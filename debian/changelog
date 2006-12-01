@@ -1,3 +1,9 @@
+dh-make-perl (0.26) unstable; urgency=low
+
+  * s/debian/Debian/ in Description
+
+ -- Frank Lichtenheld <djpig@debian.org>  Sat,  2 Dec 2006 00:26:15 +0100
+
 dh-make-perl (0.25) unstable; urgency=low
 
   * Fixed the Perl package data parsing function, fixing an unneeded
