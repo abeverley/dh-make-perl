@@ -771,7 +771,7 @@ sub create_changelog {
 	open(C, ">$file") || die "Cannot open $file: $!\n";
 	print C "$srcname ($pkgversion) unstable; urgency=low\n";
 	print C "\n  * Initial Release.\n\n";
-	print C " -- $maintainer  $date\n\n";
+	print C " -- $maintainer  $date\n";
 	#print C "Local variables:\nmode: debian-changelog\nEnd:\n";
 	close(C);
 }
