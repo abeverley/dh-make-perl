@@ -6,8 +6,11 @@ dh-make-perl (0.26) unstable; urgency=low
   [ Gunnar Wolf ]
   * Trimmed unneeded whitespace from generated files - Thanks to Kees
     Cook <kees@outflux.net> for the patch! (Closes: #411282)
+  * Patched regex for finding the module name when unde Module::Install,
+    allowing for whitespace between the "name" string and the module
+    name. Thanks to Marc Chantreux for the patch (and the patience ;-) )
 
- -- Gunnar Wolf <gwolf@debian.org>  Fri, 23 Feb 2007 18:06:25 -0600
+ -- Gunnar Wolf <gwolf@debian.org>  Fri, 23 Feb 2007 18:29:34 -0600
 
 dh-make-perl (0.25) unstable; urgency=low
 

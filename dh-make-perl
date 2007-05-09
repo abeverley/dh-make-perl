@@ -456,13 +456,29 @@ sub extract_name_ver_from_makefile {
 	close(MF);
 
 	# Get the name
-	if ($file =~ /([\'\"]?)DISTNAME\1\s*(=>|,)\s*([\'\"]?)(\S+)\3/s) {
+	if ($file =~ /([\'\"]?)
+	    DISTNAME\1\s*
+	    (=>|,)
+	    \s*
+	    ([\'\"]?)
+	    (\S+)\3/xs) {
 	    # Regular MakeMaker
 	    $name = $4;
-	} elsif ($file =~ /([\'\"]?)NAME\1\s*(=>|,)\s*([\'\"]?)(\S+)\3/s) {
+	} elsif ($file =~ /([\'\"]?)
+		 NAME\1\s*
+		 (=>|,)
+		 \s*
+		 ([\'\"]?)
+		 (\S+)\3/xs) {
 	    # Regular MakeMaker
 	    $name = $4;
-	} elsif ($file =~ /name\(([\'\"]?)(\S+)\1\);/s) {
+	} elsif ($file =~ /name
+		 \s*
+		 \(
+		     ([\'\"]?)
+		         (\S+)
+		     \1
+		 \);/xs) {
 	    # Module::Install syntax
 	    $name = $2;
 	}
