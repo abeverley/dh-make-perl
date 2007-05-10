@@ -9,8 +9,15 @@ dh-make-perl (0.26) unstable; urgency=low
   * Patched regex for finding the module name when unde Module::Install,
     allowing for whitespace between the "name" string and the module
     name. Thanks to Marc Chantreux for the patch (and the patience ;-) )
+  * Replaced the (now deprecated) call to the external program 822-date
+    for date -R
+  * Started reorganizing the code - All bare open() calls are now
+    handled through IO::File; shuffled some functions around so the code
+    is more followable
+  * Added --core-ok option to allow building core modules (Closes:
+    #409017)
 
- -- Gunnar Wolf <gwolf@debian.org>  Fri, 23 Feb 2007 18:29:34 -0600
+ -- Gunnar Wolf <gwolf@debian.org>  Wed, 09 May 2007 19:24:16 -0500
 
 dh-make-perl (0.25) unstable; urgency=low
 
