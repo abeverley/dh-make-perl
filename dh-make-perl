@@ -171,7 +171,7 @@ my ($pkgname, $srcname,
     # $pkgversion is the resulting version of the package: User's
     # --version=s or "$version-1"
     $pkgversion, 
-    $desc, $longdesc, $copyright, $author);
+    $desc, $longdesc, $copyright, $author, $upsurl);
 my ($extrasfields, $extrapfields);
 my (@docs, $changelog, @args);
 
@@ -306,14 +306,16 @@ sub setup_dir {
 		if ($cpanversion < 1.59) { # wild guess on the version number
 			$dist = $CPAN::META->instance('CPAN::Distribution', $mod->{CPAN_FILE});
 			$dist->get || die "Cannot get $mod->{CPAN_FILE}\n";
-                        $tarball .= $mod->{CPAN_FILE};
+			$tarball .= $mod->{CPAN_FILE};
 			$maindir = $dist->{'build_dir'};
+			$upsurl = "http://www.cpan.org/authors/id/" . $mod->{CPAN_FILE};
 		} else {
 			# CPAN internals changed
 			$dist = $CPAN::META->instance('CPAN::Distribution', $mod->cpan_file);
 			$dist->get || die "Cannot get ", $mod->cpan_file, "\n";
-                        $tarball .= $mod->cpan_file;
-                        $maindir = $dist->dir;
+			$tarball .= $mod->cpan_file;
+			$maindir = $dist->dir;
+			$upsurl = "http://www.cpan.org/authors/id/" . $mod->cpan_file;
 		}
 
 		copy ($tarball, $ENV{'PWD'});
@@ -864,7 +866,12 @@ sub create_copyright {
 "This is the debian package for the $perlname module.
 It was created by $maintainer using dh-make-perl.
 
-This copyright info was automatically extracted from the perl module.
+");
+        if (defined $upsurl) {
+                $fh->print("It was downloaded from $upsurl\n\n");
+        }
+	$fh->print(
+"This copyright info was automatically extracted from the perl module.
 It may not be accurate, so you better check the module sources
 if don\'t want to get into legal troubles.
 
@@ -1226,6 +1233,7 @@ Patches from:
   Fermin Galan E<lt>galan@dit.upm.esE<gt>
   Geoff Richards E<lt>qef@ungwe.orgE<gt>
   Gergely Nagy E<lt>algernon@bonehunter.rulez.orgE<gt>
+  gregor herrmann E<lt>gregor+debian@comodo.priv.atE<gt>
   Hilko Bengen E<lt>bengen@debian.orgE<gt>
   Kees Cook E<lt>keex@outflux.netE<gt>
   Jesper Krogh E<lt>jesper@krogh.ccE<gt>
