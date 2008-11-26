@@ -299,7 +299,7 @@ sub parse_list {
 # Main dh-make-perl starts here, don't look any further!
 package main;
 my ($min_perl_version, $debstdversion, $priority,
-    $section,    $depends,          $bdepends,      $bdependsi,
+    $section,    @depends,          @bdepends,      @bdependsi,
     $maintainer, $arch,             $closes,        $date,
     $debiandir,  $startdir,         $datadir,       $homedir,
     $email
@@ -309,7 +309,7 @@ our %overrides;
 $debstdversion = '3.8.0';
 $priority      = 'optional';
 $section       = 'perl';
-$depends       = '${perl:Depends}';
+@depends       = ( Dep->new( '${perl:Depends}' ) );
 
 # 5.6.0-12 is where arch-indep modules are moved in /usr/share/perl5
 # (according to dh_perl)
@@ -317,7 +317,7 @@ $depends       = '${perl:Depends}';
 # is replaced below by calling substitute_perl_dependency
 $min_perl_version = '5.6.0-12';
 
-$bdependsi = "perl (>= $min_perl_version)";
+@bdependsi = ( Dep->new( 'perl', $min_perl_version ) );
 $arch      = 'all';
 $date      = email_date(time);
 $startdir  = getcwd();
@@ -361,7 +361,7 @@ GetOptions(
     'p=s',         'packagename=s', 'refresh|R',      'dh=i'
 ) or die usage_instructions();
 
-$bdepends   = "debhelper (>= $opts{dh})";
+@bdepends = ( Dep->new( 'debhelper', $opts{dh} ) );
 
 # Help requested? Nice, we can just die! Isn't it helpful?
 die usage_instructions() if $opts{help};
@@ -452,48 +452,39 @@ my $apt_contents = AptContents->new({
     homedir => $homedir,
 });
 
-$depends .= ', ${shlibs:Depends}' if $arch eq 'any';
-$depends .= ', ${misc:Depends}';
+push @depends, Dep->new('${shlib:Depends}') if $arch eq 'any';
+push @depends, Dep->new('${misc:Depends}');
 my $extradeps = extract_depends( $maindir, $apt_contents, 0 );
-
-$depends
-    = join( ', ', $depends || (), $opts{depends} || (), $extradeps || (), );
-
+push @depends, @$extradeps;
+push @depends, Dep->parse_list( $opts{depends} ) if $opts{depends};
 
 $module_build = ( -f "$maindir/Build.PL" ) ? "Module-Build" : "MakeMaker";
 extract_changelog($maindir);
 extract_docs($maindir);
 extract_examples($maindir);
 
-$bdepends .= ', libmodule-build-perl' if ( $module_build eq "Module-Build" );
+push @bdepends, Dep->new('libmodule-build-perl')
+    if ( $module_build eq "Module-Build" );
 
-my ( $extrabdepends, $extrabdependsi );
+my ( @extrabdepends, @extrabdependsi );
 if ( $arch eq 'any' ) {
-    $extrabdepends = join(
-        ', ',
-        extract_depends( $maindir, $apt_contents, 1 ) || (),
-        $extradeps || (),
+    @extrabdepends = (
+        @{ extract_depends( $maindir, $apt_contents, 1 ) },
+        @$extradeps,
     );
 }
 else {
-    $extrabdependsi = join(
-        ', ',
-        extract_depends( $maindir, $apt_contents, 1 ) || (),
-        $extradeps || (),
+    @extrabdependsi = (
+        @{ extract_depends( $maindir, $apt_contents, 1 ) },
+        @$extradeps,
     );
 }
 
-$bdepends = join( ', ',
-    $bdepends || (),
-    $opts{bdepends} || (),
-    $extrabdepends || (),
-);
+push @bdepends, Dep->parse_list( $opts{bdepends} ) if $opts{bdepends};
+push @bdepends, @extrabdepends;
 
-$bdependsi 	= join( ', ',
-    $bdependsi || (),
-    $opts{bdependsi} || (),
-    $extrabdependsi || (),
-);
+push @bdependsi, Dep->parse_list( $opts{bdependsi} ) if $opts{bdependsi};
+push @bdependsi, @extrabdependsi;
 
 apply_overrides();
 
@@ -1354,8 +1345,8 @@ sub create_control {
         and !defined( $opts{bdepends} )
         and !defined( $opts{bdependsi} ) )
     {
-        $bdepends .= ", $bdependsi";
-        $bdependsi = '';
+        @bdepends = prune_deps( @bdepends, @bdependsi );
+        @bdependsi = ();
     }
 
     $fh->print("Source: $srcname\n");
@@ -1363,9 +1354,18 @@ sub create_control {
     $fh->print("Priority: $priority\n");
     local $Text::Wrap::break     = ', ';
     local $Text::Wrap::separator = ",\n";
-    $fh->print( wrap( '', ' ', "Build-Depends: $bdepends\n" ) ) if $bdepends;
-    $fh->print( wrap( '', ' ', "Build-Depends-Indep: $bdependsi\n" ) )
-        if $bdependsi;
+    $fh->print(
+        wrap( '', ' ', "Build-Depends: " . join( ', ', @bdepends ) . "\n" )
+    ) if @bdepends;
+
+    $fh->print(
+        wrap(
+            '',
+            ' ',
+            "Build-Depends-Indep: " . join( ', ', @bdependsi ) . "\n"
+        )
+    ) if @bdependsi;
+
     $fh->print($extrasfields) if defined $extrasfields;
 
     if ( $opts{'pkg-perl'} ) {
@@ -1389,7 +1389,9 @@ sub create_control {
     $fh->print("\n");
     $fh->print("Package: $pkgname\n");
     $fh->print("Architecture: $arch\n");
-    $fh->print( wrap( '', ' ', "Depends: $depends\n" ) ) if $depends;
+    $fh->print(
+        wrap( '', ' ', "Depends: " . join( ', ', @depends ) . "\n" )
+    ) if @depends;
     $fh->print($extrapfields) if defined $extrapfields;
     $fh->print(
         "Description: $desc\n$longdesc\n .\n This description was automagically extracted from the module by dh-make-perl.\n"
