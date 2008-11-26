@@ -1207,34 +1207,6 @@ sub get_itp {
     return 0;
 }
 
-sub substitute_perl_dependency {
-
-    # If we get 'perl' specified in here, the module requires a
-    # specific version of Perl in order to be run. This is only
-    # reliable if we have ${perl:Depends} in $depends and either
-    # of $bdepends and $bdependsi - Warn otherwise.
-    my ( $version, $dep_str, $old_dep_str, $old_bdep_str );
-    $version = shift;
-
-    # Over-escaping? I'm putting this in variables to get a bit more clarity.
-    # Remember they will be fed into the regex engine.
-    $dep_str      = "perl (>= $version)";
-    $old_dep_str  = '\\$\\{perl:Depends\\}';
-    $old_bdep_str = "perl \\(>= $min_perl_version\\)";
-
-    unless (
-        $depends =~ s/$old_dep_str/$dep_str/
-        and (  $bdepends =~ s/$old_bdep_str/$dep_str/
-            or $bdependsi =~ s/$old_bdep_str/$dep_str/ )
-        )
-    {
-        warn "The module requires Perl version $version, but you have ",
-            "apparently overriden the default dependency handling.\n",
-            "Please note that you might need to manually edit your debian/control ",
-            "- It might not make sense at all!\n";
-    }
-}
-
 sub check_for_xs {
     ( !$opts{exclude} or $File::Find::name !~ /$opts{exclude}/ )
         && /\.(xs|c|cpp|cxx)$/i
