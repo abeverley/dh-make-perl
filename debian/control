@@ -4,6 +4,7 @@ Priority: optional
 Build-Depends: debhelper (>= 5)
 Build-Depends-Indep: perl,
  libapt-pkg-perl,
+ libclass-accessor-perl,
  libemail-date-format-perl,
  libfile-which-perl,
  libmodule-corelist-perl,
