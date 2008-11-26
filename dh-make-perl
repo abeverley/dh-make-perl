@@ -1077,6 +1077,9 @@ sub extract_examples {
     );
 }
 
+# finds the list of modules that the distribution in $dir depends on
+# if $build_deps is true, returns build-time dependencies, otherwise
+# returns run-time dependencies
 sub run_depends {
     my ( $depends_module, $dir, $build_deps ) = @_;
 
