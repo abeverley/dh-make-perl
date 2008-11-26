@@ -1173,13 +1173,10 @@ sub find_debs_for_modules {
                     ) <= 0;
                 }
 
-                push @debs, {
-                        name    => $deb,
-                        version => $v
-                };
+                push @debs, Dep->new( $deb, $v );
             }
             else {
-                push @debs, { name => $deb };
+                push @debs, Dep->new($deb);
             }
         }
         else {
@@ -1236,7 +1233,7 @@ sub extract_depends {
 
     print "\n";
     print "Needs the following debian packages: "
-        . join( ", ", map { $_->{name} } @$debs ) . "\n"
+        . join( ", ", @$debs ) . "\n"
         if (@$debs);
     if (@$missing) {
         my ($missing_debs_str);
