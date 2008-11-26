@@ -1,4 +1,4 @@
-dh-make-perl (0.52) UNRELEASED; urgency=low
+dh-make-perl (0.53) UNRELEASED; urgency=low
 
   [ gregor herrmann ]
   * Handle --desc option before --refresh to avoid uninitialized $desc
@@ -12,6 +12,21 @@ dh-make-perl (0.52) UNRELEASED; urgency=low
   * avoid duplicate entries in dependency lists
   * better output when searching for dependent packages
   * Add Paul Fenwick to the 'Patched from' section
+  * Simple tests to ensure that get_stdmodules() works.
+  * Updated get_stdmodules to use Module::CoreList.
+  * refactor parsing, caching and searching in apt Contents files in a
+    class. check for std module only once
+  * add dependency on libclass-accessor-perl
+  * move the check for core modules in is_core_module()
+  * drop unused @stdmodules and get_stdmodules()
+  * migrate t/corelist.t from get_stdmodules() to is_core_module()
+  * extend AptContents so that one can search by both file name and
+    module name
+  * create AptContents instance in the main course and give it to
+    extract_depends
+  * conversion of depended on modules list to a list of debian packages
+    separated
+  * substitute_perl_dependency() removed as not used
 
   [ Paul Fenwick ]
   * Setting the base for unit-testing:
@@ -21,7 +36,7 @@ dh-make-perl (0.52) UNRELEASED; urgency=low
   * Updated extract_name_ver_from_makefile to handle M::I recommended
     syntax.
 
- -- Damyan Ivanov <dmn@debian.org>  Tue, 25 Nov 2008 10:31:48 +0200
+ -- Damyan Ivanov <dmn@debian.org>  Wed, 26 Nov 2008 11:37:12 +0200
 
 dh-make-perl (0.50) unstable; urgency=low
 
