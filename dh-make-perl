@@ -1264,14 +1264,7 @@ sub extract_depends {
 
     }
 
-    return join(
-        ", ",
-        map {
-                  $_->{version}
-                ? $_->{name} . " (>= " . $_->{version} . ")"
-                : $_->{name}
-            } @$debs
-    );
+    return $debs;
 }
 
 sub get_itp {
