@@ -283,7 +283,10 @@ sub parse_list {
 
     for( @list ) {
         if ( /(^S+)\s(.+)$/ ) {
-            $_ = $class->new( $1, $2 );
+            my ( $pkg, $ver ) = ( $1, $2 );
+            $ver =~ s/^>=\s*//
+                or die "$_: only '>=' relationships are supported";
+            $_ = $class->new( $pkg, $ver );
         }
         else {
             $_ = $class->new($_);
