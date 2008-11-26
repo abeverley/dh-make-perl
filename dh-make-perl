@@ -213,7 +213,7 @@ sub store_cache {
     rename( "$homedir/Contents.cache.new", "$homedir/Contents.cache" );
 }
 
-sub find {
+sub find_file_packages {
     my( $self, $file ) = @_;
 
     my $packages = $self->cache->{apt_contents}{$file};
@@ -227,6 +227,24 @@ sub find {
     s{[^/]+/}{} for @packages;  # remove section
 
     return @packages;
+}
+
+sub find_perl_module_package {
+    my ( $self, $module ) = @_;
+
+    my $module_file = $module;
+    $module_file =~ s|::|/|g;
+
+    my @matches = $self->find_file_packages("$module_file.pm");
+
+    # rank non -perl packages lower
+    @matches = sort {
+        if    ( $a !~ /-perl: / ) { return 1; }
+        elsif ( $b !~ /-perl: / ) { return -1; }
+        else                      { return $a cmp $b; }    # or 0?
+    } @matches;
+
+    return $matches[0];
 }
 
 1;
