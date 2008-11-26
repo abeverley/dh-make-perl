@@ -1170,7 +1170,7 @@ sub find_debs_for_modules {
 
         my $deb;
         if ( $module eq 'perl' ) {
-            $deb = 'perl',
+            $deb = 'perl';
         }
         elsif ($apt_contents) {
             $deb = $apt_contents->find_perl_module_package($module);
