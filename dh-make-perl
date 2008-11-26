@@ -1115,6 +1115,7 @@ sub find_debs_for_modules {
 sub extract_depends {
     my $dir  = shift;
     my $apt_contents = shift;
+    my $build_deps = shift;
     my (%dep_hash);
     local @INC = ( $dir, @INC );
 
@@ -1123,7 +1124,7 @@ sub extract_depends {
     # try Module::Depends, but if that fails then
     # fall back to Module::Depends::Intrusive.
 
-    eval { %dep_hash = run_depends( 'Module::Depends', $dir ); };
+    eval { %dep_hash = run_depends( 'Module::Depends', $dir, $build_deps ); };
     if ($@) {
         warn '=' x 70, "\n";
         warn "First attempt (Module::Depends) at a dependency\n"
@@ -1132,18 +1133,22 @@ sub extract_depends {
         warn '=' x 70, "\n";
 
         eval {
-            %dep_hash = run_depends( 'Module::Depends::Intrusive', $dir );
+            %dep_hash = run_depends(
+                'Module::Depends::Intrusive', $dir, $build_deps );
         };
         if ($@) {
             warn '=' x 70, "\n";
             warn
-                "Could not find the dependencies for the requested module.\n";
+                "Could not find the " . ( $build_deps ? 'build-' : '' ) 
+                . "dependencies for the requested module.\n";
             warn "Generated error: $@";
 
             warn "Please bug the module author to provide a proper META.yml\n"
                 . "file.\n"
-                . "Automatic find of dependencies failed. You may want to \n"
-                . "retry using the 'depends' option\n";
+                . "Automatic find of " . ( $build_deps ? 'build-' : '' )
+                . "dependencies failed. You may want to \n"
+                . "retry using the '" . ( $build_deps ? 'b' : '' )
+                . "depends' option\n";
             warn '=' x 70, "\n";
         }
     }
