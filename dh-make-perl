@@ -1098,8 +1098,8 @@ sub run_depends {
 sub prune_deps(@) {
     my %deps;
     for (@_) {
-        my $p = $_->{name};
-        my $v = exists( $_->{version} ) ? $_->{version} : undef;
+        my $p = $_->pkg;
+        my $v = $_->ver;
         if ( exists $deps{$p} ) {
             my $cur_ver = $deps{$p};
 
@@ -1114,7 +1114,7 @@ sub prune_deps(@) {
 
     }
 
-    return map( { name => $_, version => $deps{$_} }, sort( keys(%deps) ) );
+    return map( Dep->new( $_, $deps{$_} ), sort( keys(%deps) ) );
 }
 
 sub find_debs_for_modules {
