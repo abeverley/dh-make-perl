@@ -249,6 +249,28 @@ sub find_perl_module_package {
 
 1;
 
+# The C<Dep> class represent a dependency relationship in an opaque way
+#
+# SYNOPSIS
+#
+#   my $d = Dep->new( 'perl' );             # simple dependency
+#   my $d = Dep->new( 'perl', '5.10' );     # dependency with a version
+#   print $d->pkg;  # 'perl'
+#   print $d->ver;  # '5.10
+#
+#                                   # for people who like to type much
+#   my $d = Dep->new( { pkg => 'perl', ver => '5.10' } );
+#
+#   # stringification
+#   print "$d"      # 'perl (>= 5.10)'
+#
+#   # parsing lists
+#   my @list = Dep->parse_list( 'perl (>= 5.10), libc (>= 2.7)' );
+#   print $list[0]->ver;    # '5.10'
+#
+#                                                       # <= relationship
+#   my @list = Dep->parse_list( 'perl (<= 5.11)' );     # UNSUPPORTED
+#
 package Dep;
 
 use base qw(Class::Accessor);
