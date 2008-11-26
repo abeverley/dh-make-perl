@@ -1091,15 +1091,12 @@ sub run_depends {
     $mod_dep->dist_dir($dir);
     $mod_dep->find_modules();
 
-    my %dep_hash = %{
-        $build_deps
-        ? $mod_dep->build_requires 
-        : $mod_dep->requires
-    };
+    my $deps = $build_deps ? $mod_dep->build_requires : $mod_dep->requires;
 
     my $error = $mod_dep->error();
     die "Error: $error\n" if $error;
-    return %dep_hash;
+
+    return $deps;
 }
 
 # filter @deps to contain only one instance of each package
@@ -1200,7 +1197,7 @@ sub extract_depends {
     my $dir  = shift;
     my $apt_contents = shift;
     my $build_deps = shift;
-    my (%dep_hash);
+    my ($dep_hash);
     local @INC = ( $dir, @INC );
 
     $dir .= '/' unless $dir =~ m/\/$/;
@@ -1208,7 +1205,7 @@ sub extract_depends {
     # try Module::Depends, but if that fails then
     # fall back to Module::Depends::Intrusive.
 
-    eval { %dep_hash = run_depends( 'Module::Depends', $dir, $build_deps ); };
+    eval { $dep_hash = run_depends( 'Module::Depends', $dir, $build_deps ); };
     if ($@) {
         warn '=' x 70, "\n";
         warn "First attempt (Module::Depends) at a dependency\n"
@@ -1217,7 +1214,7 @@ sub extract_depends {
         warn '=' x 70, "\n";
 
         eval {
-            %dep_hash = run_depends(
+            $dep_hash = run_depends(
                 'Module::Depends::Intrusive', $dir, $build_deps );
         };
         if ($@) {
@@ -1237,7 +1234,7 @@ sub extract_depends {
         }
     }
 
-    my( $debs, $missing ) = find_debs_for_modules( \%dep_hash, $apt_contents );
+    my( $debs, $missing ) = find_debs_for_modules( $dep_hash, $apt_contents );
 
     print "\n";
     print "Needs the following debian packages: "
