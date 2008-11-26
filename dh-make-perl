@@ -156,12 +156,12 @@ sub read_cache() {
     }
 
     unless ($cache) {
-        warn "Parsing apt-file Contents...\n";
         $cache->{stamp}          = time;
         $cache->{contents_files} = [];
         $cache->{apt_contents}   = {};
         for ( glob $contents_glob ) {
             push @{ $cache->{contents_files} }, $_;
+            warn "Parsing $_ ...\n";
             my $f         = IO::Uncompress::Gunzip->new($_);
             my $capturing = 0;
             while ( defined( $_ = $f->getline ) ) {
