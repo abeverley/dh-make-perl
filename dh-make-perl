@@ -402,6 +402,11 @@ move( $tarball, dirname($tarball) . "/${pkgname}_${version}.orig.tar.gz" )
     && die
     "The directory $debiandir is already present and I won't overwrite it: remove it yourself.\n";
 
+my $apt_contents = AptContents->new({
+    homedir => $homedir,
+});
+
+
 $module_build = ( -f "$maindir/Build.PL" ) ? "Module-Build" : "MakeMaker";
 extract_changelog($maindir);
 extract_docs($maindir);
@@ -414,7 +419,7 @@ $bdependsi = join( ', ', $bdependsi || (), $opts{bdependsi} || () );
 
 $depends .= ', ${shlibs:Depends}' if $arch eq 'any';
 $depends .= ', ${misc:Depends}';
-my $extradeps = extract_depends( $maindir, $meta );
+my $extradeps = extract_depends( $maindir, $apt_contents );
 
 $depends
     = join( ', ', $depends || (), $opts{depends} || (), $extradeps || (), );
