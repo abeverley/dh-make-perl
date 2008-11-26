@@ -2,7 +2,14 @@ Source: dh-make-perl
 Section: devel
 Priority: optional
 Build-Depends: debhelper (>= 5)
-Build-Depends-Indep: perl
+Build-Depends-Indep: perl,
+ libapt-pkg-perl,
+ libemail-date-format-perl,
+ libfile-which-perl,
+ libmodule-corelist-perl,
+ libmodule-depends-perl,
+ libwww-mechanize-perl,
+ libyaml-perl
 Maintainer: Debian Perl Group <pkg-perl-maintainers@lists.alioth.debian.org>
 Uploaders: Gunnar Wolf <gwolf@debian.org>, Wolfgang Schemmel <debian@37.org>,
  Christopher Sacca <csacca@thecsl.org>,
@@ -15,10 +22,16 @@ Vcs-Browser: http://svn.debian.org/viewsvn/pkg-perl/trunk/dh-make-perl/
 
 Package: dh-make-perl
 Architecture: all
-Depends: debhelper (>= 4.0.2), libpod-parser-perl, ${perl:Depends}, make,
- dpkg-dev, fakeroot, ${misc:Depends}, libyaml-perl,  libmodule-depends-perl,
- libwww-mechanize-perl, libemail-date-format-perl, libmodule-corelist-perl,
- libclass-accessor-perl, libfile-which-perl
+Depends: debhelper (>= 4.0.2), ${perl:Depends}, ${misc:Depends},
+ make, dpkg-dev, fakeroot, 
+ libapt-pkg-perl,
+ libclass-accessor-perl,
+ libemail-date-format-perl,
+ libfile-which-perl,
+ libmodule-corelist-perl,
+ libmodule-depends-perl,
+ libwww-mechanize-perl,
+ libyaml-perl
 Recommends: apt-file (>= 2.1.0), libmodule-build-perl
 Description: Create Debian packages from perl modules
  dh-make-perl will create the files required to build a Debian source
@@ -26,4 +39,3 @@ Description: Create Debian packages from perl modules
  and is also useful for getting started with packaging perl modules.
  Given a perl package name, it can also automatically download it from
  CPAN.
-

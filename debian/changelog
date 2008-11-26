@@ -3,6 +3,8 @@ dh-make-perl (0.51) UNRELEASED; urgency=low
   [ gregor herrmann ]
   * Handle --desc option before --refresh to avoid uninitialized $desc
     variable.
+  * Remove libpod-parser-perl from Depends, sync Build-Depends-Indep with
+    Depends now that tests are run.
 
   [ Damyan Ivanov ]
   * Apply two patches from Paul Fenwick reformatting the whitespace of
@@ -12,7 +14,8 @@ dh-make-perl (0.51) UNRELEASED; urgency=low
   * Parse and use build-time dependencies too
     Closes: #501688 -- dh-make-perl ignoring build_requires in Makefile.PL
   * Add dependencies on libwww-mechanize-perl, libclass-accessor-perl,
-    libemail-date-format-perl, libmodule-corelist-perl, libfile-which-perl.
+    libemail-date-format-perl, libmodule-corelist-perl, libfile-which-perl,
+    libapt-pkg-perl.
   * Internal rewrites of dependency checking and apt Contents parsing:
     - encapsulate dependencies into Dep class and rework the code to use 
       Dep objects
