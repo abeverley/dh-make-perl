@@ -1,4 +1,4 @@
-dh-make-perl (0.54) UNRELEASED; urgency=low
+dh-make-perl (0.51) UNRELEASED; urgency=low
 
   [ gregor herrmann ]
   * Handle --desc option before --refresh to avoid uninitialized $desc
@@ -8,32 +8,19 @@ dh-make-perl (0.54) UNRELEASED; urgency=low
   * Apply two patches from Paul Fenwick reformatting the whitespace of
     dh-make-perl. Hopefully this makes the code a bit easier for people not
     used to it.
-  * extract_depends: try Module::Depends first, ::Intrusive -- second
-  * avoid duplicate entries in dependency lists
-  * better output when searching for dependent packages
   * Add Paul Fenwick to the 'Patched from' section
-  * Simple tests to ensure that get_stdmodules() works.
-  * Updated get_stdmodules to use Module::CoreList.
-  * refactor parsing, caching and searching in apt Contents files in a
-    class. check for std module only once
-  * add dependency on libclass-accessor-perl
-  * move the check for core modules in is_core_module()
-  * drop unused @stdmodules and get_stdmodules()
-  * migrate t/corelist.t from get_stdmodules() to is_core_module()
-  * extend AptContents so that one can search by both file name and
-    module name
-  * create AptContents instance in the main course and give it to
-    extract_depends
-  * conversion of depended on modules list to a list of debian packages
-    separated
-  * substitute_perl_dependency() removed as not used
-  * parse and use build-time dependencies too
+  * Parse and use build-time dependencies too
     Closes: #501688 -- dh-make-perl ignoring build_requires in Makefile.PL
-  * find_debs_for_modules: specual treatment of perl versions (5.008 ->
-    5.8)
-  * encapsulate dependencies into Dep class and rework the code to use Dep
-    objects
-  * avoid adding dependencies to ancient perl versions
+  * Add dependency on libclass-accessor-perl.
+  * Internal rewrites of dependency checking and apt Contents parsing:
+    - encapsulate dependencies into Dep class and rework the code to use 
+      Dep objects
+    - extract_depends: try Module::Depends first, ::Intrusive -- second
+    - update get_stdmodules to use Module::CoreList
+    - avoid adding dependencies on ancient perl versions
+    - refactor parsing, caching and searching in apt Contents files in a class
+    - remove some unused variables and functions
+  * Simple tests to ensure that is_core_module() works.
 
   [ Paul Fenwick ]
   * Setting the base for unit-testing:
