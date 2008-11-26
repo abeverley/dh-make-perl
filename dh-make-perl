@@ -1164,6 +1164,13 @@ sub find_debs_for_modules {
                         $ver .= '.' . ( 0 + substr( $1, 3 ) );
                     }
                     $v =~ s/\.\d+$/.$ver/;
+
+                    # no point depending on ancient perl versions
+                    # perl is Priority: standard
+                    next
+                    if $AptPkg::Config::_config->system->versioning->compare(
+                        $v, $min_perl_version
+                    ) <= 0;
                 }
 
                 push @debs, {
