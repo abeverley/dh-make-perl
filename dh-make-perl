@@ -1695,13 +1695,13 @@ sub apply_overrides {
     $priority = $val
         if (
         defined( $val = get_override_val( $data, $subkey, 'priority' ) ) );
-    $depends = $val
+    @depends = Dep->parse_list($val)
         if (
         defined( $val = get_override_val( $data, $subkey, 'depends' ) ) );
-    $bdepends = $val
+    @bdepends = Dep->parse_list($val)
         if (
         defined( $val = get_override_val( $data, $subkey, 'bdepends' ) ) );
-    $bdependsi = $val
+    @bdependsi = Dep->parse_list($val)
         if (
         defined( $val = get_override_val( $data, $subkey, 'bdependsi' ) ) );
     $desc = $val
