@@ -1051,10 +1051,67 @@ sub prune_deps(@) {
     return map( { name => $_, version => $deps{$_} }, sort( keys(%deps) ) );
 }
 
+sub find_debs_for_modules {
+
+    my ( $dep_hash, $apt_contents ) = @_;
+
+    my @uses;
+
+    foreach my $module ( keys(%$dep_hash) ) {
+        if ( is_core_module($module) ) {
+            print "= $module is a core module\n";
+
+            # TODO
+            # see if there is a version requirement and if the core
+            # module satisfies it. If it does, see if previous perl
+            # releases satisfy it too and if needed, bump the perl
+            # dependency to the lowest version that contains module
+            # version satisfying the dependency
+            next;
+        }
+
+        push @uses, $module;
+    }
+
+    my ( @debs, @missing );
+
+    foreach my $module (@uses) {
+
+        my $deb;
+        if ( $module eq 'perl' ) {
+            $deb = 'perl',
+        }
+        elsif ($apt_contents) {
+			$deb = $apt_contents->find_perl_module_package($module);
+		}
+
+        if ($deb) {
+            print "+ $module found in $deb\n";
+            if ( exists $dep_hash->{$module} ) {
+				my $v = $dep_hash->{$module};
+				$v =~ s/^v//;    # strip leading 'v' from version
+				push @debs, {
+					name    => $deb,
+					version => $v
+				};
+            }
+            else {
+				push @debs, { name => $deb };
+            }
+        }
+        else {
+            print "- $module not found in any package\n";
+            push @missing, $module;
+        }
+    }
+
+    return \@debs, \@missing;
+}
+
 sub extract_depends {
     my $dir  = shift;
-    my $meta = shift;
-    my ( %dep_hash, @uses, @deps, @not_debs );
+    my $apt_contents = shift;
+    my (%dep_hash);
     local @INC = ( $dir, @INC );
 
     $dir .= '/' unless $dir =~ m/\/$/;
@@ -1087,88 +1144,24 @@ sub extract_depends {
         }
     }
 
-    foreach my $module ( keys(%dep_hash) ) {
-        if ( is_core_module($module) ) {
-            print "= $module is a core module\n";
-
-            # TODO
-            # see if there is a version requirement and if the core
-            # module satisfies it. If it does, see if previous perl
-            # releases satisfy it too and if needed, bump the perl
-            # dependency to the lowest version that contains module
-            # version satisfying the dependency
-            next;
-        }
-
-        push @uses, $module;
-    }
-
-    my $apt_contents = AptContents->new({
-        homedir => $homedir,
-    });
-
-    if ($apt_contents) {
-        foreach my $module (@uses) {
-            if ( $module eq 'perl' ) {
-                substitute_perl_dependency( $dep_hash{perl} );
-                next;
-            }
-
-            my $mod = $module;
-            $module =~ s|::|/|g;
-
-            my @matches = $apt_contents->find("$module.pm");
-
-            # rank non -perl packages lower
-            @matches = sort {
-                if    ( $a !~ /-perl: / ) { return 1; }
-                elsif ( $b !~ /-perl: / ) { return -1; }
-                else                      { return $a cmp $b; }    # or 0?
-            } @matches;
-
-            if ( my $p = $matches[0] ) {
-                print "+ $mod is contained in $p\n";
-                if ( exists $dep_hash{$mod} ) {
-                    my $v = $dep_hash{$mod};
-                    $v =~ s/^v//;    # strip leading 'v' from version
-                    push @deps,
-                    {
-                        name    => $p,
-                        version => $v
-                    };
-                }
-                else {
-                    push @deps, { name => $p };
-                }
-            }
-            else {
-                print "- $mod not found in any package\n";
-                push @not_debs, $mod;
-            }
-        }
-    }
-    elsif ( $opts{requiredeps} ) {
-        die "--requiredeps was specified, but apt-file was not found\n";
-    }
-
-    @deps = prune_deps(@deps);
+    my( $debs, $missing ) = find_debs_for_modules( \%dep_hash, $apt_contents );
 
     print "\n";
     print "Needs the following debian packages: "
-        . join( ", ", map { $_->{name} } @deps ) . "\n"
-        if (@deps);
-    if (@not_debs) {
+        . join( ", ", map { $_->{name} } @$debs ) . "\n"
+        if (@$debs);
+    if (@$missing) {
         my ($missing_debs_str);
         if ($apt_contents) {
             $missing_debs_str = join( "\n",
                 "Needs the following modules for which there are no debian packages available",
-                map( {" - $_"} @not_debs ),
+                map( {" - $_"} @$missing ),
                 '' );
         }
         else {
             $missing_debs_str = join( "\n",
                 "The following Perl modules are required and not installed in your system:",
-                map( {" - $_"} @not_debs ),
+                map( {" - $_"} @$missing ),
                 "You do not have 'apt-file' currently installed - If you install it, I will",
                 "be able to tell you which Debian packages are those modules in (if they are",
                 "packaged)." );
@@ -1189,7 +1182,7 @@ sub extract_depends {
                   $_->{version}
                 ? $_->{name} . " (>= " . $_->{version} . ")"
                 : $_->{name}
-            } @deps
+            } @$debs
     );
 }
 
