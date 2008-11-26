@@ -1086,21 +1086,21 @@ sub find_debs_for_modules {
             $deb = 'perl',
         }
         elsif ($apt_contents) {
-			$deb = $apt_contents->find_perl_module_package($module);
-		}
+            $deb = $apt_contents->find_perl_module_package($module);
+        }
 
         if ($deb) {
             print "+ $module found in $deb\n";
             if ( exists $dep_hash->{$module} ) {
-				my $v = $dep_hash->{$module};
-				$v =~ s/^v//;    # strip leading 'v' from version
-				push @debs, {
-					name    => $deb,
-					version => $v
-				};
+                my $v = $dep_hash->{$module};
+                $v =~ s/^v//;    # strip leading 'v' from version
+                push @debs, {
+                        name    => $deb,
+                        version => $v
+                };
             }
             else {
-				push @debs, { name => $deb };
+                push @debs, { name => $deb };
             }
         }
         else {
