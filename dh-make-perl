@@ -132,11 +132,12 @@ sub read_cache() {
 
     my $archspec = `dpkg --print-architecture`;
     chomp($archspec);
+    my $contents_glob = "/var/cache/apt/apt-file/*_debian_dists_{unstable,sid}_Contents-$archspec.gz";
 
     # see if the cache is stale
     if ( $cache and $cache->{stamp} and $cache->{contents_files} ) {
         my @contents_files;
-        for ( glob "/var/cache/apt/apt-file/*_Contents-$archspec.gz" ) {
+        for ( glob $contents_glob ) {
             push @contents_files, $_;
             if ( ( stat($_) )[9] > $cache->{stamp} ) {
                 undef($cache);
@@ -159,7 +160,7 @@ sub read_cache() {
         $cache->{stamp}          = time;
         $cache->{contents_files} = [];
         $cache->{apt_contents}   = {};
-        for ( glob "/var/cache/apt/apt-file/*_Contents-$archspec.gz" ) {
+        for ( glob $contents_glob ) {
             push @{ $cache->{contents_files} }, $_;
             my $f         = IO::Uncompress::Gunzip->new($_);
             my $capturing = 0;
