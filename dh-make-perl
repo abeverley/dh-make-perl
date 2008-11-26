@@ -249,6 +249,36 @@ sub find_perl_module_package {
 
 1;
 
+package Dep;
+
+use base qw(Class::Accessor);
+__PACKAGE__->mk_accessors(qw(pkg ver));
+
+use overload
+    '""'    => \&stringify;
+sub new {
+    my $class = shift;
+    $class = ref($class) if ref($class);
+
+    return (
+        ref( $_[0] )
+        ? $class->SUPER::new(@_)
+        : $class->SUPER::new( { pkg => $_[0], ver => $_[1] } )
+    );
+}
+
+sub stringify {
+    my $self = shift;
+
+    return (
+        $self->ver
+        ? $self->pkg . ' (>= ' . $self->ver . ')'
+        : $self->pkg
+    );
+}
+
+1;
+
 ######################################################################
 # Main dh-make-perl starts here, don't look any further!
 package main;
