@@ -406,6 +406,13 @@ my $apt_contents = AptContents->new({
     homedir => $homedir,
 });
 
+$depends .= ', ${shlibs:Depends}' if $arch eq 'any';
+$depends .= ', ${misc:Depends}';
+my $extradeps = extract_depends( $maindir, $apt_contents, 0 );
+
+$depends
+    = join( ', ', $depends || (), $opts{depends} || (), $extradeps || (), );
+
 
 $module_build = ( -f "$maindir/Build.PL" ) ? "Module-Build" : "MakeMaker";
 extract_changelog($maindir);
@@ -416,10 +423,18 @@ $bdepends .= ', libmodule-build-perl' if ( $module_build eq "Module-Build" );
 
 my ( $extrabdepends, $extrabdependsi );
 if ( $arch eq 'any' ) {
-    $extrabdepends = extract_depends( $maindir, $apt_contents, 1 );
+    $extrabdepends = join(
+        ', ',
+        extract_depends( $maindir, $apt_contents, 1 ) || (),
+        $extradeps || (),
+    );
 }
 else {
-    $extrabdependsi = extract_depends( $maindir, $apt_contents, 1 );
+    $extrabdependsi = join(
+        ', ',
+        extract_depends( $maindir, $apt_contents, 1 ) || (),
+        $extradeps || (),
+    );
 }
 
 $bdepends = join( ', ',
@@ -433,13 +448,6 @@ $bdependsi 	= join( ', ',
     $opts{bdependsi} || (),
     $extrabdependsi || (),
 );
-
-$depends .= ', ${shlibs:Depends}' if $arch eq 'any';
-$depends .= ', ${misc:Depends}';
-my $extradeps = extract_depends( $maindir, $apt_contents, 0 );
-
-$depends
-    = join( ', ', $depends || (), $opts{depends} || (), $extradeps || (), );
 
 apply_overrides();
 
