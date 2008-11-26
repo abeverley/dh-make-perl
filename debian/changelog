@@ -31,6 +31,9 @@ dh-make-perl (0.54) UNRELEASED; urgency=low
     Closes: #501688 -- dh-make-perl ignoring build_requires in Makefile.PL
   * find_debs_for_modules: specual treatment of perl versions (5.008 ->
     5.8)
+  * encapsulate dependencies into Dep class and rework the code to use Dep
+    objects
+  * avoid adding dependencies to ancient perl versions
 
   [ Paul Fenwick ]
   * Setting the base for unit-testing:
