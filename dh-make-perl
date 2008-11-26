@@ -277,6 +277,22 @@ sub stringify {
     );
 }
 
+sub parse_list {
+    my $class = shift;
+    my @list = split( /\s*,\s*/, shift );
+
+    for( @list ) {
+        if ( /(^S+)\s(.+)$/ ) {
+            $_ = $class->new( $1, $2 );
+        }
+        else {
+            $_ = $class->new($_);
+        }
+    }
+
+    return @list;
+}
+
 1;
 
 ######################################################################
