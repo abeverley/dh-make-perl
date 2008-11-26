@@ -1119,6 +1119,16 @@ sub find_debs_for_modules {
             if ( exists $dep_hash->{$module} ) {
                 my $v = $dep_hash->{$module};
                 $v =~ s/^v//;    # strip leading 'v' from version
+
+                # perl versions need special handling
+                if ( $module eq 'perl' and $v =~ /\.(\d+)$/ ) {
+                    my $ver = 0 + substr( $1, 0, 3 );
+                    if( length($1) > 3 ) {
+                        $ver .= '.' . ( 0 + substr( $1, 3 ) );
+                    }
+                    $v =~ s/\.\d+$/.$ver/;
+                }
+
                 push @debs, {
                         name    => $deb,
                         version => $v
