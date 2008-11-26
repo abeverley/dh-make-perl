@@ -1,4 +1,4 @@
-dh-make-perl (0.53) UNRELEASED; urgency=low
+dh-make-perl (0.54) UNRELEASED; urgency=low
 
   [ gregor herrmann ]
   * Handle --desc option before --refresh to avoid uninitialized $desc
@@ -27,6 +27,10 @@ dh-make-perl (0.53) UNRELEASED; urgency=low
   * conversion of depended on modules list to a list of debian packages
     separated
   * substitute_perl_dependency() removed as not used
+  * parse and use build-time dependencies too
+    Closes: #501688 -- dh-make-perl ignoring build_requires in Makefile.PL
+  * find_debs_for_modules: specual treatment of perl versions (5.008 ->
+    5.8)
 
   [ Paul Fenwick ]
   * Setting the base for unit-testing:
@@ -36,7 +40,7 @@ dh-make-perl (0.53) UNRELEASED; urgency=low
   * Updated extract_name_ver_from_makefile to handle M::I recommended
     syntax.
 
- -- Damyan Ivanov <dmn@debian.org>  Wed, 26 Nov 2008 11:37:12 +0200
+ -- Damyan Ivanov <dmn@debian.org>  Wed, 26 Nov 2008 12:36:45 +0200
 
 dh-make-perl (0.50) unstable; urgency=low
 
