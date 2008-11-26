@@ -1007,7 +1007,7 @@ sub extract_examples {
 }
 
 sub run_depends {
-    my ( $depends_module, $dir ) = @_;
+    my ( $depends_module, $dir, $build_deps ) = @_;
 
     no warnings;
     local *STDERR;
@@ -1017,7 +1017,11 @@ sub run_depends {
     $mod_dep->dist_dir($dir);
     $mod_dep->find_modules();
 
-    my %dep_hash = %{ $mod_dep->requires };
+    my %dep_hash = %{
+        $build_deps
+        ? $mod_dep->build_requires 
+        : $mod_dep->requires
+    };
 
     my $error = $mod_dep->error();
     die "Error: $error\n" if $error;
