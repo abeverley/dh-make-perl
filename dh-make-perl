@@ -482,12 +482,14 @@ my $opt_dist         = '{sid,unstable}';
 my $opt_sources_list = '/etc/apt/sources.list';
 my $opt_verbose      = 1;
 my $opt_email        = '';
-my ($opt_arch,    $opt_basepkgs,    $opt_bdepends,    $opt_bdependsi,
-    $opt_depends, $opt_build,       $opt_install,     $opt_core_ok,
-    $opt_cpan,    $opt_cpanplus,    $opt_cpan_mirror, $opt_closes,
-    $opt_dbflags, $opt_desc,        $opt_exclude,     $opt_help,
-    $opt_nometa,  $opt_notest,      $opt_pkg_perl,    $opt_requiredeps,
-    $opt_version, $opt_packagename, $opt_refresh
+my $opt_exclude      = '(?:\/|^)(?:CVS|\.svn)\/';
+
+my ($opt_arch,        $opt_basepkgs, $opt_bdepends,    $opt_bdependsi,
+    $opt_depends,     $opt_build,    $opt_install,     $opt_core_ok,
+    $opt_cpan,        $opt_cpanplus, $opt_cpan_mirror, $opt_closes,
+    $opt_dbflags,     $opt_desc,     $opt_help,        $opt_nometa,
+    $opt_notest,      $opt_pkg_perl, $opt_requiredeps, $opt_version,
+    $opt_packagename, $opt_refresh
 );
 
 my $mod_cpan_version;
@@ -531,10 +533,6 @@ GetOptions(
 # Help requested? Nice, we can just die! Isn't it helpful?
 die usage_instructions() if $opt_help;
 die "CPANPLUS support disabled, sorry" if $opt_cpanplus;
-
-$opt_exclude = '(?:\/|^)(?:CVS|\.svn)\/'
-    if ( !defined $opt_exclude
-    or $opt_exclude eq '' );
 
 $arch = $opt_arch if defined $opt_arch;
 
