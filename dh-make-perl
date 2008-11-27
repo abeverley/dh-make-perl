@@ -178,7 +178,9 @@ sub read_cache() {
         for ( @{ $self->contents_files } ) {
             push @{ $cache->{contents_files} }, $_;
             warn "Parsing $_ ...\n";
-            my $f         = IO::Uncompress::Gunzip->new($_);
+            my $f = /\.gz$/
+                ? IO::Uncompress::Gunzip->new($_)
+                : IO::File->new( $_, 'r' );
 
             unless ($f) {
                 warn "Error reading '$_': $!\n";
