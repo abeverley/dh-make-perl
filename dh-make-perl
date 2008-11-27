@@ -432,11 +432,10 @@ sub parse_list {
 ######################################################################
 # Main dh-make-perl starts here, don't look any further!
 package main;
-my ($min_perl_version, $debstdversion, $priority,
-    $section,    @depends,          @bdepends,      @bdependsi,
-    $maintainer, $arch,             $closes,        $date,
-    $debiandir,  $startdir,         $datadir,       $homedir,
-    $email
+my ($min_perl_version, $debstdversion, $priority,  $section,
+    @depends,          @bdepends,      @bdependsi, $maintainer,
+    $arch,             $closes,        $date,      $debiandir,
+    $startdir,         $datadir,       $homedir,
 );
 our %overrides;
 
@@ -482,13 +481,13 @@ my $opt_dh           = 7;
 my $opt_dist         = '{sid,unstable}';
 my $opt_sources_list = '/etc/apt/sources.list';
 my $opt_verbose      = 1;
-my ($opt_arch,        $opt_basepkgs, $opt_bdepends,    $opt_bdependsi,
-    $opt_depends,     $opt_build,    $opt_install,     $opt_core_ok,
-    $opt_cpan,        $opt_cpanplus, $opt_cpan_mirror, $opt_closes,
-    $opt_dbflags,     $opt_desc,     $opt_exclude,     $opt_help,
-    $opt_nometa,      $opt_notest,   $opt_pkg_perl,    $opt_requiredeps,
-    $opt_version,     $opt_email,    $opt_e,           $opt_p,
-    $opt_packagename, $opt_refresh
+my $opt_email        = '';
+my ($opt_arch,    $opt_basepkgs,    $opt_bdepends,    $opt_bdependsi,
+    $opt_depends, $opt_build,       $opt_install,     $opt_core_ok,
+    $opt_cpan,    $opt_cpanplus,    $opt_cpan_mirror, $opt_closes,
+    $opt_dbflags, $opt_desc,        $opt_exclude,     $opt_help,
+    $opt_nometa,  $opt_notest,      $opt_pkg_perl,    $opt_requiredeps,
+    $opt_version, $opt_packagename, $opt_refresh
 );
 
 my $mod_cpan_version;
@@ -497,36 +496,34 @@ $opt_dbflags = $> == 0 ? "" : "-rfakeroot";
 chomp($date);
 
 GetOptions(
-    'arch=s'         => \$opt_arch,
-    'basepkgs=s'     => \$opt_basepkgs,
-    'bdepends=s'     => \$opt_bdepends,
-    'bdependsi=s'    => \$opt_bdependsi,
-    'build!'         => \$opt_build,
-    'core-ok'        => \$opt_core_ok,
-    'cpan=s'         => \$opt_cpan,
-    'cpanplus=s'     => \$opt_cpanplus,
-    'closes=i'       => \$opt_closes,
-    'cpan-mirror=s'  => \$opt_cpan_mirror,
-    'dbflags=s'      => \$opt_dbflags,
-    'depends=s'      => \$opt_depends,
-    'desc=s'         => \$opt_desc,
-    'exclude|i:s{,}' => \$opt_exclude,
-    'help'           => \$opt_help,
-    'install!'       => \$opt_install,
-    'nometa'         => \$opt_nometa,
-    'notest'         => \$opt_notest,
-    'pkg-perl!'      => \$opt_pkg_perl,
-    'requiredeps'    => \$opt_requiredeps,
-    'version=s'      => \$opt_version,
-    'e=s'            => \$opt_e,
-    'email=s'        => \$opt_email,
-    'p=s'            => \$opt_p,
-    'packagename=s'  => \$opt_packagename,
-    'refresh|R'      => \$opt_refresh,
-    'dh=i'           => \$opt_dh,
-    'sources-list=s' => \$opt_sources_list,
-    'dist=s'         => \$opt_dist,
-    'verbose!'       => \$opt_verbose,
+    'arch=s'          => \$opt_arch,
+    'basepkgs=s'      => \$opt_basepkgs,
+    'bdepends=s'      => \$opt_bdepends,
+    'bdependsi=s'     => \$opt_bdependsi,
+    'build!'          => \$opt_build,
+    'core-ok'         => \$opt_core_ok,
+    'cpan=s'          => \$opt_cpan,
+    'cpanplus=s'      => \$opt_cpanplus,
+    'closes=i'        => \$opt_closes,
+    'cpan-mirror=s'   => \$opt_cpan_mirror,
+    'dbflags=s'       => \$opt_dbflags,
+    'depends=s'       => \$opt_depends,
+    'desc=s'          => \$opt_desc,
+    'exclude|i:s{,}'  => \$opt_exclude,
+    'help'            => \$opt_help,
+    'install!'        => \$opt_install,
+    'nometa'          => \$opt_nometa,
+    'notest'          => \$opt_notest,
+    'pkg-perl!'       => \$opt_pkg_perl,
+    'requiredeps'     => \$opt_requiredeps,
+    'version=s'       => \$opt_version,
+    'e|email=s'       => \$opt_email,
+    'p|packagename=s' => \$opt_packagename,
+    'refresh|R'       => \$opt_refresh,
+    'dh=i'            => \$opt_dh,
+    'sources-list=s'  => \$opt_sources_list,
+    'dist=s'          => \$opt_dist,
+    'verbose!'        => \$opt_verbose,
 ) or die usage_instructions();
 
 @bdepends = ( Dep->new( 'debhelper', $opt_dh ) );
@@ -541,16 +538,7 @@ $opt_exclude = '(?:\/|^)(?:CVS|\.svn)\/'
 
 $arch = $opt_arch if defined $opt_arch;
 
-if ( defined $opt_e ) {
-    $email = $opt_e;
-}
-elsif ( defined $opt_email ) {
-    $email = $opt_email;
-}
-else {
-    $email = '';
-}
-$maintainer = get_maintainer($email);
+$maintainer = get_maintainer($opt_email);
 
 if ( defined $opt_desc ) {
     $desc = $opt_desc;
@@ -594,10 +582,7 @@ $meta = process_meta("$maindir/META.yml") if ( -f "$maindir/META.yml" );
 findbin_fix();
 
 ( $pkgname, $version ) = extract_basic();
-if ( defined $opt_p ) {
-    $pkgname = $opt_p;
-}
-elsif ( defined $opt_packagename ) {
+if ( defined $opt_packagename ) {
     $pkgname = $opt_packagename;
 }
 unless ( defined $opt_version ) {
