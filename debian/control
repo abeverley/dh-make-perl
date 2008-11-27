@@ -9,7 +9,8 @@ Build-Depends-Indep: perl,
  libmodule-corelist-perl,
  libmodule-depends-perl,
  libwww-mechanize-perl,
- libyaml-perl
+ libyaml-perl,
+ libfile-touch-perl
 Maintainer: Debian Perl Group <pkg-perl-maintainers@lists.alioth.debian.org>
 Uploaders: Gunnar Wolf <gwolf@debian.org>, Wolfgang Schemmel <debian@37.org>,
  Christopher Sacca <csacca@thecsl.org>,
