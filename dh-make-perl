@@ -93,7 +93,9 @@ sub interior_sequence {
 package AptContents;
 
 use base qw(Class::Accessor);
-__PACKAGE__->mk_accessors(qw(cache homedir cache_file contents_dir contents_files ));
+__PACKAGE__->mk_accessors(
+    qw(cache homedir cache_file contents_dir contents_files verbose )
+);
 
 use Storable;
 use File::Spec::Functions qw( catfile catdir splitpath );
@@ -115,11 +117,19 @@ sub new
         unless $self->contents_files;
     $self->cache_file( catfile( $self->homedir, 'Contents.cache' ) )
         unless $self->cache_file;
+    $self->verbose(1) unless defined( $self->verbose );
 
     $self->read_cache();
     $self->cache or return undef;
 
     return $self;
+}
+
+sub warning
+{
+    my( $self, $level, $msg ) = @_;
+
+    warn "$msg\n" if $self->verbose >= $level;
 }
 
 sub get_contents_file_list {
@@ -180,7 +190,7 @@ sub read_cache() {
                 next;
             }
 
-            warn "Parsing $_ ...\n";
+            $self->warning( 1, "Parsing $_ ..." );
             my $capturing = 0;
             my $line;
             while ( defined( $line = $f->getline ) ) {
@@ -212,8 +222,10 @@ sub read_cache() {
         }
     }
     else {
-        warn "Using cached Contents from "
-        . localtime( $cache->{stamp} ) . "\n";
+        $self->warning( 1,
+            "Using cached Contents from "
+            . localtime( $cache->{stamp} )
+        );
 
         $self->cache($cache);
     }
