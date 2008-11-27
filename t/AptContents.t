@@ -6,6 +6,7 @@ use warnings;
 use Test::More 'no_plan';
 
 use FindBin qw($Bin);
+use File::Touch qw(touch);
 
 require "$Bin/../dh-make-perl";        # Load our code for testing.
 
@@ -35,5 +36,21 @@ is_deeply(
 );
 
 ok( -f "$Bin/Contents.cache", 'Contents.cache created' );
+
+is( $apt_contents->source, 'parsed files', 'no cache was used' );
+
+$apt_contents = AptContents->new(
+    { homedir => $Bin, contents_dir => "$Bin/contents", verbose => 0 }
+);
+
+is( $apt_contents->source, 'cache', 'cache was used' );
+
+touch( glob "$Bin/contents/*Contents*" );
+
+$apt_contents = AptContents->new(
+    { homedir => $Bin, contents_dir => "$Bin/contents", verbose => 0 }
+);
+
+is( $apt_contents->source, 'parsed files', 'cache updated' );
 
 ok( unlink "$Bin/Contents.cache", 'Contents.cache unlnked' );
