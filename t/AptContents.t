@@ -12,20 +12,27 @@ require "$Bin/../dh-make-perl";        # Load our code for testing.
 
 unlink("$Bin/Contents.cache");
 
+sub instance
+{
+    AptContents->new({
+        homedir => $Bin,
+        contents_dir    => "$Bin/contents",
+        verbose => 0,
+        sources_file    => "$Bin/contents/sources.list",
+        @_,
+    });
+}
+
 eval { AptContents->new() };
 ok( $@, 'AptContents->new with no homedir dies' );
 like( $@, qr/No homedir given/, 'should say why it died' );
 
-my $apt_contents = AptContents->new(
-    { homedir => '.', contents_dir => 'non-existent' }
-);
+my $apt_contents = instance( contents_dir => 'non-existent' );
 
 is( $apt_contents, undef, 'should not create with no contents' );
 
 
-$apt_contents = AptContents->new(
-    { homedir => $Bin, contents_dir => "$Bin/contents", verbose => 0 }
-);
+$apt_contents = instance();
 
 isnt( $apt_contents, undef, 'object created' );
 
@@ -39,18 +46,14 @@ ok( -f "$Bin/Contents.cache", 'Contents.cache created' );
 
 is( $apt_contents->source, 'parsed files', 'no cache was used' );
 
-$apt_contents = AptContents->new(
-    { homedir => $Bin, contents_dir => "$Bin/contents", verbose => 0 }
-);
+$apt_contents = instance();
 
 is( $apt_contents->source, 'cache', 'cache was used' );
 
 sleep(1);   # allow the clock to tick so the timestamp actually differs
 touch( glob "$Bin/contents/*Contents*" );
 
-$apt_contents = AptContents->new(
-    { homedir => $Bin, contents_dir => "$Bin/contents", verbose => 0 }
-);
+$apt_contents = instance();
 
 is( $apt_contents->source, 'parsed files', 'cache updated' );
 
