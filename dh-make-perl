@@ -495,7 +495,8 @@ GetOptions(
     'depends=s',   'desc=s',        'exclude|i:s{,}', 'help',
     'install!',    'nometa',        'notest',         'pkg-perl!',
     'requiredeps', 'version=s',     'e=s',            'email=s',
-    'p=s',         'packagename=s', 'refresh|R',      'dh=i'
+    'p=s',         'packagename=s', 'refresh|R',      'dh=i',
+    'sources-list=s', 'dist=s',
 ) or die usage_instructions();
 
 @bdepends = ( Dep->new( 'debhelper', $opts{dh} ) );
