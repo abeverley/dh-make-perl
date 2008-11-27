@@ -134,7 +134,7 @@ sub get_contents_file_list {
     my $archspec = `dpkg --print-architecture`;
     chomp($archspec);
 
-    my $pattern = catfile( $self->contents_dir, "*_debian_dists_{unstable,sid}_Contents-$archspec.gz" );
+    my $pattern = catfile( $self->contents_dir, "*_debian_dists_{unstable,sid}_Contents{,-$archspec}{,.gz}" );
 
     return [ sort glob $pattern ];
 }
