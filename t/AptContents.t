@@ -45,6 +45,7 @@ $apt_contents = AptContents->new(
 
 is( $apt_contents->source, 'cache', 'cache was used' );
 
+sleep(1);   # allow the clock to tick so the timestamp actually differs
 touch( glob "$Bin/contents/*Contents*" );
 
 $apt_contents = AptContents->new(
