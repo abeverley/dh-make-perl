@@ -54,4 +54,11 @@ $apt_contents = AptContents->new(
 
 is( $apt_contents->source, 'parsed files', 'cache updated' );
 
+is_deeply(
+    [ $apt_contents->find_file_packages('Moose.pm')],
+    [ 'libmoose-perl' ],
+    'Moose found by find_file_packages' );
+
+is( $apt_contents->find_perl_module_package('Moose'), 'libmoose-perl', 'Moose fund by module name' );
+
 ok( unlink "$Bin/Contents.cache", 'Contents.cache unlnked' );
