@@ -182,9 +182,10 @@ sub read_cache() {
 
             warn "Parsing $_ ...\n";
             my $capturing = 0;
-            while ( defined( $_ = $f->getline ) ) {
+            my $line;
+            while ( defined( $line = $f->getline ) ) {
                 if ($capturing) {
-                    my ( $file, $packages ) = split(/\s+/);
+                    my ( $file, $packages ) = split( /\s+/, $line );
                     next unless $file =~ s{
                         ^usr/
                         (?:share|lib)/
@@ -200,7 +201,7 @@ sub read_cache() {
                     # while checking only a couple
                 }
                 else {
-                    $capturing = 1 if /^FILE\s+LOCATION/;
+                    $capturing = 1 if $line =~ /^FILE\s+LOCATION/;
                 }
             }
         }
