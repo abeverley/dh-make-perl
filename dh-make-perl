@@ -172,7 +172,7 @@ sub get_contents_filename_filters
             )?
             \s+
             (\S+)           # distribution
-            (?
+            (?:
                 \s+
                 (.+)            # components
             )?
