@@ -478,59 +478,88 @@ my ( $extrasfields, $extrapfields );
 my ($module_build);
 my ( @docs, @examples, $changelog, @args );
 
-my %opts = (
-    'dh' => 7, dist => '{sid,unstable}',
-    'sources-list'  => '/etc/apt/sources.list',
-    verbose => 1,
+my $opt_dh           = 7;
+my $opt_dist         = '{sid,unstable}';
+my $opt_sources_list = '/etc/apt/sources.list';
+my $opt_verbose      = 1;
+my ($opt_arch,        $opt_basepkgs, $opt_bdepends,    $opt_bdependsi,
+    $opt_depends,     $opt_build,    $opt_install,     $opt_core_ok,
+    $opt_cpan,        $opt_cpanplus, $opt_cpan_mirror, $opt_closes,
+    $opt_dbflags,     $opt_desc,     $opt_exclude,     $opt_help,
+    $opt_nometa,      $opt_notest,   $opt_pkg_perl,    $opt_requiredeps,
+    $opt_version,     $opt_email,    $opt_e,           $opt_p,
+    $opt_packagename, $opt_refresh
 );
 
 my $mod_cpan_version;
 
-$opts{dbflags} = $> == 0 ? "" : "-rfakeroot";
+$opt_dbflags = $> == 0 ? "" : "-rfakeroot";
 chomp($date);
 
 GetOptions(
-    \%opts,        'arch=s',        'basepkgs=s',     'bdepends=s',
-    'bdependsi=s', 'build!',        'core-ok',        'cpan=s',
-    'cpanplus=s',  'closes=i',      'cpan-mirror=s',  'dbflags=s',
-    'depends=s',   'desc=s',        'exclude|i:s{,}', 'help',
-    'install!',    'nometa',        'notest',         'pkg-perl!',
-    'requiredeps', 'version=s',     'e=s',            'email=s',
-    'p=s',         'packagename=s', 'refresh|R',      'dh=i',
-    'sources-list=s', 'dist=s', 'verbose!',
+    'arch=s'         => \$opt_arch,
+    'basepkgs=s'     => \$opt_basepkgs,
+    'bdepends=s'     => \$opt_bdepends,
+    'bdependsi=s'    => \$opt_bdependsi,
+    'build!'         => \$opt_build,
+    'core-ok'        => \$opt_core_ok,
+    'cpan=s'         => \$opt_cpan,
+    'cpanplus=s'     => \$opt_cpanplus,
+    'closes=i'       => \$opt_closes,
+    'cpan-mirror=s'  => \$opt_cpan_mirror,
+    'dbflags=s'      => \$opt_dbflags,
+    'depends=s'      => \$opt_depends,
+    'desc=s'         => \$opt_desc,
+    'exclude|i:s{,}' => \$opt_exclude,
+    'help'           => \$opt_help,
+    'install!'       => \$opt_install,
+    'nometa'         => \$opt_nometa,
+    'notest'         => \$opt_notest,
+    'pkg-perl!'      => \$opt_pkg_perl,
+    'requiredeps'    => \$opt_requiredeps,
+    'version=s'      => \$opt_version,
+    'e=s'            => \$opt_e,
+    'email=s'        => \$opt_email,
+    'p=s'            => \$opt_p,
+    'packagename=s'  => \$opt_packagename,
+    'refresh|R'      => \$opt_refresh,
+    'dh=i'           => \$opt_dh,
+    'sources-list=s' => \$opt_sources_list,
+    'dist=s'         => \$opt_dist,
+    'verbose!'       => \$opt_verbose,
 ) or die usage_instructions();
 
-@bdepends = ( Dep->new( 'debhelper', $opts{dh} ) );
+@bdepends = ( Dep->new( 'debhelper', $opt_dh ) );
 
 # Help requested? Nice, we can just die! Isn't it helpful?
-die usage_instructions() if $opts{help};
-die "CPANPLUS support disabled, sorry" if $opts{cpanplus};
+die usage_instructions() if $opt_help;
+die "CPANPLUS support disabled, sorry" if $opt_cpanplus;
 
-$opts{exclude} = '(?:\/|^)(?:CVS|\.svn)\/'
-    if ( !defined $opts{exclude}
-    or $opts{exclude} eq '' );
+$opt_exclude = '(?:\/|^)(?:CVS|\.svn)\/'
+    if ( !defined $opt_exclude
+    or $opt_exclude eq '' );
 
-$arch = $opts{arch} if defined $opts{arch};
+$arch = $opt_arch if defined $opt_arch;
 
-if ( defined $opts{e} ) {
-    $email = $opts{e};
+if ( defined $opt_e ) {
+    $email = $opt_e;
 }
-elsif ( defined $opts{email} ) {
-    $email = $opts{email};
+elsif ( defined $opt_email ) {
+    $email = $opt_email;
 }
 else {
     $email = '';
 }
 $maintainer = get_maintainer($email);
 
-if ( defined $opts{desc} ) {
-    $desc = $opts{desc};
+if ( defined $opt_desc ) {
+    $desc = $opt_desc;
 }
 else {
     $desc = '';
 }
 
-if ( $opts{refresh} ) {
+if ($opt_refresh) {
     print "Engaging refresh mode\n";
     $maindir = '.';
 
@@ -565,17 +594,17 @@ $meta = process_meta("$maindir/META.yml") if ( -f "$maindir/META.yml" );
 findbin_fix();
 
 ( $pkgname, $version ) = extract_basic();
-if ( defined $opts{p} ) {
-    $pkgname = $opts{p};
+if ( defined $opt_p ) {
+    $pkgname = $opt_p;
 }
-elsif ( defined $opts{packagename} ) {
-    $pkgname = $opts{packagename};
+elsif ( defined $opt_packagename ) {
+    $pkgname = $opt_packagename;
 }
-unless ( defined $opts{version} ) {
+unless ( defined $opt_version ) {
     $pkgversion = $version . "-1";
 }
 else {
-    $pkgversion = $opts{version};
+    $pkgversion = $opt_version;
 }
 
 move( $tarball, dirname($tarball) . "/${pkgname}_${version}.orig.tar.gz" )
@@ -589,16 +618,16 @@ move( $tarball, dirname($tarball) . "/${pkgname}_${version}.orig.tar.gz" )
 
 my $apt_contents = AptContents->new({
     homedir      => $homedir,
-    dist         => $opts{dist},
-    sources_file => $opts{'sources-list'},
-    verbose      => $opts{verbose},
+    dist         => $opt_dist,
+    sources_file => $opt_sources_list,
+    verbose      => $opt_verbose,
 });
 
 push @depends, Dep->new('${shlib:Depends}') if $arch eq 'any';
 push @depends, Dep->new('${misc:Depends}');
 my $extradeps = extract_depends( $maindir, $apt_contents, 0 );
 push @depends, @$extradeps;
-push @depends, Dep->parse_list( $opts{depends} ) if $opts{depends};
+push @depends, Dep->parse_list($opt_depends) if $opt_depends;
 
 $module_build = ( -f "$maindir/Build.PL" ) ? "Module-Build" : "MakeMaker";
 extract_changelog($maindir);
@@ -622,10 +651,10 @@ else {
     );
 }
 
-push @bdepends, Dep->parse_list( $opts{bdepends} ) if $opts{bdepends};
+push @bdepends, Dep->parse_list($opt_bdepends) if $opt_bdepends;
 push @bdepends, @extrabdepends;
 
-push @bdependsi, Dep->parse_list( $opts{bdependsi} ) if $opts{bdependsi};
+push @bdependsi, Dep->parse_list($opt_bdependsi) if $opt_bdependsi;
 push @bdependsi, @extrabdependsi;
 
 apply_overrides();
@@ -643,8 +672,8 @@ print "Found examples: @examples\n" if @examples;
 # start writing out the data
 mkdir( $debiandir, 0755 ) || die "Cannot create $debiandir dir: $!\n";
 create_control("$debiandir/control");
-if ( defined $opts{closes} ) {
-    $closes = $opts{closes};
+if ( defined $opt_closes ) {
+    $closes = $opt_closes;
 }
 else {
     $closes = get_itp($pkgname);
@@ -659,8 +688,8 @@ create_copyright("$debiandir/copyright");
 fix_rules( "$debiandir/rules", ( defined $changelog ? $changelog : '' ),
     \@docs, \@examples );
 apply_final_overrides();
-build_package($maindir) if $opts{build} or $opts{install};
-install_package($debiandir) if $opts{install};
+build_package($maindir) if $opt_build or $opt_install;
+install_package($debiandir) if $opt_install;
 print "--- Done\n";
 exit(0);
 
@@ -696,31 +725,32 @@ sub is_core_module {
 sub setup_dir {
     my ( $dist, $mod, $cpanversion, $tarball );
     $mod_cpan_version = '';
-    if ( $opts{cpan} ) {
+    if ($opt_cpan) {
         my ($new_maindir);
 
         # Is the module a core module?
-        if ( is_core_module( $opts{cpan} ) ) {
-            die "$opts{cpan} is a standard module. Will not build without --core-ok.\n"
-                unless $opts{'core-ok'};
+        if ( is_core_module($opt_cpan) ) {
+            die "$opt_cpan is a standard module. Will not build without --core-ok.\n"
+                unless $opt_core_ok;
         }
 
         # Make CPAN happy, make the user happy: Be more tolerant!
         # Accept names to be specified with double-colon, dash or slash
-        $opts{cpan} =~ s![/-]!::!g;
+        $opt_cpan =~ s![/-]!::!g;
 
 ###		require CPAN;
-        CPAN::Config->load( be_silent => not $opts{verbose} );
+        CPAN::Config->load( be_silent => not $opt_verbose );
 
-        unshift( @{ $CPAN::Config->{'urllist'} }, $opts{'cpan-mirror'} )
-            if $opts{'cpan-mirror'};
+        unshift( @{ $CPAN::Config->{'urllist'} }, $opt_cpan_mirror )
+            if $opt_cpan_mirror;
 
         $CPAN::Config->{'build_dir'} = $ENV{'HOME'} . "/.cpan/build";
         $CPAN::Config->{'cpan_home'} = $ENV{'HOME'} . "/.cpan/";
         $CPAN::Config->{'histfile'}  = $ENV{'HOME'} . "/.cpan/history";
         $CPAN::Config->{'keep_source_where'} = $ENV{'HOME'} . "/.cpan/source";
-        $CPAN::Config->{'tar_verbosity'} = $opts{verbose} ? 'v' : '';
-        $CPAN::Config->{'load_module_verbosity'} = $opts{verbose} ? 'verbose' : 'silent';
+        $CPAN::Config->{'tar_verbosity'} = $opt_verbose ? 'v' : '';
+        $CPAN::Config->{'load_module_verbosity'}
+            = $opt_verbose ? 'verbose' : 'silent';
 
         # This modification allows to retrieve all the modules that
         # match the user-provided string.
@@ -731,14 +761,14 @@ sub setup_dir {
         # different modules which only differ in case.
         #
         # This Closes: #451838
-        my @mod = CPAN::Shell->expand( 'Module', '/^' . $opts{cpan} . '$/' )
-            or die "Can't find '$opts{cpan}' module on CPAN\n";
+        my @mod = CPAN::Shell->expand( 'Module', '/^' . $opt_cpan . '$/' )
+            or die "Can't find '$opt_cpan' module on CPAN\n";
         foreach (@mod) {
             my $file = $_->cpan_file();
             $file =~ s#.*/##;          # remove directory
             $file =~ s/(.*)-.*/$1/;    # remove version and extension
             $file =~ s/-/::/g;         # convert dashes to colons
-            if ( $file eq $opts{cpan} ) {
+            if ( $file eq $opt_cpan ) {
                 $mod = $_;
                 last;
             }
@@ -789,15 +819,15 @@ sub setup_dir {
         $maindir = $new_maindir;
 
     }
-    elsif ( $opts{cpanplus} ) {
+    elsif ($opt_cpanplus) {
         die "CPANPLUS support is b0rken at the moment.";
 
         #  	        my ($cb, $href, $file);
 
 # 		eval "use CPANPLUS 0.045;";
 # 		$cb = CPANPLUS::Backend->new(conf => {debug => 1, verbose => 1});
-# 		$href = $cb->fetch( modules => [ $opts{cpanplus} ], fetchdir => $ENV{'PWD'});
-# 		die "Cannot get $opts{cpanplus}\n" if keys(%$href) != 1;
+# 		$href = $cb->fetch( modules => [ $opt_cpanplus ], fetchdir => $ENV{'PWD'});
+# 		die "Cannot get $opt_cpanplus\n" if keys(%$href) != 1;
 # 		$file = (values %$href)[0];
 # 		print $file, "\n\n";
 # 		$maindir = $cb->extract( files => [ $file ], extractdir => $ENV{'PWD'} )->{$file};
@@ -813,7 +843,7 @@ sub build_package {
     my $maindir = shift;
 
     # uhmf! dpkg-genchanges doesn't cope with the deb being in another dir..
-    #system("dpkg-buildpackage -b -us -uc $opts{dbflags}") == 0
+    #system("dpkg-buildpackage -b -us -uc $opt_dbflags") == 0
     system("fakeroot make -C $maindir -f debian/rules clean");
     system("fakeroot make -C $maindir -f debian/rules binary") == 0
         || die "Cannot create deb package\n";
@@ -841,7 +871,7 @@ sub process_meta {
     $file = shift;
 
     # Command line option nometa causes this function not to be run
-    return {} if $opts{nometa};
+    return {} if $opt_nometa;
 
     # YAML::LoadFile has the bad habit of dying when it cannot properly parse
     # a file - Catch it in an eval, and if it dies, return -again- just an
@@ -874,7 +904,7 @@ sub extract_basic {
     $pkgname = lc $perlname;
     $pkgname = 'lib' . $pkgname unless $pkgname =~ /^lib/;
     $pkgname .= '-perl'
-        unless ( $pkgname =~ /-perl$/ and $opts{cpan} !~ /::perl$/i );
+        unless ( $pkgname =~ /-perl$/ and $opt_cpan !~ /::perl$/i );
 
     # ensure policy compliant names and versions (from Joeyh)...
     $pkgname =~ s/[^-.+a-zA-Z0-9]+/-/g;
@@ -893,10 +923,10 @@ sub extract_basic {
         extract_desc($modulepm);
     }
 
-    $opts{exclude} = '^$' unless $opts{exclude};
+    $opt_exclude = '^$' unless $opt_exclude;
     find(
         sub {
-            $File::Find::name !~ /$opts{exclude}/
+            $File::Find::name !~ /$opt_exclude/
                 && /\.(pm|pod)$/
                 && extract_desc($_);
         },
@@ -996,15 +1026,15 @@ sub extract_name_ver_from_makefile {
     $name =~ s/,.*$//;
 
     # band aid: need to find a solution also for build in directories
-    # warn "name is $name (cpan name: $opts{cpan})\n";
-    $name = $opts{cpan}     if ( $name eq '__PACKAGE__' && $opts{cpan} );
-    $name = $opts{cpanplus} if ( $name eq '__PACKAGE__' && $opts{cpanplus} );
+    # warn "name is $name (cpan name: $opt_cpan)\n";
+    $name = $opt_cpan     if ( $name eq '__PACKAGE__' && $opt_cpan );
+    $name = $opt_cpanplus if ( $name eq '__PACKAGE__' && $opt_cpanplus );
 
     # Get the version
-    if ( defined $opts{version} ) {
+    if ( defined $opt_version ) {
 
         # Explicitly specified
-        $ver = $opts{version};
+        $ver = $opt_version;
 
     }
     elsif ( $file =~ /([\'\"]?)VERSION\1\s*(=>|,)\s*([\'\"]?)(\S+)\3/s ) {
@@ -1175,8 +1205,7 @@ sub extract_changelog {
         sub {
             $changelog = substr( $File::Find::name, length($dir) )
                 if ( !defined($changelog) && /^change(s|log)$/i
-                and
-                ( !$opts{exclude} or $File::Find::name !~ /$opts{exclude}/ )
+                and ( !$opt_exclude or $File::Find::name !~ /$opt_exclude/ )
                 );
         },
         $dir
@@ -1190,8 +1219,7 @@ sub extract_docs {
         sub {
             push( @docs, substr( $File::Find::name, length($dir) ) )
                 if ( /^(README|TODO|BUGS|NEWS|ANNOUNCE)/i
-                and
-                ( !$opts{exclude} or $File::Find::name !~ /$opts{exclude}/ )
+                and ( !$opt_exclude or $File::Find::name !~ /$opt_exclude/ )
                 );
         },
         $dir
@@ -1206,8 +1234,7 @@ sub extract_examples {
             push( @examples,
                 substr( $File::Find::name, length($dir) ) . '/*' )
                 if ( /^(examples?|eg|samples?)$/i
-                and
-                ( !$opts{exclude} or $File::Find::name !~ /$opts{exclude}/ )
+                and ( !$opt_exclude or $File::Find::name !~ /$opt_exclude/ )
                 );
         },
         $dir
@@ -1271,7 +1298,7 @@ sub find_debs_for_modules {
 
     foreach my $module ( keys(%$dep_hash) ) {
         if ( is_core_module($module) ) {
-            print "= $module is a core module\n" if $opts{verbose};
+            print "= $module is a core module\n" if $opt_verbose;
 
             # TODO
             # see if there is a version requirement and if the core
@@ -1298,7 +1325,7 @@ sub find_debs_for_modules {
         }
 
         if ($deb) {
-            print "+ $module found in $deb\n" if $opts{verbose};
+            print "+ $module found in $deb\n" if $opt_verbose;
             if ( exists $dep_hash->{$module} ) {
                 my $v = $dep_hash->{$module};
                 $v =~ s/^v//;    # strip leading 'v' from version
@@ -1398,7 +1425,7 @@ sub extract_depends {
                 "packaged)." );
         }
 
-        if ( $opts{requiredeps} ) {
+        if ($opt_requiredeps) {
             die $missing_debs_str;
         }
         else {
@@ -1432,7 +1459,7 @@ sub get_itp {
 }
 
 sub check_for_xs {
-    ( !$opts{exclude} or $File::Find::name !~ /$opts{exclude}/ )
+    ( !$opt_exclude or $File::Find::name !~ /$opt_exclude/ )
         && /\.(xs|c|cpp|cxx)$/i
         && do {
         $arch = 'any';
@@ -1444,12 +1471,12 @@ sub fix_rules {
         @content );
     ( $rules_file, $changelog_file, $docs, $examples ) = @_;
 
-    if ( $opts{dh} < 7 ) {
+    if ( $opt_dh < 7 ) {
         $test_line
             = ( $module_build eq 'Module-Build' )
             ? '$(PERL) Build test'
             : '$(MAKE) test';
-        $test_line = "#$test_line" if $opts{notest};
+        $test_line = "#$test_line" if $opt_notest;
 
         $fh      = _file_rw($rules_file);
         @content = $fh->getlines;
@@ -1485,8 +1512,8 @@ sub create_control {
     my $fh = _file_w(shift);
 
     if (    $arch ne 'all'
-        and !defined( $opts{bdepends} )
-        and !defined( $opts{bdependsi} ) )
+        and !defined($opt_bdepends)
+        and !defined($opt_bdependsi) )
     {
         @bdepends = prune_deps( @bdepends, @bdependsi );
         @bdependsi = ();
@@ -1511,7 +1538,7 @@ sub create_control {
 
     $fh->print($extrasfields) if defined $extrasfields;
 
-    if ( $opts{'pkg-perl'} ) {
+    if ($opt_pkg_perl) {
         $fh->print(
             "Maintainer: Debian Perl Group <pkg-perl-maintainers\@lists.alioth.debian.org>\n"
         );
@@ -1528,7 +1555,7 @@ sub create_control {
         $fh->print(
             "Vcs-Browser: http://svn.debian.org/viewsvn/pkg-perl/trunk/$srcname/\n"
         );
-    } if $opts{'pkg-perl'};
+    } if $opt_pkg_perl;
     $fh->print("\n");
     $fh->print("Package: $pkgname\n");
     $fh->print("Architecture: $arch\n");
@@ -1560,7 +1587,7 @@ sub create_rules {
     my ( $file, $rulesname, $error );
     ($file) = shift;
     $rulesname = (
-          ( $opts{dh} eq 7 )
+          ( $opt_dh eq 7 )
         ? $arch eq 'all'
                 ? 'rules.dh7.noxs'
                 : 'rules.dh7.xs'
@@ -1581,7 +1608,7 @@ sub create_rules {
 
 sub create_compat {
     my $fh = _file_w(shift);
-    $fh->print("$opts{dh}\n");
+    $fh->print("$opt_dh\n");
     $fh->close;
 }
 
