@@ -185,6 +185,8 @@ sub get_contents_filename_filters
 
         next unless $schema eq 'deb';
 
+        $dir ||= '';    # deb http://there sid main
+
         s{/}{_}g for( $host, $dir, $dist );
 
         push @re, qr,${host}_${dir}_dists_${dist}_,;
