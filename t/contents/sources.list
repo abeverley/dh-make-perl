@@ -1,0 +1,3 @@
+# dummy sources.list file used only for testing
+
+deb http://test/debian sid main
