@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 12;
+use Test::More tests => 13;
 
 use FindBin qw($Bin);
 use File::Touch qw(touch);
@@ -31,6 +31,8 @@ my $apt_contents = instance( contents_dir => 'non-existent' );
 
 is( $apt_contents, undef, 'should not create with no contents' );
 
+$apt_contents = instance( dist => 'non-existent' );
+is( $apt_contents, undef, 'should not create when no dists found' );
 
 $apt_contents = instance();
 
