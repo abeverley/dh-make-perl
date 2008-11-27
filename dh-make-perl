@@ -478,7 +478,10 @@ my ( $extrasfields, $extrapfields );
 my ($module_build);
 my ( @docs, @examples, $changelog, @args );
 
-my %opts = ( 'dh' => 7, dist => '{sid,unstable}' );
+my %opts = (
+    'dh' => 7, dist => '{sid,unstable}',
+    'sources-list'  => '/etc/apt/sources.list',
+);
 
 my $mod_cpan_version;
 
@@ -583,8 +586,9 @@ move( $tarball, dirname($tarball) . "/${pkgname}_${version}.orig.tar.gz" )
     "The directory $debiandir is already present and I won't overwrite it: remove it yourself.\n";
 
 my $apt_contents = AptContents->new({
-    homedir => $homedir,
-    dist    => $opts{dist},
+    homedir      => $homedir,
+    dist         => $opts{dist},
+    sources_file => $opts{'sources-list'},
 });
 
 push @depends, Dep->new('${shlib:Depends}') if $arch eq 'any';
@@ -669,7 +673,7 @@ Other options: [ --desc DESCRIPTION ] [ --arch all|any ] [ --version VERSION ]
                [ --requiredeps ] [ --core-ok ] [ --basepkgs PKGSLIST ]
                [ --closes ITPBUG ] [ --packagename|-p PACKAGENAME ]
                [ --email|-e EMAIL ] [ --pkg-perl ] [ --dh <ver> ]
-               [ --dist <pattern> ]
+               [ --sources-list file ] [ --dist <pattern> ]
 USAGE
 }
 
@@ -2100,6 +2104,15 @@ Set desired debhelper version. If C<ver> is 7, generated debian/rules is
 minimalistic, using the auto-mode of debhelper. Also, any additional
 documentation and examples are listed in additional files under debian/, instead
 of being listed in debian/rules
+
+=item B<--sources-list file>
+
+Instruct the C<Contents> file parser to use this B<file> when determining if a
+given file should be parsed or not. Contents files not matching any line in
+B<sources.list> are not parsed in order to save you time parsing old files from
+mirrors you no longer use.
+
+Default: C</etc/aptp/sources.list>
 
 =item B<--dist pattern>
 
