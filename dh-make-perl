@@ -481,6 +481,7 @@ my ( @docs, @examples, $changelog, @args );
 my %opts = (
     'dh' => 7, dist => '{sid,unstable}',
     'sources-list'  => '/etc/apt/sources.list',
+    verbose => 1,
 );
 
 my $mod_cpan_version;
@@ -496,7 +497,7 @@ GetOptions(
     'install!',    'nometa',        'notest',         'pkg-perl!',
     'requiredeps', 'version=s',     'e=s',            'email=s',
     'p=s',         'packagename=s', 'refresh|R',      'dh=i',
-    'sources-list=s', 'dist=s',
+    'sources-list=s', 'dist=s', 'verbose!',
 ) or die usage_instructions();
 
 @bdepends = ( Dep->new( 'debhelper', $opts{dh} ) );
@@ -590,6 +591,7 @@ my $apt_contents = AptContents->new({
     homedir      => $homedir,
     dist         => $opts{dist},
     sources_file => $opts{'sources-list'},
+    verbose      => $opts{verbose},
 });
 
 push @depends, Dep->new('${shlib:Depends}') if $arch eq 'any';
@@ -675,6 +677,7 @@ Other options: [ --desc DESCRIPTION ] [ --arch all|any ] [ --version VERSION ]
                [ --closes ITPBUG ] [ --packagename|-p PACKAGENAME ]
                [ --email|-e EMAIL ] [ --pkg-perl ] [ --dh <ver> ]
                [ --sources-list file ] [ --dist <pattern> ]
+               [ --[no-]verbose ]
 USAGE
 }
 
@@ -1266,7 +1269,7 @@ sub find_debs_for_modules {
 
     foreach my $module ( keys(%$dep_hash) ) {
         if ( is_core_module($module) ) {
-            print "= $module is a core module\n";
+            print "= $module is a core module\n" if $opts{verbose};
 
             # TODO
             # see if there is a version requirement and if the core
@@ -1293,7 +1296,7 @@ sub find_debs_for_modules {
         }
 
         if ($deb) {
-            print "+ $module found in $deb\n";
+            print "+ $module found in $deb\n" if $opts{verbose};
             if ( exists $dep_hash->{$module} ) {
                 my $v = $dep_hash->{$module};
                 $v =~ s/^v//;    # strip leading 'v' from version
@@ -2123,6 +2126,12 @@ Default: C<{sid,unstable}>.
 
 Example:
     dh-make-perl --dist etch
+
+=item B<--verbose> | B<--no-verbose>
+
+Print additional information while processing.
+
+Default: C<--verbose>
 
 =back
 
