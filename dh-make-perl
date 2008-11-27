@@ -478,7 +478,7 @@ my ( $extrasfields, $extrapfields );
 my ($module_build);
 my ( @docs, @examples, $changelog, @args );
 
-my %opts = ( 'dh' => 7, );
+my %opts = ( 'dh' => 7, dist => '{sid,unstable}' );
 
 my $mod_cpan_version;
 
@@ -584,6 +584,7 @@ move( $tarball, dirname($tarball) . "/${pkgname}_${version}.orig.tar.gz" )
 
 my $apt_contents = AptContents->new({
     homedir => $homedir,
+    dist    => $opts{dist},
 });
 
 push @depends, Dep->new('${shlib:Depends}') if $arch eq 'any';
@@ -668,6 +669,7 @@ Other options: [ --desc DESCRIPTION ] [ --arch all|any ] [ --version VERSION ]
                [ --requiredeps ] [ --core-ok ] [ --basepkgs PKGSLIST ]
                [ --closes ITPBUG ] [ --packagename|-p PACKAGENAME ]
                [ --email|-e EMAIL ] [ --pkg-perl ] [ --dh <ver> ]
+               [ --dist <pattern> ]
 USAGE
 }
 
@@ -2098,6 +2100,15 @@ Set desired debhelper version. If C<ver> is 7, generated debian/rules is
 minimalistic, using the auto-mode of debhelper. Also, any additional
 documentation and examples are listed in additional files under debian/, instead
 of being listed in debian/rules
+
+=item B<--dist pattern>
+
+Limit the distributions whose C<Contents> files are parsed. The argument is a shell pattern.
+
+Default: C<{sid,unstable}>.
+
+Example:
+    dh-make-perl --dist etch
 
 =back
 
