@@ -93,10 +93,11 @@ sub interior_sequence {
 package AptContents;
 
 use base qw(Class::Accessor);
-__PACKAGE__->mk_accessors(qw(cache homedir));
+__PACKAGE__->mk_accessors(qw(cache homedir cache_file contents_dir contents_files ));
 
 use Storable;
-use File::Which;
+use File::Which qw(which);
+use File::Spec::Functions qw( catfile catpath splitpath );
 
 sub new
 {
@@ -104,8 +105,17 @@ sub new
     $class = ref($class) if ref($class);
     my $self = $class->SUPER::new(@_);
 
+    # required options
     $self->homedir
         or die "No homedir given";
+
+    # some defaults
+    $self->contents_dir( '/var/cache/apt/apt-file' )
+        unless $self->contents_dir;
+    $self->contents_files( $self->get_contents_file_list )
+        unless $self->contents_files;
+    $self->cache_file( catfile( $self->homedir, 'Contents.cache' ) )
+        unless $self->cache_file;
 
     if ( which('apt-file') ) {
         $self->read_cache();
@@ -124,36 +134,32 @@ sub get_contents_file_list {
     my $archspec = `dpkg --print-architecture`;
     chomp($archspec);
 
-    return( sort glob
-        "/var/cache/apt/apt-file/*_debian_dists_{unstable,sid}_Contents-$archspec.gz"
-    );
+    my $pattern = catfile( $self->contents_dir, "*_debian_dists_{unstable,sid}_Contents-$archspec.gz" );
+
+    return [ sort glob $pattern ];
 }
 
 sub read_cache() {
     my $self = shift;
 
-    my $homedir = $self->homedir;
-
     my $cache;
 
-    if ( -r "$homedir/Contents.cache" ) {
-        $cache = eval { Storable::retrieve("$homedir/Contents.cache") };
+    if ( -r $self->cache_file ) {
+        $cache = eval { Storable::retrieve(  $self->cache_file ) };
         undef($cache) unless ref($cache) and ref($cache) eq 'HASH';
     }
-
-    my @contents_files = $self->get_contents_file_list();
 
     # see if the cache is stale
     if ( $cache and $cache->{stamp} and $cache->{contents_files} ) {
         undef($cache)
-            unless join( '><', @contents_files ) eq
+            unless join( '><', @{ $self->contents_files } ) eq
                 join( '><', @{ $cache->{contents_files} } );
 
         # file lists are the same?
         # see if any of the files has changed since we
         # last read it
         if ( $cache ) {
-            for ( @contents_files ) {
+            for ( @{ $self->contents_files } ) {
                 if ( ( stat($_) )[9] > $cache->{stamp} ) {
                     undef($cache);
                     last;
@@ -169,10 +175,16 @@ sub read_cache() {
         $cache->{stamp}          = time;
         $cache->{contents_files} = [];
         $cache->{apt_contents}   = {};
-        for ( @contents_files ) {
+        for ( @{ $self->contents_files } ) {
             push @{ $cache->{contents_files} }, $_;
             warn "Parsing $_ ...\n";
             my $f         = IO::Uncompress::Gunzip->new($_);
+
+            unless ($f) {
+                warn "Error reading '$_': $!\n";
+                next;
+            }
+
             my $capturing = 0;
             while ( defined( $_ = $f->getline ) ) {
                 if ($capturing) {
@@ -213,15 +225,16 @@ sub read_cache() {
 sub store_cache {
     my $self = shift;
 
-    my $homedir = $self->homedir;
+    my ( $vol, $dir, $file ) = splitpath( $self->cache_file );
 
-    unless ( -d $homedir ) {
-        mkdir $homedir
-            or die "Error creating '$homedir': $!\n"
+    $dir = catpath( $vol, $dir );
+    unless ( -d $dir ) {
+        mkdir $dir
+            or die "Error creating directory '$dir': $!\n"
     }
 
-    Storable::store( $self->cache, "$homedir/Contents.cache.new" );
-    rename( "$homedir/Contents.cache.new", "$homedir/Contents.cache" );
+    Storable::store( $self->cache, $self->cache_file . '-new' );
+    rename( $self->cache_file . '-new', $self->cache_file );
 }
 
 sub find_file_packages {
