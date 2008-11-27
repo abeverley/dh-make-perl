@@ -118,6 +118,17 @@ sub new
     return $self;
 }
 
+sub get_contents_file_list {
+    my $self = shift;
+
+    my $archspec = `dpkg --print-architecture`;
+    chomp($archspec);
+
+    return( sort glob
+        "/var/cache/apt/apt-file/*_debian_dists_{unstable,sid}_Contents-$archspec.gz"
+    );
+}
+
 sub read_cache() {
     my $self = shift;
 
@@ -130,26 +141,25 @@ sub read_cache() {
         undef($cache) unless ref($cache) and ref($cache) eq 'HASH';
     }
 
-    my $archspec = `dpkg --print-architecture`;
-    chomp($archspec);
-    my $contents_glob = "/var/cache/apt/apt-file/*_debian_dists_{unstable,sid}_Contents-$archspec.gz";
+    my @contents_files = $self->get_contents_file_list();
 
     # see if the cache is stale
     if ( $cache and $cache->{stamp} and $cache->{contents_files} ) {
-        my @contents_files;
-        for ( glob $contents_glob ) {
-            push @contents_files, $_;
-            if ( ( stat($_) )[9] > $cache->{stamp} ) {
-                undef($cache);
-                last;
-            }
-        }
-
-        @contents_files = sort @contents_files;
-
         undef($cache)
             unless join( '><', @contents_files ) eq
                 join( '><', @{ $cache->{contents_files} } );
+
+        # file lists are the same?
+        # see if any of the files has changed since we
+        # last read it
+        if ( $cache ) {
+            for ( @contents_files ) {
+                if ( ( stat($_) )[9] > $cache->{stamp} ) {
+                    undef($cache);
+                    last;
+                }
+            }
+        }
     }
     else {
         undef($cache);
@@ -159,7 +169,7 @@ sub read_cache() {
         $cache->{stamp}          = time;
         $cache->{contents_files} = [];
         $cache->{apt_contents}   = {};
-        for ( glob $contents_glob ) {
+        for ( @contents_files ) {
             push @{ $cache->{contents_files} }, $_;
             warn "Parsing $_ ...\n";
             my $f         = IO::Uncompress::Gunzip->new($_);
