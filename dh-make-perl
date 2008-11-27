@@ -168,7 +168,7 @@ sub get_contents_filename_filters
             )?
             (?:
                 /
-                (\S+)       # path on server (or local)
+                (\S*)       # path on server (or local)
             )?
             \s+
             (\S+)           # distribution
