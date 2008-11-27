@@ -701,7 +701,7 @@ sub setup_dir {
 
         # Is the module a core module?
         if ( is_core_module( $opts{cpan} ) ) {
-            die "$opts{cpan} is a standard module.\n"
+            die "$opts{cpan} is a standard module. Will not build without --core-ok.\n"
                 unless $opts{'core-ok'};
         }
 
