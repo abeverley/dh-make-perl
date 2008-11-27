@@ -96,7 +96,7 @@ use base qw(Class::Accessor);
 __PACKAGE__->mk_accessors(qw(cache homedir cache_file contents_dir contents_files ));
 
 use Storable;
-use File::Spec::Functions qw( catfile catpath splitpath );
+use File::Spec::Functions qw( catfile catdir splitpath );
 
 sub new
 {
@@ -223,7 +223,7 @@ sub store_cache {
 
     my ( $vol, $dir, $file ) = splitpath( $self->cache_file );
 
-    $dir = catpath( $vol, $dir );
+    $dir = catdir( $vol, $dir );
     unless ( -d $dir ) {
         mkdir $dir
             or die "Error creating directory '$dir': $!\n"
