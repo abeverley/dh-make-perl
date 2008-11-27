@@ -96,7 +96,7 @@ use base qw(Class::Accessor);
 __PACKAGE__->mk_accessors(
     qw(
         cache homedir cache_file contents_dir contents_files verbose
-        source sources_file
+        source sources_file dist
     )
 );
 
@@ -118,6 +118,7 @@ sub new
         unless $self->contents_dir;
     $self->sources_file('/etc/apt/sources.list')
         unless defined( $self->sources_file );
+    $self->dist('{sid,unstable}') unless $self->dist;
     $self->contents_files( $self->get_contents_file_list )
         unless $self->contents_files;
     $self->cache_file( catfile( $self->homedir, 'Contents.cache' ) )
@@ -198,7 +199,10 @@ sub get_contents_file_list {
 
     my @re = $self->get_contents_filename_filters;
 
-    my $pattern = catfile( $self->contents_dir, "*_Contents{,-$archspec}{,.gz}" );
+    my $pattern = catfile(
+        $self->contents_dir,
+        "*_". $self->dist . "_Contents{,-$archspec}{,.gz}"
+    );
 
     my @list = glob $pattern;
 
