@@ -171,7 +171,6 @@ sub read_cache() {
         $cache->{apt_contents}   = {};
         for ( @{ $self->contents_files } ) {
             push @{ $cache->{contents_files} }, $_;
-            warn "Parsing $_ ...\n";
             my $f = /\.gz$/
                 ? IO::Uncompress::Gunzip->new($_)
                 : IO::File->new( $_, 'r' );
@@ -181,6 +180,7 @@ sub read_cache() {
                 next;
             }
 
+            warn "Parsing $_ ...\n";
             my $capturing = 0;
             while ( defined( $_ = $f->getline ) ) {
                 if ($capturing) {
