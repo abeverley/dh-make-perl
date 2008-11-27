@@ -187,7 +187,8 @@ sub get_contents_filename_filters
 
         $dir ||= '';    # deb http://there sid main
 
-        s{/}{_}g for( $host, $dir, $dist );
+        s{/$}{} for( $host, $dir, $dist );  # remove trailing /
+        s{/}{_}g for( $host, $dir, $dist ); # replace remaining /
 
         push @re, qr,${host}_${dir}_dists_${dist}_,;
     }
