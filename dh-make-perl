@@ -96,7 +96,6 @@ use base qw(Class::Accessor);
 __PACKAGE__->mk_accessors(qw(cache homedir cache_file contents_dir contents_files ));
 
 use Storable;
-use File::Which qw(which);
 use File::Spec::Functions qw( catfile catpath splitpath );
 
 sub new
@@ -117,13 +116,8 @@ sub new
     $self->cache_file( catfile( $self->homedir, 'Contents.cache' ) )
         unless $self->cache_file;
 
-    if ( which('apt-file') ) {
-        $self->read_cache();
-        $self->cache or return undef;
-    }
-    else {
-        return undef;
-    }
+    $self->read_cache();
+    $self->cache or return undef;
 
     return $self;
 }
