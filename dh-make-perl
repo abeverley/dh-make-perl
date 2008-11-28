@@ -176,7 +176,7 @@ sub repo_source_to_contents_path {
         s{/$}{} for( $host, $dir, $dist );  # remove trailing /
         s{/}{_}g for( $host, $dir, $dist ); # replace remaining /
 
-    return "${host}_${dir}_dists_${dist}";
+    return join( "_", $host, $dir||(), "dists", $dist );
 }
 
 sub get_contents_filename_filters
