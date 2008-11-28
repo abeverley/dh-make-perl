@@ -137,6 +137,48 @@ sub warning
     warn "$msg\n" if $self->verbose >= $level;
 }
 
+sub repo_source_to_contents_path {
+    my ( $self, $source ) = @_;
+
+    my ( $schema, $proto, $host, $port, $dir, $dist, $components ) = $source =~ m{
+        ^
+        (\S+)           # deb or deb-src
+        \s+
+        ([^:\s]+)       # ftp/http/file/cdrom
+        ://
+        (/?             # file:///
+            [^:/\s]+    # host name or path
+        )
+        (?:
+            :(\d+)      # optional port number
+        )?
+        (?:
+            /
+            (\S*)       # path on server (or local)
+        )?
+        \s+
+        (\S+)           # distribution
+        (?:
+            \s+
+            (.+)            # components
+        )?
+    }x;
+
+    unless ( defined $schema ) {
+        $self->warning( 1, "'$_' has unknown format" );
+        next;
+    }
+
+    return undef unless $schema eq 'deb';
+
+    $dir ||= '';    # deb http://there sid main
+
+        s{/$}{} for( $host, $dir, $dist );  # remove trailing /
+        s{/}{_}g for( $host, $dir, $dist ); # replace remaining /
+
+    return "${host}_${dir}_dists_${dist}";
+}
+
 sub get_contents_filename_filters
 {
     my $self = shift;
@@ -153,43 +195,8 @@ sub get_contents_filename_filters
         s/\s+$//;
         next unless $_;
 
-        my ( $schema, $proto, $host, $port, $dir, $dist, $components ) = m{
-            ^
-            (\S+)           # deb or deb-src
-            \s+
-            ([^:\s]+)       # ftp/http/file/cdrom
-            ://
-            (/?             # file:///
-                [^:/\s]+    # host name or path
-            )
-            (?:
-                :(\d+)      # optional port number
-            )?
-            (?:
-                /
-                (\S*)       # path on server (or local)
-            )?
-            \s+
-            (\S+)           # distribution
-            (?:
-                \s+
-                (.+)            # components
-            )?
-        }x;
-
-        unless ( defined $schema ) {
-            $self->warning( 1, "'$_' has unknown format" );
-            next;
-        }
-
-        next unless $schema eq 'deb';
-
-        $dir ||= '';    # deb http://there sid main
-
-        s{/$}{} for( $host, $dir, $dist );  # remove trailing /
-        s{/}{_}g for( $host, $dir, $dist ); # replace remaining /
-
-        push @re, qr,${host}_${dir}_dists_${dist}_,;
+        my $path = $self->repo_source_to_contents_path($_);
+        push @re, qr{\Q$path\E} if $path;
     }
 
     return @re;
