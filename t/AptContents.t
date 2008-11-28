@@ -29,14 +29,13 @@ like( $@, qr/No homedir given/, 'should say why it died' );
 
 my $apt_contents = instance( contents_dir => 'non-existent' );
 
-is( $apt_contents, undef, 'should not create with no contents' );
+isnt( $apt_contents, undef, 'should create with no contents' );
 
-$apt_contents = instance( dist => 'non-existent' );
-is( $apt_contents, undef, 'should not create when no dists found' );
+is( $apt_contents->cache, undef, 'but should contain no cache' );
+
+is( $apt_contents->cache, undef, 'should have no cache when no dists found' );
 
 $apt_contents = instance();
-
-isnt( $apt_contents, undef, 'object created' );
 
 is_deeply(
     $apt_contents->contents_files,

@@ -126,7 +126,6 @@ sub new
     $self->verbose(1) unless defined( $self->verbose );
 
     $self->read_cache();
-    $self->cache or return undef;
 
     return $self;
 }
@@ -610,6 +609,8 @@ my $apt_contents = AptContents->new({
     sources_file => $opt_sources_list,
     verbose      => $opt_verbose,
 });
+
+undef($apt_contents) unless $apt_contents->cache;
 
 push @depends, Dep->new('${shlib:Depends}') if $arch eq 'any';
 push @depends, Dep->new('${misc:Depends}');
