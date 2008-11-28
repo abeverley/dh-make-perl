@@ -703,7 +703,7 @@ Other options: [ --desc DESCRIPTION ] [ --arch all|any ] [ --version VERSION ]
                [ --closes ITPBUG ] [ --packagename|-p PACKAGENAME ]
                [ --email|-e EMAIL ] [ --pkg-perl ] [ --dh <ver> ]
                [ --sources-list file ] [ --dist <pattern> ]
-               [ --[no-]verbose ]
+               [ --[no-]verbose ] [ --data-dir dir ]
 USAGE
 }
 
