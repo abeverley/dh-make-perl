@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 13;
+use Test::More tests => 18;
 
 use FindBin qw($Bin);
 use File::Touch qw(touch);
@@ -34,6 +34,41 @@ isnt( $apt_contents, undef, 'should create with no contents' );
 is( $apt_contents->cache, undef, 'but should contain no cache' );
 
 is( $apt_contents->cache, undef, 'should have no cache when no dists found' );
+
+is(
+    $apt_contents->repo_source_to_contents_path(
+        'deb     http://debian.cihar.com/ unstable main contrib non-free'),
+    'debian.cihar.com_dists_unstable',
+    'source line conversion 1',
+);
+
+is(
+    $apt_contents->repo_source_to_contents_path(
+        'deb     http://kernel-archive.buildserver.net/debian-kernel trunk main'),
+    'kernel-archive.buildserver.net_debian-kernel_dists_trunk',
+    'source line conversion 2',
+);
+
+is(
+    $apt_contents->repo_source_to_contents_path(
+        'deb     http://www.debian-multimedia.org stable main'),
+    'www.debian-multimedia.org_dists_stable',
+    'source line conversion 3',
+);
+
+is(
+    $apt_contents->repo_source_to_contents_path(
+        'deb     http://ftp.debian-unofficial.org/debian testing main contrib non-free restricted'),
+    'ftp.debian-unofficial.org_debian_dists_testing',
+    'source line conversion 4',
+);
+
+is(
+    $apt_contents->repo_source_to_contents_path(
+        'deb     http://ftp.de.debian.org/debian/ unstable main contrib non-free'),
+    'ftp.de.debian.org_debian_dists_unstable',
+    'source line conversion 5',
+);
 
 $apt_contents = instance();
 
