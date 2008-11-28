@@ -500,7 +500,7 @@ my ($opt_arch,        $opt_basepkgs, $opt_bdepends,    $opt_bdependsi,
     $opt_cpan,        $opt_cpanplus, $opt_cpan_mirror, $opt_closes,
     $opt_dbflags,     $opt_desc,     $opt_help,        $opt_nometa,
     $opt_notest,      $opt_pkg_perl, $opt_requiredeps, $opt_version,
-    $opt_packagename, $opt_refresh,  $opt_datadir
+    $opt_packagename, $opt_refresh
 );
 
 my $mod_cpan_version;
