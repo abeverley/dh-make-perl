@@ -34,6 +34,8 @@ dh-make-perl (0.51) UNRELEASED; urgency=low
   * Updated regexp to extract version from basic Module::Install.
   * Updated extract_name_ver_from_makefile to handle M::I recommended
     syntax.
+  * We now inform the user about the --core-ok switch if they're trying
+    to build a core module.
 
  -- Damyan Ivanov <dmn@debian.org>  Wed, 26 Nov 2008 12:36:45 +0200
 
