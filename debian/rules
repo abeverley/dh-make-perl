@@ -50,8 +50,7 @@ install:
 	mkdir -p $(INST)/usr/bin
 	mkdir -p $(INST)/usr/share/dh-make-perl
 	cp dh-make-perl $(INST)/usr/bin
-	cp rules* $(INST)/usr/share/dh-make-perl
-	cp overrides $(INST)/usr/share/dh-make-perl
+	cp share/* $(INST)/usr/share/dh-make-perl/
 
 
 # Build architecture-independent files here.
