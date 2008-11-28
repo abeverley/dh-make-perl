@@ -26,12 +26,14 @@ clean:
 	rm -f build-stamp
 
 	# Add here commands to clean up after the build process.
-	@for i in Strange-0.1 Strange-2.1; do\
-		if test -d "$$i/debian"; then \
+	for i in Strange-0.1 Strange-2.1; do\
+		if test -d "t/dists/$$i/debian"; then \
+		    ( \
 			cd $$i; \
 			debian/rules clean; \
 			cd ..; \
 			rm -rf $$i/debian; \
+		    ) \
 		fi \
 	done
 
