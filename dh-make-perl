@@ -446,7 +446,7 @@ package main;
 my ($min_perl_version, $debstdversion, $priority,  $section,
     @depends,          @bdepends,      @bdependsi, $maintainer,
     $arch,             $closes,        $date,      $debiandir,
-    $startdir,         $homedir,
+    $startdir,
 );
 our %overrides;
 
@@ -465,7 +465,6 @@ $min_perl_version = '5.6.0-12';
 $arch      = 'all';
 $date      = email_date(time);
 $startdir  = getcwd();
-$homedir   = "$ENV{HOME}/.dh-make-perl";
 
 # If we're being required rather than called as a main command, then
 # return now without doing any work.  This facilitates easier testing.
@@ -494,6 +493,7 @@ my $opt_verbose      = 1;
 my $opt_email        = '';
 my $opt_exclude      = '(?:\/|^)(?:CVS|\.svn)\/';
 my $opt_datadir      = '/usr/share/dh-make-perl';
+my $opt_homedir      = "$ENV{HOME}/.dh-make-perl";
 
 my ($opt_arch,        $opt_basepkgs, $opt_bdepends,    $opt_bdependsi,
     $opt_depends,     $opt_build,    $opt_install,     $opt_core_ok,
@@ -538,6 +538,7 @@ GetOptions(
     'dist=s'          => \$opt_dist,
     'verbose!'        => \$opt_verbose,
     'data-dir=s'      => \$opt_datadir,
+    'home-dir=s'      => \$opt_homedir,
 ) or die usage_instructions();
 
 @bdepends = ( Dep->new( 'debhelper', $opt_dh ) );
@@ -612,7 +613,7 @@ move( $tarball, dirname($tarball) . "/${pkgname}_${version}.orig.tar.gz" )
     "The directory $debiandir is already present and I won't overwrite it: remove it yourself.\n";
 
 my $apt_contents = AptContents->new({
-    homedir      => $homedir,
+    homedir      => $opt_homedir,
     dist         => $opt_dist,
     sources_file => $opt_sources_list,
     verbose      => $opt_verbose,
@@ -1592,7 +1593,7 @@ sub create_rules {
         : "rules.$module_build.xs"
     );
 
-    for my $source ( ( "$homedir/$rulesname", "$opt_datadir/$rulesname" ) ) {
+    for my $source ( ( "$opt_homedir/$rulesname", "$opt_datadir/$rulesname" ) ) {
         copy( $source, $file ) && do {
             print "Using rules: $source\n";
             last;
@@ -1838,7 +1839,7 @@ sub get_maintainer {
 sub load_overrides {
     eval {
         do "$opt_datadir/overrides" if -f "$opt_datadir/overrides";
-        do "$homedir/overrides" if -f "$homedir/overrides";
+        do "$opt_homedir/overrides" if -f "$opt_homedir/overrides";
     };
     if ($@) {
         die "Error when processing the overrides files: $@";
@@ -2159,13 +2160,19 @@ Print additional information while processing.
 
 Default: C<--verbose>
 
+=item B<--home-dir directory>
+
+Where user overrides and APT Contents cache is stored.
+
+Default: ~/.dh-make-perl
+
 =item B<--data-dir directory>
 
 Use another data directory, instead of the default, C</usr/share/dh-make-perl>
 
-Data directory is were B<dh-make-perl> looks for its rules.* templates. It is
-similar to B<--homedir>, but does not change the location of the APT Contents
-cache file. If both are given, B<--homedir> takes precedence.
+Data directory is were B<dh-make-perl> looks for its default rules.* templates.
+It is similar to B<--home-dir>, but does not change the location of the APT
+Contents cache file. If both are given, B<--home-dir> takes precedence.
 
 =back
 
