@@ -6,11 +6,12 @@ Build-Depends-Indep: perl,
  libapt-pkg-perl,
  libclass-accessor-perl,
  libemail-date-format-perl,
+ libfile-touch-perl,
  libmodule-corelist-perl,
  libmodule-depends-perl,
+ libtext-diff-perl,
  libwww-mechanize-perl,
- libyaml-perl,
- libfile-touch-perl
+ libyaml-perl
 Maintainer: Debian Perl Group <pkg-perl-maintainers@lists.alioth.debian.org>
 Uploaders: Gunnar Wolf <gwolf@debian.org>, Wolfgang Schemmel <debian@37.org>,
  Christopher Sacca <csacca@thecsl.org>,
