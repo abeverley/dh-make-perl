@@ -1,0 +1,18 @@
+Source: libstrange-perl
+Section: misc
+Priority: Extra
+Build-Depends: perl6, xlib-dev
+Build-Depends-Indep: perl (>= 5.6.0-12)
+Maintainer: Damyan Ivanov <dmn@debian.org>
+Standards-Version: 3.8.0
+Homepage: http://search.cpan.org/dist/Strange/
+
+Package: libstrange-perl
+Architecture: all
+Depends: perl6
+Conflicts: ba-ba-buma
+Description: A really ugly module to test dh-make-perl
+ A really ugly long description
+ for a really ugly perl module.
+ .
+ This description was automagically extracted from the module by dh-make-perl.
