@@ -500,7 +500,7 @@ my ($opt_arch,        $opt_basepkgs, $opt_bdepends,    $opt_bdependsi,
     $opt_cpan,        $opt_cpanplus, $opt_cpan_mirror, $opt_closes,
     $opt_dbflags,     $opt_desc,     $opt_help,        $opt_nometa,
     $opt_notest,      $opt_pkg_perl, $opt_requiredeps, $opt_version,
-    $opt_packagename, $opt_refresh
+    $opt_packagename, $opt_refresh,  $opt_refresh_cache
 );
 
 my $mod_cpan_version;
@@ -539,6 +539,7 @@ GetOptions(
     'verbose!'        => \$opt_verbose,
     'data-dir=s'      => \$opt_datadir,
     'home-dir=s'      => \$opt_homedir,
+    'refresh-cache'   => \$opt_refresh_cache,
 ) or die usage_instructions();
 
 @bdepends = ( Dep->new( 'debhelper', $opt_dh ) );
@@ -546,6 +547,17 @@ GetOptions(
 # Help requested? Nice, we can just die! Isn't it helpful?
 die usage_instructions() if $opt_help;
 die "CPANPLUS support disabled, sorry" if $opt_cpanplus;
+
+if ($opt_refresh_cache) {
+    my $apt_contents = AptContents->new({
+        homedir      => $opt_homedir,
+        dist         => $opt_dist,
+        sources_file => $opt_sources_list,
+        verbose      => $opt_verbose,
+    });
+
+    exit 0;
+}
 
 $arch = $opt_arch if defined $opt_arch;
 
@@ -2173,6 +2185,11 @@ Use another data directory, instead of the default, C</usr/share/dh-make-perl>
 Data directory is were B<dh-make-perl> looks for its default rules.* templates.
 It is similar to B<--home-dir>, but does not change the location of the APT
 Contents cache file. If both are given, B<--home-dir> takes precedence.
+
+=item B<--refresh-cache>
+
+Refresh the APT contents cache. If there is no change in the Contents files,
+does nothing. Useful after C<apt-file update> in your crontab.
 
 =back
 
