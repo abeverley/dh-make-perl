@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More 'no_plan';
+use Test::More tests => 15;
 
 use FindBin qw($Bin);
 
@@ -51,6 +51,6 @@ sub dist_ok($) {
 
 $ENV{DEBFULLNAME} = "Joe Maintainer";
 
-for( qw( Strange-0.1 ) ) {
+for( qw( Strange-0.1 Strange-2.1 ) ) {
     dist_ok($_);
 }
