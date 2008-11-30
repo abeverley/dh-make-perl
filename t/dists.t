@@ -11,9 +11,9 @@ sub compare {
 
     return unless -f $File::Find::name;
 
-    my $wanted = $File::Find::name;
-    $wanted =~ s{/debian/}{/wanted-debian/};
-    my $diff = diff($wanted, $File::Find::name);
+    my $real = $File::Find::name;
+    $real =~ s{/wanted-debian/}{/debian/};
+    my $diff = diff($File::Find::name, $real);
 
     $diff = ''
         unless grep { /^[-+] /
@@ -37,7 +37,7 @@ sub dist_ok($) {
     use File::Find qw(find);
     use Text::Diff qw(diff);
 
-    find(\&compare, "$dist/debian");
+    find(\&compare, "$dist/wanted-debian");
 
     # clean after the test
     find( sub{
