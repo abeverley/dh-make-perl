@@ -7,35 +7,50 @@ use Test::More 'no_plan';
 
 use FindBin qw($Bin);
 
-my $dist = "$Bin/dists/Strange-0.1";
+sub compare {
 
-$ENV{DEBFULLNAME} = "Joe Maintainer";
-system( "$Bin/../dh-make-perl", "--no-verbose",
-        "--home-dir", "$Bin/contents", "--sources-list",
-        "$Bin/contents/sources.list", "--email", "joemaint\@test.local",
-        $dist );
-
-is( $?, 0, 'system returned 0' );
-
-use File::Find qw(find);
-use Text::Diff qw(diff);
-
-find(\&compare, "$dist/debian");
-
-sub compare
-{
     return unless -f $File::Find::name;
 
-    my $diff = diff("$dist/wanted-debian/$_", $File::Find::name);
+    my $wanted = $File::Find::name;
+    $wanted =~ s{/debian/}{/wanted-debian/};
+    my $diff = diff($wanted, $File::Find::name);
 
     $diff = ''
-        unless grep { /^[-+] / and not /^[-+] -- Joe Maintainer / }
+        unless grep { /^[-+] /
+                     and not /^[-+] -- Joe Maintainer <joemaint\@test.local>  / }
             split( /\n/, $diff );
 
-    is($diff, '', "No differences to the wanted contents of debian/$_");
+    is($diff, '', "$File::Find::name is OK");
 }
 
-# clean after the test
-find( sub{ unlink $File::Find::name }, "$dist/debian" );
+sub dist_ok($) {
+    my $dist_dir = shift;
+    my $dist = "$Bin/dists/$dist_dir";
 
-rmdir "$dist/debian" or warn "Error removing $dist/debian: $!\n";
+    system( "$Bin/../dh-make-perl", "--no-verbose",
+            "--home-dir", "$Bin/contents", "--sources-list",
+            "$Bin/contents/sources.list", "--email", "joemaint\@test.local",
+            $dist );
+
+    is( $?, 0, "$dist_dir: system returned 0" );
+
+    use File::Find qw(find);
+    use Text::Diff qw(diff);
+
+    find(\&compare, "$dist/debian");
+
+    # clean after the test
+    find( sub{
+            unlink $File::Find::name 
+                or die "unlink($File::Find::name): $!"
+            if -f $File::Find::name;
+        }, "$dist/debian" );
+
+    rmdir "$dist/debian" or die "rmdir($dist/debian): $!";
+}
+
+$ENV{DEBFULLNAME} = "Joe Maintainer";
+
+for( qw( Strange-0.1 ) ) {
+    dist_ok($_);
+}
