@@ -8,6 +8,7 @@ use Test::More tests => 15;
 use FindBin qw($Bin);
 
 sub compare {
+    my $dist = shift;
 
     return unless -f $File::Find::name;
 
@@ -45,7 +46,7 @@ sub compare {
         $diff = '' if $only_date_differs;
     }
 
-    is($diff, '', "$File::Find::name is OK");
+    is($diff, '', "$dist/debian/$_ is OK");
 }
 
 sub dist_ok($) {
@@ -62,7 +63,7 @@ sub dist_ok($) {
     use File::Find qw(find);
     use Text::Diff qw(diff);
 
-    find(\&compare, "$dist/wanted-debian");
+    find( sub { compare($dist_dir) }, "$dist/wanted-debian");
 
     # clean after the test
     find( sub{
