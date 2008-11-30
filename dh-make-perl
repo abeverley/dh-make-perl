@@ -1385,30 +1385,34 @@ sub extract_depends {
 
     eval { $dep_hash = run_depends( 'Module::Depends', $dir, $build_deps ); };
     if ($@) {
-        warn '=' x 70, "\n";
-        warn "First attempt (Module::Depends) at a dependency\n"
-            . "check failed. Missing/bad META.yml?\n"
-            . "Trying again with Module::Depends::Intrusive ... \n";
-        warn '=' x 70, "\n";
+        if ($opt_verbose) {
+            warn '=' x 70, "\n";
+            warn "First attempt (Module::Depends) at a dependency\n"
+                . "check failed. Missing/bad META.yml?\n"
+                . "Trying again with Module::Depends::Intrusive ... \n";
+            warn '=' x 70, "\n";
+        }
 
         eval {
             $dep_hash = run_depends(
                 'Module::Depends::Intrusive', $dir, $build_deps );
         };
         if ($@) {
-            warn '=' x 70, "\n";
-            warn
-                "Could not find the " . ( $build_deps ? 'build-' : '' ) 
-                . "dependencies for the requested module.\n";
-            warn "Generated error: $@";
+            if ($opt_verbose) {
+                warn '=' x 70, "\n";
+                warn
+                    "Could not find the " . ( $build_deps ? 'build-' : '' ) 
+                    . "dependencies for the requested module.\n";
+                warn "Generated error: $@";
 
-            warn "Please bug the module author to provide a proper META.yml\n"
-                . "file.\n"
-                . "Automatic find of " . ( $build_deps ? 'build-' : '' )
-                . "dependencies failed. You may want to \n"
-                . "retry using the '" . ( $build_deps ? 'b' : '' )
-                . "depends' option\n";
-            warn '=' x 70, "\n";
+                warn "Please bug the module author to provide a proper META.yml\n"
+                    . "file.\n"
+                    . "Automatic find of " . ( $build_deps ? 'build-' : '' )
+                    . "dependencies failed. You may want to \n"
+                    . "retry using the '" . ( $build_deps ? 'b' : '' )
+                    . "depends' option\n";
+                warn '=' x 70, "\n";
+            }
         }
     }
 
