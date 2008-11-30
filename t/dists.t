@@ -30,6 +30,21 @@ sub compare {
         $diff = '' if $only_date_differs;
     }
 
+    if ( $_ eq 'copyright' ) {
+        my $only_date_differs = 1;
+        for ( split( /\n/, $diff ) ) {
+            next if /^--- / or /^\+\+\+ /;
+            next unless /^[-+] /;
+            next if /^[-+] Copyright: \d+, Joe Maintainer <joemaint\@test\.local>/;
+
+            $only_date_differs = 0;
+            diag $_;
+            last;
+        }
+
+        $diff = '' if $only_date_differs;
+    }
+
     is($diff, '', "$File::Find::name is OK");
 }
 
