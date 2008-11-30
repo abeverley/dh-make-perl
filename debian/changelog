@@ -10,7 +10,7 @@ dh-make-perl (0.51) UNRELEASED; urgency=low
   * Apply two patches from Paul Fenwick reformatting the whitespace of
     dh-make-perl. Hopefully this makes the code a bit easier for people not
     used to it.
-  * Add Paul Fenwick to the 'Patched from' section
+  * Add Paul Fenwick to the 'Patches from' section
   * Parse and use build-time dependencies too
     Closes: #501688 -- dh-make-perl ignoring build_requires in Makefile.PL
   * Add dependencies on libwww-mechanize-perl, libclass-accessor-perl,
