@@ -3,7 +3,7 @@ Section: misc
 Priority: Extra
 Build-Depends: perl6, xlib-dev
 Build-Depends-Indep: perl (>= 5.6.0-12)
-Maintainer: Damyan Ivanov <dmn@debian.org>
+Maintainer: Joe Maintainer <joemaint@test.local>
 Standards-Version: 3.8.0
 Homepage: http://search.cpan.org/dist/Strange/
 
