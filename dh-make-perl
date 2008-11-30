@@ -571,7 +571,7 @@ else {
 }
 
 if ($opt_refresh) {
-    print "Engaging refresh mode\n";
+    print "Engaging refresh mode\n" if $opt_verbose;
     $maindir = '.';
 
     die "debian/rules.bak already exists. Aborting!\n"
@@ -586,16 +586,17 @@ if ($opt_refresh) {
     extract_changelog($maindir);
     extract_docs($maindir);
     extract_examples($maindir);
-    print "Found changelog: $changelog\n" if defined $changelog;
-    print "Found docs: @docs\n";
-    print "Found examples: @examples\n" if @examples;
+    print "Found changelog: $changelog\n"
+        if defined $changelog and $opt_verbose;
+    print "Found docs: @docs\n" if $opt_verbose;
+    print "Found examples: @examples\n" if @examples and $opt_verbose;
     copy( "$debiandir/rules", "$debiandir/rules.bak" );
     create_rules("$debiandir/rules");
     fix_rules( "$debiandir/rules", ( defined $changelog ? $changelog : '' ),
         \@docs, \@examples, );
     copy( "$debiandir/copyright", "$debiandir/copyright.bak" );
     create_copyright("$debiandir/copyright");
-    print "--- Done\n";
+    print "--- Done\n" if $opt_verbose;
     exit 0;
 }
 
@@ -673,11 +674,11 @@ die "Cannot find a description for the package: use the --desc switch\n"
     unless $desc;
 print "Package does not provide a long description - ",
     " Please fill it in manually.\n"
-    if ( !defined $longdesc or $longdesc =~ /^\s*\.?\s*$/ );
-print "Using maintainer: $maintainer\n";
-print "Found changelog: $changelog\n" if defined $changelog;
-print "Found docs: @docs\n";
-print "Found examples: @examples\n" if @examples;
+    if ( !defined $longdesc or $longdesc =~ /^\s*\.?\s*$/ ) and $opt_verbose;
+print "Using maintainer: $maintainer\n" if $opt_verbose;
+print "Found changelog: $changelog\n" if defined $changelog and $opt_verbose;
+print "Found docs: @docs\n" if $opt_verbose;
+print "Found examples: @examples\n" if @examples and $opt_verbose;
 
 # start writing out the data
 mkdir( $debiandir, 0755 ) || die "Cannot create $debiandir dir: $!\n";
@@ -700,7 +701,7 @@ fix_rules( "$debiandir/rules", ( defined $changelog ? $changelog : '' ),
 apply_final_overrides();
 build_package($maindir) if $opt_build or $opt_install;
 install_package($debiandir) if $opt_install;
-print "--- Done\n";
+print "--- Done\n" if $opt_verbose;
 exit(0);
 
 sub usage_instructions {
@@ -923,7 +924,7 @@ sub extract_basic {
     $version =~ s/[^-.+a-zA-Z0-9]+/-/g;
     $version = "0$version" unless $version =~ /^\d/;
 
-    print "Found: $perlname $version ($pkgname arch=$arch)\n";
+    print "Found: $perlname $version ($pkgname arch=$arch)\n" if $opt_verbose;
     $debiandir = "$maindir/debian";
 
     $upsurl = "http://search.cpan.org/dist/$perlname/";
@@ -1418,10 +1419,12 @@ sub extract_depends {
 
     my( $debs, $missing ) = find_debs_for_modules( $dep_hash, $apt_contents );
 
-    print "\n";
-    print "Needs the following debian packages: "
-        . join( ", ", @$debs ) . "\n"
-        if (@$debs);
+    if ($opt_verbose) {
+        print "\n";
+        print "Needs the following debian packages: "
+            . join( ", ", @$debs ) . "\n"
+            if (@$debs);
+    }
     if (@$missing) {
         my ($missing_debs_str);
         if ($apt_contents) {
@@ -1611,7 +1614,7 @@ sub create_rules {
 
     for my $source ( ( "$opt_homedir/$rulesname", "$opt_datadir/$rulesname" ) ) {
         copy( $source, $file ) && do {
-            print "Using rules: $source\n";
+            print "Using rules: $source\n" if $opt_verbose;
             last;
         };
         $error = $!;
