@@ -15,16 +15,14 @@ dh-make-perl (0.51) UNRELEASED; urgency=low
     Closes: #501688 -- dh-make-perl ignoring build_requires in Makefile.PL
   * Add dependencies on libwww-mechanize-perl, libclass-accessor-perl,
     libemail-date-format-perl, libmodule-corelist-perl, libapt-pkg-perl.
-  * Internal rewrites of dependency checking and apt Contents parsing:
+  * Internal rewrites:
     - encapsulate dependencies into Dep class and rework the code to use 
       Dep objects
     - extract_depends: try Module::Depends first, ::Intrusive -- second
-    - update get_stdmodules to use Module::CoreList
+    - Module::CoreList to check if given module is a core one
     - avoid adding dependencies on ancient perl versions
     - refactor parsing, caching and searching in apt Contents files in a class
-    - remove some unused variables and functions
-  * Simple tests to ensure that is_core_module() works.
-  * add Makefile and support script for running tests
+  * add test suite
   * rules: run the test suite during build
 
   [ Paul Fenwick ]
