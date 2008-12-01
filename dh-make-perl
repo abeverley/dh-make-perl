@@ -1492,6 +1492,12 @@ sub fix_rules {
         @content );
     ( $rules_file, $changelog_file, $docs, $examples ) = @_;
 
+    $fh      = _file_rw($rules_file);
+    @content = $fh->getlines;
+
+    $fh->seek( 0, 0 ) || die "Can't rewind $rules_file: $!";
+    $fh->truncate(0) || die "Can't truncate $rules_file: $!";
+
     if ( $opt_dh < 7 ) {
         $test_line
             = ( $module_build eq 'Module-Build' )
@@ -1499,11 +1505,6 @@ sub fix_rules {
             : '$(MAKE) test';
         $test_line = "#$test_line" if $opt_notest;
 
-        $fh      = _file_rw($rules_file);
-        @content = $fh->getlines;
-
-        $fh->seek( 0, 0 ) || die "Can't rewind $rules_file: $!";
-        $fh->truncate(0) || die "Can't truncate $rules_file: $!";
         for (@content) {
             s/#CHANGES#/$changelog_file/g;
             s/#EXAMPLES#/join " ", @examples/eg;
@@ -1513,9 +1514,14 @@ sub fix_rules {
             s/#TEST#/$test_line/g;
             $fh->print($_);
         }
-        $fh->close;
     }
     else {
+        for (@content) {
+            if ($opt_notest) {
+                s/dh build/dh build --before dh_auto_test\n\tdh build --after dh_auto_test/;
+            }
+            $fh->print($_)
+        }
         if (@examples) {
             open F, '>>', "$maindir/debian/$pkgname.examples" or die $!;
             print F "$_\n" foreach @examples;
@@ -1527,6 +1533,7 @@ sub fix_rules {
             close F;
         }
     }
+    $fh->close;
 }
 
 sub create_control {
