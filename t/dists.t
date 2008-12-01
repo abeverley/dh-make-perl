@@ -54,7 +54,8 @@ sub dist_ok($) {
     my $dist = "$Bin/dists/$dist_dir";
 
     system( "$Bin/../dh-make-perl", "--no-verbose",
-            "--home-dir", "$Bin/contents", "--sources-list",
+            "--home-dir", "$Bin/contents", "--data-dir", "$Bin/../share",
+            "--sources-list",
             "$Bin/contents/sources.list", "--email", "joemaint\@test.local",
             $dist );
 
