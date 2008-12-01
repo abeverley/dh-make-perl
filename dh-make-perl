@@ -638,7 +638,7 @@ my $apt_contents = AptContents->new({
 
 undef($apt_contents) unless $apt_contents->cache;
 
-push @depends, Dep->new('${shlib:Depends}') if $arch eq 'any';
+push @depends, Dep->new('${shlibs:Depends}') if $arch eq 'any';
 push @depends, Dep->new('${misc:Depends}');
 my $extradeps = extract_depends( $maindir, $apt_contents, 0 );
 push @depends, @$extradeps;
