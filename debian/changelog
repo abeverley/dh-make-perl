@@ -37,8 +37,9 @@ dh-make-perl (0.51) UNRELEASED; urgency=low
 
   [ Ryan Niebur ]
   * process META.yml file when refreshing
+  * create debian/compat file while refreshing
 
- -- Ryan Niebur <ryanryan52@gmail.com>  Mon, 01 Dec 2008 11:55:23 -0800
+ -- Ryan Niebur <ryanryan52@gmail.com>  Mon, 01 Dec 2008 12:05:11 -0800
 
 dh-make-perl (0.50) unstable; urgency=low
 

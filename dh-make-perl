@@ -593,6 +593,9 @@ if ($opt_refresh) {
     print "Found examples: @examples\n" if @examples and $opt_verbose;
     copy( "$debiandir/rules", "$debiandir/rules.bak" );
     create_rules("$debiandir/rules");
+    if (! -f "$debiandir/compat" or $opt_dh == 7) {
+        create_compat("$debiandir/compat");
+    }
     fix_rules( "$debiandir/rules", ( defined $changelog ? $changelog : '' ),
         \@docs, \@examples, );
     copy( "$debiandir/copyright", "$debiandir/copyright.bak" );
