@@ -1698,7 +1698,7 @@ sub create_copyright {
             . "    can be found in /usr/share/common-licenses/Artistic",
         'GPL-1+' =>
             "    This program is free software; you can redistribute it and/or modify\n"
-            . "    it under the terms of the GNU General Public License as published by \n"
+            . "    it under the terms of the GNU General Public License as published by\n"
             . "    the Free Software Foundation; either version 1, or (at your option)\n"
             . "    any later version.\n"
             . "    On Debian GNU/Linux systems, the complete text of the GNU General\n"
