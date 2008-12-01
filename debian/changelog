@@ -35,7 +35,10 @@ dh-make-perl (0.51) UNRELEASED; urgency=low
   * We now inform the user about the --core-ok switch if they're trying
     to build a core module.
 
- -- Damyan Ivanov <dmn@debian.org>  Wed, 26 Nov 2008 12:36:45 +0200
+  [ Ryan Niebur ]
+  * process META.yml file when refreshing
+
+ -- Ryan Niebur <ryanryan52@gmail.com>  Mon, 01 Dec 2008 11:55:23 -0800
 
 dh-make-perl (0.50) unstable; urgency=low
 

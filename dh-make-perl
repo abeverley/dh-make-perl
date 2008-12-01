@@ -580,6 +580,7 @@ if ($opt_refresh) {
     die "debian/copyright.bak already exists. Aborting!\n"
         if -e "debian/copyright.bak";
 
+    $meta = process_meta("$maindir/META.yml") if ( -f "$maindir/META.yml" );
     ( $pkgname, $version ) = extract_basic();  # also detects arch-dep package
     $module_build = ( -f "$maindir/Build.PL" ) ? "Module-Build" : "MakeMaker";
     $debiandir = './debian';
