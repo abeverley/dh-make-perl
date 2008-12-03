@@ -6,17 +6,19 @@ use warnings;
 use Test::More tests => 15;
 
 use FindBin qw($Bin);
+use File::Spec::Functions qw(splitpath);
 
 sub compare {
-    my $dist = shift;
+    my ( $dist, $path ) = @_;
+    my ( $vol, $dir, $name ) = splitpath($path);
 
-    return unless -f $File::Find::name;
+    return unless -f $path;
 
-    my $real = $File::Find::name;
+    my $real = $path;
     $real =~ s{/wanted-debian/}{/debian/};
-    my $diff = diff($File::Find::name, $real);
+    my $diff = diff($path, $real);
 
-    if ( $_ eq 'changelog' ) {
+    if ( $name eq 'changelog' ) {
         my $only_date_differs = 1;
         for ( split( /\n/, $diff ) ) {
             next if /^--- / or /^\+\+\+ /;
@@ -24,14 +26,14 @@ sub compare {
             next if /^[-+] -- Joe Maintainer <joemaint\@test\.local>  /;
 
             $only_date_differs = 0;
-            diag $_;
+            diag $name;
             last;
         }
 
         $diff = '' if $only_date_differs;
     }
 
-    if ( $_ eq 'copyright' ) {
+    if ( $name eq 'copyright' ) {
         my $only_date_differs = 1;
         for ( split( /\n/, $diff ) ) {
             next if /^--- / or /^\+\+\+ /;
@@ -39,14 +41,14 @@ sub compare {
             next if /^[-+] Copyright: \d+, Joe Maintainer <joemaint\@test\.local>/;
 
             $only_date_differs = 0;
-            diag $_;
+            diag $name;
             last;
         }
 
         $diff = '' if $only_date_differs;
     }
 
-    is($diff, '', "$dist/debian/$_ is OK");
+    is($diff, '', "$dist/debian/$name is OK");
 }
 
 sub dist_ok($) {
@@ -61,17 +63,24 @@ sub dist_ok($) {
 
     is( $?, 0, "$dist_dir: system returned 0" );
 
-    use File::Find qw(find);
+    use File::Find::Rule qw();
     use Text::Diff qw(diff);
-
-    find( sub { compare($dist_dir) }, "$dist/wanted-debian");
+    my @files = File::Find::Rule->or(
+               File::Find::Rule->new
+                    ->directory
+                    ->name( '.svn', 'CVS', '.git', '.hg' )
+                    ->prune
+                    ->discard,
+               File::Find::Rule->new,
+            )
+         ->in("$dist/wanted-debian");
+    compare( $dist_dir, $_) for @files;
 
     # clean after the test
-    find( sub{
-            unlink $File::Find::name 
-                or die "unlink($File::Find::name): $!"
-            if -f $File::Find::name;
-        }, "$dist/debian" );
+    File::Find::Rule->file
+                    ->exec( sub{ unlink $_[2]
+                                or die "unlink($_[2]): $!" } )
+                    ->in("$dist/debian");
 
     rmdir "$dist/debian" or die "rmdir($dist/debian): $!";
 }
