@@ -1544,7 +1544,7 @@ sub get_itp {
 
     my $wnpp
         = "http://bugs.debian.org/cgi-bin/pkgreport.cgi?pkg=wnpp;includesubj=ITP: $package";
-    my $mech = WWW::Mechanize->new( noproxy => 1 );
+    my $mech = WWW::Mechanize->new();
 
     $mech->get($wnpp);
 
