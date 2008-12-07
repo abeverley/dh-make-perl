@@ -374,6 +374,7 @@ sub find_perl_module_package {
 # SYNOPSIS
 #
 #   my $d = Dep->new( 'perl' );             # simple dependency
+#   my $d = Dep->new('perl (>= 5.10)');     # also parses a single argument
 #   my $d = Dep->new( 'perl', '5.10' );     # dependency with a version
 #   my $d = Dep->new( 'perl', '>=', '5.10' );
 #                               # dependency with version and relation
@@ -406,7 +407,7 @@ sub new {
 
     return $class->SUPER::new(@_) if ref( $_[0] );
 
-    return $class->SUPER::new( { pkg => $_[0] } )
+    return $class->parse( $_[0] )
         if @_ == 1;
 
     return $class->SUPER::new( { pkg => $_[0], rel => '>=', ver => $_[1] } )
