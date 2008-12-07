@@ -16,7 +16,7 @@ build-stamp:
 	# Add here commands to compile the package.
 	pod2man --center debian dh-make-perl > dh-make-perl.1
 
-	$(MAKE) test
+	NO_NETWORK=1 $(MAKE) test
 
 	touch build-stamp
 
