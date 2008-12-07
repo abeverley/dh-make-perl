@@ -428,6 +428,42 @@ sub stringify {
     );
 }
 
+sub parse {
+    my ( $class, $str ) = @_;
+
+    if ( $str =~ m{
+            ^               # start from the beginning
+            ([^\(\s]+)      # package name - no paren, no space
+            \s*             # oprional space
+            (?:             # version is optional
+                \(          # opening paren
+                    (       # various relations 
+                        <<
+                      | <=
+                      | ==
+                      | >=
+                      | >>
+                    )
+                    \s*     # optional space
+                    (.+)    # version
+                \)          # closing paren
+            )?
+            $}x             # done
+    )
+    {
+        return $class->new( {
+            pkg => $1,
+            ( ( defined($2) and defined($3) )
+               ? ( rel => $2, ver => $3 )
+               : ()
+            )
+        } );
+    }
+    else {
+        die "Unable to parse '$str'";
+    }
+}
+
 sub parse_list {
     my $class = shift;
     my @list = split( /\s*,\s*/, shift );
