@@ -375,6 +375,8 @@ sub find_perl_module_package {
 #
 #   my $d = Dep->new( 'perl' );             # simple dependency
 #   my $d = Dep->new( 'perl', '5.10' );     # dependency with a version
+#   my $d = Dep->new( 'perl', '>=', '5.10' );
+#                               # dependency with version and relation
 #   print $d->pkg;  # 'perl'
 #   print $d->ver;  # '5.10
 #
@@ -394,7 +396,7 @@ sub find_perl_module_package {
 package Dep;
 
 use base qw(Class::Accessor);
-__PACKAGE__->mk_accessors(qw(pkg ver));
+__PACKAGE__->mk_accessors(qw( pkg ver rel ));
 
 use overload
     '""'    => \&stringify;
@@ -402,11 +404,18 @@ sub new {
     my $class = shift;
     $class = ref($class) if ref($class);
 
-    return (
-        ref( $_[0] )
-        ? $class->SUPER::new(@_)
-        : $class->SUPER::new( { pkg => $_[0], ver => $_[1] } )
-    );
+    return $class->SUPER::new(@_) if ref( $_[0] );
+
+    return $class->SUPER::new( { pkg => $_[0] } )
+        if @_ == 1;
+
+    return $class->SUPER::new( { pkg => $_[0], rel => '>=', ver => $_[1] } )
+        if @_ == 2;
+
+    return $class->SUPER::new( { pkg => $_[0], rel => $_[1], ver => $_[2] } )
+        if @_ == 3;
+
+    die "Unsupported number of arguments";
 }
 
 sub stringify {
@@ -414,7 +423,7 @@ sub stringify {
 
     return (
         $self->ver
-        ? $self->pkg . ' (>= ' . $self->ver . ')'
+        ? $self->pkg . ' (' . $self->rel . ' ' . $self->ver . ')'
         : $self->pkg
     );
 }
