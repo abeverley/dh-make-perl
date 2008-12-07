@@ -1536,6 +1536,8 @@ sub extract_depends {
 }
 
 sub get_itp {
+    return if $ENV{NO_NETWORK};
+
     use WWW::Mechanize;
 
     my ($package) = shift @_;
