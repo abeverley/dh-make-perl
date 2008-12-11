@@ -26,7 +26,7 @@ construction and stringification.
 
 Objects of this class are blessed array references. You can safely treat them
 as arrayrefs, as long as the elements you put in them are instances of the
-Debian::Dependency class.
+L<Debian::Dependency> class.
 
 When used in string context, Debian::Dependencies converts itself into a
 comma-delimitted list of dependencies, suitable for dependency fields of
@@ -38,8 +38,10 @@ F<debian/control> files.
 
 =item new(dependency-string)
 
-Constructs a new Debian::Dependencies object. Accepts one scalar argument,
-which is parsed and turned into an arrayref of Debian::Dependency objects.
+Constructs a new L<Debian::Dependencies> object. Accepts one scalar argument,
+which is parsed and turned into an arrayref of L<Debian::Dependency> objects.
+Each dependency should be delimitted by a comma and optional space. The exact
+regular expression is C</\s*,\s*/>.
 
 =cut
 
