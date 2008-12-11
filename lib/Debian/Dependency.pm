@@ -32,8 +32,7 @@ Debian::Dependency -- dependency relationship between Debian packages
 use base qw(Class::Accessor);
 __PACKAGE__->mk_accessors(qw( pkg ver rel ));
 
-use overload
-    '""'    => \&_stringify;
+use overload '""' => \&_stringify;
 
 =head2 CLASS_METHODS
 
@@ -78,7 +77,7 @@ sub _stringify {
     my $self = shift;
 
     return (
-        $self->ver
+          $self->ver
         ? $self->pkg . ' (' . $self->rel . ' ' . $self->ver . ')'
         : $self->pkg
     );
@@ -105,7 +104,7 @@ Examples:
 sub parse {
     my ( $class, $str ) = @_;
 
-    if ( $str =~ m{
+    if ($str =~ m{
             ^               # start from the beginning
             ([^\(\s]+)      # package name - no paren, no space
             \s*             # oprional space
@@ -122,22 +121,22 @@ sub parse {
                     (.+)    # version
                 \)          # closing paren
             )?
-            $}x             # done
-    )
+            $}x    # done
+        )
     {
-        return $class->new( {
-            pkg => $1,
-            ( ( defined($2) and defined($3) )
-               ? ( rel => $2, ver => $3 )
-               : ()
-            )
-        } );
+        return $class->new(
+            {   pkg => $1,
+                (     ( defined($2) and defined($3) )
+                    ? ( rel => $2, ver => $3 )
+                    : ()
+                )
+            }
+        );
     }
     else {
         die "Unable to parse '$str'";
     }
 }
-
 
 1;
 
