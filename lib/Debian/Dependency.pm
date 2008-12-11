@@ -9,16 +9,20 @@ Debian::Dependency -- dependency relationship between Debian packages
 
 =head1 SYNOPSIS
 
-   my $d = Dep->new( 'perl' );             # simple dependency
-   my $d = Dep->new('perl (>= 5.10)');     # also parses a single argument
-   my $d = Dep->new( 'perl', '5.10' );     # dependency with a version
-   my $d = Dep->new( 'perl', '>=', '5.10' );
-                               # dependency with version and relation
+                                    # simple dependency
+   my $d = Debian::Dependency->new( 'perl' );
+                                    # also parses a single argument
+   my $d = Debian::Dependency->new('perl (>= 5.10)');
+                                    # dependency with a version
+   my $d = Debian::Dependency->new( 'perl', '5.10' );
+                                    # dependency with version and relation
+   my $d = Debian::Dependency->new( 'perl', '>=', '5.10' );
+
    print $d->pkg;  # 'perl'
    print $d->ver;  # '5.10
 
-                                   # for people who like to type much
-   my $d = Dep->new( { pkg => 'perl', ver => '5.10' } );
+                                    # for people who like to type much
+   my $d = Debian::Dependency->new( { pkg => 'perl', ver => '5.10' } );
 
    # stringification
    print "$d"      # 'perl (>= 5.10)'
@@ -30,6 +34,28 @@ __PACKAGE__->mk_accessors(qw( pkg ver rel ));
 
 use overload
     '""'    => \&_stringify;
+
+=head2 CLASS_METHODS
+
+=over 4
+
+=item new()
+
+=item new( { pkg => 'package', rel => '>=', ver => '1.9' } )
+
+Construct new instance. If a reference is passed as an argument, it must be a
+hashref and is passed to L<Class::Accessor>.
+
+If a single argument is given, the construction is passed to the C<parse>
+constructor.
+
+Two arguments are interpreted as package name and version. The relation is
+assumed to be '>='.
+
+Three arguments are interpreted as package name, relation and version.
+
+=cut
+
 sub new {
     my $class = shift;
     $class = ref($class) if ref($class);
@@ -57,6 +83,24 @@ sub _stringify {
         : $self->pkg
     );
 }
+
+=item parse()
+
+Takes a single string argument and parses it.
+
+Examples:
+
+=over
+
+=item perl
+
+=item perl (>= 5.8)
+
+=item libversion-perl (<< 3.4)
+
+=back
+
+=cut
 
 sub parse {
     my ( $class, $str ) = @_;
@@ -96,6 +140,38 @@ sub parse {
 
 
 1;
+
+=back
+
+=head2 FIELDS
+
+=over
+
+=item pkg
+
+Contains the name of the package that is depended upon
+
+=item rel
+
+Contains the relation of the dependency. May be any of '<<', '<=', '==', '>='
+or '>>'. Default is '>='.
+
+=item ver
+
+Contains the version of the package the dependency is about.
+
+=back
+
+C<rel> and C<ver> are either both present or both missing.
+
+Examples
+
+    print $dep->pkg;
+    $dep->ver('3.4');
+
+=head1 SEE ALSO
+
+L<Debian::Dependencies>
 
 =head1 AUTHOR
 
