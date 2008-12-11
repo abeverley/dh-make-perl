@@ -34,8 +34,9 @@ sub set_names {
 
 =item get
 
-Gets the contents for the specified POD section
-    
+Gets the contents for the specified POD section. The single argument should be
+one of the values given to L</set_names>.
+
 =cut
 
 sub get {
@@ -46,7 +47,7 @@ sub get {
 =item cleanup
 
 Empties the information held by the parser object
-    
+
 =cut
 
 sub cleanup {
@@ -59,10 +60,12 @@ sub cleanup {
 
 =item command
 
-Implemented as base class requires it. Gets each of the POD's commands
+Overrides base class' L<Pod::Parser> L<command|Pod::Parser/command> method.
+
+Gets each of the POD's commands
 (sections), and defines how it should react to each of them. In this
 particular implementation, it basically filters out anything except
-for the C<=head> sections defined in C<set_names>
+for the C<=head> sections defined in L</set_names>.
 
 =cut
 
@@ -82,9 +85,12 @@ sub command {
 
 =item add_text
 
-Hands back the text it received as it ocurred in the input stream (see
-the base class' documentation for C<verbatim>, C<textblock>,
-C<interior_sequence>)
+Hands back the text it received as it ocurred in the input stream (see the
+L<Pod::Parser>'s documentation for L<verbatim|Pod::Parser/verbatim>,
+L<textblock|Pod::Parser/textblock> and
+L<interior_sequence|Pod::Parser/interior_sequence>).
+
+Content is ignored if more than 15 lines away from the section start.
 
 =cut
 
@@ -102,8 +108,7 @@ sub add_text {
 
 =item verbatim
 
-Implemented as base class requires it - Just passes its arguments to
-add_text
+Called by L<Pod::Parser> for verbatim paragraphs. Redirected to L</add_text>.
 
 =cut
 
@@ -111,8 +116,8 @@ sub verbatim { shift->add_text(@_) }
 
 =item textblock
 
-Implemented as the base class requires it - Just passes its arguments
-to add_text
+Called by L<Pod::Parser> for ordinary text paragraphs. Redirected to
+L</add_text>.
 
 =cut
 
@@ -120,8 +125,12 @@ sub textblock { shift->add_text(@_) }
 
 =item interior_sequence
 
-Implemented as the base class requires it - Translates common POD
-escaped entities into their text representation.
+L<interior_sequence()|Pod::Parser/interior_sequence()> is called by
+L<Pod::Parser> when, eh, an interiorsquence occureds in the text. Interior
+sequences are things like IE<lt>...E<gt>.
+
+This implementation decodes C<gt>, C<lt>, C<sol>, C<verbar> and numeric
+character codes, all used by C<E> escape.
 
 =cut
 
@@ -141,11 +150,17 @@ sub interior_sequence {
 
 =back
 
+=head1 SEE ALSO
+
+L<Pod::Parser>
+
 =head1 AUTHOR
 
 =over 4
 
 =item Paolo Molaro
+
+=item Documentation added by Gunnar Wolf and Damyan Ivanov
 
 =back
 
@@ -154,6 +169,10 @@ sub interior_sequence {
 =over 4
 
 =item Copyright (C) 2001, Paolo Molaro <lupus@debian.org>
+
+=item Copyright (C) 2008, Gunnar Wolf <gwolf@debian.org>
+
+=item Copyright (C) 2008, Damyan Ivanov <dmn@debian.org>
 
 =back
 
