@@ -113,6 +113,10 @@ my ($opt_arch,        $opt_basepkgs, $opt_bdepends,    $opt_bdependsi,
 
 my $mod_cpan_version;
 
+sub new {
+	return bless {}, shift;
+}
+
 sub run {
     $opt_dbflags = $> == 0 ? "" : "-rfakeroot";
     chomp($date);

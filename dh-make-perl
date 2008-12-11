@@ -1,11 +1,12 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl
 
-use FindBin qw($Bin);
-use lib "$Bin/lib";
+use strict;
+use warnings;
 
 use DhMakePerl;
 
-exit DhMakePerl::run();
+my $app = DhMakePerl->new;
+exit $app->run();
 
 __END__
 
