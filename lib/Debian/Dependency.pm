@@ -23,13 +23,6 @@ Debian::Dependency -- dependency relationship between Debian packages
    # stringification
    print "$d"      # 'perl (>= 5.10)'
 
-   # parsing lists
-   my @list = Dep->parse_list( 'perl (>= 5.10), libc (>= 2.7)' );
-   print $list[0]->ver;    # '5.10'
-
-                                                       # <= relationship
-   my @list = Dep->parse_list( 'perl (<= 5.11)' );     # UNSUPPORTED
-
 =cut
 
 use base qw(Class::Accessor);
@@ -101,24 +94,6 @@ sub parse {
     }
 }
 
-sub parse_list {
-    my $class = shift;
-    my @list = split( /\s*,\s*/, shift );
-
-    for( @list ) {
-        if ( /(^S+)\s(.+)$/ ) {
-            my ( $pkg, $ver ) = ( $1, $2 );
-            $ver =~ s/^>=\s*//
-                or die "$_: only '>=' relationships are supported";
-            $_ = $class->new( $pkg, $ver );
-        }
-        else {
-            $_ = $class->new($_);
-        }
-    }
-
-    return @list;
-}
 
 1;
 

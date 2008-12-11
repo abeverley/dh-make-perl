@@ -44,6 +44,8 @@ use Email::Date::Format qw(email_date);
 use Text::Wrap;
 use Module::CoreList ();
 use AptPkg::Config;
+use Debian::Dependency;
+use Debian::Dependencies;
 
 # TODO:
 # * get more info from the package (maybe using CPAN methods)
@@ -249,7 +251,7 @@ sub run {
     push @depends, Debian::Dependency->new('${misc:Depends}');
     my $extradeps = extract_depends( $maindir, $apt_contents, 0 );
     push @depends, @$extradeps;
-    push @depends, Debian::Dependency->parse_list($opt_depends) if $opt_depends;
+    push @depends, Debian::Dependencies->new($opt_depends) if $opt_depends;
 
     $module_build = ( -f "$maindir/Build.PL" ) ? "Module-Build" : "MakeMaker";
     extract_changelog($maindir);
@@ -273,10 +275,10 @@ sub run {
         );
     }
 
-    push @bdepends, Debian::Dependency->parse_list($opt_bdepends) if $opt_bdepends;
+    push @bdepends, Debian::Dependencies->new($opt_bdepends) if $opt_bdepends;
     push @bdepends, @extrabdepends;
 
-    push @bdependsi, Debian::Dependency->parse_list($opt_bdependsi) if $opt_bdependsi;
+    push @bdependsi, Debian::Dependencies->new($opt_bdependsi) if $opt_bdependsi;
     push @bdependsi, @extrabdependsi;
 
     apply_overrides();
@@ -1503,13 +1505,13 @@ sub apply_overrides {
     $priority = $val
         if (
         defined( $val = get_override_val( $data, $subkey, 'priority' ) ) );
-    @depends = Debian::Dependency->parse_list($val)
+    @depends = Debian::Dependencies->new($val)
         if (
         defined( $val = get_override_val( $data, $subkey, 'depends' ) ) );
-    @bdepends = Debian::Dependency->parse_list($val)
+    @bdepends = Debian::Dependencies->new($val)
         if (
         defined( $val = get_override_val( $data, $subkey, 'bdepends' ) ) );
-    @bdependsi = Debian::Dependency->parse_list($val)
+    @bdependsi = Debian::Dependencies->new($val)
         if (
         defined( $val = get_override_val( $data, $subkey, 'bdependsi' ) ) );
     $desc = $val
