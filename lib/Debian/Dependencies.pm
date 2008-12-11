@@ -3,6 +3,7 @@ package Debian::Dependencies;
 use strict;
 use warnings;
 
+use AptPkg::Config;
 use Debian::Dependency;
 
 use overload '""'   => \&stringify;
@@ -62,9 +63,14 @@ sub new {
 
 =over 4
 
-XXX TO BE FILLED
+=item prune()
 
-=back
+Reduces the list of dependencies by removing duplicate or covering ones. The
+resulting list is also sorted by package name.
+
+For example, if you have libppi-perl, libppi-perl (>= 3.0), libarm-perl,
+libalpa-perl, libarm-perl (>= 2), calling C<prune> will leave you with
+libalpa-perl, libarm-perl (>= 2), libppi-perl (>= 3.0)
 
 =cut
 
@@ -73,6 +79,33 @@ sub stringify {
 
     return join( ', ', @$self );
 }
+
+sub prune(@) {
+    my $self = shift;
+    my %deps;
+    for (@$self) {
+        my $p = $_->pkg;
+        my $v = $_->ver;
+        if ( exists $deps{$p} ) {
+            my $cur_ver = $deps{$p}->ver;
+
+            $deps{$p} = $v
+                if defined($v) and not defined($cur_ver)
+                    or $AptPkg::Config::_config->system->versioning->compare(
+                        $cur_ver, $v ) < 0;
+        }
+        else {
+            $deps{$p} = $_;
+        }
+
+    }
+
+    @$self = map( $deps{$_}, sort( keys(%deps) ) );
+}
+
+=back
+
+=cut
 
 1;
 
