@@ -90,41 +90,6 @@ sub interior_sequence {
     return $seq_argument;
 }
 
-# List of Dep objects
-# Overrides the stringification operator so that one can use Dep::List
-# and a string, consisting of list of dependencies simultaneously
-#
-# my $dl = Dep::List->new('perl, libfoo-perl (>= 3.4)');
-# print $dl->[1]->ver;      # 3.4
-# print $dl->[1];           # libfoo-perl (>= 3.4)
-# print $dl;                # perl, libfoo-perl (>= 3.4)
-
-package Dep::List;
-
-use Debian::Dependency;
-
-use overload
-    '""'   => \&stringify;
-
-sub new {
-    my ( $class, $val ) = @_;
-
-    my $self = bless [], $class;
-
-    if ( defined($val) ) {
-        @{$self} = map(
-            Debian::Dependency->new($_),
-            split( /\s*,\s*/, $val ) );
-    }
-}
-
-sub stringify {
-    my $self = shift;
-
-    return join( ', ', @$self );
-}
-
-1;
 ######################################################################
 # Main dh-make-perl starts here, don't look any further!
 package main;
