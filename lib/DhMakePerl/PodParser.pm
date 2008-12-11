@@ -5,6 +5,25 @@ use warnings;
 
 use base qw(Pod::Parser);
 
+=head1 NAME
+
+DhMakePerl::PodParser - internal helper module for DhMakePerl
+
+=head1 SYNOPSIS
+
+DhMakePerl::PodParser is used by DhMakePerl to extract some information from
+the module-to-be-packaged.
+
+=head1 METHODS
+
+TODO: actually describe what they do
+
+=over
+
+=item set_names
+
+=cut
+
 sub set_names {
     my ( $parser, @names ) = @_;
     foreach my $n (@names) {
@@ -12,10 +31,18 @@ sub set_names {
     }
 }
 
+=item get
+
+=cut
+
 sub get {
     my ( $parser, $name ) = @_;
     $parser->{_deb_}->{$name};
 }
+
+=item cleanup
+
+=cut
 
 sub cleanup {
     my $parser = shift;
@@ -24,6 +51,10 @@ sub cleanup {
         $parser->{_deb_}->{$k} = undef;
     }
 }
+
+=item command
+
+=cut
 
 sub command {
     my ( $parser, $command, $paragraph, $line_num ) = @_;
@@ -39,6 +70,10 @@ sub command {
     #print "GOT: $command -> $paragraph\n";
 }
 
+=item add_text
+
+=cut
+
 sub add_text {
     my ( $parser, $paragraph, $line_num ) = @_;
     return unless exists $parser->{_current_};
@@ -48,12 +83,24 @@ sub add_text {
     $paragraph = $parser->interpolate( $paragraph, $line_num );
     $parser->{_deb_}->{ $parser->{_current_} } .= "\n\n" . $paragraph;
 
-    #print "GOTT: $paragraph'\n";
+    #print "GOT: $paragraph'\n";
 }
+
+=item verbatim
+
+=cut
 
 sub verbatim { shift->add_text(@_) }
 
+=item textblock
+
+=cut
+
 sub textblock { shift->add_text(@_) }
+
+=item interior_sequence
+
+=cut
 
 sub interior_sequence {
     my ( $parser, $seq_command, $seq_argument ) = @_;
@@ -68,3 +115,35 @@ sub interior_sequence {
 }
 
 1;
+
+=back
+
+=head1 AUTHOR
+
+=over 4
+
+=item Paolo Molaro
+
+=back
+
+=head1 COPYRIGHT & LICENSE
+
+=over 4
+
+=item Copyright (C) 2001, Paolo Molaro <lupus@debian.org>
+
+=back
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License version 2 as published by the Free
+Software Foundation.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+this program; if not, write to the Free Software Foundation, Inc., 51 Franklin
+Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+=cut
