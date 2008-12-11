@@ -9,11 +9,11 @@ App::DhMakePerl - The great new App::DhMakePerl!
 
 =head1 VERSION
 
-Version 0.01
+Version 0.51
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.51';
 
 
 =head1 SYNOPSIS
