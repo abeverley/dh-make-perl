@@ -3,12 +3,12 @@ use warnings;
 use Module::Build;
 
 my $builder = Module::Build->new(
-    module_name         => 'App::DhMakePerl',
+    module_name         => 'DhMakePerl',
     license             => 'gpl2',
     build_requires => {
         'Test::More' => 0,
     },
-    add_to_cleanup      => [ 'App-DhMakePerl-*' ],
+    add_to_cleanup      => [ 'DhMakePerl-*' ],
     create_makefile_pl => 'traditional',
     script_files    => [ 'dh-make-perl' ],
     install_path    => {

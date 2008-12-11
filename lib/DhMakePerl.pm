@@ -1,11 +1,11 @@
-package App::DhMakePerl;
+package DhMakePerl;
 
 use warnings;
 use strict;
 
 =head1 NAME
 
-App::DhMakePerl - create Debian source package from CPAN dist
+DhMakePerl - create Debian source package from CPAN dist
 
 =head1 VERSION
 
@@ -20,9 +20,9 @@ our $VERSION = '0.51';
 
 TO BE FILLED
 
-    use App::DhMakePerl;
+    use DhMakePerl;
 
-    my $foo = App::DhMakePerl->new();
+    my $foo = DhMakePerl->new();
     ...
 
 =head1 METHODS
@@ -62,7 +62,7 @@ L<debian-perl@lists.debian.org> mailing list.
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc App::DhMakePerl
+    perldoc DhMakePerl
 
 You can also look for information at:
 
@@ -110,4 +110,4 @@ Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 =cut
 
-1; # End of App::DhMakePerl
+1; # End of DhMakePerl

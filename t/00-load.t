@@ -3,7 +3,7 @@
 use Test::More tests => 1;
 
 BEGIN {
-	use_ok( 'App::DhMakePerl' );
+	use_ok( 'DhMakePerl' );
 }
 
-diag( "Testing App::DhMakePerl $App::DhMakePerl::VERSION, Perl $], $^X" );
+diag( "Testing DhMakePerl $DhMakePerl::VERSION, Perl $], $^X" );
