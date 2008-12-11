@@ -1,5 +1,8 @@
 package Debian::AptContents;
 
+use strict;
+use warnings;
+
 =head1 NAME
 
 Debian::AptContents - parse/search through apt-file's Contents files

@@ -1,3 +1,12 @@
+package Debian::Dependencies;
+
+use strict;
+use warnings;
+
+use Debian::Dependency;
+
+use overload '""'   => \&stringify;
+
 =head1 NAME
 
 Debian::Dependencies -- a list of Debian::Dependency objects
@@ -21,16 +30,6 @@ Debian::Dependency class.
 When used in string context, Debian::Dependencies converts itself into a
 comma-delimitted list of dependencies, suitable for dependency fields of
 F<debian/control> files.
-
-=cut
-
-package Debian::Dependencies;
-use strict;
-use warnings;
-use Debian::Dependency;
-
-use overload
-    '""'   => \&stringify;
 
 =head2 CLASS METHODS
 

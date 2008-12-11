@@ -1,5 +1,8 @@
 package DhMakePerl::PodParser;
 
+use strict;
+use warnings;
+
 use base qw(Pod::Parser);
 
 sub set_names {
