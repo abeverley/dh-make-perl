@@ -36,7 +36,7 @@ use base qw(Class::Accessor);
 __PACKAGE__->mk_accessors(qw( pkg ver rel ));
 
 use overload
-    '""'    => \&stringify;
+    '""'    => \&_stringify;
 sub new {
     my $class = shift;
     $class = ref($class) if ref($class);
@@ -55,7 +55,7 @@ sub new {
     die "Unsupported number of arguments";
 }
 
-sub stringify {
+sub _stringify {
     my $self = shift;
 
     return (

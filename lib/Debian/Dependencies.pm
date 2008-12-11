@@ -6,7 +6,7 @@ use warnings;
 use AptPkg::Config;
 use Debian::Dependency;
 
-use overload '""'   => \&stringify;
+use overload '""'   => \&_stringify;
 
 =head1 NAME
 
@@ -74,7 +74,7 @@ libalpa-perl, libarm-perl (>= 2), libppi-perl (>= 3.0)
 
 =cut
 
-sub stringify {
+sub _stringify {
     my $self = shift;
 
     return join( ', ', @$self );
