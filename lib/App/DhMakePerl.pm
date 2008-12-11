@@ -5,7 +5,7 @@ use strict;
 
 =head1 NAME
 
-App::DhMakePerl - The great new App::DhMakePerl!
+App::DhMakePerl - create Debian source package from CPAN dist
 
 =head1 VERSION
 
@@ -18,48 +18,45 @@ our $VERSION = '0.51';
 
 =head1 SYNOPSIS
 
-Quick summary of what the module does.
-
-Perhaps a little code snippet.
+TO BE FILLED
 
     use App::DhMakePerl;
 
     my $foo = App::DhMakePerl->new();
     ...
 
-=head1 EXPORT
+=head1 METHODS
 
-A list of functions that can be exported.  You can delete this section
-if you don't export anything, such as for a purely object-oriented module.
+=head2 method1
 
-=head1 FUNCTIONS
-
-=head2 function1
+TO BE FILLED
 
 =cut
 
-sub function1 {
+sub method1 {
 }
 
-=head2 function2
+=head2 method2
+
+TO BE FILLED
 
 =cut
 
-sub function2 {
+sub method2 {
 }
 
 =head1 AUTHOR
 
-Paolo Molaro and others, C<< <lupus at debian.org> >>
+dh-make-perl was created by Paolo Molaro.
+
+It is currently maintained by Gunnar Wolf and others, under the umbrella of the
+Debian Perl Group <debian-perl@lists.debian.org>
 
 =head1 BUGS
 
-Please report any bugs or feature requests to C<bug-app-dhmakeperl at rt.cpan.org>, or through
-the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=App-DhMakePerl>.  I will be notified, and then you'll
-automatically be notified of progress on your bug as I make changes.
-
-
-
+Please report any bugs or feature requests to the Debian Bug Tracking System
+(L<http://bugs.debian.org/>, use I<dh-make-perl> as package name) or to the
+L<debian-perl@lists.debian.org> mailing list.
 
 =head1 SUPPORT
 
@@ -67,40 +64,49 @@ You can find documentation for this module with the perldoc command.
 
     perldoc App::DhMakePerl
 
-
 You can also look for information at:
 
 =over 4
 
-=item * RT: CPAN's request tracker
+=item * Debian Bugtracking System
 
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=App-DhMakePerl>
-
-=item * AnnoCPAN: Annotated CPAN documentation
-
-L<http://annocpan.org/dist/App-DhMakePerl>
-
-=item * CPAN Ratings
-
-L<http://cpanratings.perl.org/d/App-DhMakePerl>
-
-=item * Search CPAN
-
-L<http://search.cpan.org/dist/App-DhMakePerl>
+L<http://bugs.debian.org/dh-make-perl>
 
 =back
 
 
-=head1 ACKNOWLEDGEMENTS
-
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2008 Paolo Molaro and others, all rights reserved.
+=over 4
 
-This program is free software; you can redistribute it and/or modify it
-under the same terms as Perl itself.
+=item Copyright (C) 2000,2001 Paolo Molaro <lupus@debian.org>
 
+=item Copyright (C) 2002,2003,2008 Ivan Kohler <ivan-debian@420.am>
+
+=item Copyright (C) 2003,2004 Marc 'HE' Brockschmidt <he@debian.org>
+
+=item Copyright (C) 2005-2007 Gunnar Wolf <gwolf@debian.org>
+
+=item Copyright (C) 2006 Frank Lichtenheld <djpig@debian.org>
+
+=item Copyright (C) 2007-2008 Gregor Herrmann <gregoa@debian.org>
+
+=item Copyright (C) 2007-2008 Damyan Ivanov <dmn@debian.org>
+
+=back
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License version 2 as published by the Free
+Software Foundation.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+this program; if not, write to the Free Software Foundation, Inc., 51 Franklin
+Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 =cut
 
