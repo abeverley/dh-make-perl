@@ -52,6 +52,8 @@ sub new {
             Debian::Dependency->new($_),
             split( /\s*,\s*/, $val ) );
     }
+
+    return $self;
 }
 
 =back
