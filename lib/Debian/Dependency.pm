@@ -3,31 +3,34 @@ package Debian::Dependency;
 use strict;
 use warnings;
 
-# The C<Dep> class represent a dependency relationship in an opaque way
-#
-# SYNOPSIS
-#
-#   my $d = Dep->new( 'perl' );             # simple dependency
-#   my $d = Dep->new('perl (>= 5.10)');     # also parses a single argument
-#   my $d = Dep->new( 'perl', '5.10' );     # dependency with a version
-#   my $d = Dep->new( 'perl', '>=', '5.10' );
-#                               # dependency with version and relation
-#   print $d->pkg;  # 'perl'
-#   print $d->ver;  # '5.10
-#
-#                                   # for people who like to type much
-#   my $d = Dep->new( { pkg => 'perl', ver => '5.10' } );
-#
-#   # stringification
-#   print "$d"      # 'perl (>= 5.10)'
-#
-#   # parsing lists
-#   my @list = Dep->parse_list( 'perl (>= 5.10), libc (>= 2.7)' );
-#   print $list[0]->ver;    # '5.10'
-#
-#                                                       # <= relationship
-#   my @list = Dep->parse_list( 'perl (<= 5.11)' );     # UNSUPPORTED
-#
+=head1 NAME
+
+Debian::Dependency -- dependency relationship between Debian packages
+
+=head1 SYNOPSIS
+
+   my $d = Dep->new( 'perl' );             # simple dependency
+   my $d = Dep->new('perl (>= 5.10)');     # also parses a single argument
+   my $d = Dep->new( 'perl', '5.10' );     # dependency with a version
+   my $d = Dep->new( 'perl', '>=', '5.10' );
+                               # dependency with version and relation
+   print $d->pkg;  # 'perl'
+   print $d->ver;  # '5.10
+
+                                   # for people who like to type much
+   my $d = Dep->new( { pkg => 'perl', ver => '5.10' } );
+
+   # stringification
+   print "$d"      # 'perl (>= 5.10)'
+
+   # parsing lists
+   my @list = Dep->parse_list( 'perl (>= 5.10), libc (>= 2.7)' );
+   print $list[0]->ver;    # '5.10'
+
+                                                       # <= relationship
+   my @list = Dep->parse_list( 'perl (<= 5.11)' );     # UNSUPPORTED
+
+=cut
 
 use base qw(Class::Accessor);
 __PACKAGE__->mk_accessors(qw( pkg ver rel ));
@@ -119,3 +122,32 @@ sub parse_list {
 
 1;
 
+=head1 AUTHOR
+
+=over 4
+
+=item Damyan Ivanov <dmn@debian.org>
+
+=back
+
+=head1 COPYRIGHT & LICENSE
+
+=over 4
+
+=item Copyright (C) 2008 Damyan Ivanov <dmn@debian.org>
+
+=back
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License version 2 as published by the Free
+Software Foundation.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+this program; if not, write to the Free Software Foundation, Inc., 51 Franklin
+Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+=cut
