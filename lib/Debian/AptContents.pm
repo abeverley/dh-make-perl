@@ -1,5 +1,24 @@
 package Debian::AptContents;
 
+=head1 NAME
+
+Debian::AptContents - parse/search through apt-file's Contents files
+
+=head1 SYNOPSIS
+
+    my $c = Debian::AptContents->new( { homedir => '~/.dh-make-perl' } );
+    my @pkgs = $c->find_file_packages('/usr/bin/foo');
+    my @pkgs = $c->find_perl_module_packages('Foo::Bar');
+
+=head1 TODO
+
+This needs to really work not only for Perl modules.
+
+A module specific to Perl modules is needed by dh-make-perl, but it can
+subclass Debian::AptContents, which needs to become more generic.
+
+=cut
+
 use base qw(Class::Accessor);
 __PACKAGE__->mk_accessors(
     qw(
@@ -276,3 +295,33 @@ sub find_perl_module_package {
 }
 
 1;
+
+=head1 AUTHOR
+
+=over 4
+
+=item Damyan Ivanov <dmn@debian.org>
+
+=back
+
+=head1 COPYRIGHT & LICENSE
+
+=over 4
+
+=item Copyright (C) 2008 Damyan Ivanov <dmn@debian.org>
+
+=back
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License version 2 as published by the Free
+Software Foundation.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+this program; if not, write to the Free Software Foundation, Inc., 51 Franklin
+Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+=cut
