@@ -11,16 +11,17 @@ DhMakePerl::PodParser - internal helper module for DhMakePerl
 
 =head1 SYNOPSIS
 
-DhMakePerl::PodParser is used by DhMakePerl to extract some information from
-the module-to-be-packaged.
+DhMakePerl::PodParser is used by DhMakePerl to extract some
+information from the module-to-be-packaged. It subclasses from
+L<Pod::Parser> - Please refer to it for further documentation.
 
 =head1 METHODS
-
-TODO: actually describe what they do
 
 =over
 
 =item set_names
+
+Defines the names of the sections that should be fetched from the POD
 
 =cut
 
@@ -33,6 +34,8 @@ sub set_names {
 
 =item get
 
+Gets the contents for the specified POD section
+    
 =cut
 
 sub get {
@@ -42,6 +45,8 @@ sub get {
 
 =item cleanup
 
+Empties the information held by the parser object
+    
 =cut
 
 sub cleanup {
@@ -53,6 +58,11 @@ sub cleanup {
 }
 
 =item command
+
+Implemented as base class requires it. Gets each of the POD's commands
+(sections), and defines how it should react to each of them. In this
+particular implementation, it basically filters out anything except
+for the C<=head> sections defined in C<set_names>
 
 =cut
 
@@ -72,6 +82,10 @@ sub command {
 
 =item add_text
 
+Hands back the text it received as it ocurred in the input stream (see
+the base class' documentation for C<verbatim>, C<textblock>,
+C<interior_sequence>)
+
 =cut
 
 sub add_text {
@@ -88,17 +102,26 @@ sub add_text {
 
 =item verbatim
 
+Implemented as base class requires it - Just passes its arguments to
+add_text
+
 =cut
 
 sub verbatim { shift->add_text(@_) }
 
 =item textblock
 
+Implemented as the base class requires it - Just passes its arguments
+to add_text
+
 =cut
 
 sub textblock { shift->add_text(@_) }
 
 =item interior_sequence
+
+Implemented as the base class requires it - Translates common POD
+escaped entities into their text representation.
 
 =cut
 
