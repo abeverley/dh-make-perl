@@ -15,7 +15,6 @@ Version 0.51
 
 our $VERSION = '0.51';
 
-
 =head1 SYNOPSIS
 
 TO BE FILLED
@@ -27,23 +26,7 @@ TO BE FILLED
 
 =head1 METHODS
 
-=head2 method1
-
-TO BE FILLED
-
 =cut
-
-sub method1 {
-}
-
-=head2 method2
-
-TO BE FILLED
-
-=cut
-
-sub method2 {
-}
 
 use DhMakePerl::PodParser;
 use YAML;
@@ -61,13 +44,9 @@ use Email::Date::Format qw(email_date);
 use Text::Wrap;
 use Module::CoreList ();
 use AptPkg::Config;
-use strict;
 
 # TODO:
 # * get more info from the package (maybe using CPAN methods)
-
-use strict;
-use warnings;
 
 use Debian::AptContents;
 use Debian::Dependency;
@@ -132,7 +111,7 @@ my ($opt_arch,        $opt_basepkgs, $opt_bdepends,    $opt_bdependsi,
 
 my $mod_cpan_version;
 
-sub run() {
+sub run {
     $opt_dbflags = $> == 0 ? "" : "-rfakeroot";
     chomp($date);
 
