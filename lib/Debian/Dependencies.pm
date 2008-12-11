@@ -51,9 +51,8 @@ sub new {
     my $self = bless [], $class;
 
     if ( defined($val) ) {
-        @{$self} = map(
-            Debian::Dependency->new($_),
-            split( /\s*,\s*/, $val ) );
+        @{$self}
+            = map( Debian::Dependency->new($_), split( /\s*,\s*/, $val ) );
     }
 
     return $self;
