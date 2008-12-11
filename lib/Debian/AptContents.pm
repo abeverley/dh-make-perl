@@ -33,6 +33,61 @@ __PACKAGE__->mk_accessors(
 use Storable;
 use File::Spec::Functions qw( catfile catdir splitpath );
 
+=head1 CONSTRUCTOR
+
+=over
+
+=item new
+
+Constructs new instance of the class. Expects at least C<homedir> option.
+
+=back
+
+=head1 FIELDS
+
+=over
+
+=item homedir
+
+(B<mandatory>) Directory where the object stores its cache.
+
+=item contents_dir
+
+Directory where L<apt-file> stores Contents files are stored. Default is
+F</var/cache/apt/apt-file>
+
+=item sources_file
+
+Path to the F<sources.list> file. Default is F</etc/apt/sources.list>.
+
+=item dist
+
+A regular expression, used for filtering on the C<distributon> part of the
+repository paths listed in L<sources.list>. Default is C<{sid,unstable}>
+
+=item contents_files
+
+Arrayref of F<Contents> file names. Default is to parse C<sources_file> and to
+look in C<contents_dir> for matching files.
+
+=item cache_file
+
+Path to the file with cached parsed information from all F<Contents> files.
+Default is F<Contents.cache> under C<homedir>.
+
+=item cache
+
+Filled by C<read_cache>. Used by C<find_file_packages> and (obviously)
+C<store_cache>
+
+=item verbose
+
+Verbosity level. 0 means silent, the bigger the more the jabber. Default is 1.
+
+=back
+
+=cut
+
 sub new
 {
     my $class = shift;
@@ -60,12 +115,31 @@ sub new
     return $self;
 }
 
+=head1 OBJECT METHODS
+
+=over
+
+=item warning
+
+Used internally. Given a verbosity level and a message, prints the message to
+STDERR if the verbosity level is greater than or equal of the value of
+C<verbose>.
+
+=cut
+
 sub warning
 {
     my( $self, $level, $msg ) = @_;
 
     warn "$msg\n" if $self->verbose >= $level;
 }
+
+=item repo_source_to_contents_path
+
+Given a line with Deban package repository path (typically taken from
+F<sources.list>), converts it to the correspondinf F<Contents> file name.
+
+=cut
 
 sub repo_source_to_contents_path {
     my ( $self, $source ) = @_;
@@ -109,6 +183,14 @@ sub repo_source_to_contents_path {
     return join( "_", $host, $dir||(), "dists", $dist );
 }
 
+=item get_contents_filename_filters
+
+Reads F<sources.list>, gives the repository paths to
+C<repo_source_to_contents_path> and returns a list of regular expressions that
+can be used to match against the files in C<contents_dir>.
+
+=cut
+
 sub get_contents_filename_filters
 {
     my $self = shift;
@@ -131,6 +213,13 @@ sub get_contents_filename_filters
 
     return @re;
 }
+
+=item get_contents_file_list
+
+Returns a list of F<Contents> files. Uses the information from F<sources.list>
+and C<contents_dir>.
+
+=cut
 
 sub get_contents_file_list {
     my $self = shift;
@@ -157,6 +246,15 @@ sub get_contents_file_list {
     }
     return [ sort @filtered ];
 }
+
+=item read_cache
+
+Reads the cached parsed F<Contents> files. If there are F<Contents> files with
+more recent mtime than that of the cache (or if there is no cache at all),
+parses all F<Contents> and stores the cache via C<store_cache> for later
+invocation.
+
+=cut
 
 sub read_cache() {
     my $self = shift;
@@ -248,6 +346,15 @@ sub read_cache() {
     }
 }
 
+=item store_cache
+
+Writes the contents of the parsed C<cache> to the C<cache_file>.
+
+Storable is used to stream the data. Along woth the information from
+F<Contents> files, a timestamp is stored.
+
+=cut
+
 sub store_cache {
     my $self = shift;
 
@@ -262,6 +369,17 @@ sub store_cache {
     Storable::store( $self->cache, $self->cache_file . '-new' );
     rename( $self->cache_file . '-new', $self->cache_file );
 }
+
+=item find_file_packages
+
+Returns a list of packages where the given file was found.
+
+F<Contents> files store the package section together with package name. That is
+stripped.
+
+Returns an empty list of the file is not found in any package.
+
+=cut
 
 sub find_file_packages {
     my( $self, $file ) = @_;
@@ -278,6 +396,14 @@ sub find_file_packages {
 
     return @packages;
 }
+
+=item find_perl_module_package
+
+Given Perl module name (e.g. Foo::Bar), returns a list of package names where
+that module was found. The list is sorted so that the most likely package is
+first.
+
+=cut
 
 sub find_perl_module_package {
     my ( $self, $module ) = @_;
@@ -298,6 +424,8 @@ sub find_perl_module_package {
 }
 
 1;
+
+=back
 
 =head1 AUTHOR
 
