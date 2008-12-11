@@ -17,4 +17,4 @@ plan skip_all => "Pod::Coverage $min_pc required for testing POD coverage"
 plan skip_all => "POD coverage is not full. set TEST_POD_COVERAGE if you ant to see how."
     unless $ENV{TEST_POD_COVERAGE};
 
-all_pod_coverage_ok();
+all_pod_coverage_ok( { coverage_class => 'Pod::Coverage::CountParents' } );
