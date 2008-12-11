@@ -1,5 +1,5 @@
 #!/usr/bin/perl -w
-use Pod::Parser;
+use DhMakePerl::PodParser;
 use YAML;
 use IO::File;
 use File::Basename;
@@ -20,79 +20,6 @@ use strict;
 # TODO:
 # * get more info from the package (maybe using CPAN methods)
 
-######################################################################
-# This Pod::Parser must be declared before the main program flow. If you
-# are trying to figure out what happens inside dh-make-perl, skip down
-# until 'package main'.
-package MyPod;
-
-@MyPod::ISA = qw(Pod::Parser);
-
-sub set_names {
-    my ( $parser, @names ) = @_;
-    foreach my $n (@names) {
-        $parser->{_deb_}->{$n} = undef;
-    }
-}
-
-sub get {
-    my ( $parser, $name ) = @_;
-    $parser->{_deb_}->{$name};
-}
-
-sub cleanup {
-    my $parser = shift;
-    delete $parser->{_current_};
-    foreach my $k ( keys %{ $parser->{_deb_} } ) {
-        $parser->{_deb_}->{$k} = undef;
-    }
-}
-
-sub command {
-    my ( $parser, $command, $paragraph, $line_num ) = @_;
-    $paragraph =~ s/\s+$//s;
-    if ( $command =~ /head/ && exists( $parser->{_deb_}->{$paragraph} ) ) {
-        $parser->{_current_} = $paragraph;
-        $parser->{_lineno_}  = $line_num;
-    }
-    else {
-        delete $parser->{_current_};
-    }
-
-    #print "GOT: $command -> $paragraph\n";
-}
-
-sub add_text {
-    my ( $parser, $paragraph, $line_num ) = @_;
-    return unless exists $parser->{_current_};
-    return if ( $line_num - $parser->{_lineno_} > 15 );
-    $paragraph =~ s/^\s+//s;
-    $paragraph =~ s/\s+$//s;
-    $paragraph = $parser->interpolate( $paragraph, $line_num );
-    $parser->{_deb_}->{ $parser->{_current_} } .= "\n\n" . $paragraph;
-
-    #print "GOTT: $paragraph'\n";
-}
-
-sub verbatim { shift->add_text(@_) }
-
-sub textblock { shift->add_text(@_) }
-
-sub interior_sequence {
-    my ( $parser, $seq_command, $seq_argument ) = @_;
-    if ( $seq_command eq 'E' ) {
-        my %map = ( 'gt' => '>', 'lt' => '<', 'sol' => '/', 'verbar' => '|' );
-        return $map{$seq_argument} if exists $map{$seq_argument};
-        return chr($seq_argument) if ( $seq_argument =~ /^\d+$/ );
-
-        # html names...
-    }
-    return $seq_argument;
-}
-
-######################################################################
-# Main dh-make-perl starts here, don't look any further!
-package main;
 use strict;
 use warnings;
 
@@ -796,7 +723,7 @@ sub extract_name_ver_from_makefile {
 sub extract_desc {
     my ( $file, $parser, $modulename );
     $file   = shift;
-    $parser = new MyPod;
+    $parser = new DhMakePerl::PodParser;
     return unless -f $file;
     $parser->set_names(qw(NAME DESCRIPTION DETAILS COPYRIGHT AUTHOR AUTHORS));
     $parser->parse_from_file($file);
