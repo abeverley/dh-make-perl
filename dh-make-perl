@@ -7,6 +7,8 @@ use DhMakePerl;
 
 exit DhMakePerl::run();
 
+__END__
+
 =head1 NAME
 
 B<dh-make-perl> - Create debian source packages from perl modules
