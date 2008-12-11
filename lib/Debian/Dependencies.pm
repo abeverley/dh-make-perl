@@ -57,6 +57,12 @@ sub new {
     return $self;
 }
 
+sub _stringify {
+    my $self = shift;
+
+    return join( ', ', @$self );
+}
+
 =back
 
 =head2 OBJECT METHODS
@@ -74,11 +80,7 @@ libalpa-perl, libarm-perl (>= 2), libppi-perl (>= 3.0)
 
 =cut
 
-sub _stringify {
-    my $self = shift;
 
-    return join( ', ', @$self );
-}
 
 sub prune(@) {
     my $self = shift;
