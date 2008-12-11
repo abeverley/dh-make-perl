@@ -3,18 +3,20 @@
 use strict;
 use warnings;
 
-use Test::More tests => 18;
+use Test::More tests => 19;
+
+BEGIN {
+    use_ok 'Debian::AptContents';
+};
 
 use FindBin qw($Bin);
 use File::Touch qw(touch);
-
-require "$Bin/../dh-make-perl";        # Load our code for testing.
 
 unlink("$Bin/Contents.cache");
 
 sub instance
 {
-    AptContents->new({
+    Debian::AptContents->new({
         homedir => $Bin,
         contents_dir    => "$Bin/contents",
         verbose => 0,
@@ -23,7 +25,7 @@ sub instance
     });
 }
 
-eval { AptContents->new() };
+eval { Debian::AptContents->new() };
 ok( $@, 'AptContents->new with no homedir dies' );
 like( $@, qr/No homedir given/, 'should say why it died' );
 
