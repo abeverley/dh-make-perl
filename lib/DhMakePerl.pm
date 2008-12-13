@@ -28,30 +28,29 @@ TO BE FILLED
 
 =cut
 
-use DhMakePerl::PodParser;
-use YAML;
-use IO::File;
-use File::Basename;
-use File::Find;
-use File::Copy qw(copy move);
-use User::pwent;
-use Getopt::Long;
-use Cwd;
-use CPAN;
-use Module::Depends;
-use Module::Depends::Intrusive;
-use Email::Date::Format qw(email_date);
-use Text::Wrap;
-use Module::CoreList ();
 use AptPkg::Config;
-use Debian::Dependency;
+use CPAN;
+use Cwd;
+use Debian::AptContents;
 use Debian::Dependencies;
+use Debian::Dependency;
+use DhMakePerl::PodParser;
+use Email::Date::Format qw(email_date);
+use File::Basename;
+use File::Copy qw(copy move);
+use File::Find;
+use Getopt::Long;
+use IO::File;
+use Module::CoreList ();
+use Module::Depends::Intrusive;
+use Module::Depends;
+use Text::Wrap;
+use User::pwent;
+use YAML;
+
 
 # TODO:
 # * get more info from the package (maybe using CPAN methods)
-
-use Debian::AptContents;
-use Debian::Dependency;
 
 my ($min_perl_version, $debstdversion, $priority,  $section,
     @depends,          @bdepends,      @bdependsi, $maintainer,
