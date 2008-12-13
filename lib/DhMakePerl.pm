@@ -46,6 +46,7 @@ use Module::Depends::Intrusive;
 use Module::Depends;
 use Text::Wrap;
 use User::pwent;
+use WWW::Mechanize;
 use YAML;
 
 
@@ -113,10 +114,12 @@ my ($opt_arch,        $opt_basepkgs, $opt_bdepends,    $opt_bdependsi,
 my $mod_cpan_version;
 
 sub new {
-	return bless {}, shift;
+    return bless {}, shift;
 }
 
 sub run {
+    my ($self) = @_;
+
     $opt_dbflags = $> == 0 ? "" : "-rfakeroot";
     chomp($date);
 
@@ -152,12 +155,12 @@ sub run {
         'data-dir=s'      => \$opt_datadir,
         'home-dir=s'      => \$opt_homedir,
         'refresh-cache'   => \$opt_refresh_cache,
-    ) or die usage_instructions();
+    ) or die $self->usage_instructions();
 
     @bdepends = ( Debian::Dependency->new( 'debhelper', $opt_dh ) );
 
     # Help requested? Nice, we can just die! Isn't it helpful?
-    die usage_instructions() if $opt_help;
+    die $self->usage_instructions() if $opt_help;
     die "CPANPLUS support disabled, sorry" if $opt_cpanplus;
 
     if ($opt_refresh_cache) {
@@ -173,7 +176,7 @@ sub run {
 
     $arch = $opt_arch if defined $opt_arch;
 
-    $maintainer = get_maintainer($opt_email);
+    $maintainer = $self->get_maintainer($opt_email);
 
     if ( defined $opt_desc ) {
         $desc = $opt_desc;
@@ -192,36 +195,41 @@ sub run {
         die "debian/copyright.bak already exists. Aborting!\n"
             if -e "debian/copyright.bak";
 
-        $meta = process_meta("$maindir/META.yml") if ( -f "$maindir/META.yml" );
-        ( $pkgname, $version ) = extract_basic();  # also detects arch-dep package
-        $module_build = ( -f "$maindir/Build.PL" ) ? "Module-Build" : "MakeMaker";
+        $meta = $self->process_meta("$maindir/META.yml")
+            if ( -f "$maindir/META.yml" );
+        ( $pkgname, $version )
+            = $self->extract_basic();    # also detects arch-dep package
+        $module_build
+            = ( -f "$maindir/Build.PL" ) ? "Module-Build" : "MakeMaker";
         $debiandir = './debian';
-        extract_changelog($maindir);
-        extract_docs($maindir);
-        extract_examples($maindir);
+        $self->extract_changelog($maindir);
+        $self->extract_docs($maindir);
+        $self->extract_examples($maindir);
         print "Found changelog: $changelog\n"
             if defined $changelog and $opt_verbose;
         print "Found docs: @docs\n" if $opt_verbose;
         print "Found examples: @examples\n" if @examples and $opt_verbose;
         copy( "$debiandir/rules", "$debiandir/rules.bak" );
-        create_rules("$debiandir/rules");
+        $self->create_rules("$debiandir/rules");
         if (! -f "$debiandir/compat" or $opt_dh == 7) {
-            create_compat("$debiandir/compat");
+            $self->create_compat("$debiandir/compat");
         }
-        fix_rules( "$debiandir/rules", ( defined $changelog ? $changelog : '' ),
+        $self->fix_rules( "$debiandir/rules",
+            ( defined $changelog ? $changelog : '' ),
             \@docs, \@examples, );
         copy( "$debiandir/copyright", "$debiandir/copyright.bak" );
-        create_copyright("$debiandir/copyright");
+        $self->create_copyright("$debiandir/copyright");
         print "--- Done\n" if $opt_verbose;
         return 0;
     }
 
-    load_overrides();
-    my $tarball = setup_dir();
-    $meta = process_meta("$maindir/META.yml") if ( -f "$maindir/META.yml" );
-    findbin_fix();
+    $self->load_overrides();
+    my $tarball = $self->setup_dir();
+    $meta = $self->process_meta("$maindir/META.yml")
+        if ( -f "$maindir/META.yml" );
+    $self->findbin_fix();
 
-    ( $pkgname, $version ) = extract_basic();
+    ( $pkgname, $version ) = $self->extract_basic();
     if ( defined $opt_packagename ) {
         $pkgname = $opt_packagename;
     }
@@ -252,14 +260,14 @@ sub run {
 
     push @depends, Debian::Dependency->new('${shlibs:Depends}') if $arch eq 'any';
     push @depends, Debian::Dependency->new('${misc:Depends}');
-    my $extradeps = extract_depends( $maindir, $apt_contents, 0 );
+    my $extradeps = $self->extract_depends( $maindir, $apt_contents, 0 );
     push @depends, @$extradeps;
     push @depends, Debian::Dependencies->new($opt_depends) if $opt_depends;
 
     $module_build = ( -f "$maindir/Build.PL" ) ? "Module-Build" : "MakeMaker";
-    extract_changelog($maindir);
-    extract_docs($maindir);
-    extract_examples($maindir);
+    $self->extract_changelog($maindir);
+    $self->extract_docs($maindir);
+    $self->extract_examples($maindir);
 
     push @bdepends, Debian::Dependency->new('libmodule-build-perl')
         if ( $module_build eq "Module-Build" );
@@ -267,13 +275,13 @@ sub run {
     my ( @extrabdepends, @extrabdependsi );
     if ( $arch eq 'any' ) {
         @extrabdepends = (
-            @{ extract_depends( $maindir, $apt_contents, 1 ) },
+            @{ $self->extract_depends( $maindir, $apt_contents, 1 ) },
             @$extradeps,
         );
     }
     else {
         @extrabdependsi = (
-            @{ extract_depends( $maindir, $apt_contents, 1 ) },
+            @{ $self->extract_depends( $maindir, $apt_contents, 1 ) },
             @$extradeps,
         );
     }
@@ -284,7 +292,7 @@ sub run {
     push @bdependsi, Debian::Dependencies->new($opt_bdependsi) if $opt_bdependsi;
     push @bdependsi, @extrabdependsi;
 
-    apply_overrides();
+    $self->apply_overrides();
 
     die "Cannot find a description for the package: use the --desc switch\n"
         unless $desc;
@@ -298,30 +306,33 @@ sub run {
 
     # start writing out the data
     mkdir( $debiandir, 0755 ) || die "Cannot create $debiandir dir: $!\n";
-    create_control("$debiandir/control");
+    $self->create_control("$debiandir/control");
     if ( defined $opt_closes ) {
         $closes = $opt_closes;
     }
     else {
-        $closes = get_itp($pkgname);
+        $closes = $self->get_itp($pkgname);
     }
-    create_changelog( "$debiandir/changelog", $closes );
-    create_rules("$debiandir/rules");
-    create_compat("$debiandir/compat");
-    create_watch("$debiandir/watch") if $upsurl;
+    $self->create_changelog( "$debiandir/changelog", $closes );
+    $self->create_rules("$debiandir/rules");
+    $self->create_compat("$debiandir/compat");
+    $self->create_watch("$debiandir/watch") if $upsurl;
 
     #create_readme("$debiandir/README.Debian");
-    create_copyright("$debiandir/copyright");
-    fix_rules( "$debiandir/rules", ( defined $changelog ? $changelog : '' ),
+    $self->create_copyright("$debiandir/copyright");
+    $self->fix_rules( "$debiandir/rules",
+        ( defined $changelog ? $changelog : '' ),
         \@docs, \@examples );
-    apply_final_overrides();
-    build_package($maindir) if $opt_build or $opt_install;
-    install_package($debiandir) if $opt_install;
+    $self->apply_final_overrides();
+    $self->build_package($maindir) if $opt_build or $opt_install;
+    $self->install_package($debiandir) if $opt_install;
     print "--- Done\n" if $opt_verbose;
     return(0);
 }
 
 sub usage_instructions {
+    my ($self) = @_;
+
     return <<"USAGE"
 Usage:
 $0 [ --build ] [ --install ] [ SOURCE_DIR | --cpan MODULE ]
@@ -339,7 +350,7 @@ USAGE
 }
 
 sub is_core_module {
-    my $module = shift;
+    my ( $self, $module ) = @_;
 
     my $core = $Module::CoreList::version{$]}
             || $Module::CoreList::version{$]+0};
@@ -351,13 +362,15 @@ sub is_core_module {
 }
 
 sub setup_dir {
+    my ($self) = @_;
+
     my ( $dist, $mod, $cpanversion, $tarball );
     $mod_cpan_version = '';
     if ($opt_cpan) {
         my ($new_maindir);
 
         # Is the module a core module?
-        if ( is_core_module($opt_cpan) ) {
+        if ( $self->is_core_module($opt_cpan) ) {
             die "$opt_cpan is a standard module. Will not build without --core-ok.\n"
                 unless $opt_core_ok;
         }
@@ -468,7 +481,7 @@ sub setup_dir {
 }
 
 sub build_package {
-    my $maindir = shift;
+    my ( $self, $maindir ) = @_;
 
     # uhmf! dpkg-genchanges doesn't cope with the deb being in another dir..
     #system("dpkg-buildpackage -b -us -uc $opt_dbflags") == 0
@@ -478,6 +491,8 @@ sub build_package {
 }
 
 sub install_package {
+    my ($self) = @_;
+
     my ( $archspec, $debname );
 
     if ( $arch eq 'any' ) {
@@ -495,6 +510,8 @@ sub install_package {
 }
 
 sub process_meta {
+    my ($self) = @_;
+
     my ( $file, $yaml );
     $file = shift;
 
@@ -517,9 +534,11 @@ sub process_meta {
 }
 
 sub extract_basic_copyright {
+    my ($self) = @_;
+
     for my $f ( map( "$maindir/$_", qw(LICENSE LICENCE COPYING) ) ) {
         if ( -f $f ) {
-            my $fh = _file_r($f);
+            my $fh = $self->_file_r($f);
             return join( '', $fh->getlines );
         }
     }
@@ -527,7 +546,9 @@ sub extract_basic_copyright {
 }
 
 sub extract_basic {
-    ( $perlname, $version ) = extract_name_ver();
+    my ($self) = @_;
+
+    ( $perlname, $version ) = $self->extract_name_ver();
     find( \&check_for_xs, $maindir );
     $pkgname = lc $perlname;
     $pkgname = 'lib' . $pkgname unless $pkgname =~ /^lib/;
@@ -546,9 +567,9 @@ sub extract_basic {
 
     $upsurl = "http://search.cpan.org/dist/$perlname/";
 
-    $copyright = extract_basic_copyright();
+    $copyright = $self->extract_basic_copyright();
     if ($modulepm) {
-        extract_desc($modulepm);
+        $self->extract_desc($modulepm);
     }
 
     $opt_exclude = '^$' unless $opt_exclude;
@@ -556,7 +577,7 @@ sub extract_basic {
         sub {
             $File::Find::name !~ /$opt_exclude/
                 && /\.(pm|pod)$/
-                && extract_desc($_);
+                && $self->extract_desc($_);
         },
         $maindir
     );
@@ -565,22 +586,27 @@ sub extract_basic {
 }
 
 sub makefile_pl {
+    my ($self) = @_;
+
     return "$maindir/Makefile.PL";
 }
 
 sub findbin_fix {
+    my ($self) = @_;
 
     # FindBin requires to know the name of the invoker - and requires it to be
     # Makefile.PL to function properly :-/
-    $0 = makefile_pl();
+    $0 = $self->makefile_pl();
     if ( exists $FindBin::{Bin} ) {
         FindBin::again();
     }
 }
 
 sub extract_name_ver {
+    my ($self) = @_;
+
     my ( $name, $ver, $makefile );
-    $makefile = makefile_pl();
+    $makefile = $self->makefile_pl();
 
     if ( defined $meta->{name} and defined $meta->{version} ) {
         $name = $meta->{name};
@@ -588,7 +614,7 @@ sub extract_name_ver {
 
     }
     else {
-        ( $name, $ver ) = extract_name_ver_from_makefile($makefile);
+        ( $name, $ver ) = $self->extract_name_ver_from_makefile($makefile);
     }
 
     $name =~ s/::/-/g;
@@ -596,12 +622,12 @@ sub extract_name_ver {
 }
 
 sub extract_name_ver_from_makefile {
-    my ( $file, $name, $ver, $vfrom, $dir, $makefile );
-    $makefile = shift;
+    my ( $self, $makefile ) = @_;
+    my ( $file, $name, $ver, $vfrom, $dir );
 
     {
         local $/ = undef;
-        my $fh = _file_r($makefile);
+        my $fh = $self->_file_r($makefile);
         $file = $fh->getline;
     }
 
@@ -722,7 +748,7 @@ sub extract_name_ver_from_makefile {
             and -f "$dir/$vfrom"
             and -r "$dir/$vfrom" )
         {
-            my $fh = _file_r("$dir/$vfrom");
+            my $fh = $self->_file_r("$dir/$vfrom");
             while ( my $lin = $fh->getline ) {
                 if ( $lin =~ /([\$*])(([\w\:\']*)\bVERSION)\b.*\=/ ) {
                     no strict;
@@ -751,8 +777,9 @@ sub extract_name_ver_from_makefile {
 }
 
 sub extract_desc {
-    my ( $file, $parser, $modulename );
-    $file   = shift;
+    my ( $self, $file ) = @_;
+
+    my ( $parser, $modulename );
     $parser = new DhMakePerl::PodParser;
     return unless -f $file;
     $parser->set_names(qw(NAME DESCRIPTION DETAILS COPYRIGHT AUTHOR AUTHORS));
@@ -827,7 +854,8 @@ sub extract_desc {
 }
 
 sub extract_changelog {
-    my ($dir) = shift;
+    my ( $self, $dir ) = @_;
+
     $dir .= '/' unless $dir =~ m(/$);
     find(
         sub {
@@ -841,7 +869,8 @@ sub extract_changelog {
 }
 
 sub extract_docs {
-    my ($dir) = shift;
+    my ( $self, $dir ) = @_;
+
     $dir .= '/' unless $dir =~ m(/$);
     find(
         sub {
@@ -855,7 +884,8 @@ sub extract_docs {
 }
 
 sub extract_examples {
-    my ($dir) = shift;
+    my ( $self, $dir ) = @_;
+
     $dir .= '/' unless $dir =~ m(/$);
     find(
         sub {
@@ -873,7 +903,7 @@ sub extract_examples {
 # if $build_deps is true, returns build-time dependencies, otherwise
 # returns run-time dependencies
 sub run_depends {
-    my ( $depends_module, $dir, $build_deps ) = @_;
+    my ( $self, $depends_module, $dir, $build_deps ) = @_;
 
     no warnings;
     local *STDERR;
@@ -897,6 +927,8 @@ sub run_depends {
 # we want a clean list instead:
 #   libalpa-perl, libarm-perl (>= 2), libppi-perl (>= 3.0)
 sub prune_deps(@) {
+    my $self = shift;
+
     my %deps;
     for (@_) {
         my $p = $_->pkg;
@@ -920,12 +952,12 @@ sub prune_deps(@) {
 
 sub find_debs_for_modules {
 
-    my ( $dep_hash, $apt_contents ) = @_;
+    my ( $self, $dep_hash, $apt_contents ) = @_;
 
     my @uses;
 
     foreach my $module ( keys(%$dep_hash) ) {
-        if ( is_core_module($module) ) {
+        if ( $self->is_core_module($module) ) {
             print "= $module is a core module\n" if $opt_verbose;
 
             # TODO
@@ -990,9 +1022,8 @@ sub find_debs_for_modules {
 }
 
 sub extract_depends {
-    my $dir  = shift;
-    my $apt_contents = shift;
-    my $build_deps = shift;
+    my ( $self, $dir, $apt_contents, $build_deps ) = @_;
+
     my ($dep_hash);
     local @INC = ( $dir, @INC );
 
@@ -1001,7 +1032,10 @@ sub extract_depends {
     # try Module::Depends, but if that fails then
     # fall back to Module::Depends::Intrusive.
 
-    eval { $dep_hash = run_depends( 'Module::Depends', $dir, $build_deps ); };
+    eval {
+        $dep_hash
+            = $self->run_depends( 'Module::Depends', $dir, $build_deps );
+    };
     if ($@) {
         if ($opt_verbose) {
             warn '=' x 70, "\n";
@@ -1012,8 +1046,9 @@ sub extract_depends {
         }
 
         eval {
-            $dep_hash = run_depends(
-                'Module::Depends::Intrusive', $dir, $build_deps );
+            $dep_hash
+                = $self->run_depends( 'Module::Depends::Intrusive', $dir,
+                $build_deps );
         };
         if ($@) {
             if ($opt_verbose) {
@@ -1034,7 +1069,8 @@ sub extract_depends {
         }
     }
 
-    my( $debs, $missing ) = find_debs_for_modules( $dep_hash, $apt_contents );
+    my ( $debs, $missing )
+        = $self->find_debs_for_modules( $dep_hash, $apt_contents );
 
     if ($opt_verbose) {
         print "\n";
@@ -1074,9 +1110,7 @@ sub extract_depends {
 sub get_itp {
     return if $ENV{NO_NETWORK};
 
-    use WWW::Mechanize;
-
-    my ($package) = shift @_;
+    my ( $self, $package ) = @_;
 
     my $wnpp
         = "http://bugs.debian.org/cgi-bin/pkgreport.cgi?pkg=wnpp;includesubj=ITP: $package";
@@ -1095,6 +1129,8 @@ sub get_itp {
 }
 
 sub check_for_xs {
+    my ($self) = @_;
+
     ( !$opt_exclude or $File::Find::name !~ /$opt_exclude/ )
         && /\.(xs|c|cpp|cxx)$/i
         && do {
@@ -1103,11 +1139,11 @@ sub check_for_xs {
 }
 
 sub fix_rules {
-    my ( $rules_file, $changelog_file, $docs, $examples, $test_line, $fh,
-        @content );
-    ( $rules_file, $changelog_file, $docs, $examples ) = @_;
+    my ( $self, $rules_file, $changelog_file, $docs, $examples ) = @_;
 
-    $fh      = _file_rw($rules_file);
+    my ( $test_line, $fh, @content );
+
+    $fh      = $self->_file_rw($rules_file);
     @content = $fh->getlines;
 
     $fh->seek( 0, 0 ) || die "Can't rewind $rules_file: $!";
@@ -1152,13 +1188,15 @@ sub fix_rules {
 }
 
 sub create_control {
-    my $fh = _file_w(shift);
+    my ( $self, $file ) = @_;
+
+    my $fh = $self->_file_w($file);
 
     if (    $arch ne 'all'
         and !defined($opt_bdepends)
         and !defined($opt_bdependsi) )
     {
-        @bdepends = prune_deps( @bdepends, @bdependsi );
+        @bdepends = $self->prune_deps( @bdepends, @bdependsi );
         @bdependsi = ();
     }
 
@@ -1213,8 +1251,9 @@ sub create_control {
 }
 
 sub create_changelog {
-    my $fh  = _file_w(shift);
-    my $bug = shift;
+    my ( $self, $file, $bug ) = @_;
+
+    my $fh  = $self->_file_w($file);
 
     my $closes = $bug ? " (Closes: #$bug)" : '';
 
@@ -1227,8 +1266,9 @@ sub create_changelog {
 }
 
 sub create_rules {
-    my ( $file, $rulesname, $error );
-    ($file) = shift;
+    my ( $self, $file ) = @_;
+
+    my ( $rulesname, $error );
     $rulesname = (
           ( $opt_dh eq 7 )
         ? $arch eq 'all'
@@ -1250,14 +1290,18 @@ sub create_rules {
 }
 
 sub create_compat {
-    my $fh = _file_w(shift);
+    my ( $self, $file ) = @_;
+
+    my $fh = $self->_file_w($file);
     $fh->print("$opt_dh\n");
     $fh->close;
 }
 
 sub create_copyright {
+    my ( $self, $filename ) = @_;
+
     my ( $fh, %fields, @res, @incomplete, $year );
-    $fh = _file_w(shift);
+    $fh = $self->_file_w($filename);
 
     # In case $author spawns more than one line, indent them all.
     my $cprt_author = $author || '(information incomplete)';
@@ -1428,11 +1472,14 @@ sub create_copyright {
     $fh->print( join( "\n", @res, '' ) );
     $fh->close;
 
-    _warn_incomplete_copyright( join( "\n", @incomplete ) ) if @incomplete;
+    $self->_warn_incomplete_copyright( join( "\n", @incomplete ) )
+        if @incomplete;
 }
 
 sub create_readme {
-    my $fh = _file_w(shift);
+    my ( $self, $filename ) = @_;
+
+    my $fh = $self->_file_w($filename);
     $fh->print(
         "This is the debian package for the $perlname module.
 It was created by $maintainer using dh-make-perl.
@@ -1442,7 +1489,9 @@ It was created by $maintainer using dh-make-perl.
 }
 
 sub create_watch {
-    my $fh = _file_w(shift);
+    my ( $self, $filename ) = @_;
+
+    my $fh = $self->_file_w($filename);
 
     my $version_re = 'v?(\d[\d_.-]+)\.(?:tar(?:\.gz|\.bz2)?|tgz|zip)';
 
@@ -1457,7 +1506,9 @@ $upsurl   .*/$perlname-$version_re\$
 }
 
 sub get_maintainer {
-    my ( $user, $pwnam, $email, $name, $mailh );
+    my ($self, $email ) = @_;
+
+    my ( $user, $pwnam, $name, $mailh );
     $user = $ENV{LOGNAME} || $ENV{USER};
     $pwnam = getpwuid($<);
     die "Cannot determine current user\n" unless $pwnam;
@@ -1470,7 +1521,7 @@ sub get_maintainer {
     }
     $user ||= $pwnam->name;
     $name ||= $user;
-    $email = shift @_ || ( $ENV{DEBEMAIL} || $ENV{EMAIL} );
+    $email ||= ( $ENV{DEBEMAIL} || $ENV{EMAIL} );
     unless ($email) {
         chomp( $mailh = `cat /etc/mailname` );
         $email = $user . '@' . $mailh;
@@ -1482,6 +1533,8 @@ sub get_maintainer {
 }
 
 sub load_overrides {
+    my ($self) = @_;
+
     eval {
         do "$opt_datadir/overrides" if -f "$opt_datadir/overrides";
         do "$opt_homedir/overrides" if -f "$opt_homedir/overrides";
@@ -1492,70 +1545,118 @@ sub load_overrides {
 }
 
 sub apply_overrides {
+    my ($self) = @_;
+
     my ( $data, $val, $subkey );
 
-    ( $data, $subkey ) = get_override_data();
+    ( $data, $subkey ) = $self->get_override_data();
     return unless defined $data;
     $pkgname = $val
         if (
-        defined( $val = get_override_val( $data, $subkey, 'pkgname' ) ) );
+        defined(
+            $val = $self->get_override_val( $data, $subkey, 'pkgname' )
+        )
+        );
     $srcname = $val
         if (
-        defined( $val = get_override_val( $data, $subkey, 'srcname' ) ) );
+        defined(
+            $val = $self->get_override_val( $data, $subkey, 'srcname' )
+        )
+        );
     $section = $val
         if (
-        defined( $val = get_override_val( $data, $subkey, 'section' ) ) );
+        defined(
+            $val = $self->get_override_val( $data, $subkey, 'section' )
+        )
+        );
     $priority = $val
         if (
-        defined( $val = get_override_val( $data, $subkey, 'priority' ) ) );
+        defined(
+            $val = $self->get_override_val( $data, $subkey, 'priority' )
+        )
+        );
     @depends = Debian::Dependencies->new($val)
         if (
-        defined( $val = get_override_val( $data, $subkey, 'depends' ) ) );
+        defined(
+            $val = $self->get_override_val( $data, $subkey, 'depends' )
+        )
+        );
     @bdepends = Debian::Dependencies->new($val)
         if (
-        defined( $val = get_override_val( $data, $subkey, 'bdepends' ) ) );
+        defined(
+            $val = $self->get_override_val( $data, $subkey, 'bdepends' )
+        )
+        );
     @bdependsi = Debian::Dependencies->new($val)
         if (
-        defined( $val = get_override_val( $data, $subkey, 'bdependsi' ) ) );
+        defined(
+            $val = $self->get_override_val( $data, $subkey, 'bdependsi' )
+        )
+        );
     $desc = $val
-        if ( defined( $val = get_override_val( $data, $subkey, 'desc' ) ) );
+        if (
+        defined( $val = $self->get_override_val( $data, $subkey, 'desc' ) ) );
     $longdesc = $val
         if (
-        defined( $val = get_override_val( $data, $subkey, 'longdesc' ) ) );
+        defined(
+            $val = $self->get_override_val( $data, $subkey, 'longdesc' )
+        )
+        );
     $pkgversion = $val
         if (
-        defined( $val = get_override_val( $data, $subkey, 'version' ) ) );
+        defined(
+            $val = $self->get_override_val( $data, $subkey, 'version' )
+        )
+        );
     $arch = $val
-        if ( defined( $val = get_override_val( $data, $subkey, 'arch' ) ) );
+        if (
+        defined( $val = $self->get_override_val( $data, $subkey, 'arch' ) ) );
     $changelog = $val
         if (
-        defined( $val = get_override_val( $data, $subkey, 'changelog' ) ) );
+        defined(
+            $val = $self->get_override_val( $data, $subkey, 'changelog' )
+        )
+        );
     @docs = split( /\s+/, $val )
-        if ( defined( $val = get_override_val( $data, $subkey, 'docs' ) ) );
+        if (
+        defined( $val = $self->get_override_val( $data, $subkey, 'docs' ) ) );
 
     $extrasfields = $val
         if (
-        defined( $val = get_override_val( $data, $subkey, 'sfields' ) ) );
+        defined(
+            $val = $self->get_override_val( $data, $subkey, 'sfields' )
+        )
+        );
     $extrapfields = $val
         if (
-        defined( $val = get_override_val( $data, $subkey, 'pfields' ) ) );
+        defined(
+            $val = $self->get_override_val( $data, $subkey, 'pfields' )
+        )
+        );
     $maintainer = $val
         if (
-        defined( $val = get_override_val( $data, $subkey, 'maintainer' ) ) );
+        defined(
+            $val = $self->get_override_val( $data, $subkey, 'maintainer' )
+        )
+        );
 
     # fix longdesc if needed
     $longdesc =~ s/^\s*/ /mg;
 }
 
 sub apply_final_overrides {
+    my ($self) = @_;
+
     my ( $data, $val, $subkey );
 
-    ( $data, $subkey ) = get_override_data();
+    ( $data, $subkey ) = $self->get_override_data();
     return unless defined $data;
-    get_override_val( $data, $subkey, 'finish' );
+    $self->get_override_val( $data, $subkey, 'finish' );
 }
 
 sub get_override_data {
+    my ($self) = @_;
+
     my ( $data, $checkver, $subkey );
     $data = $overrides{$perlname};
 
@@ -1573,8 +1674,9 @@ sub get_override_data {
 }
 
 sub get_override_val {
-    my ( $data, $subkey, $key, $val );
-    ( $data, $subkey, $key ) = @_;
+    my ( $self, $data, $subkey, $key ) = @_;
+
+    my $val;
     $val
         = defined( $data->{ $subkey . $key } )
         ? $data->{ $subkey . $key }
@@ -1584,6 +1686,8 @@ sub get_override_val {
 }
 
 sub _warn_incomplete_copyright {
+    my ($self) = @_;
+
     print '*' x 10, '
 Copyright information incomplete!
 
@@ -1599,26 +1703,28 @@ The causes for this warning are:
 }
 
 sub _file_r {
-    my ( $file, $fh );
-    $file = shift;
-    $fh = IO::File->new( $file, 'r' ) or die "Cannot open $file: $!\n";
+    my ( $self, $filename ) = @_;
+
+    my $fh = IO::File->new( $filename, 'r' )
+        or die "Cannot open $filename: $!\n";
     return $fh;
 }
 
 sub _file_w {
-    my ( $file, $fh );
-    $file = shift;
-    $fh = IO::File->new( $file, 'w' ) or die "Cannot open $file: $!\n";
+    my ( $self, $filename ) = @_;
+
+    my $fh = IO::File->new( $filename, 'w' )
+        or die "Cannot open $filename: $!\n";
     return $fh;
 }
 
 sub _file_rw {
-    my ( $file, $fh );
-    $file = shift;
-    $fh = IO::File->new( $file, 'r+' ) or die "Cannot open $file: $!\n";
+    my ( $self, $filename ) = @_;
+
+    my $fh = IO::File->new( $filename, 'r+' )
+        or die "Cannot open $filename: $!\n";
     return $fh;
 }
-
 
 =head1 AUTHOR
 

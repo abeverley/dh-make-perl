@@ -5,11 +5,13 @@ use FindBin qw($Bin);
 
 use DhMakePerl;
 
+my $maker = DhMakePerl->new;
+
 my ($name, $ver);
 
 eval {
   ($name, $ver) = 
-    DhMakePerl::extract_name_ver_from_makefile("$Bin/makefiles/module-install-autodie.PL");
+    $maker->extract_name_ver_from_makefile("$Bin/makefiles/module-install-autodie.PL");
 };
 
 is($@, "", "Calling extract_name_ver_from_makefile should not die on legit file");
