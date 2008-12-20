@@ -28,26 +28,27 @@ TO BE FILLED
 
 =cut
 
-use AptPkg::Config;
-use CPAN;
-use Cwd;
-use Debian::AptContents;
-use Debian::Dependencies;
-use Debian::Dependency;
-use DhMakePerl::PodParser;
+use AptPkg::Config ();
+use CPAN ();
+use Cwd qw( getcwd );
+use Debian::AptContents ();
+use Debian::Dependencies ();
+use Debian::Dependency ();
+use DhMakePerl::Config;
+use DhMakePerl::PodParser ();
 use Email::Date::Format qw(email_date);
-use File::Basename;
-use File::Copy qw(copy move);
-use File::Find;
-use Getopt::Long;
-use IO::File;
+use File::Basename qw( basename dirname );
+use File::Copy qw( copy move );
+use File::Find qw( find );
+use File::Spec::Functions qw( catfile );
+use IO::File ();
 use Module::CoreList ();
-use Module::Depends::Intrusive;
-use Module::Depends;
-use Text::Wrap;
-use User::pwent;
-use WWW::Mechanize;
-use YAML;
+use Module::Depends::Intrusive ();
+use Module::Depends ();
+use Text::Wrap qw( fill wrap );
+use User::pwent ();
+use WWW::Mechanize ();
+use YAML ();
 
 
 # TODO:
