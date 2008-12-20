@@ -33,6 +33,7 @@ TO BE FILLED
 =cut
 
 use AptPkg::Config ();
+use Config qw( %Config );
 use CPAN ();
 use Cwd qw( getcwd );
 use Debian::AptContents ();
@@ -53,6 +54,7 @@ use Text::Wrap qw( fill wrap );
 use User::pwent ();
 use WWW::Mechanize ();
 use YAML ();
+use version qw( qv );
 
 
 # TODO:
@@ -308,11 +310,13 @@ USAGE
 sub is_core_module {
     my ( $self, $module ) = @_;
 
-    my $core = $Module::CoreList::version{$]}
-            || $Module::CoreList::version{$]+0};
+    my $perl_version = qv( $Config{version} )->numify + 0;
+
+    my $core = $Module::CoreList::version{$perl_version};
 
     $core
-        or die "Internal error: \$Module::CoreList::version{ $] } is empty";
+        or die
+    "Internal error: \$Module::CoreList::version{$perl_version} is empty";
 
     return exists( $core->{$module} );
 }
