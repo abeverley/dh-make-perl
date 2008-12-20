@@ -4,8 +4,10 @@ use Test::More 'no_plan';
 use FindBin qw($Bin);
 
 use DhMakePerl;
+use DhMakePerl::Config;
 
 my $maker = DhMakePerl->new;
+$maker->cfg( DhMakePerl::Config->new );
 
 my ($name, $ver);
 

@@ -3,6 +3,10 @@ package DhMakePerl;
 use warnings;
 use strict;
 
+use base 'Class::Accessor';
+
+__PACKAGE__->mk_accessors( qw( cfg ) );
+
 =head1 NAME
 
 DhMakePerl - create Debian source package from CPAN dist
@@ -95,99 +99,43 @@ my ( $extrasfields, $extrapfields );
 my ($module_build);
 my ( @docs, @examples, $changelog, @args );
 
-my $opt_dh           = 7;
-my $opt_dist         = '{sid,unstable}';
-my $opt_sources_list = '/etc/apt/sources.list';
-my $opt_verbose      = 1;
-my $opt_email        = '';
-my $opt_exclude      = '(?:\/|^)(?:CVS|\.svn)\/';
-my $opt_datadir      = '/usr/share/dh-make-perl';
-my $opt_homedir      = "$ENV{HOME}/.dh-make-perl";
-
-my ($opt_arch,        $opt_basepkgs, $opt_bdepends,    $opt_bdependsi,
-    $opt_depends,     $opt_build,    $opt_install,     $opt_core_ok,
-    $opt_cpan,        $opt_cpanplus, $opt_cpan_mirror, $opt_closes,
-    $opt_dbflags,     $opt_desc,     $opt_help,        $opt_nometa,
-    $opt_notest,      $opt_pkg_perl, $opt_requiredeps, $opt_version,
-    $opt_packagename, $opt_refresh,  $opt_refresh_cache
-);
-
 my $mod_cpan_version;
-
-sub new {
-    return bless {}, shift;
-}
 
 sub run {
     my ($self) = @_;
 
-    $opt_dbflags = $> == 0 ? "" : "-rfakeroot";
+    unless ( $self->cfg ) {
+        $self->cfg( DhMakePerl::Config->new );
+        $self->cfg->parse_command_line_options;
+    }
+
     chomp($date);
 
-    GetOptions(
-        'arch=s'          => \$opt_arch,
-        'basepkgs=s'      => \$opt_basepkgs,
-        'bdepends=s'      => \$opt_bdepends,
-        'bdependsi=s'     => \$opt_bdependsi,
-        'build!'          => \$opt_build,
-        'core-ok'         => \$opt_core_ok,
-        'cpan=s'          => \$opt_cpan,
-        'cpanplus=s'      => \$opt_cpanplus,
-        'closes=i'        => \$opt_closes,
-        'cpan-mirror=s'   => \$opt_cpan_mirror,
-        'dbflags=s'       => \$opt_dbflags,
-        'depends=s'       => \$opt_depends,
-        'desc=s'          => \$opt_desc,
-        'exclude|i:s{,}'  => \$opt_exclude,
-        'help'            => \$opt_help,
-        'install!'        => \$opt_install,
-        'nometa'          => \$opt_nometa,
-        'notest'          => \$opt_notest,
-        'pkg-perl!'       => \$opt_pkg_perl,
-        'requiredeps'     => \$opt_requiredeps,
-        'version=s'       => \$opt_version,
-        'e|email=s'       => \$opt_email,
-        'p|packagename=s' => \$opt_packagename,
-        'refresh|R'       => \$opt_refresh,
-        'dh=i'            => \$opt_dh,
-        'sources-list=s'  => \$opt_sources_list,
-        'dist=s'          => \$opt_dist,
-        'verbose!'        => \$opt_verbose,
-        'data-dir=s'      => \$opt_datadir,
-        'home-dir=s'      => \$opt_homedir,
-        'refresh-cache'   => \$opt_refresh_cache,
-    ) or die $self->usage_instructions();
-
-    @bdepends = ( Debian::Dependency->new( 'debhelper', $opt_dh ) );
+    @bdepends = ( Debian::Dependency->new( 'debhelper', $self->cfg->dh ) );
 
     # Help requested? Nice, we can just die! Isn't it helpful?
-    die $self->usage_instructions() if $opt_help;
-    die "CPANPLUS support disabled, sorry" if $opt_cpanplus;
+    die $self->usage_instructions() if $self->cfg->help;
+    die "CPANPLUS support disabled, sorry" if $self->cfg->cpanplus;
 
-    if ($opt_refresh_cache) {
+    if ( $self->cfg->command eq 'refresh-cache' ) {
         my $apt_contents = Debian::AptContents->new({
-            homedir      => $opt_homedir,
-            dist         => $opt_dist,
-            sources_file => $opt_sources_list,
-            verbose      => $opt_verbose,
+            homedir      => $self->cfg->home_dir,
+            dist         => $self->cfg->dist,
+            sources_file => $self->cfg->sources_list,
+            verbose      => $self->cfg->verbose,
         });
 
         return 0;
     }
 
-    $arch = $opt_arch if defined $opt_arch;
+    $arch = $self->cfg->arch if $self->cfg->arch;
 
-    $maintainer = $self->get_maintainer($opt_email);
+    $maintainer = $self->get_maintainer( $self->cfg->email );
 
-    if ( defined $opt_desc ) {
-        $desc = $opt_desc;
-    }
-    else {
-        $desc = '';
-    }
+    $desc = $self->cfg->desc || '';
 
-    if ($opt_refresh) {
-        print "Engaging refresh mode\n" if $opt_verbose;
+    if ( $self->cfg->command eq 'refresh' ) {
+        print "Engaging refresh mode\n" if $self->cfg->verbose;
         $maindir = '.';
 
         die "debian/rules.bak already exists. Aborting!\n"
@@ -207,12 +155,12 @@ sub run {
         $self->extract_docs($maindir);
         $self->extract_examples($maindir);
         print "Found changelog: $changelog\n"
-            if defined $changelog and $opt_verbose;
-        print "Found docs: @docs\n" if $opt_verbose;
-        print "Found examples: @examples\n" if @examples and $opt_verbose;
+            if defined $changelog and $self->cfg->verbose;
+        print "Found docs: @docs\n" if $self->cfg->verbose;
+        print "Found examples: @examples\n" if @examples and $self->cfg->verbose;
         copy( "$debiandir/rules", "$debiandir/rules.bak" );
         $self->create_rules("$debiandir/rules");
-        if (! -f "$debiandir/compat" or $opt_dh == 7) {
+        if (! -f "$debiandir/compat" or $self->cfg->dh == 7) {
             $self->create_compat("$debiandir/compat");
         }
         $self->fix_rules( "$debiandir/rules",
@@ -220,7 +168,7 @@ sub run {
             \@docs, \@examples, );
         copy( "$debiandir/copyright", "$debiandir/copyright.bak" );
         $self->create_copyright("$debiandir/copyright");
-        print "--- Done\n" if $opt_verbose;
+        print "--- Done\n" if $self->cfg->verbose;
         return 0;
     }
 
@@ -231,14 +179,14 @@ sub run {
     $self->findbin_fix();
 
     ( $pkgname, $version ) = $self->extract_basic();
-    if ( defined $opt_packagename ) {
-        $pkgname = $opt_packagename;
+    if ( defined $self->cfg->packagename ) {
+        $pkgname = $self->cfg->packagename;
     }
-    unless ( defined $opt_version ) {
+    unless ( defined $self->cfg->version ) {
         $pkgversion = $version . "-1";
     }
     else {
-        $pkgversion = $opt_version;
+        $pkgversion = $self->cfg->version;
     }
 
     move( $tarball, dirname($tarball) . "/${pkgname}_${version}.orig.tar.gz" )
@@ -251,19 +199,21 @@ sub run {
         "The directory $debiandir is already present and I won't overwrite it: remove it yourself.\n";
 
     my $apt_contents = Debian::AptContents->new({
-        homedir      => $opt_homedir,
-        dist         => $opt_dist,
-        sources_file => $opt_sources_list,
-        verbose      => $opt_verbose,
+        homedir      => $self->cfg->home_dir,
+        dist         => $self->cfg->dist,
+        sources_file => $self->cfg->sources_list,
+        verbose      => $self->cfg->verbose,
     });
 
     undef($apt_contents) unless $apt_contents->cache;
 
-    push @depends, Debian::Dependency->new('${shlibs:Depends}') if $arch eq 'any';
+    push @depends, Debian::Dependency->new('${shlibs:Depends}')
+        if $arch eq 'any';
     push @depends, Debian::Dependency->new('${misc:Depends}');
     my $extradeps = $self->extract_depends( $maindir, $apt_contents, 0 );
     push @depends, @$extradeps;
-    push @depends, Debian::Dependencies->new($opt_depends) if $opt_depends;
+    push @depends, Debian::Dependencies->new( $self->cfg->depends )
+        if $self->cfg->depends;
 
     $module_build = ( -f "$maindir/Build.PL" ) ? "Module-Build" : "MakeMaker";
     $self->extract_changelog($maindir);
@@ -287,10 +237,12 @@ sub run {
         );
     }
 
-    push @bdepends, Debian::Dependencies->new($opt_bdepends) if $opt_bdepends;
+    push @bdepends, Debian::Dependencies->new( $self->cfg->bdepends )
+        if $self->cfg->bdepends;
     push @bdepends, @extrabdepends;
 
-    push @bdependsi, Debian::Dependencies->new($opt_bdependsi) if $opt_bdependsi;
+    push @bdependsi, Debian::Dependencies->new( $self->cfg->bdependsi )
+        if $self->cfg->bdependsi;
     push @bdependsi, @extrabdependsi;
 
     $self->apply_overrides();
@@ -299,17 +251,19 @@ sub run {
         unless $desc;
     print "Package does not provide a long description - ",
         " Please fill it in manually.\n"
-        if ( !defined $longdesc or $longdesc =~ /^\s*\.?\s*$/ ) and $opt_verbose;
-    print "Using maintainer: $maintainer\n" if $opt_verbose;
-    print "Found changelog: $changelog\n" if defined $changelog and $opt_verbose;
-    print "Found docs: @docs\n" if $opt_verbose;
-    print "Found examples: @examples\n" if @examples and $opt_verbose;
+        if ( !defined $longdesc or $longdesc =~ /^\s*\.?\s*$/ )
+            and $self->cfg->verbose;
+    print "Using maintainer: $maintainer\n" if $self->cfg->verbose;
+    print "Found changelog: $changelog\n"
+        if defined $changelog and $self->cfg->verbose;
+    print "Found docs: @docs\n" if $self->cfg->verbose;
+    print "Found examples: @examples\n" if @examples and $self->cfg->verbose;
 
     # start writing out the data
     mkdir( $debiandir, 0755 ) || die "Cannot create $debiandir dir: $!\n";
     $self->create_control("$debiandir/control");
-    if ( defined $opt_closes ) {
-        $closes = $opt_closes;
+    if ( defined $self->cfg->closes ) {
+        $closes = $self->cfg->closes;
     }
     else {
         $closes = $self->get_itp($pkgname);
@@ -325,9 +279,10 @@ sub run {
         ( defined $changelog ? $changelog : '' ),
         \@docs, \@examples );
     $self->apply_final_overrides();
-    $self->build_package($maindir) if $opt_build or $opt_install;
-    $self->install_package($debiandir) if $opt_install;
-    print "--- Done\n" if $opt_verbose;
+    $self->build_package($maindir)
+        if $self->cfg->build or $self->cfg->install;
+    $self->install_package($debiandir) if $self->cfg->install;
+    print "--- Done\n" if $self->cfg->verbose;
     return(0);
 }
 
@@ -367,32 +322,29 @@ sub setup_dir {
 
     my ( $dist, $mod, $cpanversion, $tarball );
     $mod_cpan_version = '';
-    if ($opt_cpan) {
+    if ( $self->cfg->cpan ) {
         my ($new_maindir);
 
         # Is the module a core module?
-        if ( $self->is_core_module($opt_cpan) ) {
-            die "$opt_cpan is a standard module. Will not build without --core-ok.\n"
-                unless $opt_core_ok;
+        if ( $self->is_core_module( $self->cfg->cpan ) ) {
+            die $self->cfg->cpan 
+            . " is a standard module. Will not build without --core-ok.\n"
+                unless $self->cfg->core_ok;
         }
 
-        # Make CPAN happy, make the user happy: Be more tolerant!
-        # Accept names to be specified with double-colon, dash or slash
-        $opt_cpan =~ s![/-]!::!g;
-
 ###		require CPAN;
-        CPAN::Config->load( be_silent => not $opt_verbose );
+        CPAN::Config->load( be_silent => not $self->cfg->verbose );
 
-        unshift( @{ $CPAN::Config->{'urllist'} }, $opt_cpan_mirror )
-            if $opt_cpan_mirror;
+        unshift( @{ $CPAN::Config->{'urllist'} }, $self->cfg->cpan_mirror )
+            if $self->cfg->cpan_mirror;
 
         $CPAN::Config->{'build_dir'} = $ENV{'HOME'} . "/.cpan/build";
         $CPAN::Config->{'cpan_home'} = $ENV{'HOME'} . "/.cpan/";
         $CPAN::Config->{'histfile'}  = $ENV{'HOME'} . "/.cpan/history";
         $CPAN::Config->{'keep_source_where'} = $ENV{'HOME'} . "/.cpan/source";
-        $CPAN::Config->{'tar_verbosity'} = $opt_verbose ? 'v' : '';
+        $CPAN::Config->{'tar_verbosity'} = $self->cfg->verbose ? 'v' : '';
         $CPAN::Config->{'load_module_verbosity'}
-            = $opt_verbose ? 'verbose' : 'silent';
+            = $self->cfg->verbose ? 'verbose' : 'silent';
 
         # This modification allows to retrieve all the modules that
         # match the user-provided string.
@@ -403,14 +355,14 @@ sub setup_dir {
         # different modules which only differ in case.
         #
         # This Closes: #451838
-        my @mod = CPAN::Shell->expand( 'Module', '/^' . $opt_cpan . '$/' )
-            or die "Can't find '$opt_cpan' module on CPAN\n";
+        my @mod = CPAN::Shell->expand( 'Module', '/^' . $self->cfg->cpan . '$/' )
+            or die "Can't find '" . $self->cfg->cpan . "' module on CPAN\n";
         foreach (@mod) {
             my $file = $_->cpan_file();
             $file =~ s#.*/##;          # remove directory
             $file =~ s/(.*)-.*/$1/;    # remove version and extension
             $file =~ s/-/::/g;         # convert dashes to colons
-            if ( $file eq $opt_cpan ) {
+            if ( $file eq $self->cfg->cpan ) {
                 $mod = $_;
                 last;
             }
@@ -461,15 +413,15 @@ sub setup_dir {
         $maindir = $new_maindir;
 
     }
-    elsif ($opt_cpanplus) {
+    elsif ( $self->cfg->cpanplus ) {
         die "CPANPLUS support is b0rken at the moment.";
 
         #  	        my ($cb, $href, $file);
 
 # 		eval "use CPANPLUS 0.045;";
 # 		$cb = CPANPLUS::Backend->new(conf => {debug => 1, verbose => 1});
-# 		$href = $cb->fetch( modules => [ $opt_cpanplus ], fetchdir => $ENV{'PWD'});
-# 		die "Cannot get $opt_cpanplus\n" if keys(%$href) != 1;
+# 		$href = $cb->fetch( modules => [ $self->cfg->cpanplus ], fetchdir => $ENV{'PWD'});
+# 		die "Cannot get " . $self->cfg->cpanplus . "\n" if keys(%$href) != 1;
 # 		$file = (values %$href)[0];
 # 		print $file, "\n\n";
 # 		$maindir = $cb->extract( files => [ $file ], extractdir => $ENV{'PWD'} )->{$file};
@@ -485,7 +437,7 @@ sub build_package {
     my ( $self, $maindir ) = @_;
 
     # uhmf! dpkg-genchanges doesn't cope with the deb being in another dir..
-    #system("dpkg-buildpackage -b -us -uc $opt_dbflags") == 0
+    #system("dpkg-buildpackage -b -us -uc " . $self->cfg->dbflags) == 0
     system("fakeroot make -C $maindir -f debian/rules clean");
     system("fakeroot make -C $maindir -f debian/rules binary") == 0
         || die "Cannot create deb package\n";
@@ -517,7 +469,7 @@ sub process_meta {
     $file = shift;
 
     # Command line option nometa causes this function not to be run
-    return {} if $opt_nometa;
+    return {} if $self->cfg->nometa;
 
     # YAML::LoadFile has the bad habit of dying when it cannot properly parse
     # a file - Catch it in an eval, and if it dies, return -again- just an
@@ -550,11 +502,11 @@ sub extract_basic {
     my ($self) = @_;
 
     ( $perlname, $version ) = $self->extract_name_ver();
-    find( \&check_for_xs, $maindir );
+    find( sub { $self->check_for_xs }, $maindir );
     $pkgname = lc $perlname;
     $pkgname = 'lib' . $pkgname unless $pkgname =~ /^lib/;
     $pkgname .= '-perl'
-        unless ( $pkgname =~ /-perl$/ and $opt_cpan !~ /::perl$/i );
+        unless ( $pkgname =~ /-perl$/ and $self->cfg->cpan !~ /::perl$/i );
 
     # ensure policy compliant names and versions (from Joeyh)...
     $pkgname =~ s/[^-.+a-zA-Z0-9]+/-/g;
@@ -563,7 +515,7 @@ sub extract_basic {
     $version =~ s/[^-.+a-zA-Z0-9]+/-/g;
     $version = "0$version" unless $version =~ /^\d/;
 
-    print "Found: $perlname $version ($pkgname arch=$arch)\n" if $opt_verbose;
+    print "Found: $perlname $version ($pkgname arch=$arch)\n" if $self->cfg->verbose;
     $debiandir = "$maindir/debian";
 
     $upsurl = "http://search.cpan.org/dist/$perlname/";
@@ -573,10 +525,10 @@ sub extract_basic {
         $self->extract_desc($modulepm);
     }
 
-    $opt_exclude = '^$' unless $opt_exclude;
     find(
         sub {
-            $File::Find::name !~ /$opt_exclude/
+            my $pattern = qr( $self->cfg->exclude );
+            $File::Find::name !~ $pattern
                 && /\.(pm|pod)$/
                 && $self->extract_desc($_);
         },
@@ -681,15 +633,15 @@ sub extract_name_ver_from_makefile {
     $name =~ s/,.*$//;
 
     # band aid: need to find a solution also for build in directories
-    # warn "name is $name (cpan name: $opt_cpan)\n";
-    $name = $opt_cpan     if ( $name eq '__PACKAGE__' && $opt_cpan );
-    $name = $opt_cpanplus if ( $name eq '__PACKAGE__' && $opt_cpanplus );
+    # warn "name is $name (cpan name: $self->cfg->cpan)\n";
+    $name = $self->cfg->cpan     if ( $name eq '__PACKAGE__' && $self->cfg->cpan );
+    $name = $self->cfg->cpanplus if ( $name eq '__PACKAGE__' && $self->cfg->cpanplus );
 
     # Get the version
-    if ( defined $opt_version ) {
+    if ( defined $self->cfg->version ) {
 
         # Explicitly specified
-        $ver = $opt_version;
+        $ver = $self->cfg->version;
 
     }
     elsif ( $file =~ /([\'\"]?)VERSION\1\s*(=>|,)\s*([\'\"]?)(\S+)\3/s ) {
@@ -862,7 +814,7 @@ sub extract_changelog {
         sub {
             $changelog = substr( $File::Find::name, length($dir) )
                 if ( !defined($changelog) && /^change(s|log)$/i
-                and ( !$opt_exclude or $File::Find::name !~ /$opt_exclude/ )
+                and ( !$self->cfg->exclude or $File::Find::name !~ m($self->cfg->exclude) )
                 );
         },
         $dir
@@ -877,7 +829,7 @@ sub extract_docs {
         sub {
             push( @docs, substr( $File::Find::name, length($dir) ) )
                 if ( /^(README|TODO|BUGS|NEWS|ANNOUNCE)/i
-                and ( !$opt_exclude or $File::Find::name !~ /$opt_exclude/ )
+                and ( !$self->cfg->exclude or $File::Find::name !~ m($self->cfg->exclude) )
                 );
         },
         $dir
@@ -887,13 +839,13 @@ sub extract_docs {
 sub extract_examples {
     my ( $self, $dir ) = @_;
 
-    $dir .= '/' unless $dir =~ m(/$);
+    $dir .= '/' unless $dir =~ m{/$};
     find(
         sub {
             push( @examples,
                 substr( $File::Find::name, length($dir) ) . '/*' )
                 if ( /^(examples?|eg|samples?)$/i
-                and ( !$opt_exclude or $File::Find::name !~ /$opt_exclude/ )
+                and ( !$self->cfg->exclude or $File::Find::name !~ m($self->cfg->exclude) )
                 );
         },
         $dir
@@ -959,7 +911,7 @@ sub find_debs_for_modules {
 
     foreach my $module ( keys(%$dep_hash) ) {
         if ( $self->is_core_module($module) ) {
-            print "= $module is a core module\n" if $opt_verbose;
+            print "= $module is a core module\n" if $self->cfg->verbose;
 
             # TODO
             # see if there is a version requirement and if the core
@@ -986,7 +938,7 @@ sub find_debs_for_modules {
         }
 
         if ($deb) {
-            print "+ $module found in $deb\n" if $opt_verbose;
+            print "+ $module found in $deb\n" if $self->cfg->verbose;
             if ( exists $dep_hash->{$module} ) {
                 my $v = $dep_hash->{$module};
                 $v =~ s/^v//;    # strip leading 'v' from version
@@ -1038,7 +990,7 @@ sub extract_depends {
             = $self->run_depends( 'Module::Depends', $dir, $build_deps );
     };
     if ($@) {
-        if ($opt_verbose) {
+        if ($self->cfg->verbose) {
             warn '=' x 70, "\n";
             warn "First attempt (Module::Depends) at a dependency\n"
                 . "check failed. Missing/bad META.yml?\n"
@@ -1052,7 +1004,7 @@ sub extract_depends {
                 $build_deps );
         };
         if ($@) {
-            if ($opt_verbose) {
+            if ($self->cfg->verbose) {
                 warn '=' x 70, "\n";
                 warn
                     "Could not find the " . ( $build_deps ? 'build-' : '' ) 
@@ -1073,7 +1025,7 @@ sub extract_depends {
     my ( $debs, $missing )
         = $self->find_debs_for_modules( $dep_hash, $apt_contents );
 
-    if ($opt_verbose) {
+    if ($self->cfg->verbose) {
         print "\n";
         print "Needs the following debian packages: "
             . join( ", ", @$debs ) . "\n"
@@ -1096,7 +1048,7 @@ sub extract_depends {
                 "packaged)." );
         }
 
-        if ($opt_requiredeps) {
+        if ($self->cfg->requiredeps) {
             die $missing_debs_str;
         }
         else {
@@ -1132,7 +1084,7 @@ sub get_itp {
 sub check_for_xs {
     my ($self) = @_;
 
-    ( !$opt_exclude or $File::Find::name !~ /$opt_exclude/ )
+    ( !$self->cfg->exclude or $File::Find::name !~ m($self->cfg->exclude) )
         && /\.(xs|c|cpp|cxx)$/i
         && do {
         $arch = 'any';
@@ -1150,12 +1102,12 @@ sub fix_rules {
     $fh->seek( 0, 0 ) || die "Can't rewind $rules_file: $!";
     $fh->truncate(0) || die "Can't truncate $rules_file: $!";
 
-    if ( $opt_dh < 7 ) {
+    if ( $self->cfg->dh < 7 ) {
         $test_line
             = ( $module_build eq 'Module-Build' )
             ? '$(PERL) Build test'
             : '$(MAKE) test';
-        $test_line = "#$test_line" if $opt_notest;
+        $test_line = "#$test_line" if $self->cfg->notest;
 
         for (@content) {
             s/#CHANGES#/$changelog_file/g;
@@ -1169,7 +1121,7 @@ sub fix_rules {
     }
     else {
         for (@content) {
-            if ($opt_notest) {
+            if ($self->cfg->notest) {
                 s/dh build/dh build --before dh_auto_test\n\tdh build --after dh_auto_test/;
             }
             $fh->print($_)
@@ -1194,8 +1146,8 @@ sub create_control {
     my $fh = $self->_file_w($file);
 
     if (    $arch ne 'all'
-        and !defined($opt_bdepends)
-        and !defined($opt_bdependsi) )
+        and !defined($self->cfg->bdepends)
+        and !defined($self->cfg->bdependsi) )
     {
         @bdepends = $self->prune_deps( @bdepends, @bdependsi );
         @bdependsi = ();
@@ -1220,7 +1172,7 @@ sub create_control {
 
     $fh->print($extrasfields) if defined $extrasfields;
 
-    if ($opt_pkg_perl) {
+    if ($self->cfg->pkg_perl) {
         $fh->print(
             "Maintainer: Debian Perl Group <pkg-perl-maintainers\@lists.alioth.debian.org>\n"
         );
@@ -1237,7 +1189,7 @@ sub create_control {
         $fh->print(
             "Vcs-Browser: http://svn.debian.org/viewsvn/pkg-perl/trunk/$srcname/\n"
         );
-    } if $opt_pkg_perl;
+    } if $self->cfg->pkg_perl;
     $fh->print("\n");
     $fh->print("Package: $pkgname\n");
     $fh->print("Architecture: $arch\n");
@@ -1271,7 +1223,7 @@ sub create_rules {
 
     my ( $rulesname, $error );
     $rulesname = (
-          ( $opt_dh eq 7 )
+          ( $self->cfg->dh eq 7 )
         ? $arch eq 'all'
                 ? 'rules.dh7.noxs'
                 : 'rules.dh7.xs'
@@ -1279,9 +1231,12 @@ sub create_rules {
         : "rules.$module_build.xs"
     );
 
-    for my $source ( ( "$opt_homedir/$rulesname", "$opt_datadir/$rulesname" ) ) {
+    for my $source (
+        catfile( $self->cfg->home_dir, $rulesname ),
+        catfile( $self->cfg->data_dir, $rulesname )
+    ) {
         copy( $source, $file ) && do {
-            print "Using rules: $source\n" if $opt_verbose;
+            print "Using rules: $source\n" if $self->cfg->verbose;
             last;
         };
         $error = $!;
@@ -1294,7 +1249,7 @@ sub create_compat {
     my ( $self, $file ) = @_;
 
     my $fh = $self->_file_w($file);
-    $fh->print("$opt_dh\n");
+    $fh->print( $self->cfg->dh, "\n" );
     $fh->close;
 }
 
@@ -1537,8 +1492,10 @@ sub load_overrides {
     my ($self) = @_;
 
     eval {
-        do "$opt_datadir/overrides" if -f "$opt_datadir/overrides";
-        do "$opt_homedir/overrides" if -f "$opt_homedir/overrides";
+        my $overrides = catfile( $self->cfg->data_dir, 'overrides' );
+        do $overrides if -f $overrides;
+        $overrides = catfile( $self->cfg->home_dir, 'overrides');
+        do $overrides if -f $overrides;
     };
     if ($@) {
         die "Error when processing the overrides files: $@";
