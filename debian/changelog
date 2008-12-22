@@ -44,7 +44,10 @@ dh-make-perl (0.51) UNRELEASED; urgency=low
   [ Ansgar Burchardt ]
   * Quote name of file containing the Artistic license.
 
- -- Ryan Niebur <ryanryan52@gmail.com>  Mon, 01 Dec 2008 13:52:49 -0800
+  [ David Paleino ]
+  * Removed myself from Uploaders.
+
+ -- David Paleino <d.paleino@gmail.com>  Mon, 22 Dec 2008 23:47:34 +0100
 
 dh-make-perl (0.50) unstable; urgency=low
 
