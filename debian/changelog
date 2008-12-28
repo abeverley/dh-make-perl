@@ -42,6 +42,7 @@ dh-make-perl (0.51) UNRELEASED; urgency=low
   * fix typo (s/shlib:Depends/shlibs:Depends/g) in control file generation
   * when searching for docs files, ignore .svn-base files. (fixes tests
     when building out of the svn repo)
+  * mention running apt-file update in error message
 
   [ Ansgar Burchardt ]
   * Quote name of file containing the Artistic license.
@@ -49,7 +50,7 @@ dh-make-perl (0.51) UNRELEASED; urgency=low
   [ David Paleino ]
   * Removed myself from Uploaders.
 
- -- Ryan Niebur <ryanryan52@gmail.com>  Sun, 28 Dec 2008 13:49:50 -0800
+ -- Ryan Niebur <ryanryan52@gmail.com>  Sun, 28 Dec 2008 13:57:18 -0800
 
 dh-make-perl (0.50) unstable; urgency=low
 

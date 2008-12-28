@@ -1048,9 +1048,10 @@ sub extract_depends {
             $missing_debs_str = join( "\n",
                 "The following Perl modules are required and not installed in your system:",
                 map( {" - $_"} @$missing ),
-                "You do not have 'apt-file' currently installed - If you install it, I will",
-                "be able to tell you which Debian packages are those modules in (if they are",
-                "packaged)." );
+                "You do not have 'apt-file' currently installed, or have not ran",
+                "'apt-file update' - If you install it and run 'apt-file update' as",
+                "root, I will be able to tell you which Debian packages are those",
+                "modules in (if they are packaged)." );
         }
 
         if ($self->cfg->requiredeps) {
