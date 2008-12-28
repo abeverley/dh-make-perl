@@ -834,6 +834,7 @@ sub extract_docs {
             push( @docs, substr( $File::Find::name, length($dir) ) )
                 if ( /^(README|TODO|BUGS|NEWS|ANNOUNCE)/i
                 and ( !$self->cfg->exclude or $File::Find::name !~ m($self->cfg->exclude) )
+                and ! /\.svn-base$/
                 );
         },
         $dir

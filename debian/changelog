@@ -40,6 +40,8 @@ dh-make-perl (0.51) UNRELEASED; urgency=low
   * create debian/compat file while refreshing
   * make --notest work with dh7 (Closes: #506708)
   * fix typo (s/shlib:Depends/shlibs:Depends/g) in control file generation
+  * when searching for docs files, ignore .svn-base files. (fixes tests
+    when building out of the svn repo)
 
   [ Ansgar Burchardt ]
   * Quote name of file containing the Artistic license.
@@ -47,7 +49,7 @@ dh-make-perl (0.51) UNRELEASED; urgency=low
   [ David Paleino ]
   * Removed myself from Uploaders.
 
- -- David Paleino <d.paleino@gmail.com>  Mon, 22 Dec 2008 23:47:34 +0100
+ -- Ryan Niebur <ryanryan52@gmail.com>  Sun, 28 Dec 2008 13:49:50 -0800
 
 dh-make-perl (0.50) unstable; urgency=low
 
