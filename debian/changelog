@@ -24,6 +24,8 @@ dh-make-perl (0.51) UNRELEASED; urgency=low
     - refactor parsing, caching and searching in apt Contents files in a class
   * add test suite
   * rules: run the test suite during build
+  * get_itp(): adapt to new BTS web interface. Thanks to SteveNZ for the
+    patch.
 
   [ Paul Fenwick ]
   * Setting the base for unit-testing:

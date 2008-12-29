@@ -1082,7 +1082,10 @@ sub get_itp {
     foreach my $link (@links) {
         my $desc = $link->text();
 
-        return $1 if $desc and $desc =~ /^#(\d+): ITP: $package /;
+        if ($desc && $desc =~ /^ITP: $package /) {
+            return $1 if $link->url =~ m/bug=(\d+)$/;
+        }
+
     }
     return 0;
 }
