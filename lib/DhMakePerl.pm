@@ -51,7 +51,7 @@ use Module::CoreList ();
 use Module::Depends::Intrusive ();
 use Module::Depends ();
 use Text::Wrap qw( fill wrap );
-use User::pwent ();
+use User::pwent qw(:FIELDS);
 use WWW::Mechanize ();
 use YAML ();
 use version qw( qv );
