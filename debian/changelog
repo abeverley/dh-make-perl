@@ -5,6 +5,10 @@ dh-make-perl (0.51) UNRELEASED; urgency=low
     variable.
   * Remove libpod-parser-perl from Depends, sync Build-Depends-Indep with
     Depends now that tests are run.
+  * "--build": call `debian/rules build' before `fakeroot debian/rules binary'
+    in order to do the build without (fake)root privileges. Thanks to Mark
+    Hedges for the bug report and to Russ Allbery for the solution
+    (closes: #510362).
 
   [ Damyan Ivanov ]
   * Apply two patches from Paul Fenwick reformatting the whitespace of

@@ -443,8 +443,10 @@ sub build_package {
     # uhmf! dpkg-genchanges doesn't cope with the deb being in another dir..
     #system("dpkg-buildpackage -b -us -uc " . $self->cfg->dbflags) == 0
     system("fakeroot make -C $maindir -f debian/rules clean");
+    system("make -C $maindir -f debian/rules build") == 0 
+        || die "Cannot create deb package: 'debian/rules build' failed.\n";
     system("fakeroot make -C $maindir -f debian/rules binary") == 0
-        || die "Cannot create deb package\n";
+        || die "Cannot create deb package: 'fakeroot debian/rules binary' failed.\n";
 }
 
 sub install_package {
