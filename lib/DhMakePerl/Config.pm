@@ -63,7 +63,7 @@ sub parse_command_line_options {
 
     # first get 'regular' options. commands are parsed in another
     # run below.
-    Getopt::Long::Configure('pass_through');
+    Getopt::Long::Configure( qw( pass_through no_auto_abbrev no_ignore_case ) );
     my %opts;
     GetOptions( \%opts, $self->options, )
         or die "Error parsing command-line options\n";
