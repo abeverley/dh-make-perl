@@ -1,4 +1,4 @@
-dh-make-perl (0.51) UNRELEASED; urgency=low
+dh-make-perl (0.51) unstable; urgency=low
 
   [ gregor herrmann ]
   * Handle --desc option before --refresh to avoid uninitialized $desc
@@ -66,7 +66,7 @@ dh-make-perl (0.51) UNRELEASED; urgency=low
   [ David Paleino ]
   * Removed myself from Uploaders.
 
- -- Ryan Niebur <ryanryan52@gmail.com>  Sun, 28 Dec 2008 13:57:18 -0800
+ -- Damyan Ivanov <dmn@debian.org>  Thu, 08 Jan 2009 00:38:22 +0200
 
 dh-make-perl (0.50) unstable; urgency=low
 
