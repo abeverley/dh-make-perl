@@ -36,6 +36,8 @@ Debian::Dependency -- dependency relationship between Debian packages
 use base qw(Class::Accessor);
 __PACKAGE__->mk_accessors(qw( pkg ver rel ));
 
+use Carp;
+
 use overload '""' => \&_stringify,
              '+'  => \&_add;
 
