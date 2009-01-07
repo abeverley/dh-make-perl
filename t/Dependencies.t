@@ -27,3 +27,24 @@ cmp_deeply(
     ),
     'Dependencies list parsed' );
 is( "$list", $dep_string, 'Dependencies stringifies' );
+
+my $sum = $list + 'libsome-perl (>= 4.4)';
+cmp_deeply(
+    $sum->[3],
+    bless(
+        {
+            pkg=>'libsome-perl',
+            rel=>'>=',
+            ver=>'4.4',
+        },
+        'Debian::Dependency',
+    ),
+    'Adding to a Dependencies',
+);
+
+$list += 'libother-perl';
+cmp_deeply(
+    $list->[3],
+    bless( { pkg => 'libother-perl' }, 'Debian::Dependency' ),
+    '+= works',
+);

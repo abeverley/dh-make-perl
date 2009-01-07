@@ -6,7 +6,8 @@ use warnings;
 use AptPkg::Config;
 use Debian::Dependency;
 
-use overload '""'   => \&_stringify;
+use overload '""'   => \&_stringify,
+             '+'    => \&_add;
 
 =head1 NAME
 
@@ -18,6 +19,20 @@ Debian::Dependencies -- a list of Debian::Dependency objects
     print $dl->[1]->ver;      # 3.4
     print $dl->[1];           # libfoo-perl (>= 3.4)
     print $dl;                # perl, libfoo-perl (>= 3.4)
+
+    $dl += 'libbar-perl';
+    print $dl;                # perl, libfoo-perl (>= 3.4), libbar-perl
+
+    print Debian::Dependencies->new('perl') + 'libfoo-bar-perl';
+                              # simple 'sum'
+
+    print Debian::Dependencies->new('perl')
+          + Debian::Dependencies->new('libfoo, libbar');
+                              # add (concatenate) two lists
+
+    print Debian::Dependencies->new('perl')
+          + Debian::Dependency->new('foo');
+                              # add depeendency to a list
 
 =head1 DESCRIPTION
 
@@ -62,6 +77,23 @@ sub _stringify {
     my $self = shift;
 
     return join( ', ', @$self );
+}
+
+sub _add {
+    my $left = shift;
+    my $right = shift;
+    my $mode = shift;
+
+    $right = $left->new($right) unless ref($right);
+    $right = [ $right ] if $right->isa('Debian::Dependency');
+
+    if ( defined $mode ) {      # $a + $b
+        return bless [ @$left, @$right ], ref($left);
+    }
+    else {                      # $a += $b;
+        push @$left, @$right;
+        $left;
+    }
 }
 
 =back
