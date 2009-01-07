@@ -20,16 +20,26 @@ dh-make-perl (0.51) UNRELEASED; urgency=low
   * Add dependencies on libwww-mechanize-perl, libclass-accessor-perl,
     libemail-date-format-perl, libmodule-corelist-perl, libapt-pkg-perl.
   * Internal rewrites:
-    - encapsulate dependencies into Dep class and rework the code to use 
-      Dep objects
+    - encapsulate dependencies into a class and rework the code to use it
     - extract_depends: try Module::Depends first, ::Intrusive -- second
-    - Module::CoreList to check if given module is a core one
+    - use Module::CoreList to check if given module is a core one
     - avoid adding dependencies on ancient perl versions
-    - refactor parsing, caching and searching in apt Contents files in a class
   * add test suite
   * rules: run the test suite during build
+    + sync B-D-I with Depends
+    + add libfile-touch-perl, libtext-diff-perl, libfile-find-rule-perl and
+      libtest-deep-perl to B-D-I
   * get_itp(): adapt to new BTS web interface. Thanks to SteveNZ for the
     patch.
+  * add --verbose option (set by default)
+    + disable diagnostic output when --no-verbose is given
+  * instead of searching Perl modules in packages contents via apt-file, parse
+    Contents files ourselves and cache the result
+    + add --refresh-cache option, useful for cron-jobs
+  * do not call bugs.debian.org when NO_NETWORK is set in the environment
+    + rules: set NO_NETWORK=1 when running tests
+  * uses Module::Build for building and running tests
+    + add libmodule-build-perl to B-D
 
   [ Paul Fenwick ]
   * Setting the base for unit-testing:
