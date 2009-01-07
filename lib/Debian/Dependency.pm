@@ -27,12 +27,17 @@ Debian::Dependency -- dependency relationship between Debian packages
    # stringification
    print "$d"      # 'perl (>= 5.10)'
 
+   # 'adding'
+   $deps = $dep1 + $dep2;
+   $deps = $dep1 + 'foo (>= 1.23)'
+
 =cut
 
 use base qw(Class::Accessor);
 __PACKAGE__->mk_accessors(qw( pkg ver rel ));
 
-use overload '""' => \&_stringify;
+use overload '""' => \&_stringify,
+             '+'  => \&_add;
 
 =head2 CLASS_METHODS
 
@@ -81,6 +86,16 @@ sub _stringify {
         ? $self->pkg . ' (' . $self->rel . ' ' . $self->ver . ')'
         : $self->pkg
     );
+}
+
+sub _add {
+    my $left = shift;
+    my $right = shift;
+    my $mode = shift;
+
+    confess "cannot += Dependency. put Dependencies instance on the left instead" unless defined($mode);
+
+    return bless( [ $left ], 'Debian::Dependencies' ) + $right;
 }
 
 =item parse()
