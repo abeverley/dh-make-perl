@@ -469,10 +469,9 @@ sub install_package {
 }
 
 sub process_meta {
-    my ($self) = @_;
+    my ( $self, $file ) = @_;
 
-    my ( $file, $yaml );
-    $file = shift;
+    my $yaml;
 
     # Command line option nometa causes this function not to be run
     return {} if $self->cfg->nometa;
