@@ -1,29 +1,6 @@
 Some regressions need to be fixed beefore next upload
 =====================================================
 
-Strange complains when doing refresh in perlindex
--------------------------------------------------
-Engaging refresh mode
-Error parsing DhMakePerl=HASH(0x9464760) - Ignoring it.
-Please notify module upstream maintainer.
-Found: perlindex 1.502 (libperlindex-perl arch=all)
-Found changelog: ChangeLog
-Found docs: README debian/README.source
-Using rules: /usr/share/dh-make-perl/rules.dh7.noxs
-**********
-Copyright information incomplete!
- 
-Upstream copyright information could not be automatically determined.
- 
-If you are building this package for your personal use, you might disregard
-this information; however, if you intend to upload this package to Debian
-(or in general, if you plan on distributing it), you must look into the
-complete copyright information.
- 
-The causes for this warning are:
-DhMakePerl=HASH(0x9464760)Licensing information is present, but cannot be parsed
---- Done
-
 refreshing libmodule-build-perl gives strange warnings
 ------------------------------------------------------
 Engaging refresh mode

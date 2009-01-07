@@ -1654,7 +1654,7 @@ sub get_override_val {
 }
 
 sub _warn_incomplete_copyright {
-    my ($self) = @_;
+    my $self = shift;
 
     print '*' x 10, '
 Copyright information incomplete!
