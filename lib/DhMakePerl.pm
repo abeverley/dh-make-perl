@@ -61,7 +61,7 @@ use version qw( qv );
 # * get more info from the package (maybe using CPAN methods)
 
 my ($min_perl_version, $debstdversion, $priority,  $section,
-    @depends,          @bdepends,      @bdependsi, $maintainer,
+    $depends,          $bdepends,      $bdependsi, $maintainer,
     $arch,             $closes,        $date,      $debiandir,
     $startdir,
 );
@@ -70,7 +70,7 @@ our %overrides;
 $debstdversion = '3.8.0';
 $priority      = 'optional';
 $section       = 'perl';
-@depends       = ( Debian::Dependency->new( '${perl:Depends}' ) );
+$depends       = Debian::Dependencies->new('${perl:Depends}');
 
 # 5.6.0-12 is where arch-indep modules are moved in /usr/share/perl5
 # (according to dh_perl)
@@ -78,7 +78,7 @@ $section       = 'perl';
 # is replaced below by calling substitute_perl_dependency
 $min_perl_version = '5.6.0-12';
 
-@bdependsi = ( Debian::Dependency->new( 'perl', $min_perl_version ) );
+$bdependsi = Debian::Dependencies->new("perl (>= $min_perl_version)");
 $arch      = 'all';
 $date      = email_date(time);
 $startdir  = getcwd();
@@ -113,7 +113,9 @@ sub run {
 
     chomp($date);
 
-    @bdepends = ( Debian::Dependency->new( 'debhelper', $self->cfg->dh ) );
+    $bdepends = Debian::Dependencies->new(
+        'debhelperi (>=' . $self->cfg->dh . ')',
+    );
 
     # Help requested? Nice, we can just die! Isn't it helpful?
     die $self->usage_instructions() if $self->cfg->help;
@@ -209,12 +211,12 @@ sub run {
 
     undef($apt_contents) unless $apt_contents->cache;
 
-    push @depends, Debian::Dependency->new('${shlibs:Depends}')
+    $depends += Debian::Dependency->new('${shlibs:Depends}')
         if $arch eq 'any';
-    push @depends, Debian::Dependency->new('${misc:Depends}');
+    $depends += Debian::Dependency->new('${misc:Depends}');
     my $extradeps = $self->extract_depends( $maindir, $apt_contents, 0 );
-    push @depends, @$extradeps;
-    push @depends, Debian::Dependencies->new( $self->cfg->depends )
+    $depends += $extradeps;
+    $depends += Debian::Dependencies->new( $self->cfg->depends )
         if $self->cfg->depends;
 
     $module_build = ( -f "$maindir/Build.PL" ) ? "Module-Build" : "MakeMaker";
@@ -222,30 +224,27 @@ sub run {
     $self->extract_docs($maindir);
     $self->extract_examples($maindir);
 
-    push @bdepends, Debian::Dependency->new('libmodule-build-perl')
+    $bdepends += Debian::Dependency->new('libmodule-build-perl')
         if ( $module_build eq "Module-Build" );
 
-    my ( @extrabdepends, @extrabdependsi );
+    my ( $extrabdepends, $extrabdependsi );
     if ( $arch eq 'any' ) {
-        @extrabdepends = (
-            @{ $self->extract_depends( $maindir, $apt_contents, 1 ) },
-            @$extradeps,
-        );
+        $extrabdepends = $self->extract_depends( $maindir, $apt_contents, 1 )
+            + $extradeps;
     }
     else {
-        @extrabdependsi = (
-            @{ $self->extract_depends( $maindir, $apt_contents, 1 ) },
-            @$extradeps,
-        );
+        $extrabdependsi = $self->extract_depends( $maindir, $apt_contents, 1 )
+            + $extradeps,
+            ;
     }
 
-    push @bdepends, Debian::Dependencies->new( $self->cfg->bdepends )
+    $bdepends += Debian::Dependencies->new( $self->cfg->bdepends )
         if $self->cfg->bdepends;
-    push @bdepends, @extrabdepends;
+    $bdepends += $extrabdepends;
 
-    push @bdependsi, Debian::Dependencies->new( $self->cfg->bdependsi )
+    $bdependsi += Debian::Dependencies->new( $self->cfg->bdependsi )
         if $self->cfg->bdependsi;
-    push @bdependsi, @extrabdependsi;
+    $bdependsi += $extrabdependsi;
 
     $self->apply_overrides();
 
@@ -931,7 +930,8 @@ sub find_debs_for_modules {
         push @uses, $module;
     }
 
-    my ( @debs, @missing );
+    my $debs = Debian::Dependencies->new();
+    my @missing;
 
     foreach my $module (@uses) {
 
@@ -965,10 +965,10 @@ sub find_debs_for_modules {
                     ) <= 0;
                 }
 
-                push @debs, Debian::Dependency->new( $deb, $v );
+                $debs += Debian::Dependency->new( $deb, $v );
             }
             else {
-                push @debs, Debian::Dependency->new($deb);
+                $debs += Debian::Dependency->new($deb);
             }
         }
         else {
@@ -977,7 +977,7 @@ sub find_debs_for_modules {
         }
     }
 
-    return \@debs, \@missing;
+    return $debs, \@missing;
 }
 
 sub extract_depends {
@@ -1159,26 +1159,23 @@ sub create_control {
         and !defined($self->cfg->bdepends)
         and !defined($self->cfg->bdependsi) )
     {
-        @bdepends = $self->prune_deps( @bdepends, @bdependsi );
-        @bdependsi = ();
+        $bdepends += $bdependsi;
+        @$bdependsi = ();
     }
+
+    $depends->prune();
+    $bdepends->prune();
+    $bdependsi->prune();
 
     $fh->print("Source: $srcname\n");
     $fh->print("Section: $section\n");
     $fh->print("Priority: $priority\n");
     local $Text::Wrap::break     = ', ';
     local $Text::Wrap::separator = ",\n";
-    $fh->print(
-        wrap( '', ' ', "Build-Depends: " . join( ', ', @bdepends ) . "\n" )
-    ) if @bdepends;
+    $fh->print( wrap( '', ' ', "Build-Depends: $bdepends\n" ) ) if $bdepends;
 
-    $fh->print(
-        wrap(
-            '',
-            ' ',
-            "Build-Depends-Indep: " . join( ', ', @bdependsi ) . "\n"
-        )
-    ) if @bdependsi;
+    $fh->print( wrap( '', ' ', "Build-Depends-Indep: $bdependsi\n" ) )
+        if $bdependsi;
 
     $fh->print($extrasfields) if defined $extrasfields;
 
@@ -1203,9 +1200,7 @@ sub create_control {
     $fh->print("\n");
     $fh->print("Package: $pkgname\n");
     $fh->print("Architecture: $arch\n");
-    $fh->print(
-        wrap( '', ' ', "Depends: " . join( ', ', @depends ) . "\n" )
-    ) if @depends;
+    $fh->print( wrap( '', ' ', "Depends: $depends\n" ) ) if $depends;
     $fh->print($extrapfields) if defined $extrapfields;
     $fh->print(
         "Description: $desc\n$longdesc\n .\n This description was automagically extracted from the module by dh-make-perl.\n"
@@ -1543,19 +1538,19 @@ sub apply_overrides {
             $val = $self->get_override_val( $data, $subkey, 'priority' )
         )
         );
-    @depends = Debian::Dependencies->new($val)
+    $depends = Debian::Dependencies->new($val)
         if (
         defined(
             $val = $self->get_override_val( $data, $subkey, 'depends' )
         )
         );
-    @bdepends = Debian::Dependencies->new($val)
+    $bdepends = Debian::Dependencies->new($val)
         if (
         defined(
             $val = $self->get_override_val( $data, $subkey, 'bdepends' )
         )
         );
-    @bdependsi = Debian::Dependencies->new($val)
+    $bdependsi = Debian::Dependencies->new($val)
         if (
         defined(
             $val = $self->get_override_val( $data, $subkey, 'bdependsi' )
