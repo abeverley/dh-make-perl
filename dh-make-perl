@@ -16,11 +16,53 @@ B<dh-make-perl> - Create debian source packages from perl modules
 
 =head1 SYNOPSIS
 
-B<dh-make-perl> [B<SOURCE_DIR> | B<--cpan> I<MODULE>]
+=over
 
-B<dh-make-perl> B<--refresh>
+=item dh-make-perl [--make] {I<SOURCE_DIR> | --cpan I<MODULE>} I<options...>
 
-You can modify B<dh-make-perl>'s behaviour with some switches:
+=item dh-make-perl --refresh I<options...>
+
+=item dh-make-perl --refresh-cache
+
+=item dh-make-perl --dump-config
+
+=back
+
+=head2 COMMANDS
+
+=over
+
+=item --make
+
+Default command if no command is given. Needs a source directory given as
+argument to the command line or the B<--cpan> option. Adds debianisation to
+upstream sources.
+
+=item --refresh
+
+To be run inside unpacked source package. Rebuilds F<debian/copyright>,
+F<debian/rules>, F<debian/compat> and adjusts the debhelper dependency in
+F<debian/control>.
+
+=item --refresh-cache
+
+dh-make-perl parses the Contents files, fetched by L<apt-file(1)> and stores
+the result in a cache. The cache is refreshed automatically if it is older than
+any Contents file. However, if you run L<apt-file(1)> in your nightly cron job,
+the first time you run C<dh-make-perl> during the day, you shall wait for the
+cache to be reconstructed. With this option, you can move the cache re-creation
+to the cron job, right after C<apt-file update>.
+
+=item --dump-config
+
+Causes the current config, including any default settings to be printed to the
+standard output.
+
+Useful for populating L<dh-make-perl.conf> file.
+
+=over
+
+=head2 OPTIONS
 
 =over
 
@@ -215,12 +257,12 @@ Contents cache file. If both are given, B<--home-dir> takes precedence.
 Refresh the APT contents cache. If there is no change in the Contents files,
 does nothing. Useful after C<apt-file update> in your crontab.
 
-=back
-
 =item B<--dump-config>
 
 Print the configuration to STDOUT. Useful for initial population of
 F<dh-make-perl.conf> file.
+
+=back
 
 =head1 DESCRIPTION
 
