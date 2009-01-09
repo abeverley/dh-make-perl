@@ -136,6 +136,8 @@ sub parse_command_line_options {
         @ARGV == 1 or die "cpan2deb requires exactly one non-option argument";
 
         $self->cpan( shift @ARGV );
+        $self->build(1);
+        $self->command('make');
     }
 }
 
