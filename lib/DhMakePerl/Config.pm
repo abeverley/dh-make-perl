@@ -38,6 +38,7 @@ __PACKAGE__->mk_accessors(
     '_explicitly_set',
 );
 
+use File::Basename qw(basename);
 use File::Spec::Functions qw(catfile);
 use Getopt::Long;
 use Tie::IxHash ();
@@ -55,11 +56,26 @@ use constant DEFAULTS => {
     verbose      => 1,
 };
 
+use constant cpan2deb_DEFAULTS => {
+    verbose => 0,
+    build   => 1,
+
+    #recursive   => 1,
+};
+
 sub new {
     my $class = shift;
     my $values = shift || {};
 
-    my $self = $class->SUPER::new( { %{ $class->DEFAULTS }, @_ } );
+    my $self = $class->SUPER::new(
+        {   %{ $class->DEFAULTS },
+            (   ( basename($0) eq 'cpan2deb' )
+                ? %{ $class->cpan2deb_DEFAULTS }
+                : ()
+            ),
+            @_,
+        },
+    );
 
     $self->_explicitly_set( {} );
 
