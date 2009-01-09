@@ -66,8 +66,13 @@ Fails with an error if L<debian/> directory already exists.
 =item --refresh
 
 To be run inside unpacked source package. Rebuilds F<debian/copyright>,
-F<debian/rules>, F<debian/compat> and adjusts the debhelper dependency in
-F<debian/control>.
+F<debian/rules>, F<debian/compat> using the current templates and adjusts the
+debhelper dependency in F<debian/control>.
+
+This is useful when F<debian/rules> was created using older templates and
+doesn't contain much customisations. As always, you're strongly encouraged to
+verify if F<debian/rules> looks sane.
+
 
 =item --refresh-cache
 
@@ -226,17 +231,6 @@ specifying this option, dh-make-perl will build them anyway.
 Note that, although it is not probable, this might break unrelated items in 
 your system - If a newer version of a core module breaks the API, all kinds
 of daemons might get upset ;-)
-
-=item B<--refresh>
-
-Refresh mode.
-
-Instead of creating new debian/ directory, B<--refresh> makes B<dh-make-perl>
-to re-create only B<debian/rules> according to the current templates.
-
-This is useful when B<debian/rules> was created using older templates and
-doesn't contain much customisations. As always, you're strongly encouraged to
-verify if B<debian/rules> looks sane.
 
 =item B<--dh ver>
 
