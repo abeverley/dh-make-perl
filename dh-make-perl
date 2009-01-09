@@ -28,15 +28,40 @@ B<dh-make-perl> - Create debian source packages from perl modules
 
 =back
 
+=head1 DESCRIPTION
+
+B<dh-make-perl> will create the files required to build
+a debian source package out of a perl package.
+This works for most simple packages and is also useful
+for getting started with packaging perl modules.
+
+You can specify a module name with the L<--cpan|/cpan_dist> switch
+and B<dh-make-perl> will download the module for you from
+a CPAN mirror, or you can specify the directory with the
+already unpacked sources. If neither L<--cpan|/cpan_dist> nor a directory
+is given as argument, dh-make-perl tries to create a
+perl package from the data in the current directory.
+
+There is an override mechanism in place to handle most of
+the little changes that may be needed for some modules
+(this hasn't been tested much, though, and the override
+database needs to be filled in).
+
+You can build and install the debian package using the L</--build>
+and L</--install> command line switches.
+
+Using this program is no excuse for not reading the
+debian developer documentation, including the Debian policy,
+the perl policy, the packaging manual and so on.
+
 =head2 COMMANDS
 
 =over
 
 =item --make
 
-Default command if no command is given. Needs a source directory given as
-argument to the command line or the B<--cpan> option. Adds debianisation to
-upstream sources.
+Default command if no command is given. Creates debianisation from scratch.
+Fails with an error if L<debian/> directory already exists.
 
 =item --refresh
 
@@ -60,7 +85,7 @@ standard output.
 
 Useful for populating L<dh-make-perl.conf> file.
 
-=over
+=back
 
 =head2 OPTIONS
 
@@ -132,6 +157,10 @@ L<http://pkg-perl.alioth.debian.org>.
 
 Sets C<Maintainer>, C<Uploaders>, C<Vcs-Svn> and C<Vcs-Browser> fields in
 debian/control accordingly, and sets packaging-related licensing to GPLv2.
+
+=item --cpan I<DIST>
+
+Instructs dh-make-perl to fetch and extract the given CPAN distribution.
 
 =item B<--cpan-mirror> I<MIRROR>
 
@@ -263,32 +292,6 @@ Print the configuration to STDOUT. Useful for initial population of
 F<dh-make-perl.conf> file.
 
 =back
-
-=head1 DESCRIPTION
-
-B<dh-make-perl> will create the files required to build
-a debian source package out of a perl package.
-This works for most simple packages and is also useful
-for getting started with packaging perl modules.
-
-You can specify a module name with the B<--cpan> switch
-and B<dh-make-perl> will download the module for you from
-a CPAN mirror, or you can specify the directory with the
-already unpacked sources. If neither --cpan nor a directory
-is given as argument, dh-make-perl tries to create a
-perl package from the data in F<.>
-
-There is an override mechanism in place to handle most of
-the little changes that may be needed for some modules
-(this hasn't been tested much, though, and the override
-database needs to be filled in).
-
-You can build and install the debian package using the --build
-and --install command line switches.
-
-Using this program is no excuse for not reading the
-debian developer documentation, including the Debian policy,
-the perl policy, the packaging manual and so on.
 
 =head1 FILES
 
