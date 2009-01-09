@@ -110,6 +110,7 @@ sub run {
     unless ( $self->cfg ) {
         $self->cfg( DhMakePerl::Config->new );
         $self->cfg->parse_command_line_options;
+        $self->cfg->parse_config_file;
     }
 
     chomp($date);
