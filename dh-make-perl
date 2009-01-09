@@ -295,6 +295,13 @@ required by dh-make-perl:
 
 =over 4
 
+=item * dh-make-perl.conf
+
+User configuration. The file is in YAML format. The keys are option names, as documented in L</OPTIONS> (without leading I<-->).
+
+See the output of C<dh-make-perl --dump-config>, which can also be used for
+population of F<dh-make-perl.conf>.
+
 =item * overrides
 
 File that overrides information retreived (or guessed) about the package.
