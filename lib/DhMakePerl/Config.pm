@@ -36,6 +36,7 @@ __PACKAGE__->mk_accessors(
         @opts;
     },
     'command',
+    'cpan2deb',
     '_explicitly_set',
 );
 
@@ -68,12 +69,15 @@ sub new {
     my $class = shift;
     my $values = shift || {};
 
+    my $cpan2deb = basename($0) eq 'cpan2deb';
+
     my $self = $class->SUPER::new(
         {   %{ $class->DEFAULTS },
-            (   ( basename($0) eq 'cpan2deb' )
+            (   $cpan2deb
                 ? %{ $class->cpan2deb_DEFAULTS }
                 : ()
             ),
+            cpan2deb    => $cpan2deb,
             @_,
         },
     );
@@ -127,6 +131,12 @@ sub parse_command_line_options {
     }
 
     $self->command( ( keys %opts )[0] );
+
+    if ($self->cpan2deb) {
+        @ARGV == 1 or die "cpan2deb requires exactly one non-option argument";
+
+        $self->cpan( shift @ARGV );
+    }
 }
 
 sub parse_config_file {
