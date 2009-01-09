@@ -220,8 +220,8 @@ in debian/changelog.
 
 This allows you to specify a PCRE to exclude some files from the search for
 docs and stuff like that. If no argument is given (but the switch is specified
-- not specifying the switch will include everything), it defaults to exclude
-CVS and .svn directories.
+- not specifying the switch will include everything), it defaults to
+dpkg-source's default values.
 
 =item B<--install>
 

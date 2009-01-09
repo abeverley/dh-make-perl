@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use base 'Class::Accessor';
+use Dpkg::Source::Package;
 
 use constant options => (
     'arch=s',          'basepkgs=s',
@@ -50,7 +51,7 @@ use constant DEFAULTS => {
     dh           => 7,
     dist         => '{sid,unstable}',
     email        => '',
-    exclude      => '(?:\/|^)(?:CVS|\.svn)\/',
+    exclude      => qr/$Dpkg::Source::Package::diff_ignore_default_regexp/,
     home_dir     => "$ENV{HOME}/.dh-make-perl",
     sources_list => '/etc/apt/sources.list',
     verbose      => 1,
@@ -95,7 +96,14 @@ sub parse_command_line_options {
     # Make CPAN happy, make the user happy: Be more tolerant!
     # Accept names to be specified with double-colon, dash or slash
     $opts{cpan} =~ s![/-]!::!g if $opts{cpan};
-    $opts{exclude} ||= '^$';
+
+    # "If no argument is given (but the switch is specified - not specifying
+    # the switch will include everything), it defaults to dpkg-source's 
+    # default values."
+    $opts{exclude} = '^$' if ! defined $opts{exclude};                 # switch not specified
+                                                                       # take everything
+    $opts{exclude} = $self->DEFAULTS->{'exclude'} if ! $opts{exclude}; # arguments not specified
+                                                                       # back to defaults
 
     while ( my ( $k, $v ) = each %opts ) {
         my $field = $k;

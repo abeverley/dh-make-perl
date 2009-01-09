@@ -542,8 +542,7 @@ sub extract_basic {
 
     find(
         sub {
-            my $pattern = qr( $self->cfg->exclude );
-            $File::Find::name !~ $pattern
+            $File::Find::name !~ $self->cfg->exclude
                 && /\.(pm|pod)$/
                 && $self->extract_desc($_);
         },
@@ -829,7 +828,7 @@ sub extract_changelog {
         sub {
             $changelog = substr( $File::Find::name, length($dir) )
                 if ( !defined($changelog) && /^change(s|log)$/i
-                and ( !$self->cfg->exclude or $File::Find::name !~ m($self->cfg->exclude) )
+                and ( !$self->cfg->exclude or $File::Find::name !~ $self->cfg->exclude )
                 );
         },
         $dir
@@ -844,8 +843,7 @@ sub extract_docs {
         sub {
             push( @docs, substr( $File::Find::name, length($dir) ) )
                 if ( /^(README|TODO|BUGS|NEWS|ANNOUNCE)/i
-                and ( !$self->cfg->exclude or $File::Find::name !~ m($self->cfg->exclude) )
-                and ! /\.svn-base$/
+                and ( !$self->cfg->exclude or $File::Find::name !~ $self->cfg->exclude )
                 );
         },
         $dir
@@ -861,7 +859,7 @@ sub extract_examples {
             push( @examples,
                 substr( $File::Find::name, length($dir) ) . '/*' )
                 if ( /^(examples?|eg|samples?)$/i
-                and ( !$self->cfg->exclude or $File::Find::name !~ m($self->cfg->exclude) )
+                and ( !$self->cfg->exclude or $File::Find::name !~ $self->cfg->exclude )
                 );
         },
         $dir
@@ -1105,7 +1103,7 @@ sub get_itp {
 sub check_for_xs {
     my ($self) = @_;
 
-    ( !$self->cfg->exclude or $File::Find::name !~ m($self->cfg->exclude) )
+    ( !$self->cfg->exclude or $File::Find::name !~ $self->cfg->exclude )
         && /\.(xs|c|cpp|cxx)$/i
         && do {
         $arch = 'any';

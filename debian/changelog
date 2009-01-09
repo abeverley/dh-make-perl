@@ -10,6 +10,9 @@ dh-make-perl (0.52) UNRELEASED; urgency=low
   * Add libtie-ixhash-perl to Build-Depends-Indep and Depends.
   * Create symlinks /usr/bin/cpan2deb -> dh-make-perl and
     /usr/share/man/man1/cpan2deb.1p.gz -> dh-make-perl.1p.gz.
+  * "--exclude": use default values from Dpkg::Source::Package instead of
+    maintaining our own list; if invoked without arguments use default values
+    again.
 
  -- Damyan Ivanov <dmn@debian.org>  Fri, 09 Jan 2009 11:38:50 +0200
 
