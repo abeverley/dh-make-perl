@@ -5,6 +5,8 @@ dh-make-perl (0.52) UNRELEASED; urgency=low
     same name already exists. Thanks to Brian Cassidy for bringing up the
     problem and Gregor Herrmann and Don Armstrong for the suggestions about
     the implementation
+  * add cpan2deb 'flavour' of dh-make-perl. If it is called by that name, the
+    behaviour changes for easy .deb creation.
 
   [ gregor herrmann ]
   * Add libtie-ixhash-perl to Build-Depends-Indep and Depends.
