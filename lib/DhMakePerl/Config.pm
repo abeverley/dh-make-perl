@@ -163,9 +163,11 @@ sub dump_config {
     for my $opt ( $self->options ) {
         $opt =~ s/[=!|].*//;
         ( my $field = $opt ) =~ s/-/_/g;
-        $hash{$opt} = '' . $self->$field    # stringified
-            if defined $self->$field;
+        $hash{$opt} = $self->$field;
     }
+
+    local $YAML::UseVersion = 1;
+    local $YAML::Stringify  = 1;
 
     return YAML::Dump( \%hash );
 }
