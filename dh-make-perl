@@ -78,6 +78,8 @@ the first time you run C<dh-make-perl> during the day, you shall wait for the
 cache to be reconstructed. With this option, you can move the cache re-creation
 to the cron job, right after C<apt-file update>.
 
+Does nothing if the cache is newer that the Contents files.
+
 =item --dump-config
 
 Causes the current config, including any default settings to be printed to the
@@ -280,16 +282,6 @@ Use another data directory, instead of the default, C</usr/share/dh-make-perl>
 Data directory is were B<dh-make-perl> looks for its default rules.* templates.
 It is similar to B<--home-dir>, but does not change the location of the APT
 Contents cache file. If both are given, B<--home-dir> takes precedence.
-
-=item B<--refresh-cache>
-
-Refresh the APT contents cache. If there is no change in the Contents files,
-does nothing. Useful after C<apt-file update> in your crontab.
-
-=item B<--dump-config>
-
-Print the configuration to STDOUT. Useful for initial population of
-F<dh-make-perl.conf> file.
 
 =back
 
