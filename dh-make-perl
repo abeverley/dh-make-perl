@@ -217,6 +217,11 @@ does nothing. Useful after C<apt-file update> in your crontab.
 
 =back
 
+=item B<--dump-config>
+
+Print the configuration to STDOUT. Useful for initial population of
+F<dh-make-perl.conf> file.
+
 =head1 DESCRIPTION
 
 B<dh-make-perl> will create the files required to build

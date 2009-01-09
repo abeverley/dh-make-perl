@@ -134,6 +134,12 @@ sub run {
         return 0;
     }
 
+    if ( $self->cfg->command eq 'dump-config' ) {
+        print $self->cfg->dump_config;
+
+        return 0;
+    }
+
     $arch = $self->cfg->arch if $self->cfg->arch;
 
     $maintainer = $self->get_maintainer( $self->cfg->email );
