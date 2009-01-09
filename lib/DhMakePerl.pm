@@ -32,6 +32,7 @@ TO BE FILLED
 
 =cut
 
+use AptPkg::Cache ();
 use AptPkg::Config ();
 use Config qw( %Config );
 use CPAN ();
@@ -284,6 +285,9 @@ sub run {
         if $self->cfg->build or $self->cfg->install;
     $self->install_package($debiandir) if $self->cfg->install;
     print "--- Done\n" if $self->cfg->verbose;
+
+    $self->package_already_exists($apt_contents);
+
     return(0);
 }
 
@@ -1646,6 +1650,42 @@ sub get_override_val {
         : $data->{$key};
     return &$val() if ( defined($val) && ref($val) eq 'CODE' );
     return $val;
+}
+
+sub package_already_exists {
+    my( $self, $apt_contents ) = @_;
+
+    my $apt_cache = AptPkg::Cache->new;
+    my $found = $apt_cache->packages->lookup($pkgname);
+
+    if ($found) {
+        warn "**********\n";
+        warn "WARNING: a package named\n";
+        warn "              '$pkgname'\n";
+        warn "         is already available in APT repositories\n";
+        warn "Maintainer: ", $found->{Maintainer}, "\n";
+        my $short_desc = (split( /\n/, $found->{LongDesc} ))[0];
+        warn "Description: $short_desc\n";
+    }
+    elsif ($apt_contents) {
+        my @possible_packages = $apt_contents->find_perl_module_package(
+            $perlname);
+
+        if ( $found = shift @possible_packages ) {
+            my $mod_name = $perlname =~ s/-/::/g;
+            warn "**********\n";
+            warn "NOTICE: the package '$found', available in APT repositories\n";
+            warn "        already contains a module named $perlname\n";
+
+            if ( @possible_packages > 1 ) {
+                shift @possible_packages;
+                warn "\n        Other packages that contain similarly named modules are:\n";
+                warn "          - $_\n" for @possible_packages;
+            }
+        }
+    }
+
+    return $found ? 1 : 0;
 }
 
 sub _warn_incomplete_copyright {

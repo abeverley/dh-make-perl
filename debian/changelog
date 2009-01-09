@@ -1,3 +1,12 @@
+dh-make-perl (0.52) UNRELEASED; urgency=low
+
+  * check if package named as the created one or containing modules with the
+    same name already exists. Thanks to Brian Cassidy for bringing up the
+    problem and Gregor Herrmann and Don Armstrong for the suggestions about
+    the implementation
+
+ -- Damyan Ivanov <dmn@debian.org>  Fri, 09 Jan 2009 11:38:50 +0200
+
 dh-make-perl (0.51) unstable; urgency=low
 
   [ gregor herrmann ]
