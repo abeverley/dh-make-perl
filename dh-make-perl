@@ -20,6 +20,8 @@ B<dh-make-perl> - Create debian source packages from perl modules
 
 =item dh-make-perl [--make] {I<SOURCE_DIR> | --cpan I<MODULE>} I<options...>
 
+=item cpan2deb I<DIST> I<options...>
+
 =item dh-make-perl --refresh I<options...>
 
 =item dh-make-perl --refresh-cache
@@ -49,6 +51,14 @@ database needs to be filled in).
 
 You can build and install the debian package using the L</--build>
 and L</--install> command line switches.
+
+If dh-make-perl is called as
+
+    cpan2deb <options...> Foo-Bar
+
+it behaves like
+
+    dh-make-perl <options...> --build --cpan Foo-Bar
 
 Using this program is no excuse for not reading the
 debian developer documentation, including the Debian policy,
