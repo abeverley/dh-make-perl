@@ -6,7 +6,7 @@ use strict;
 use base 'Class::Accessor';
 use Pod::Usage;
 
-__PACKAGE__->mk_accessors( qw( cfg ) );
+__PACKAGE__->mk_accessors( qw( cfg apt_contents ) );
 
 =head1 NAME
 
@@ -125,12 +125,7 @@ sub run {
     die "CPANPLUS support disabled, sorry" if $self->cfg->cpanplus;
 
     if ( $self->cfg->command eq 'refresh-cache' ) {
-        my $apt_contents = Debian::AptContents->new({
-            homedir      => $self->cfg->home_dir,
-            dist         => $self->cfg->dist,
-            sources_file => $self->cfg->sources_list,
-            verbose      => $self->cfg->verbose,
-        });
+        $self->get_apt_contents;
 
         return 0;
     }
@@ -211,14 +206,7 @@ sub run {
         && die
         "The directory $debiandir is already present and I won't overwrite it: remove it yourself.\n";
 
-    my $apt_contents = Debian::AptContents->new({
-        homedir      => $self->cfg->home_dir,
-        dist         => $self->cfg->dist,
-        sources_file => $self->cfg->sources_list,
-        verbose      => $self->cfg->verbose,
-    });
-
-    undef($apt_contents) unless $apt_contents->cache;
+    my $apt_contents = $self->get_apt_contents;
 
     $depends += Debian::Dependency->new('${shlibs:Depends}')
         if $arch eq 'any';
@@ -297,6 +285,25 @@ sub run {
     $self->package_already_exists($apt_contents);
 
     return(0);
+}
+
+sub get_apt_contents {
+    my $self = shift;
+
+    return $self->apt_contents
+        if $self->apt_contents;
+
+    my $apt_c = Debian::AptContents->new(
+        {   homedir      => $self->cfg->home_dir,
+            dist         => $self->cfg->dist,
+            sources_file => $self->cfg->sources_list,
+            verbose      => $self->cfg->verbose,
+        }
+    );
+
+    undef $apt_c unless $apt_c->cache;
+
+    return $self->apt_contents($apt_c);
 }
 
 sub is_core_module {
