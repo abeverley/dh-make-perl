@@ -309,15 +309,14 @@ sub get_apt_contents {
 sub is_core_module {
     my ( $self, $module ) = @_;
 
-    my $perl_version = qv( $Config{version} )->numify + 0;
+    my $v = Module::CoreList->first_release($module);   # 5.009002
 
-    my $core = $Module::CoreList::version{$perl_version};
+    return undef unless defined $v;
 
-    $core
-        or die
-    "Internal error: \$Module::CoreList::version{$perl_version} is empty";
+    $v = version->new($v);                              # v5.9.2
+    ( $v = $v->normal ) =~ s/^v//;                      # "5.9.2"
 
-    return exists( $core->{$module} );
+    return $v;
 }
 
 sub setup_dir {
