@@ -7,6 +7,8 @@ dh-make-perl (0.52) UNRELEASED; urgency=low
     the implementation
   * add cpan2deb 'flavour' of dh-make-perl. If it is called by that name, the
     behaviour changes for easy .deb creation.
+  * add --locate command, showing if given Perl module is core, or in some
+    Debian package
 
   [ gregor herrmann ]
   * Add libtie-ixhash-perl to Build-Depends-Indep and Depends.
