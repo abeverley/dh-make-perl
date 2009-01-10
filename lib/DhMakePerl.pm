@@ -180,6 +180,39 @@ sub run {
         return 0;
     }
 
+    if ( $self->cfg->command eq 'locate' ) {
+        @ARGV == 1
+            or die
+                 "--locate command requires exactly one non-option argument\n";
+
+        my $apt_contents = $self->get_apt_contents;
+
+        unless ($apt_contents) {
+            die <<EOF;
+Unable to locate module packages, because APT Contents files
+are not available on the system.
+
+Install the 'apt-file' package, run 'apt-file update' as root
+and rettry.
+EOF
+        }
+        my $mod = $ARGV[0];
+
+        if ( defined( my $core_since = $self->is_core_module($mod) ) ) {
+            print "$mod is in Perl core (package perl-modules)";
+            print $core_since ? " since $core_since\n" : "\n";
+            return 0;
+        }
+
+        if ( my $pkg = $apt_contents->find_perl_module_package($mod) ) {
+            print "$mod is in $pkg package\n";
+            return 0;
+        }
+
+        print "$mod is not found in any Debian package\n";
+        return 1;
+    }
+
     $self->load_overrides();
     my $tarball = $self->setup_dir();
     $meta = $self->process_meta("$maindir/META.yml")

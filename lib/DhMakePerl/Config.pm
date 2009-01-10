@@ -24,7 +24,7 @@ use constant options => (
     'verbose!',        'version=s',
 );
 
-use constant commands => ( 'refresh|R', 'refresh-cache', 'dump-config' );
+use constant commands => ( 'refresh|R', 'refresh-cache', 'dump-config', 'locate' );
 
 __PACKAGE__->mk_accessors(
     do {
