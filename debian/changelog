@@ -15,6 +15,8 @@ dh-make-perl (0.52) UNRELEASED; urgency=low
   * "--exclude": use default values from Dpkg::Source::Package instead of
     maintaining our own list; if invoked without arguments use default values
     again.
+  * "--help": use pod2usage() instead of the hand-crafted usage_instructions()
+    method, duplicate maintainance of documentation is error-prone.
 
  -- Damyan Ivanov <dmn@debian.org>  Fri, 09 Jan 2009 11:38:50 +0200
 

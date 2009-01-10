@@ -4,6 +4,7 @@ use warnings;
 use strict;
 
 use base 'Class::Accessor';
+use Pod::Usage;
 
 __PACKAGE__->mk_accessors( qw( cfg ) );
 
@@ -120,7 +121,7 @@ sub run {
     );
 
     # Help requested? Nice, we can just die! Isn't it helpful?
-    die $self->usage_instructions() if $self->cfg->help;
+    die pod2usage(-message => "See `man (1) dh-make-perl' for details.\n") if $self->cfg->help;
     die "CPANPLUS support disabled, sorry" if $self->cfg->cpanplus;
 
     if ( $self->cfg->command eq 'refresh-cache' ) {
@@ -296,25 +297,6 @@ sub run {
     $self->package_already_exists($apt_contents);
 
     return(0);
-}
-
-sub usage_instructions {
-    my ($self) = @_;
-
-    return <<"USAGE"
-Usage:
-$0 [ --build ] [ --install ] [ SOURCE_DIR | --cpan MODULE ]
-$0 --refresh|-R
-Other options: [ --desc DESCRIPTION ] [ --arch all|any ] [ --version VERSION ]
-               [ --depends DEPENDS ] [ --bdepends BUILD-DEPENDS ]
-               [ --bdependsi BUILD-DEPENDS-INDEP ] [ --cpan-mirror MIRROR ]
-               [ --exclude|-i [REGEX] ] [ --notest ] [ --nometa ]
-               [ --requiredeps ] [ --core-ok ] [ --basepkgs PKGSLIST ]
-               [ --closes ITPBUG ] [ --packagename|-p PACKAGENAME ]
-               [ --email|-e EMAIL ] [ --pkg-perl ] [ --dh <ver> ]
-               [ --sources-list file ] [ --dist <pattern> ]
-               [ --[no-]verbose ] [ --data-dir dir ]
-USAGE
 }
 
 sub is_core_module {
