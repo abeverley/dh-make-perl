@@ -121,7 +121,7 @@ sub run {
     );
 
     # Help requested? Nice, we can just die! Isn't it helpful?
-    die pod2usage(-message => "See `man (1) dh-make-perl' for details.\n") if $self->cfg->help;
+    die pod2usage(-message => "See `man 1 dh-make-perl' for details.\n") if $self->cfg->help;
     die "CPANPLUS support disabled, sorry" if $self->cfg->cpanplus;
 
     if ( $self->cfg->command eq 'refresh-cache' ) {
