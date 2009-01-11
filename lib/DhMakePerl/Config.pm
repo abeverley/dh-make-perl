@@ -123,7 +123,7 @@ sub parse_command_line_options {
         or die "Error parsing command-line options\n";
 
     # by default, create source package
-    %opts = ( command => 'make' ) unless %opts;
+    %opts = ( make => 1 ) unless %opts;
 
     if ( scalar( keys %opts ) > 1 ) {
         die "Only one of " .
