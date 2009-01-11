@@ -152,7 +152,7 @@ sub parse_config_file {
 
     if ( -e $fn ) {
         local $@;
-        my $yaml = eval { YAML::Load($fn) };
+        my $yaml = eval { YAML::LoadFile($fn) };
 
         die "Error parsing $fn: $@" if $@;
 
