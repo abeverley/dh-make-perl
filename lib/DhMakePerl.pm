@@ -117,7 +117,7 @@ sub run {
     chomp($date);
 
     $bdepends = Debian::Dependencies->new(
-        'debhelperi (>=' . $self->cfg->dh . ')',
+        'debhelper (>=' . $self->cfg->dh . ')',
     );
 
     # Help requested? Nice, we can just die! Isn't it helpful?
