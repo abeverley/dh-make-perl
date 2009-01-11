@@ -55,11 +55,10 @@ use constant DEFAULTS => {
     exclude      => qr/$Dpkg::Source::Package::diff_ignore_default_regexp/,
     home_dir     => "$ENV{HOME}/.dh-make-perl",
     sources_list => '/etc/apt/sources.list',
-    verbose      => 1,
+    verbose      => 0,
 };
 
 use constant cpan2deb_DEFAULTS => {
-    verbose => 0,
     build   => 1,
 
     #recursive   => 1,
@@ -131,6 +130,10 @@ sub parse_command_line_options {
     }
 
     $self->command( ( keys %opts )[0] );
+
+    $self->verbose(1)
+        if $self->command eq 'make'
+            and not $self->_explicitly_set->{verbose};
 
     if ($self->cpan2deb) {
         @ARGV == 1 or die "cpan2deb requires exactly one non-option argument";

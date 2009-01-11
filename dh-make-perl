@@ -289,7 +289,7 @@ Default: C</etc/aptp/sources.list>
 
 Print additional information while processing.
 
-Default: C<--verbose>
+--verbose is on by default if L</--make> is given, off otherwise.
 
 =item B<--version> I<VERSION>
 
