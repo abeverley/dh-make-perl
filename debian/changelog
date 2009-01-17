@@ -19,6 +19,8 @@ dh-make-perl (0.52) UNRELEASED; urgency=low
     again.
   * "--help": use pod2usage() instead of the hand-crafted usage_instructions()
     method, duplicate maintainance of documentation is error-prone.
+  * Add the Apache License, Version 2.0 to the list of recognized licenses
+    (closes: #511588).
 
  -- Damyan Ivanov <dmn@debian.org>  Fri, 09 Jan 2009 11:38:50 +0200
 
