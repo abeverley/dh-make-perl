@@ -32,6 +32,7 @@ __PACKAGE__->mk_accessors(
 
 use Storable;
 use File::Spec::Functions qw( catfile catdir splitpath );
+use IO::Uncompress::Gunzip;
 
 =head1 CONSTRUCTOR
 

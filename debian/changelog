@@ -9,6 +9,7 @@ dh-make-perl (0.52) UNRELEASED; urgency=low
     behaviour changes for easy .deb creation.
   * add --locate command, showing if given Perl module is core, or in some
     Debian package
+  * Debian::AptContents: explicitly use IO::Uncompress::Gunzip
 
   [ gregor herrmann ]
   * Add libtie-ixhash-perl to Build-Depends-Indep and Depends.
