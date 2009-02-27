@@ -63,8 +63,8 @@ Path to the F<sources.list> file. Default is F</etc/apt/sources.list>.
 
 =item dist
 
-A regular expression, used for filtering on the C<distributon> part of the
-repository paths listed in L<sources.list>. Default is C<{sid,unstable}>
+Used for filtering on the C<distributon> part of the repository paths listed in
+L<sources.list>. Default is empty, meaning no filtering.
 
 =item contents_files
 
@@ -105,7 +105,7 @@ sub new
     $self->sources_file('/etc/apt/sources.list')
         unless defined( $self->sources_file );
     $self->dist('{sid,unstable}') unless $self->dist;
-    $self->contents_files( $self->get_contents_file_list )
+    $self->contents_files( $self->get_contents_files )
         unless $self->contents_files;
     $self->cache_file( catfile( $self->homedir, 'Contents.cache' ) )
         unless $self->cache_file;
@@ -176,6 +176,8 @@ sub repo_source_to_contents_path {
 
     return undef unless $schema eq 'deb';
 
+    next if $self->dist and $dist ne $self->dist;
+
     $dir ||= '';    # deb http://there sid main
 
         s{/$}{} for( $host, $dir, $dist );  # remove trailing /
@@ -184,22 +186,25 @@ sub repo_source_to_contents_path {
     return join( "_", $host, $dir||(), "dists", $dist );
 }
 
-=item get_contents_filename_filters
+=item get_contents_files
 
 Reads F<sources.list>, gives the repository paths to
-C<repo_source_to_contents_path> and returns a list of regular expressions that
-can be used to match against the files in C<contents_dir>.
+C<repo_source_to_contents_path> and returns an arrayref of file names of
+Contents files.
 
 =cut
 
-sub get_contents_filename_filters
+sub get_contents_files
 {
     my $self = shift;
 
     my $sources = IO::File->new( $self->sources_file, 'r' )
         or die "Unable to open '" . $self->sources_file . "': $!\n";
 
-    my @re;
+    my $archspec = `dpkg --print-architecture`;
+    chomp($archspec);
+
+    my @res;
 
     while( <$sources> ) {
         chomp;
@@ -209,43 +214,23 @@ sub get_contents_filename_filters
         next unless $_;
 
         my $path = $self->repo_source_to_contents_path($_);
-        push @re, qr{\Q$path\E} if $path;
-    }
 
-    return @re;
-}
+        next unless $path;
 
-=item get_contents_file_list
-
-Returns a list of F<Contents> files. Uses the information from F<sources.list>
-and C<contents_dir>.
-
-=cut
-
-sub get_contents_file_list {
-    my $self = shift;
-
-    my $archspec = `dpkg --print-architecture`;
-    chomp($archspec);
-
-    my @re = $self->get_contents_filename_filters;
-
-    my $pattern = catfile(
-        $self->contents_dir,
-        "*_". $self->dist . "_Contents{,-$archspec}{,.gz}"
-    );
-
-    my @list = glob $pattern;
-
-    my @filtered;
-    for my $path (@list) {
-        my( $vol, $dirs, $file ) = splitpath( $path );
-
-        for (@re) {
-            push @filtered, $path if $file =~ $_;
+        # try all of with/out architecture and
+        # un/compressed
+        for my $a ( '', "-$archspec" ) {
+            for my $c ( '', '.gz' ) {
+                my $f = catfile(
+                    $self->contents_dir,
+                    "${path}_Contents$a$c",
+                );
+                push @res, $f if -e $f;
+            }
         }
     }
-    return [ sort @filtered ];
+
+    return [ sort @res ];
 }
 
 =item read_cache
