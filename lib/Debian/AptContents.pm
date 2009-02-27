@@ -176,7 +176,7 @@ sub repo_source_to_contents_path {
 
     return undef unless $schema eq 'deb';
 
-    next if $self->dist and $dist ne $self->dist;
+    return undef if $self->dist and $dist ne $self->dist;
 
     $dir ||= '';    # deb http://there sid main
 
