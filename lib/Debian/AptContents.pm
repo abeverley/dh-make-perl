@@ -425,7 +425,7 @@ sub find_perl_module_package {
 
 =over 4
 
-=item Copyright (C) 2008 Damyan Ivanov <dmn@debian.org>
+=item Copyright (C) 2008, 2009 Damyan Ivanov <dmn@debian.org>
 
 =back
 

@@ -13,6 +13,7 @@ dh-make-perl (0.52) UNRELEASED; urgency=low
     + Rework Contents file names matching from sources.list entries. In the
       process, stop allowing only sid/unstable items.
       Closes: #517227 -- dh-make-perl cannot find dependancy using apt-file
+  * update years of copyright
 
   [ gregor herrmann ]
   * Add libtie-ixhash-perl to Build-Depends-Indep and Depends.
