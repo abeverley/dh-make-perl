@@ -104,7 +104,6 @@ sub new
         unless $self->contents_dir;
     $self->sources_file('/etc/apt/sources.list')
         unless defined( $self->sources_file );
-    $self->dist('{sid,unstable}') unless $self->dist;
     $self->contents_files( $self->get_contents_files )
         unless $self->contents_files;
     $self->cache_file( catfile( $self->homedir, 'Contents.cache' ) )
