@@ -1,4 +1,4 @@
-dh-make-perl (0.52) UNRELEASED; urgency=low
+dh-make-perl (0.52) unstable; urgency=low
 
   [ Damyan Ivanov ]
   * check if package named as the created one or containing modules with the
@@ -12,7 +12,7 @@ dh-make-perl (0.52) UNRELEASED; urgency=low
   * Debian::AptContents: explicitly use IO::Uncompress::Gunzip
     + Rework Contents file names matching from sources.list entries. In the
       process, stop allowing only sid/unstable items.
-      Closes: #517227 -- dh-make-perl cannot find dependancy using apt-file
+      Closes: #517227 -- dh-make-perl cannot find dependency using apt-file
   * update years of copyright
 
   [ gregor herrmann ]
@@ -23,11 +23,11 @@ dh-make-perl (0.52) UNRELEASED; urgency=low
     maintaining our own list; if invoked without arguments use default values
     again.
   * "--help": use pod2usage() instead of the hand-crafted usage_instructions()
-    method, duplicate maintainance of documentation is error-prone.
+    method, duplicate maintenance of documentation is error-prone.
   * Add the Apache License, Version 2.0 to the list of recognized licenses
     (closes: #511588).
 
- -- Damyan Ivanov <dmn@debian.org>  Fri, 09 Jan 2009 11:38:50 +0200
+ -- Damyan Ivanov <dmn@debian.org>  Fri, 27 Feb 2009 22:46:08 +0200
 
 dh-make-perl (0.51) unstable; urgency=low
 
