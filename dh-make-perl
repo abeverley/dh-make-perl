@@ -12,7 +12,7 @@ __END__
 
 =head1 NAME
 
-B<dh-make-perl> - Create debian source packages from Perl modules
+dh-make-perl - Create debian source packages from Perl modules
 
 =head1 SYNOPSIS
 
@@ -73,7 +73,7 @@ the Debian Perl policy, the packaging manual and so on.
 =item --make
 
 Default command if no command is given. Creates debianisation from scratch.
-Fails with an error if L<debian/> directory already exists.
+Fails with an error if F<debian/> directory already exists.
 
 =item --refresh
 
@@ -183,7 +183,7 @@ Note that, although it is not probable, this might break unrelated items in
 your system - if a newer version of a core module breaks the API, all kinds
 of daemons might get upset ;-)
 
-=item --cpan I<DIST>
+=item B<--cpan> I<DIST>
 
 Instructs B<dh-make-perl> to fetch and extract the given CPAN distribution.
 
@@ -191,7 +191,7 @@ Instructs B<dh-make-perl> to fetch and extract the given CPAN distribution.
 
 Specifies a CPAN site to use as mirror.
 
-=item B<--data-dir directory>
+=item B<--data-dir> I<DIRECTORY>
 
 Use another data directory, instead of the default, C</usr/share/dh-make-perl>
 
@@ -214,14 +214,14 @@ dependency information, you must do it using the debian package format. i.e.
 
 Uses the argument to --desc as short description for the package.
 
-=item B<--dh ver>
+=item B<--dh> I<VERSION>
 
 Set desired debhelper version. If C<ver> is 7, generated debian/rules is
 minimalistic, using the auto-mode of debhelper. Also, any additional
 documentation and examples are listed in additional files under debian/, instead
 of being listed in debian/rules
 
-=item B<--dist distribution>
+=item B<--dist> I<DISTRIBUTION>
 
 Limit the distributions whose C<Contents> files are parsed. The argument is a distribution name.
 
@@ -247,7 +247,7 @@ dpkg-source's default values.
 Installs the freshly built package. Specifying --install implies --build - The
 package will not be installed unless it was built (obviously ;-) )
 
-=item B<--home-dir directory>
+=item B<--home-dir> I<DIRECTORY>
 
 Where user overrides and APT Contents cache is stored.
 
@@ -276,7 +276,7 @@ F<debian/control> accordingly.
 Fail if a dependency Perl package was not found (dependency tracking
 requires the apt-file package installed and updated)
 
-=item B<--sources-list file>
+=item B<--sources-list> I<FILE>
 
 Instruct the C<Contents> file parser to use this B<file> when determining if a
 given file should be parsed or not. Contents files not matching any line in
