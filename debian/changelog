@@ -1,9 +1,12 @@
 dh-make-perl (0.53) UNRELEASED; urgency=low
 
-  * Non-maintainer upload.
+  [ Pierre Neyron ]
   * Fix apt-file dependency lookup if --dist is set to list of distribution,
-    e.g. "{stable,testing}", or if no --dist is given, hence defaulting to 
-    "{sid,unstable}". 
+    e.g. "{stable,testing}"
+
+  [ Damyan Ivanov ]
+  * default --dist to empty string, parsing all Contents files referenced in
+    sources.list. Further addresses #517227
 
  -- Pierre Neyron <pierre.neyron@free.fr>  Fri, 06 Mar 2009 00:29:48 +0100
 
