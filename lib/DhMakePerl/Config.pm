@@ -50,7 +50,7 @@ use constant DEFAULTS => {
     data_dir     => '/usr/share/dh-make-perl',
     dbflags      => ( $> == 0 ? "" : "-rfakeroot" ),
     dh           => 7,
-    dist         => '{sid,unstable}',
+    dist         => '',
     email        => '',
     exclude      => qr/$Dpkg::Source::Package::diff_ignore_default_regexp/,
     home_dir     => "$ENV{HOME}/.dh-make-perl",
