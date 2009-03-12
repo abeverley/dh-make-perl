@@ -8,6 +8,10 @@ dh-make-perl (0.53) UNRELEASED; urgency=low
   * default --dist to empty string, parsing all Contents files referenced in
     sources.list. Further addresses #517227
 
+  [ gregor herrmann ]
+  * Bump Standards-Version to 3.8.1 (dh-make-perl, tests and generated
+    packages).
+
  -- Pierre Neyron <pierre.neyron@free.fr>  Fri, 06 Mar 2009 00:29:48 +0100
 
 dh-make-perl (0.52) unstable; urgency=low
