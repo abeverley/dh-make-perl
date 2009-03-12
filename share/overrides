@@ -14,7 +14,7 @@ $overrides{'Strange'} = {
 	depends => 'perl6',
 	# build depends
 	bdepends => 'perl6, xlib-dev',
-	desc => 'A really ugly module to test dh-make-perl',
+	desc => 'really ugly module to test dh-make-perl',
 	longdesc => "A really ugly long description\nfor a really ugly perl module.",
 	arch => 'all',
 	# starting from version 2 it's an xs module

@@ -11,7 +11,7 @@ Package: libstrange-perl
 Architecture: all
 Depends: perl6
 Conflicts: ba-ba-buma
-Description: A really ugly module to test dh-make-perl
+Description: really ugly module to test dh-make-perl
  A really ugly long description
  for a really ugly perl module.
  .

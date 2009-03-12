@@ -11,6 +11,7 @@ dh-make-perl (0.53) UNRELEASED; urgency=low
   [ gregor herrmann ]
   * Bump Standards-Version to 3.8.1 (dh-make-perl, tests and generated
     packages).
+  * Remove leading article from test distributions' short description.
 
  -- Pierre Neyron <pierre.neyron@free.fr>  Fri, 06 Mar 2009 00:29:48 +0100
 
