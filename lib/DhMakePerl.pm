@@ -1244,8 +1244,9 @@ sub create_changelog {
     my $fh  = $self->_file_w($file);
 
     my $closes = $bug ? " (Closes: #$bug)" : '';
+    my $changelog_dist = $self->cfg->pkg_perl ? "UNRELEASED" : "unstable";
 
-    $fh->print("$srcname ($pkgversion) unstable; urgency=low\n");
+    $fh->print("$srcname ($pkgversion) $changelog_dist; urgency=low\n");
     $fh->print("\n  * Initial Release.$closes\n\n");
     $fh->print(" -- $maintainer  $date\n");
 
