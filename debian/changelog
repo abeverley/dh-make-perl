@@ -17,8 +17,10 @@ dh-make-perl (0.53) UNRELEASED; urgency=low
   * if --pkg-perl, set the changelog to UNRELEASED by default
   * if --pkg-perl is given, and --dist is not, set dist = sid
   * add myself to uploaders
+  * when refreshing, extract the debian/* copyright holders and years
+    from debian/changelog
 
- -- Ryan Niebur <ryanryan52@gmail.com>  Sat, 21 Mar 2009 00:48:42 -0700
+ -- Ryan Niebur <ryanryan52@gmail.com>  Tue, 24 Mar 2009 19:28:25 -0700
 
 dh-make-perl (0.52) unstable; urgency=low
 

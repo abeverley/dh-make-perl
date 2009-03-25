@@ -41,6 +41,7 @@ use Cwd qw( getcwd );
 use Debian::AptContents ();
 use Debian::Dependencies ();
 use Debian::Dependency ();
+use Parse::DebianChangelog;
 use DhMakePerl::Config;
 use DhMakePerl::PodParser ();
 use Email::Date::Format qw(email_date);
@@ -1289,6 +1290,38 @@ sub create_compat {
     $fh->close;
 }
 
+sub copyright_from_changelog {
+  my ( $self, $firstmaint, $firstyear ) = @_;
+  my %maintainers = ();
+  @{$maintainers{$firstmaint}} = ($firstyear);
+  my $chglog = Parse::DebianChangelog->init( { infile => 'debian/changelog' } );
+  foreach($chglog->data()) {
+    my $person = $_->Maintainer;
+    my $date = $_->Date;
+    my @date_pieces = split(" ", $date);
+    my $year = $date_pieces[3];
+    if(defined($maintainers{$person})) {
+      push @{$maintainers{$person}}, $year;
+      @{$maintainers{$person}} = sort(@{$maintainers{$person}});
+    } else {
+      @{$maintainers{$person}} = ($year);
+    }
+  }
+  my @strings;
+  foreach my $maint_name (keys %maintainers) {
+    my $str = " ";
+    my %uniq = map { $_ => 0 } @{$maintainers{$maint_name}};
+    foreach(sort keys %uniq) {
+      $str .= $_;
+      $str .= ", ";
+    }
+    $str .= $maint_name;
+    push @strings, $str;
+  }
+  @strings = sort @strings;
+  return @strings;
+}
+
 sub create_copyright {
     my ( $self, $filename ) = @_;
 
@@ -1471,7 +1504,14 @@ sub create_copyright {
     # licensed as the superset of the module and Perl itself.
     $licenses{'Artistic'} = $licenses{'GPL-1+'} = 1;
     $year = (localtime)[5] + 1900;
-    push( @res, "", "Files: debian/*", "Copyright: $year, $maintainer" );
+    push( @res, "", "Files: debian/*" );
+    if($self->cfg->command eq 'refresh') {
+      my @from_changelog = $self->copyright_from_changelog($maintainer, $year);
+      $from_changelog[0] = "Copyright:" . $from_changelog[0];
+      push @res, @from_changelog;
+    } else {
+      push @res, "Copyright: $year, $maintainer";
+    }
     push @res, "License: " . join( ' | ', keys %licenses );
 
     map { $texts{$_} && push( @res, '', "License: $_", $texts{$_} ) }
