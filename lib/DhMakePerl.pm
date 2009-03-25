@@ -1234,7 +1234,7 @@ sub create_control {
     $fh->print( wrap( '', ' ', "Depends: $depends\n" ) ) if $depends;
     $fh->print($extrapfields) if defined $extrapfields;
     $fh->print(
-        "Description: $desc\n$longdesc\n .\n This description was automagically extracted from the module by dh-make-perl.\n"
+        "Description:" . (($desc =~ m/^ /) ? "" : " ") . "$desc\n$longdesc\n .\n This description was automagically extracted from the module by dh-make-perl.\n"
     );
     $fh->close;
 }

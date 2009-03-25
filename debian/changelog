@@ -19,8 +19,10 @@ dh-make-perl (0.53) UNRELEASED; urgency=low
   * add myself to uploaders
   * when refreshing, extract the debian/* copyright holders and years
     from debian/changelog
+  * if the short description already starts with a space (for who knows
+    what reason..), don't add a space after the :
 
- -- Ryan Niebur <ryanryan52@gmail.com>  Tue, 24 Mar 2009 19:28:25 -0700
+ -- Ryan Niebur <ryanryan52@gmail.com>  Tue, 24 Mar 2009 19:43:21 -0700
 
 dh-make-perl (0.52) unstable; urgency=low
 
