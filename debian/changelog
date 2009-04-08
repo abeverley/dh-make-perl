@@ -1,4 +1,4 @@
-dh-make-perl (0.53) UNRELEASED; urgency=low
+dh-make-perl (0.53) unstable; urgency=low
 
   [ Pierre Neyron ]
   * Fix apt-file dependency lookup if --dist is set to list of distribution,
@@ -24,7 +24,7 @@ dh-make-perl (0.53) UNRELEASED; urgency=low
   * if the short description already starts with a space (for who knows
     what reason..), don't add a space after the :
 
- -- Ryan Niebur <ryanryan52@gmail.com>  Tue, 24 Mar 2009 19:43:21 -0700
+ -- gregor herrmann <gregoa@debian.org>  Wed, 08 Apr 2009 22:54:04 +0200
 
 dh-make-perl (0.52) unstable; urgency=low
 
