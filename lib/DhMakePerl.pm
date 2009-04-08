@@ -14,7 +14,7 @@ DhMakePerl - create Debian source package from CPAN dist
 
 =head1 VERSION
 
-Version 0.52
+Version 0.53
 
 =cut
 
