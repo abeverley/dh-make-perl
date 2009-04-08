@@ -194,7 +194,7 @@ Unable to locate module packages, because APT Contents files
 are not available on the system.
 
 Install the 'apt-file' package, run 'apt-file update' as root
-and rettry.
+and retry.
 EOF
         }
         my $mod = $ARGV[0];
