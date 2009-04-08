@@ -12,6 +12,8 @@ dh-make-perl (0.53) UNRELEASED; urgency=low
   * Bump Standards-Version to 3.8.1 (dh-make-perl, tests and generated
     packages).
   * Remove leading article from test distributions' short description.
+  * Remove spurious comma from Build-Depends and slightly rephrase short
+    description.
 
   [ Ryan Niebur ]
   * if --pkg-perl, set the changelog to UNRELEASED by default
