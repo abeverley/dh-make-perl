@@ -1,5 +1,5 @@
 Source: dh-make-perl
-Section: devel
+Section: perl
 Priority: optional
 Build-Depends: debhelper (>= 5),
  perl-modules (>= 5.10) | libmodule-build-perl
