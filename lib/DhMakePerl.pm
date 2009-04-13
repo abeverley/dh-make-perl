@@ -1143,12 +1143,17 @@ sub fix_rules {
     $fh->seek( 0, 0 ) || die "Can't rewind $rules_file: $!";
     $fh->truncate(0) || die "Can't truncate $rules_file: $!";
 
+    warn "--notest ignored. if you don't want to run the tests when building the package, add 'nocheck' to DEB_BUILD_OPTIONS\n"
+        if $self->cfg->notest;
+
     if ( $self->cfg->dh < 7 ) {
         $test_line
             = ( $module_build eq 'Module-Build' )
             ? '$(PERL) Build test'
             : '$(MAKE) test';
-        $test_line = "#$test_line" if $self->cfg->notest;
+        $test_line = "+ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))\n"
+                   . "\t$test_line\n"
+                   . "endif";
 
         for (@content) {
             s/#CHANGES#/$changelog_file/g;
@@ -1161,12 +1166,7 @@ sub fix_rules {
         }
     }
     else {
-        for (@content) {
-            if ($self->cfg->notest) {
-                s/dh build/dh build --before dh_auto_test\n\tdh build --after dh_auto_test/;
-            }
-            $fh->print($_)
-        }
+        $fh->print($_) for @content;
         if (@examples) {
             open F, '>>', "$maindir/debian/$pkgname.examples" or die $!;
             print F "$_\n" foreach @examples;
