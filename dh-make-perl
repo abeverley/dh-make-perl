@@ -253,11 +253,6 @@ Where user overrides and APT Contents cache is stored.
 
 Default: ~/.dh-make-perl
 
-=item B<--notest>
-
-Does not run the automatic testing of the module as part of the build script.
-This is mostly useful when packaging buggy or incomplete software.
-
 =item B<--packagename> | B<-p> I<PACKAGENAME>
 
 Manually specify the Package Name, useful when the module has dashes in its
