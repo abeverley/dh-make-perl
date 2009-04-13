@@ -1,0 +1,6 @@
+dh-make-perl (0.54) unstable; urgency=low
+
+  --notest is now ignored. If you use --build and want to skip tests, put
+  nockeck in the DEB_BUILD_OPTIONS environment variable.
+
+ -- Damyan Ivanov <dmn@debian.org>  Mon, 13 Apr 2009 23:13:38 +0300
