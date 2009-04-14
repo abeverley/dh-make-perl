@@ -31,7 +31,7 @@ Vcs-Browser: http://svn.debian.org/viewsvn/pkg-perl/trunk/dh-make-perl/
 
 Package: dh-make-perl
 Architecture: all
-Depends: debhelper (>= 4.0.2), ${perl:Depends}, ${misc:Depends},
+Depends: debhelper (>= 7), ${perl:Depends}, ${misc:Depends},
  make, dpkg-dev, fakeroot, 
  libapt-pkg-perl,
  libclass-accessor-perl,

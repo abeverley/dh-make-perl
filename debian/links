@@ -1,0 +1,2 @@
+usr/bin/dh-make-perl                usr/bin/cpan2deb
+usr/share/man/man1/dh-make-perl.1p  usr/share/man/man1/cpan2deb.1p
