@@ -12,7 +12,10 @@ dh-make-perl (0.54) UNRELEASED; urgency=low
     + install links via debian/links, README via debian/docs
     + this gives support to 'nocheck' in DEB_BUILD_OPTIONS (Closes: #523560)
 
- -- gregor herrmann <gregoa@debian.org>  Thu, 09 Apr 2009 15:43:56 +0200
+  [ Ryan Niebur ]
+  * add myself to the AUTHOR section
+
+ -- Ryan Niebur <ryanryan52@gmail.com>  Thu, 16 Apr 2009 21:20:20 -0700
 
 dh-make-perl (0.53) unstable; urgency=low
 
