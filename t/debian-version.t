@@ -12,4 +12,6 @@ plan skip_all => "'no 'debian/changelog' found"
 
 my $cl = Parse::DebianChangelog->init->parse( { infile => "$Bin/../debian/changelog" } );
 
-is( $cl->data( { count => 1   } )->[0]->{Version}, $DhMakePerl::VERSION, 'Debian package version matches module version' );
+my $pkg_ver = $cl->data( { count => 1   } )->[0]->{Version};
+$pkg_ver =~ s/~.+//;    # ignore !foo suffix
+is( $pkg_ver, $DhMakePerl::VERSION, 'Debian package version matches module version' );
