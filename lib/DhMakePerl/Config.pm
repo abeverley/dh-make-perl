@@ -96,8 +96,6 @@ sub parse_command_line_options {
     GetOptions( \%opts, $self->options, )
         or die "Error parsing command-line options\n";
 
-    $opts{dist} = "sid" if(!defined($opts{dist}) && defined($opts{"pkg-perl"}));
-
     # Make CPAN happy, make the user happy: Be more tolerant!
     # Accept names to be specified with double-colon, dash or slash
     $opts{cpan} =~ s![/-]!::!g if $opts{cpan};

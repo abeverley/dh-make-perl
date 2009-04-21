@@ -11,6 +11,7 @@ dh-make-perl (0.54) UNRELEASED; urgency=low
   * rules, control, compat: migrate to DH7
     + install links via debian/links, README via debian/docs
     + this gives support to 'nocheck' in DEB_BUILD_OPTIONS (Closes: #523560)
+  * revert defaulting --dist to 'sid' when --pkg-perl is given
 
   [ Ryan Niebur ]
   * add myself to the AUTHOR section
