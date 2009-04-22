@@ -30,7 +30,7 @@ build-stamp:
 	# Add commands to compile the package here
 	$(PERL) Makefile.PL INSTALLDIRS=vendor
 	$(MAKE) OPTIMIZE="$(CFLAGS)" LD_RUN_PATH=""
-	#TEST#
+#TEST#
 	touch $@
 
 clean:

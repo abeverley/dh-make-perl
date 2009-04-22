@@ -30,7 +30,7 @@ build-stamp:
 	# Add commands to compile the package here
 	$(PERL) Build.PL installdirs=vendor config=optimize="$(CFLAGS)"
 	OPTIMIZE="$(CFLAGS)" $(PERL) Build
-	#TEST#
+#TEST#
 	touch $@
 
 clean:

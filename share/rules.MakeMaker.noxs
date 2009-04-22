@@ -21,7 +21,7 @@ build-stamp:
 	# Add commands to compile the package here
 	$(PERL) Makefile.PL INSTALLDIRS=vendor
 	$(MAKE)
-	#TEST#
+#TEST#
 	touch $@
 
 clean:
