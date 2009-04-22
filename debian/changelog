@@ -1,4 +1,4 @@
-dh-make-perl (0.55) UNRELEASED; urgency=low
+dh-make-perl (0.55) unstable; urgency=low
 
   [ Peter Pentchev ]
   * Tweak the "nocheck" test in debian/rules:
@@ -13,7 +13,7 @@ dh-make-perl (0.55) UNRELEASED; urgency=low
   * Add Peter Pentchev to the list of contributors, move Ryan to keep the list
     sorted
 
- -- Peter Pentchev <roam@ringlet.net>  Wed, 22 Apr 2009 17:23:06 +0300
+ -- Damyan Ivanov <dmn@debian.org>  Wed, 22 Apr 2009 21:58:31 +0300
 
 dh-make-perl (0.54) unstable; urgency=low
 
