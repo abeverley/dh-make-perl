@@ -10,6 +10,8 @@ dh-make-perl (0.55) UNRELEASED; urgency=low
   [ Damyan Ivanov ]
   * t/corelist.t: ExtUtils::Miniperl is now recognised by Module::CoreList, so
     don't mark it as TODO anymore
+  * Add Peter Pentchev to the list of contributors, move Ryan to keep the list
+    sorted
 
  -- Peter Pentchev <roam@ringlet.net>  Wed, 22 Apr 2009 17:23:06 +0300
 
