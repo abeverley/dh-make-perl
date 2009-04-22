@@ -1,4 +1,4 @@
-dh-make-perl (0.54) UNRELEASED; urgency=low
+dh-make-perl (0.54) unstable; urgency=low
 
   [ gregor herrmann ]
   * Change section to "perl" to match the changes in the overrides file.
@@ -17,7 +17,7 @@ dh-make-perl (0.54) UNRELEASED; urgency=low
   [ Ryan Niebur ]
   * add myself to the AUTHOR section
 
- -- Ryan Niebur <ryanryan52@gmail.com>  Thu, 16 Apr 2009 21:20:20 -0700
+ -- Damyan Ivanov <dmn@debian.org>  Wed, 22 Apr 2009 13:31:45 +0300
 
 dh-make-perl (0.53) unstable; urgency=low
 
