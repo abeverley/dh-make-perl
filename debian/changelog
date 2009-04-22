@@ -1,7 +1,7 @@
 dh-make-perl (0.54) UNRELEASED; urgency=low
 
   [ gregor herrmann ]
-  * Change section to "perl" th match the changes in the overrides file.
+  * Change section to "perl" to match the changes in the overrides file.
 
   [ Damyan Ivanov ]
   * ignore --notest; instead, create debian/rules that obeys nocheck in
@@ -12,7 +12,7 @@ dh-make-perl (0.54) UNRELEASED; urgency=low
     + install links via debian/links, README via debian/docs
     + this gives support to 'nocheck' in DEB_BUILD_OPTIONS (Closes: #523560)
   * revert defaulting --dist to 'sid' when --pkg-perl is given
-  * fix t/debian-version.t to allow (ignore) ~foo version siffux
+  * fix t/debian-version.t to allow (ignore) ~foo version suffix
 
   [ Ryan Niebur ]
   * add myself to the AUTHOR section
