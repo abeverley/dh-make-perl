@@ -29,13 +29,5 @@ for (@files) {
     s{/}{::}g;
     s/\.pm$//;
 
-    if ( $_ eq 'ExtUtils::Miniperl' ) {
-        # ExtUtils::Miniperl is not recognized by Module::CoreList
-        local $TODO = "$_ is not recognized by Module::Core:List";
-
-        ok( $maker->is_core_module($_), "$_ is core" );
-    }
-    else {
-        ok( $maker->is_core_module($_), "$_ is core" );
-    }
+    ok( $maker->is_core_module($_), "$_ is core" );
 }

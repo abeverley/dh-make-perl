@@ -1,10 +1,15 @@
 dh-make-perl (0.55) UNRELEASED; urgency=low
 
+  [ Peter Pentchev ]
   * Tweak the "nocheck" test in debian/rules:
     - unbreak it: do not output the list of the group ID's of
       the developer's local account :)
     - remove the tab in the templates now that the contents is no
       longer a Makefile target command but an ifeq/endif pair instead
+
+  [ Damyan Ivanov ]
+  * t/corelist.t: ExtUtils::Miniperl is now recognised by Module::CoreList, so
+    don't mark it as TODO anymore
 
  -- Peter Pentchev <roam@ringlet.net>  Wed, 22 Apr 2009 17:23:06 +0300
 
