@@ -14,11 +14,11 @@ DhMakePerl - create Debian source package from CPAN dist
 
 =head1 VERSION
 
-Version 0.54
+Version 0.55
 
 =cut
 
-our $VERSION = '0.54';
+our $VERSION = '0.55';
 
 =head1 SYNOPSIS
 
@@ -1151,7 +1151,7 @@ sub fix_rules {
             = ( $module_build eq 'Module-Build' )
             ? '$(PERL) Build test'
             : '$(MAKE) test';
-        $test_line = "+ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))\n"
+        $test_line = "ifeq (,\$(filter nocheck,\$(DEB_BUILD_OPTIONS)))\n"
                    . "\t$test_line\n"
                    . "endif";
 

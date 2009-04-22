@@ -1,3 +1,11 @@
+dh-make-perl (0.55) UNRELEASED; urgency=low
+
+  * Tweak the "nocheck" test in debian/rules:
+    - unbreak it: do not output the list of the group ID's of
+      the developer's local account :)
+
+ -- Peter Pentchev <roam@ringlet.net>  Wed, 22 Apr 2009 17:23:06 +0300
+
 dh-make-perl (0.54) unstable; urgency=low
 
   [ gregor herrmann ]
