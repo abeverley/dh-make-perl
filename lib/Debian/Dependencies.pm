@@ -124,7 +124,7 @@ sub prune(@) {
         if ( exists $deps{$p} ) {
             my $cur_ver = $deps{$p}->ver;
 
-            $deps{$p} = $v
+            $deps{$p} = $_
                 if defined($v) and not defined($cur_ver)
                     or $AptPkg::Config::_config->system->versioning->compare(
                         $cur_ver, $v ) < 0;
