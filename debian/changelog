@@ -1,12 +1,16 @@
 dh-make-perl (0.56) UNRELEASED; urgency=low
 
+  [ gregor herrmann ]
   * Add the whole Debian::Dependency object to the deps hash in
     Debian::Dependencies' prune function instead of just the version; fixes
     "Can't call method "ver" without a package or object reference at
     /usr/share/perl5/Debian/Dependencies.pm line 125." error that occurs when
     a package is listed more than once in %deps.
 
- -- gregor herrmann <gregoa@debian.org>  Mon, 27 Apr 2009 16:42:59 +0200
+  [ Ryan Niebur ]
+  * remove useless comments from watch file
+
+ -- Ryan Niebur <ryanryan52@gmail.com>  Thu, 30 Apr 2009 19:42:52 -0700
 
 dh-make-perl (0.55) unstable; urgency=low
 

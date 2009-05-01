@@ -1544,9 +1544,7 @@ sub create_watch {
     my $version_re = 'v?(\d[\d_.-]+)\.(?:tar(?:\.gz|\.bz2)?|tgz|zip)';
 
     $fh->print(
-        "\# format version number, currently 3; this line is compulsory!
-version=3
-\# URL to the package page followed by a regex to search
+        "version=3
 $upsurl   .*/$perlname-$version_re\$
 "
     );
