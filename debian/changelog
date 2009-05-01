@@ -10,7 +10,10 @@ dh-make-perl (0.56) UNRELEASED; urgency=low
   [ Ryan Niebur ]
   * remove useless comments from watch file
 
- -- Ryan Niebur <ryanryan52@gmail.com>  Thu, 30 Apr 2009 19:42:52 -0700
+  [ Damyan Ivanov ]
+  * add 'make' to the list of commands
+
+ -- gregor herrmann <gregoa@debian.org>  Mon, 27 Apr 2009 16:42:59 +0200
 
 dh-make-perl (0.55) unstable; urgency=low
 
