@@ -9,6 +9,9 @@ dh-make-perl (0.56) UNRELEASED; urgency=low
 
   [ Ryan Niebur ]
   * remove useless comments from watch file
+  * don't include .svn-base files in the docs. this fixes running the
+    tests in a subversion checkout and fixes a really annoying bug where
+    .svn-base files get added when you --refresh under an svn checkout.
 
   [ Damyan Ivanov ]
   * add 'make' to the list of commands
