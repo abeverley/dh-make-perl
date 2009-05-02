@@ -12,7 +12,7 @@ dh-make-perl (0.56) UNRELEASED; urgency=low
   * don't include .svn-base files in the docs. this fixes running the
     tests in a subversion checkout and fixes a really annoying bug where
     .svn-base files get added when you --refresh under an svn checkout.
-  * depends on libparse-debianchangelog-perl (Closes: 526660)
+  * depends on libparse-debianchangelog-perl (Closes: #526660)
 
   [ Damyan Ivanov ]
   * add 'make' to the list of commands
