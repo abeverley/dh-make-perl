@@ -356,7 +356,7 @@ sub is_core_module {
 sub setup_dir {
     my ($self) = @_;
 
-    my ( $dist, $mod, $cpanversion, $tarball );
+    my ( $dist, $mod, $tarball );
     $mod_cpan_version = '';
     if ( $self->cfg->cpan ) {
         my ($new_maindir);
@@ -405,35 +405,21 @@ sub setup_dir {
         }
         $mod              = shift @mod unless ($mod);
         $mod_cpan_version = $mod->cpan_version;
-        $cpanversion      = $CPAN::VERSION;
-        $cpanversion =~ s/_.*//;
 
         $tarball = $CPAN::Config->{'keep_source_where'} . "/authors/id/";
 
-        if ( $cpanversion < 1.59 ) {    # wild guess on the version number
-            $dist = $CPAN::META->instance( 'CPAN::Distribution',
-                $mod->{CPAN_FILE} );
-            $dist->get || die "Cannot get $mod->{CPAN_FILE}\n";
-            $tarball .= $mod->{CPAN_FILE};
-            $maindir = $dist->{'build_dir'};
-        }
-        else {
-
-            # CPAN internals changed
-            $dist = $CPAN::META->instance( 'CPAN::Distribution',
-                $mod->cpan_file );
-            $dist->get || die "Cannot get ", $mod->cpan_file, "\n";
-            $tarball .= $mod->cpan_file;
-            $maindir = $dist->dir;
-        }
+        $dist = $CPAN::META->instance( 'CPAN::Distribution',
+            $mod->cpan_file );
+        $dist->get || die "Cannot get ", $mod->cpan_file, "\n";
+        $tarball .= $mod->cpan_file;
+        $maindir = $dist->dir;
 
         copy( $tarball, $ENV{'PWD'} );
         $tarball = $ENV{'PWD'} . "/" . basename($tarball);
 
         # build_dir contains a random part since 1.88_59
         # use the new CPAN::Distribution::base_id (introduced in 1.91_53)
-        $new_maindir = $ENV{PWD} . "/"
-            . ( $cpanversion < 1.9153 ? basename($maindir) : $dist->base_id );
+        $new_maindir = $ENV{PWD} . "/" . $dist->base_id;
 
         # rename existing directory
         if ( -d $new_maindir
