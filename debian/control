@@ -32,16 +32,16 @@ Vcs-Browser: http://svn.debian.org/viewsvn/pkg-perl/trunk/dh-make-perl/
 Package: dh-make-perl
 Architecture: all
 Depends: debhelper (>= 7), ${perl:Depends}, ${misc:Depends},
- make, dpkg-dev, fakeroot, 
+ make, dpkg-dev, fakeroot,
  libapt-pkg-perl,
  libclass-accessor-perl,
  libemail-date-format-perl,
  libmodule-corelist-perl,
  libmodule-depends-perl,
+ libparse-debianchangelog-perl,
  libtie-ixhash-perl,
  libwww-mechanize-perl,
- libyaml-perl,
- libparse-debianchangelog-perl
+ libyaml-perl
 Recommends: apt-file (>= 2.1.0), libmodule-build-perl
 Description: helper for creating Debian packages from perl modules
  dh-make-perl will create the files required to build a Debian source
