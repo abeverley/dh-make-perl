@@ -993,6 +993,27 @@ sub find_debs_for_modules {
 
         if ($deb) {
             print "+ $module found in $deb\n" if $self->cfg->verbose;
+        }
+        else {
+            print "- $module not found in any package\n";
+            push @missing, $module;
+
+            my $mod = $self->find_cpan_module($module);
+            if ($mod) {
+                my $dist = $mod->distribution->base_id =~ s/-v?\d[^-]*$//;
+                my $pkg = 'lib' . lc($dist) . '-perl';
+
+                print "   CPAN contains it in $dist\n";
+                print "   substituting package name of $pkg\n";
+
+                $deb = $pkg;
+            }
+            else {
+                print "   - it seems it is not available even via CPAN\n";
+            }
+        }
+
+        if ($deb) {
             if ( exists $dep_hash->{$module} ) {
                 my $v = $dep_hash->{$module};
                 $v =~ s/^v//;    # strip leading 'v' from version
@@ -1018,10 +1039,6 @@ sub find_debs_for_modules {
             else {
                 $debs += Debian::Dependency->new($deb);
             }
-        }
-        else {
-            print "- $module not found in any package\n";
-            push @missing, $module;
         }
     }
 

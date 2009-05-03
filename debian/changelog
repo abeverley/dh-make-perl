@@ -20,6 +20,8 @@ dh-make-perl (0.56) UNRELEASED; urgency=low
     perl-modules 5.10 (on which we already depend)
   * move CPAN configuration into a method
   * move finding CPAN module object for given module name into a method
+  * when a dependency module package is not found, guess the package name
+    after the CPAN distribution that contains the module
 
  -- gregor herrmann <gregoa@debian.org>  Mon, 27 Apr 2009 16:42:59 +0200
 
