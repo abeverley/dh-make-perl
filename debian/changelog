@@ -18,6 +18,7 @@ dh-make-perl (0.56) UNRELEASED; urgency=low
   * add 'make' to the list of commands
   * remove code supporting CPAN < 1.9205, which is what ships with
     perl-modules 5.10 (on which we already depend)
+  * move CPAN configuration into a method
 
  -- gregor herrmann <gregoa@debian.org>  Mon, 27 Apr 2009 16:42:59 +0200
 

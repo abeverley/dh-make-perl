@@ -31,6 +31,8 @@ TO BE FILLED
 
 =head1 METHODS
 
+=over
+
 =cut
 
 use AptPkg::Cache ();
@@ -353,6 +355,32 @@ sub is_core_module {
     return $v;
 }
 
+=item configure_cpan
+
+Configure CPAN module. It is safe to call this method more than once, it will
+do nothing if CPAN is already configured.
+
+=cut
+
+sub configure_cpan {
+    my $self = shift;
+
+    return if $CPAN::Config_loaded;
+
+    CPAN::Config->load( be_silent => not $self->cfg->verbose );
+
+    unshift( @{ $CPAN::Config->{'urllist'} }, $self->cfg->cpan_mirror )
+        if $self->cfg->cpan_mirror;
+
+    $CPAN::Config->{'build_dir'} = $ENV{'HOME'} . "/.cpan/build";
+    $CPAN::Config->{'cpan_home'} = $ENV{'HOME'} . "/.cpan/";
+    $CPAN::Config->{'histfile'}  = $ENV{'HOME'} . "/.cpan/history";
+    $CPAN::Config->{'keep_source_where'} = $ENV{'HOME'} . "/.cpan/source";
+    $CPAN::Config->{'tar_verbosity'} = $self->cfg->verbose ? 'v' : '';
+    $CPAN::Config->{'load_module_verbosity'}
+        = $self->cfg->verbose ? 'verbose' : 'silent';
+}
+
 sub setup_dir {
     my ($self) = @_;
 
@@ -368,19 +396,7 @@ sub setup_dir {
                 unless $self->cfg->core_ok;
         }
 
-###		require CPAN;
-        CPAN::Config->load( be_silent => not $self->cfg->verbose );
-
-        unshift( @{ $CPAN::Config->{'urllist'} }, $self->cfg->cpan_mirror )
-            if $self->cfg->cpan_mirror;
-
-        $CPAN::Config->{'build_dir'} = $ENV{'HOME'} . "/.cpan/build";
-        $CPAN::Config->{'cpan_home'} = $ENV{'HOME'} . "/.cpan/";
-        $CPAN::Config->{'histfile'}  = $ENV{'HOME'} . "/.cpan/history";
-        $CPAN::Config->{'keep_source_where'} = $ENV{'HOME'} . "/.cpan/source";
-        $CPAN::Config->{'tar_verbosity'} = $self->cfg->verbose ? 'v' : '';
-        $CPAN::Config->{'load_module_verbosity'}
-            = $self->cfg->verbose ? 'verbose' : 'silent';
+        $self->configure_cpan;
 
         # This modification allows to retrieve all the modules that
         # match the user-provided string.
@@ -1796,6 +1812,8 @@ sub _file_rw {
         or die "Cannot open $filename: $!\n";
     return $fh;
 }
+
+=back
 
 =head1 AUTHOR
 
