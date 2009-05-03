@@ -381,6 +381,40 @@ sub configure_cpan {
         = $self->cfg->verbose ? 'verbose' : 'silent';
 }
 
+=item find_cpan_module
+
+Returns CPAN::Module object that corresponds to the supplied argument. Returns undef if no module is found by CPAN.
+
+=cut
+
+sub find_cpan_module {
+    my( $self, $name ) = @_;
+
+    my $mod;
+
+    # expand() returns a list of matching items when called in list
+    # context, so after retrieving it, we try to match exactly what
+    # the user asked for. Specially important when there are
+    # different modules which only differ in case.
+    #
+    # This Closes: #451838
+    my @mod = CPAN::Shell->expand( 'Module', '/^' . $name . '$/' );
+
+    foreach (@mod) {
+        my $file = $_->cpan_file();
+        $file =~ s#.*/##;          # remove directory
+        $file =~ s/(.*)-.*/$1/;    # remove version and extension
+        $file =~ s/-/::/g;         # convert dashes to colons
+        if ( $file eq $self->cfg->cpan ) {
+            $mod = $_;
+            last;
+        }
+    }
+    $mod = shift @mod unless ($mod);
+
+    return $mod;
+}
+
 sub setup_dir {
     my ($self) = @_;
 
@@ -398,28 +432,8 @@ sub setup_dir {
 
         $self->configure_cpan;
 
-        # This modification allows to retrieve all the modules that
-        # match the user-provided string.
-        #
-        # expand() returns a list of matching items when called in list
-        # context, so after retrieving it, I try to match exactly what
-        # the user asked for. Specially important when there are
-        # different modules which only differ in case.
-        #
-        # This Closes: #451838
-        my @mod = CPAN::Shell->expand( 'Module', '/^' . $self->cfg->cpan . '$/' )
+        $mod = $self->find_cpan_module( $self->cfg->cpan )
             or die "Can't find '" . $self->cfg->cpan . "' module on CPAN\n";
-        foreach (@mod) {
-            my $file = $_->cpan_file();
-            $file =~ s#.*/##;          # remove directory
-            $file =~ s/(.*)-.*/$1/;    # remove version and extension
-            $file =~ s/-/::/g;         # convert dashes to colons
-            if ( $file eq $self->cfg->cpan ) {
-                $mod = $_;
-                last;
-            }
-        }
-        $mod              = shift @mod unless ($mod);
         $mod_cpan_version = $mod->cpan_version;
 
         $tarball = $CPAN::Config->{'keep_source_where'} . "/authors/id/";
