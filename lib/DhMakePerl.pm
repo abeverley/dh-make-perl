@@ -1000,7 +1000,7 @@ sub find_debs_for_modules {
 
             my $mod = $self->find_cpan_module($module);
             if ($mod) {
-                my $dist = $mod->distribution->base_id =~ s/-v?\d[^-]*$//;
+                ( my $dist = $mod->distribution->base_id ) =~ s/-v?\d[^-]*$//;
                 my $pkg = 'lib' . lc($dist) . '-perl';
 
                 print "   CPAN contains it in $dist\n";
