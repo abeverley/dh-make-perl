@@ -48,3 +48,5 @@ cmp_deeply(
     bless( { pkg => 'libother-perl' }, 'Debian::Dependency' ),
     '+= works',
 );
+
+ok( $list eq "$dep_string, libother-perl", "eq works" );

@@ -7,7 +7,8 @@ use AptPkg::Config;
 use Debian::Dependency;
 
 use overload '""'   => \&_stringify,
-             '+'    => \&_add;
+             '+'    => \&_add,
+             'eq'   => \&_eq;
 
 =head1 NAME
 
@@ -94,6 +95,13 @@ sub _add {
         push @$left, @$right;
         $left;
     }
+}
+
+sub _eq {
+    my( $left, $right ) = @_;
+
+    # force stringification
+    return "$left" eq "$right";
 }
 
 =back
