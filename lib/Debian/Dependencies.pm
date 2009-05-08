@@ -148,7 +148,7 @@ converted to an instance of the L<Debian::Dependency> class).
 sub add {
     my( $self, $dep ) = @_;
 
-    $dep = Debian::Dependency->new($dep)
+    $dep = Debian::Dependencies->new($dep)
         unless ref($dep);
 
     $self += $dep;
