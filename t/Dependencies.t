@@ -50,3 +50,18 @@ cmp_deeply(
 );
 
 ok( $list eq "$dep_string, libother-perl", "eq works" );
+
+$list = Debian::Dependencies->new('debhelper (>= 7), debhelper (>= 7.0.5)');
+is( "$list", 'debhelper (>= 7.0.5)', 'versions collapsed' );
+
+$list = Debian::Dependencies->new('debhelper (>= 7.0.5), debhelper (>= 7)');
+is( "$list", 'debhelper (>= 7.0.5)', 'versions squashed' );
+
+$list = Debian::Dependencies->new('debhelper (>= 7.0.5), debhelper (<< 8)');
+is( "$list", 'debhelper (>= 7.0.5), debhelper (<< 8)', '>= and << kept' );
+
+$list = Debian::Dependencies->new('debhelper (>= 7), libmodule-build-perl');
+$list->add('debhelper (>= 7)');
+$list->add('libtest-simple-perl');
+is( "$list", 'debhelper (>= 7), libmodule-build-perl, libtest-simple-perl',
+    'adding duplicated keeps order' );
