@@ -1295,9 +1295,7 @@ sub create_rules {
     my ( $rulesname, $error );
     $rulesname = (
           ( $self->cfg->dh eq 7 )
-        ? $arch eq 'all'
-                ? 'rules.dh7.noxs'
-                : 'rules.dh7.xs'
+        ? 'rules.dh7.tiny'
         : $arch eq 'all' ? "rules.$module_build.noxs"
         : "rules.$module_build.xs"
     );
