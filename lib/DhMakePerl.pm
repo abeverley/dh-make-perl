@@ -192,6 +192,17 @@ sub run {
             $self->drop_quilt( $maindir, $control );
         }
 
+        if( my $apt_contents = $self->get_apt_contents ) {
+            $control->dependencies_from_cpan_meta(
+                $meta, $self->get_apt_contents, $self->cfg->verbose );
+        }
+        else {
+            warn "No APT contents can be loaded.\n";
+            warn "Please install 'apt-file' package and run 'apt-file update'\n";
+            warn "as root.\n";
+            warn "Dependencies not updated.\n";
+        }
+
         $control->write("$debiandir/control");
 
         print "--- Done\n" if $self->cfg->verbose;
