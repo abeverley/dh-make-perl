@@ -64,7 +64,7 @@ regular expression is C</\s*,\s*/>.
 sub new {
     my ( $class, $val ) = @_;
 
-    my $self = bless [], $class;
+    my $self = bless [], ref($class)||$class;
 
     if ( defined($val) ) {
         @{$self}
