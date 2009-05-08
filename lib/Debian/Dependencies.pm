@@ -113,11 +113,13 @@ sub _add {
     $right = [ $right ] if $right->isa('Debian::Dependency');
 
     if ( defined $mode ) {      # $a + $b
-        return bless [ @$left, @$right ], ref($left);
+        my $result = bless [ @$left ], ref($left);
+        $result->_add_dependency(@$right);
+        return $result;
     }
     else {                      # $a += $b;
-        push @$left, @$right;
-        $left;
+        $left->_add_dependency(@$right);
+        return $left;
     }
 }
 
