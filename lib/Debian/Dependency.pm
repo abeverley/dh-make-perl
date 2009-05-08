@@ -41,7 +41,8 @@ __PACKAGE__->mk_accessors(qw( pkg ver rel ));
 use Carp;
 
 use overload '""' => \&_stringify,
-             '+'  => \&_add;
+             '+'  => \&_add,
+             '<=>'  => \&_compare;
 
 =head2 CLASS_METHODS
 
@@ -100,6 +101,36 @@ sub _add {
     confess "cannot += Dependency. put Dependencies instance on the left instead" unless defined($mode);
 
     return bless( [ $left ], 'Debian::Dependencies' ) + $right;
+}
+
+our %rel_order = (
+    '<<'    => -2,
+    '<='    => -1,
+    '='     => 0,
+    '>='    => +1,
+    '>>'    => +2,
+);
+
+sub _compare {
+    my( $left, $right ) = @_;
+
+    my $res = $left->pkg cmp $right->pkg;
+
+    return $res if $res != 0;
+
+    return -1 if not defined( $left->ver ) and defined( $right->ver );
+    return +1 if defined( $left->ver ) and not defined( $right->ver );
+
+    return 0 unless $left->ver; # both have no version
+
+    $res = $AptPkg::Config::_config->system->versioning->compare(
+        $left->ver, $right->ver,
+    );
+
+    return $res if $res != 0;
+
+    # same versions, compare relations
+    return $rel_order{ $left->rel } <=> $rel_order{ $right->rel };
 }
 
 =item parse()

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 110;
+use Test::More tests => 142;
 
 BEGIN {
     use_ok('Debian::Dependency');
@@ -161,3 +161,58 @@ sat( $dep, 'foo (>= 5)', 0 );
 sat( $dep, 'foo (= 5)',  0 );
 sat( $dep, 'foo (<= 5)', 1 );
 sat( $dep, 'foo (<< 5)', 1 );
+
+sub comp {
+    my( $one, $two, $expected ) = @_;
+
+    $one = Debian::Dependency->new($one);
+    $two = Debian::Dependency->new($two);
+
+    is( $one <=> $two, $expected,
+        $expected
+        ? (
+            ( $expected == -1 )
+            ? "$one is less than $two"
+            : "$one is greater than $two"
+        )
+        : "$one and $two are equal"
+    );
+}
+
+comp( 'foo', 'bar', 1 );
+comp( 'bar', 'foo', -1 );
+comp( 'foo', 'foo', 0 );
+comp( 'foo', 'foo (>= 2)', -1 );
+comp( 'foo (>= 2)', 'foo', 1 );
+comp( 'foo (<< 2)', 'foo (<= 1)', 1 );
+comp( 'foo (<< 1)', 'foo (<= 2)', -1 );
+
+comp( 'foo (<< 2)', 'foo (<< 2)', 0 );
+comp( 'foo (<< 2)', 'foo (<= 2)', -1 );
+comp( 'foo (<< 2)', 'foo (= 2)', -1 );
+comp( 'foo (<< 2)', 'foo (>= 2)', -1 );
+comp( 'foo (<< 2)', 'foo (>> 2)', -1 );
+
+comp( 'foo (<= 2)', 'foo (<< 2)', 1 );
+comp( 'foo (<= 2)', 'foo (<= 2)', 0 );
+comp( 'foo (<= 2)', 'foo (= 2)', -1 );
+comp( 'foo (<= 2)', 'foo (>= 2)', -1 );
+comp( 'foo (<= 2)', 'foo (>> 2)', -1 );
+
+comp( 'foo (= 2)', 'foo (<< 2)', 1 );
+comp( 'foo (= 2)', 'foo (<= 2)', 1 );
+comp( 'foo (= 2)', 'foo (= 2)', 0 );
+comp( 'foo (= 2)', 'foo (>= 2)', -1 );
+comp( 'foo (= 2)', 'foo (>> 2)', -1 );
+
+comp( 'foo (>= 2)', 'foo (<< 2)', 1 );
+comp( 'foo (>= 2)', 'foo (<= 2)', 1 );
+comp( 'foo (>= 2)', 'foo (= 2)',  1 );
+comp( 'foo (>= 2)', 'foo (>= 2)', 0 );
+comp( 'foo (>= 2)', 'foo (>> 2)', -1 );
+
+comp( 'foo (>> 2)', 'foo (<< 2)', 1 );
+comp( 'foo (>> 2)', 'foo (<= 2)', 1 );
+comp( 'foo (>> 2)', 'foo (= 2)',  1 );
+comp( 'foo (>> 2)', 'foo (>= 2)', 1 );
+comp( 'foo (>> 2)', 'foo (>> 2)', 0 );
