@@ -125,7 +125,7 @@ sub add {
     $dep = Debian::Dependency->new($dep)
         unless ref($dep);
 
-    push @$self, $dep;
+    $self += $dep;
 }
 
 =item remove( I<dependency>, ... )
