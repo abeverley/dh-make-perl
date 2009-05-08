@@ -138,10 +138,15 @@ sub _eq {
 
 =item add( I<dependency> )
 
-Adds I<dependency> to the list of dependencies. No check is made if
-I<dependency> is already part of dependencies. I<dependency> can be eitherr an
-instance of the L<Debian::Dependency> class, or a string (in which case it is
-converted to an instance of the L<Debian::Dependency> class).
+Adds I<dependency> to the list of dependencies. If the new dependency is a subset of or overlaps some of the old dependencies, it is not duplicated.
+
+    my $d = Debian::Dependencies('foo, bar (<=4)');
+    $d->add('foo (>= 4), bar');
+    print "$d";     # foo (>= 4), bar (>= 4)
+
+I<dependency> can be either a L<Debian::Dependency> object, a
+L<Debian::Deendencies> object, or a string (in which case it is converted to an
+instance of the L<Debian::Dependencies> class).
 
 =cut
 
