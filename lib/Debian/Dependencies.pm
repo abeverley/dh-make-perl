@@ -102,6 +102,55 @@ sub _add {
 
 =over 4
 
+=item add( I<dependency> )
+
+Adds I<dependency> to the list of dependencies. No check is made if
+I<dependency> is already part of dependencies. I<dependency> can be eitherr an
+instance of the L<Debian::Dependency> class, or a string (in which case it is
+converted to an instance of the L<Debian::Dependency> class).
+
+=cut
+
+sub add {
+    my( $self, $dep ) = @_;
+
+    $dep = Debian::Dependency->new($dep)
+        unless ref($dep);
+
+    push @$self, $dep;
+}
+
+=item remove( I<dependency>, ... )
+=item remove( I<dependencies>, ... )
+
+Removes a dependency from the list of dependencies. Instances of
+L<Debian::Dependency> and L<Debian::Dependencies> classes are supported as
+arguments.
+
+Any non-reference arguments are coerced to instances of L<Debian::Dependencies>
+class.
+
+Only dependencies that are subset of the given dependencies are removed:
+
+    my $deps = Debian::Dependencies->new('foo (>= 1.2), bar');
+    $deps->remove('foo, bar (>= 2.0)');
+    print $deps;    # bar
+
+=cut
+
+sub remove {
+    my( $self, @deps ) = @_;
+
+    for my $deps(@deps) {
+        $deps = Debian::Dependencies->new($deps)
+            unless ref($deps);
+
+        for my $dep(@$deps) {
+            @$self = grep { ! $dep->satisfies($_) } @$self;
+        }
+    }
+}
+
 =item prune()
 
 Reduces the list of dependencies by removing duplicate or covering ones. The
@@ -112,8 +161,6 @@ libalpa-perl, libarm-perl (>= 2), calling C<prune> will leave you with
 libalpa-perl, libarm-perl (>= 2), libppi-perl (>= 3.0)
 
 =cut
-
-
 
 sub prune(@) {
     my $self = shift;
