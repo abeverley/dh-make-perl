@@ -56,6 +56,7 @@ use Module::CoreList ();
 use Module::Depends::Intrusive ();
 use Module::Depends ();
 use Text::Wrap qw( fill wrap );
+use Tie::File;
 use User::pwent qw(:FIELDS);
 use WWW::Mechanize ();
 use YAML ();
@@ -1166,6 +1167,177 @@ sub check_for_xs {
         };
 }
 
+=item add_quilt( $maindir, $control )
+
+Plugs quilt into F<debian/rules> and F<debian/control>. Depends on
+F<debian/rules> being in DH7 three-liner format. Also bumps the debhelper
+build-dependency to 7.0.50 (the first version to support overrides) and adds
+debian/README.source documenting quilt usage.
+
+=cut
+
+sub add_quilt {
+    my( $self, $maindir, $control ) = @_;
+
+    my @rules;
+    tie @rules, 'Tie::File', catfile( $maindir, 'debian', 'rules' )
+        or die "Unable to read rules: $!";
+
+    splice @rules, 1, 0, ( '', 'include /usr/share/quilt/quilt.make' )
+        unless grep /quilt\.make/, @rules;
+
+    push @rules,
+        '',
+        'override_dh_auto_configure: $(QUILT_STAMPFN)',
+        "\tdh_auto_configure"
+        unless grep /QUILT_STAMPFN/, @rules;
+
+    push @rules,
+        '',
+        'override_dh_auto_clean: unpatch',
+        "\tdh_auto_clean"
+        unless grep /override_dh_auto_clean:.*unpatch/, @rules;
+
+    # add build-dependency on quilt
+    $control->source->Build_Depends->add('quilt');
+
+    # bump build-dependency of DH to 7.0.50
+    $control->source->Build_Depends->add('debhelper (>= 7.0.50)');
+        # a later prune() will remove redundant >= 7
+
+    # README.source
+    my $quilt_mini_doc = <<EOF;
+This package uses quilt for managing all modifications to the upstream
+source. Changes are stored in the source package as diffs in
+debian/patches and applied during the build.
+
+See /usr/share/doc/quilt/README.source for a detailed explaination.
+EOF
+
+    my $readme = catfile( $maindir, 'debian', 'README.source' );
+    my $quilt_already_documented = 0;
+    my $readme_source_exists = -e $readme;
+    if($readme_source_exists) {
+        my @readme;
+        tie @readme, 'Tie::File', $readme
+            or die "Unable to tie '$readme': $!";
+
+        for( @readme ) {
+            if( m{quilt/README.source} ) {
+                $quilt_already_documented = 1;
+                last;
+            }
+        }
+    }
+
+    print "README.source already documents quilt\n"
+        if $quilt_already_documented and $self->cfg->verbose;
+
+    unless($quilt_already_documented) {
+        my $fh;
+        open( $fh, '>>', $readme )
+            or die "Unable to open '$readme' for writing: $!";
+
+        print $fh "\n\n" if $readme_source_exists;
+        print $fh $quilt_mini_doc;
+        close $fh;
+    }
+}
+
+=item drop_quilt( $maindir, $control )
+
+removes quilt from F<debian/rules> and F<deian/control>. Expects that
+L<|add_quilt> was used to add quilt to F<debian/rules>.
+
+If F<debian/README.source> exists, references to quilt are removed from it (and
+the file removed if empty after that).
+
+=cut
+
+sub drop_quilt {
+    my( $self, $maindir, $control ) = @_;
+
+    my @rules;
+    tie @rules, 'Tie::File', catfile( $maindir, 'debian', 'rules' )
+        or die "Unable to read rules: $!";
+
+    # look for the quilt include line and remove it and the previous empty one
+    for( my $i = 1; $i < @rules; $i++ ) {
+        if ( $rules[$i] eq ''
+                and $rules[$i+1] eq 'include /usr/share/quilt/quilt.make' ) {
+            splice @rules, $i, 2;
+            last;
+        }
+    }
+
+    # remove the QUILT_STAMPFN dependency override
+    for( my $i = 1; $i < @rules; $i++ ) {
+        if ( $rules[$i] eq ''
+                and $rules[$i+1] eq 'override_dh_auto_configure: $(QUILT_STAMPFN)'
+                and $rules[$i+2] eq "\tdh_auto_configure"
+                and $rules[$i+3] eq '' ) {
+            splice @rules, $i, 3;
+            last;
+        }
+    }
+
+    # remove unpatch dependency in clean
+    for( my $i = 1; $i < @rules; $i++ ) {
+        if ( $rules[$i] eq ''
+                and $rules[$i+1] eq 'override_dh_auto_clean: unpatch'
+                and $rules[$i+2] eq "\tdh_auto_clean"
+                and $rules[$i+3] eq '' ) {
+            splice @rules, $i, 3;
+            last;
+        }
+    }
+
+    # remove build-dependency on quilt
+    $control->source->Build_Depends->remove('quilt');
+
+    # if no overrides are used, lower dh dependency from 7.0.50 to 7
+    if( not grep /^override_dh_/, @rules ) {
+        $control->source->Build_Depends->remove('debhelper (>= 7.0.50)');
+        $control->source->Build_Depends->add('debhelper (>= 7)');
+    }
+
+    # README.source
+    my $readme = catfile( $maindir, 'debian', 'README.source' );
+
+    if( -e $readme ) {
+        my @readme;
+        tie @readme, 'Tie::File', $readme
+            or die "Unable to tie '$readme': $!";
+
+        my( $start, $end );
+        for( my $i = 0; defined( $_ = $readme[$i] ); $i++ ) {
+            if( m{^This package uses quilt } ) {
+                $start = $i;
+                next;
+            }
+
+            if( defined($start)
+                    and m{^See /usr/share/doc/quilt/README.source} ) {
+                $end = $i;
+                last;
+            }
+        }
+
+        if( defined($start) and defined($end) ) {
+            print "Removing refences to quilt from README.source\n"
+                if $self->cfg->verbose;
+
+            splice @readme, $start, $end-$start+1;
+
+            # file is now empty?
+            if( join( '', @readme ) =~ /^\s*$/ ) {
+                unlink $readme
+                    or die "unlink($readme): $!";
+            }
+        }
+    }
+}
+
 sub fix_rules {
     my ( $self, $rules_file, $changelog_file, $docs, $examples ) = @_;
 
@@ -1212,6 +1384,7 @@ sub fix_rules {
             close F;
         }
     }
+
     $fh->close;
 }
 
