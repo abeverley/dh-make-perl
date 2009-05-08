@@ -3,6 +3,8 @@ package Debian::Dependency;
 use strict;
 use warnings;
 
+use AptPkg::Config;
+
 =head1 NAME
 
 Debian::Dependency -- dependency relationship between Debian packages
@@ -185,6 +187,124 @@ Examples
     print $dep->pkg;
     $dep->ver('3.4');
 
+=head1 METHODS
+
+=over
+
+=item satisfies($dep)
+
+Returns true if I<$dep> states a dependency that is already covered by this
+instance. In other words, if this method returns true, any package satisfying
+the dependency of this instance will also satisfy I<$dep> ($dep is redundant in
+dependency lsits where this instance is already present).
+
+I<$dep> can be either an instance of the L<Debian::Dependency> class, or a
+plain string.
+
+    my $dep  = Debian::Dependency->new('foo (>= 2)');
+    print $dep->satisfies('foo') ? 'yes' : 'no';             # no
+    print $dep->satisfies('bar') ? 'yes' : 'no';             # no
+    print $dep->satisfies('foo (>= 2.1)') ? 'yes' : 'no';    # yes
+
+=cut
+
+sub satisfies {
+    my( $self, $dep ) = @_;
+
+    $dep = Debian::Dependency->new($dep)
+        unless ref($dep);
+
+    # different package?
+    return 0 unless $self->pkg eq $dep->pkg;
+
+    # $dep has no relation?
+    return 1 unless $dep->rel;
+
+    # $dep has relation, but we don't?
+    return 0 if not $self->rel;
+
+    # from this point below both $dep and we have relation (and version)
+    my $cmpver = $AptPkg::Config::_config->system->versioning->compare(
+        $self->ver, $dep->ver,
+    );
+
+    if( $self->rel eq '>>' ) {
+        # >> 4 satisfies also >> 3
+        return 1 if $dep->rel eq '>>'
+            and $cmpver >= 0;
+
+        # >> 4 satisfies >= 3 and >= 4
+        return 1 if $dep->rel eq '>='
+            and $cmpver >= 0;
+
+        # >> 4 can't satisfy =, <= and << relations
+        return 0;
+    }
+    elsif( $self->rel eq '>=' ) {
+        # >= 4 satisfies >= 3
+        return 1 if $dep->rel eq '>='
+            and $cmpver >= 0;
+
+        # >= 4 satisvies >> 3, but not >> 4
+        return 1 if $dep->rel eq '>>'
+            and $cmpver > 0;
+
+        # >= 4 can't satosfy =, <= and << relations
+    }
+    elsif( $self->rel eq '=' ) {
+        return 1 if $dep->rel eq '='
+            and $cmpver == 0;
+
+        # = 4 also satisfies >= 3 and >= 4
+        return 1 if $dep->rel eq '>='
+            and $cmpver >= 0;
+
+        # = 4 satisfies >> 3, but not >> 4
+        return 1 if $dep->rel eq '>>'
+            and $cmpver > 0;
+
+        # = 4 satisfies <= 4 and <= 5
+        return 1 if $dep->rel eq '<='
+            and $cmpver <= 0;
+
+        # = 4 satisfies << 5, but not << 4
+        return 1 if $dep->rel eq '<<'
+            and $cmpver < 0;
+
+        # other cases mean 'no'
+        return 0;
+    }
+    elsif( $self->rel eq '<=' ) {
+        # <= 4 satisfies <= 5
+        return 1 if $dep->rel eq '<='
+            and $cmpver <= 0;
+
+        # <= 4 satisfies << 5, but not << 4
+        return 1 if $dep->rel eq '<<'
+            and $cmpver < 0;
+
+        # <= 4 can't satisfy =, >= and >>
+        return 0;
+    }
+    elsif( $self->rel eq '<<' ) {
+        # << 4 satisfies << 5
+        return 1 if $dep->rel eq '<<'
+            and $cmpver <= 0;
+
+        # << 4 satisfies <= 5 and <= 4
+        return 1 if $dep->rel eq '<='
+            and $cmpver <= 0;
+
+        # << 4 can't satisfy =, >= and >>
+        return 0;
+    }
+    else {
+        croak "Should not happen: $self satisfies $dep?";
+    }
+}
+
+=back
+
 =head1 SEE ALSO
 
 L<Debian::Dependencies>
@@ -201,7 +321,7 @@ L<Debian::Dependencies>
 
 =over 4
 
-=item Copyright (C) 2008 Damyan Ivanov <dmn@debian.org>
+=item Copyright (C) 2008,2009 Damyan Ivanov <dmn@debian.org>
 
 =back
 

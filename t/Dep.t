@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 18;
+use Test::More tests => 110;
 
 BEGIN {
     use_ok('Debian::Dependency');
@@ -37,3 +37,127 @@ my $se = eval { Debian::Dependency->new('libfoo-perl (=1.2)') };
 ok( !$@, '= dependency parsed' );
 is( $se->rel, '=', '= dependency detected' );
 
+sub sat( $ $ $ ) {
+    my( $dep, $test, $expected ) = @_;
+
+    ok( $dep->satisfies($test) == $expected, "$dep ".($expected ? 'satisfies' : "doesn't satisfy"). " $test" );
+}
+
+my $dep = Debian::Dependency->new('foo');
+sat( $dep, 'bar', 0 );
+sat( $dep, 'foo', 1 );
+sat( $dep, 'foo (>> 4)', 0 );
+sat( $dep, 'foo (>= 4)', 0 );
+sat( $dep, 'foo (= 4)',  0 );
+sat( $dep, 'foo (<= 4)', 0 );
+sat( $dep, 'foo (<< 4)', 0 );
+
+$dep = Debian::Dependency->new('foo (>> 4)');
+sat( $dep, 'bar', 0 );
+sat( $dep, 'foo', 1 );
+
+sat( $dep, 'foo (>> 3)', 1 );
+sat( $dep, 'foo (>= 3)', 1 );
+sat( $dep, 'foo (= 3)',  0 );
+sat( $dep, 'foo (<= 3)', 0 );
+sat( $dep, 'foo (<< 3)', 0 );
+
+sat( $dep, 'foo (>> 4)', 1 );
+sat( $dep, 'foo (>= 4)', 1 );
+sat( $dep, 'foo (= 4)',  0 );
+sat( $dep, 'foo (<= 4)', 0 );
+sat( $dep, 'foo (<< 4)', 0 );
+
+sat( $dep, 'foo (>> 5)', 0 );
+sat( $dep, 'foo (>= 5)', 0 );
+sat( $dep, 'foo (= 5)',  0 );
+sat( $dep, 'foo (<= 5)', 0 );
+sat( $dep, 'foo (<< 5)', 0 );
+
+$dep = Debian::Dependency->new('foo (>= 4)');
+sat( $dep, 'bar', 0 );
+sat( $dep, 'foo', 1 );
+
+sat( $dep, 'foo (>> 4)', 0 );
+sat( $dep, 'foo (>= 4)', 1 );
+sat( $dep, 'foo (= 4)',  0 );
+sat( $dep, 'foo (<= 4)', 0 );
+sat( $dep, 'foo (<< 4)', 0 );
+
+sat( $dep, 'foo (>> 3)', 1 );
+sat( $dep, 'foo (>= 3)', 1 );
+sat( $dep, 'foo (= 3)',  0 );
+sat( $dep, 'foo (<= 3)', 0 );
+sat( $dep, 'foo (<< 3)', 0 );
+
+sat( $dep, 'foo (>> 5)', 0 );
+sat( $dep, 'foo (>= 5)', 0 );
+sat( $dep, 'foo (= 5)',  0 );
+sat( $dep, 'foo (<= 5)', 0 );
+sat( $dep, 'foo (<< 5)', 0 );
+
+$dep = Debian::Dependency->new('foo (= 4)');
+sat( $dep, 'bar', 0 );
+sat( $dep, 'foo', 1 );
+
+sat( $dep, 'foo (>> 4)', 0 );
+sat( $dep, 'foo (>= 4)', 1 );
+sat( $dep, 'foo (= 4)',  1 );
+sat( $dep, 'foo (<= 4)', 1 );
+sat( $dep, 'foo (<< 4)', 0 );
+
+sat( $dep, 'foo (>> 3)', 1 );
+sat( $dep, 'foo (>= 3)', 1 );
+sat( $dep, 'foo (= 3)',  0 );
+sat( $dep, 'foo (<= 3)', 0 );
+sat( $dep, 'foo (<< 3)', 0 );
+
+sat( $dep, 'foo (>> 5)', 0 );
+sat( $dep, 'foo (>= 5)', 0 );
+sat( $dep, 'foo (= 5)',  0 );
+sat( $dep, 'foo (<= 5)', 1 );
+sat( $dep, 'foo (<< 5)', 1 );
+
+$dep = Debian::Dependency->new('foo (<= 4)');
+sat( $dep, 'bar', 0 );
+sat( $dep, 'foo', 1 );
+
+sat( $dep, 'foo (>> 4)', 0 );
+sat( $dep, 'foo (>= 4)', 0 );
+sat( $dep, 'foo (= 4)',  0 );
+sat( $dep, 'foo (<= 4)', 1 );
+sat( $dep, 'foo (<< 4)', 0 );
+
+sat( $dep, 'foo (>> 3)', 0 );
+sat( $dep, 'foo (>= 3)', 0 );
+sat( $dep, 'foo (= 3)',  0 );
+sat( $dep, 'foo (<= 3)', 0 );
+sat( $dep, 'foo (<< 3)', 0 );
+
+sat( $dep, 'foo (>> 5)', 0 );
+sat( $dep, 'foo (>= 5)', 0 );
+sat( $dep, 'foo (= 5)',  0 );
+sat( $dep, 'foo (<= 5)', 1 );
+sat( $dep, 'foo (<< 5)', 1 );
+
+$dep = Debian::Dependency->new('foo (<< 4)');
+sat( $dep, 'bar', 0 );
+sat( $dep, 'foo', 1 );
+
+sat( $dep, 'foo (>> 4)', 0 );
+sat( $dep, 'foo (>= 4)', 0 );
+sat( $dep, 'foo (= 4)',  0 );
+sat( $dep, 'foo (<= 4)', 1 );
+sat( $dep, 'foo (<< 4)', 1 );
+
+sat( $dep, 'foo (>> 3)', 0 );
+sat( $dep, 'foo (>= 3)', 0 );
+sat( $dep, 'foo (= 3)',  0 );
+sat( $dep, 'foo (<= 3)', 0 );
+sat( $dep, 'foo (<< 3)', 0 );
+
+sat( $dep, 'foo (>> 5)', 0 );
+sat( $dep, 'foo (>= 5)', 0 );
+sat( $dep, 'foo (= 5)',  0 );
+sat( $dep, 'foo (<= 5)', 1 );
+sat( $dep, 'foo (<< 5)', 1 );
