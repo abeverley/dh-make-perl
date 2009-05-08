@@ -203,6 +203,18 @@ sub prune(@) {
     Carp::croak("prune() is deprecated and does nothing");
 }
 
+=item sort
+
+Sorts the dependency list by packagee name, version and relation.
+
+=cut
+
+sub sort {
+    my( $self ) = @_;
+
+    @$self = sort { $a <=> $b } @$self;
+}
+
 =back
 
 =cut
