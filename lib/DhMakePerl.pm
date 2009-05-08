@@ -41,6 +41,8 @@ use Config qw( %Config );
 use CPAN ();
 use Cwd qw( getcwd );
 use Debian::AptContents ();
+use Debian::Control ();
+use Debian::Control::FromCPAN ();
 use Debian::Dependencies ();
 use Debian::Dependency ();
 use Parse::DebianChangelog;
@@ -180,6 +182,18 @@ sub run {
             \@docs, \@examples, );
         copy( "$debiandir/copyright", "$debiandir/copyright.bak" );
         $self->create_copyright("$debiandir/copyright");
+
+        my $control = Debian::Control::FromCPAN->new;
+        $control->read("$debiandir/control");
+        if ( -e "$debiandir/patches/series" ) {
+            $self->add_quilt( $maindir, $control );
+        }
+        else {
+            $self->drop_quilt( $maindir, $control );
+        }
+
+        $control->write("$debiandir/control");
+
         print "--- Done\n" if $self->cfg->verbose;
         return 0;
     }
