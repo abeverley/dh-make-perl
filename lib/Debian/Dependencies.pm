@@ -171,10 +171,10 @@ sub prune(@) {
         if ( exists $deps{$p} ) {
             my $cur_ver = $deps{$p}->ver;
 
+            # replace the present dependency unless it also satisfies the new
+            # one
             $deps{$p} = $_
-                if defined($v) and not defined($cur_ver)
-                    or $AptPkg::Config::_config->system->versioning->compare(
-                        $cur_ver, $v ) < 0;
+                unless $deps{$p}->satisfies($_);
         }
         else {
             $deps{$p} = $_;
