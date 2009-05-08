@@ -192,36 +192,15 @@ sub remove {
 
 =item prune()
 
-Reduces the list of dependencies by removing duplicate or covering ones. The
-resulting list is also sorted by package name.
-
-For example, if you have libppi-perl, libppi-perl (>= 3.0), libarm-perl,
-libalpa-perl, libarm-perl (>= 2), calling C<prune> will leave you with
-libalpa-perl, libarm-perl (>= 2), libppi-perl (>= 3.0)
+This method is deprecated. If you want to sort the dependency list, either call L</sort> or use normal perl sorting stuff on the dereferenced array.
 
 =cut
 
 sub prune(@) {
     my $self = shift;
-    my %deps;
-    for (@$self) {
-        my $p = $_->pkg;
-        my $v = $_->ver;
-        if ( exists $deps{$p} ) {
-            my $cur_ver = $deps{$p}->ver;
 
-            # replace the present dependency unless it also satisfies the new
-            # one
-            $deps{$p} = $_
-                unless $deps{$p}->satisfies($_);
-        }
-        else {
-            $deps{$p} = $_;
-        }
-
-    }
-
-    @$self = map( $deps{$_}, sort( keys(%deps) ) );
+    use Carp ();
+    Carp::croak("prune() is deprecated and does nothing");
 }
 
 =back

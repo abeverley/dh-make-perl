@@ -1228,10 +1228,6 @@ sub create_control {
         @$bdependsi = ();
     }
 
-    $depends->prune();
-    $bdepends->prune();
-    $bdependsi->prune();
-
     $fh->print("Source: $srcname\n");
     $fh->print("Section: $section\n");
     $fh->print("Priority: $priority\n");
