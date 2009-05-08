@@ -173,13 +173,13 @@ sub repo_source_to_contents_path {
         next;
     }
 
-    return undef unless $schema eq 'deb';
+    return unless $schema eq 'deb';
 
     if ( $self->dist ) {
         if ( $self->dist =~ /^\s*{\s*(.+)\s*}\s*$/ ) {
-            return undef unless grep { /^$dist$/ } split(/\s*,\s*/, $1);
+            return unless grep { /^$dist$/ } split(/\s*,\s*/, $1);
         } else {
-            return undef if $dist ne $self->dist;
+            return if $dist ne $self->dist;
         }
     }
 
@@ -247,7 +247,7 @@ invocation.
 
 =cut
 
-sub read_cache() {
+sub read_cache {
     my $self = shift;
 
     my $cache;

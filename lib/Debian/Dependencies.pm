@@ -196,7 +196,7 @@ This method is deprecated. If you want to sort the dependency list, either call 
 
 =cut
 
-sub prune(@) {
+sub prune {
     my $self = shift;
 
     use Carp ();

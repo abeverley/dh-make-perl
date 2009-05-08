@@ -373,7 +373,7 @@ sub is_core_module {
 
     my $v = Module::CoreList->first_release($module);   # 5.009002
 
-    return undef unless defined $v;
+    return unless defined $v;
 
     $v = version->new($v);                              # v5.9.2
     ( $v = $v->normal ) =~ s/^v//;                      # "5.9.2"
@@ -574,7 +574,7 @@ sub extract_basic_copyright {
             return join( '', $fh->getlines );
         }
     }
-    return undef;
+    return;
 }
 
 sub extract_basic {
