@@ -84,6 +84,9 @@ This is useful when F<debian/rules> was created using older templates and
 doesn't contain much customisations. As always, you're strongly encouraged to
 verify if F<debian/rules> looks sane.
 
+--refresh also tries to update dependency lists in F<debian/control> from
+F<META.yml>. It hooks L<quilt(1)> into F<debian/rules> and creates F<debian/README.source>
+
 =item --locate I<MODULE>
 
 Tries to locate the package that conains the given Perl I<MODULE>.
