@@ -80,6 +80,30 @@ sub _stringify {
     return join( ', ', @$self );
 }
 
+sub _add_dependency {
+    my( $self, @deps ) = @_;
+
+    DEP:
+    for my $dep(@deps) {
+        # see if the new dependency is already satisfied by some of the
+        # dependencies we have
+        for(@$self) {
+            next DEP if $_->satisfies($dep);
+        }
+
+        # see if the new dependency is broader than (satisfies) some of the old
+        for(@$self) {
+            if( $dep->satisfies($_) ) {
+                $_ = $dep;
+                next DEP;
+            }
+        }
+
+        # OK, the new dependency doesn't overlap with any of the old, add it
+        push @$self, $dep;
+    }
+}
+
 sub _add {
     my $left = shift;
     my $right = shift;
