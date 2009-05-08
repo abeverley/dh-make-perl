@@ -33,7 +33,7 @@ my $loe = eval { Debian::Dependency->new('libbar (<= 1.2)') };
 ok( !$@, '<= dependency parsed' );
 is( $loe->rel, '<=', '<= dependency detected' );
 
-my $se = eval { Debian::Dependency->new('libfoo-perl (==1.2)') };
-ok( !$@, '== dependency parsed' );
-is( $se->rel, '==', '== dependency detected' );
+my $se = eval { Debian::Dependency->new('libfoo-perl (=1.2)') };
+ok( !$@, '= dependency parsed' );
+is( $se->rel, '=', '= dependency detected' );
 

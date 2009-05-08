@@ -130,7 +130,7 @@ sub parse {
                     (       # various relations 
                         <<
                       | <=
-                      | ==
+                      | =
                       | >=
                       | >>
                     )
@@ -169,7 +169,7 @@ Contains the name of the package that is depended upon
 
 =item rel
 
-Contains the relation of the dependency. May be any of '<<', '<=', '==', '>='
+Contains the relation of the dependency. May be any of '<<', '<=', '=', '>='
 or '>>'. Default is '>='.
 
 =item ver
