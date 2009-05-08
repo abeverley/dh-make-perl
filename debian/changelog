@@ -23,6 +23,18 @@ dh-make-perl (0.56) UNRELEASED; urgency=low
   * when a dependency module package is not found, guess the package name
     after the CPAN distribution that contains the module
 
+  * Dependency classes improvements:
+    + there is no '==' dependency relation; it is '='
+    + when checking for duplicate or overlapping dependencies, all kinds of
+      version relations are supported
+    + Dependencies: add overloading of 'eq' and '<=>' operators
+  * --refresh additions
+    + add/drop quilt from debian/rules and debian/control depending on
+      presense of debian/patches/series; also try to keep README.source up to
+      date with regard to quilt usage
+    + if apt-file data is available, update package dependencies from META
+    + Dependencies are sorted
+
  -- gregor herrmann <gregoa@debian.org>  Mon, 27 Apr 2009 16:42:59 +0200
 
 dh-make-perl (0.55) unstable; urgency=low
@@ -930,4 +942,3 @@ dh-make-perl (0.1) unstable; urgency=low
   * Initial Release.
 
  -- Paolo Molaro <lupus@debian.org>  Mon, 16 Oct 2000 19:14:24 +0200
- 
