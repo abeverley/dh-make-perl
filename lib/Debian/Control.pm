@@ -4,7 +4,7 @@ Debian::Control - manage Debian source package control files
 
 =head1 SYNOPSIS
 
-    my $c = Debian::Control->new();         # construct anew
+    my $c = Debian::Control->new();         # construct a new
     $c->read($file);                        # parse debian/control file
     $c->write($file);                       # write to file
     print $c->source->Package;

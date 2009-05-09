@@ -4,7 +4,7 @@ Debian::Control::Stanza::Source - source stanza of Debian source package control
 
 =head1 SYNOPSIS
 
-    my $src = Debian::Control::Stanca::Source->new(\%data);
+    my $src = Debian::Control::Stanza::Source->new(\%data);
     print $src;                         # auto-stringification
     print $src->Build_Depends;          # Debian::Dependencies object
 

@@ -99,7 +99,7 @@ sub fill_from_cpan_meta {
 
 =item parse_meta_dep_list( src, apt_depends, missing )
 
-Convert the given CPAN META dependency list (I<src>, shashref with module names
+Convert the given CPAN META dependency list (I<src>, hashref with module names
 for keys and versions for values) into an instance of the
 L<Debian::Dependencies> class. Supplied I<apt_depends> is used for finding
 Debian packages corresponfing to CPAN modules. Modules with no corresponding

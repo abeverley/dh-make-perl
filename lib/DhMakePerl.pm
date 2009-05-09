@@ -1271,7 +1271,7 @@ EOF
 
 =item drop_quilt( $maindir, $control )
 
-removes quilt from F<debian/rules> and F<deian/control>. Expects that
+removes quilt from F<debian/rules> and F<debian/control>. Expects that
 L<|add_quilt> was used to add quilt to F<debian/rules>.
 
 If F<debian/README.source> exists, references to quilt are removed from it (and

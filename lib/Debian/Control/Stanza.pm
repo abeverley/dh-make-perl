@@ -6,7 +6,7 @@ Debian::Control::Stanza - single stanza of Debian source package control file
 
     package Binary;
     use base 'Debian::Control::Stanza';
-    use constant fields => qw( Pakcage Depends Conflicts );
+    use constant fields => qw( Package Depends Conflicts );
 
     1;
 
@@ -105,7 +105,7 @@ sub new {
 
 =item is_dependency_list($field)
 
-Returns true is I<$field> contains a list of dependencies. By default returns true for the following fields:
+Returns true if I<$field> contains a list of dependencies. By default returns true for the following fields:
 
 =over
 

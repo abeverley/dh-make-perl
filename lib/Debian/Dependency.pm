@@ -227,7 +227,7 @@ Examples
 Returns true if I<$dep> states a dependency that is already covered by this
 instance. In other words, if this method returns true, any package satisfying
 the dependency of this instance will also satisfy I<$dep> ($dep is redundant in
-dependency lsits where this instance is already present).
+dependency lists where this instance is already present).
 
 I<$dep> can be either an instance of the L<Debian::Dependency> class, or a
 plain string.
