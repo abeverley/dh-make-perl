@@ -28,6 +28,7 @@ dh-make-perl (0.56) UNRELEASED; urgency=low
     + when checking for duplicate or overlapping dependencies, all kinds of
       version relations are supported
     + Dependencies: add overloading of 'eq' and '<=>' operators
+    + null versions ("0", "0.000" and similar) are now ignored
   * --refresh additions
     + add/drop quilt from debian/rules and debian/control depending on
       presense of debian/patches/series; also try to keep README.source up to
