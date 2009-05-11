@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 142;
+use Test::More tests => 145;
 
 BEGIN {
     use_ok('Debian::Dependency');
@@ -36,6 +36,15 @@ is( $loe->rel, '<=', '<= dependency detected' );
 my $se = eval { Debian::Dependency->new('libfoo-perl (=1.2)') };
 ok( !$@, '= dependency parsed' );
 is( $se->rel, '=', '= dependency detected' );
+
+my $d = Debian::Dependency->new( 'foo', '0' );
+is( "$d", 'foo', 'zero version is ignored when given in new' );
+
+$d = Debian::Dependency->new( 'foo', '0.000' );
+is( "$d", 'foo', '0.000 version is ignored when given in new' );
+
+$d = Debian::Dependency->new('libfoo (>= 0.000)');
+is( "$d", 'libfoo', 'zero version is ignored when parsing' );
 
 sub sat( $ $ $ ) {
     my( $dep, $test, $expected ) = @_;
