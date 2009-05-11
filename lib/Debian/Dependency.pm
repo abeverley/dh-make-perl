@@ -133,6 +133,24 @@ sub _compare {
     return $rel_order{ $left->rel } <=> $rel_order{ $right->rel };
 }
 
+=item set
+
+Overrides the set method from L<Class::Accessor>. Used to convert zero versions
+(for example I<0> or I<0.000>) to void versions.
+
+=cut
+
+sub set {
+    my( $self, $field, $value ) = @_;
+
+    undef($value)
+    if $field eq 'ver'
+        and defined($value)
+        and $value =~ /^0[0.]*$/;
+
+    $self->SUPER::set( $field, $value );
+}
+
 =item parse()
 
 Takes a single string argument and parses it.
