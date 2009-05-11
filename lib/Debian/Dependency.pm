@@ -69,18 +69,47 @@ sub new {
     my $class = shift;
     $class = ref($class) if ref($class);
 
-    return $class->SUPER::new(@_) if ref( $_[0] );
+    my $self = $class->SUPER::new();
+    my( $pkg, $rel, $ver );
 
-    return $class->parse( $_[0] )
-        if @_ == 1;
+    if( ref($_[0]) ) {
+        $pkg = delete $_[0]->{pkg};
+        $rel = delete $_[0]->{rel};
+        $ver = delete $_[0]->{ver};
+        # pass-through the rest
+        while( my($k,$v) = each %{$_[0]} ) {
+            $self->$k($v);
+        }
+    }
+    elsif( @_ == 1 ) {
+        return $class->parse($_[0]);
+    }
+    elsif( @_ == 2 ) {
+        $pkg = shift;
+        $rel = '>=';
+        $ver = shift;
+    }
+    elsif( @_ == 3 ) {
+        ( $pkg, $rel, $ver ) = @_;
+    }
+    else {
+        die "Unsupported number of arguments";
+    }
 
-    return $class->SUPER::new( { pkg => $_[0], rel => '>=', ver => $_[1] } )
-        if @_ == 2;
+    $self->ver($ver);
 
-    return $class->SUPER::new( { pkg => $_[0], rel => $_[1], ver => $_[2] } )
-        if @_ == 3;
+    unless( defined( $self->ver ) ) {
+        undef($rel);
+        delete $self->{ver};
+    };
 
-    die "Unsupported number of arguments";
+    $self->rel($rel) if $rel;
+
+    die "pkg is mandatory" unless $pkg;
+
+    $self->pkg($pkg);
+
+    return $self;
 }
 
 sub _stringify {
