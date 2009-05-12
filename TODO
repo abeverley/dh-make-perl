@@ -1,0 +1,8 @@
+* --refresh: add --[no-]backups option (on by default)
+  used for controlling creation of backup files of things that are rewritten
+
+* --refresh and core dependencies
+  when a dependency module is in the core, do not blindly copy the version
+  dependend on to perl-modules dependency, but use the first perl release the
+  dependency is included in.
+  also, depending on perl-base is perhaps not a good idea
