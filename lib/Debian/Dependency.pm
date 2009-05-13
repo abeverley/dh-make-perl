@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use AptPkg::Config;
+use Carp;
 
 =head1 NAME
 
@@ -105,7 +106,7 @@ sub new {
 
     $self->rel($rel) if $rel;
 
-    die "pkg is mandatory" unless $pkg;
+    croak "pkg is mandatory" unless $pkg;
 
     $self->pkg($pkg);
 
