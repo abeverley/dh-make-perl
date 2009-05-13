@@ -60,7 +60,8 @@ Options
 
 =item apt_contents
 
-An instance of Debian::AptContents class, used for finding packages corresponding to depended on modules.
+An instance of Debian::AptContents class, used for finding packages
+corresponding to depended on modules.
 
 =back
 
