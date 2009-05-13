@@ -68,7 +68,8 @@ use version qw( qv );
 # TODO:
 # * get more info from the package (maybe using CPAN methods)
 
-my ($min_perl_version, $debstdversion, $priority,  $section,
+my ($min_perl_version, $oldest_perl_version,
+    $debstdversion, $priority,  $section,
     $depends,          $bdepends,      $bdependsi, $maintainer,
     $arch,             $closes,        $date,      $debiandir,
     $startdir,
@@ -85,6 +86,10 @@ $depends       = Debian::Dependencies->new('${perl:Depends}');
 # if the module has stricter requirements, this build-dependency
 # is replaced below by calling substitute_perl_dependency
 $min_perl_version = '5.6.0-12';
+
+# this is the version in 'oldstable'. No much point on depending on something
+# older
+$oldest_perl_version = '5.8.8-7';
 
 $bdependsi = Debian::Dependencies->new("perl (>= $min_perl_version)");
 $arch      = 'all';
@@ -201,6 +206,32 @@ sub run {
             warn "Please install 'apt-file' package and run 'apt-file update'\n";
             warn "as root.\n";
             warn "Dependencies not updated.\n";
+        }
+
+        # remove build-depending/conflicting on ancient perl versions
+        for ( qw( perl perl-modules ) ) {
+            $control->source->Build_Depends->remove(
+                "$_ (>= $oldest_perl_version)"
+            );
+            $control->source->Build_Depends_Indep->remove(
+                "$_ (>= $oldest_perl_version)"
+            );
+            $control->source->Build_Conflicts->remove(
+                "$_ (<< $oldest_perl_version)"
+            );
+            $control->source->Build_Conflicts_Indep->remove(
+                "$_ (<< $oldest_perl_version)"
+            );
+        }
+
+        # remove depending/conflicting on ancient perl versions
+        for my $perl ( qw( perl perl-modules ) ) {
+            for my $pkg ( $control->binary->Values ) {
+                $pkg->Depends->remove("$perl (>= $oldest_perl_version)");
+                $pkg->Recommends->remove("$perl (>= $oldest_perl_version)");
+                $pkg->Suggests->remove("$perl (>= $oldest_perl_version)");
+                $pkg->Conflicts->remove("$perl (<< $oldest_perl_version)");
+            }
         }
 
         $control->write("$debiandir/control");
