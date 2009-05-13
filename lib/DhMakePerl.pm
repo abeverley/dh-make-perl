@@ -982,6 +982,27 @@ sub prune_deps(@) {
     return map( Debian::Dependency->new( $_, $deps{$_} ), sort( keys(%deps) ) );
 }
 
+sub nice_perl_ver {
+    my( $self, $v ) = @_;
+
+    if( $v =~ /\.(\d+)$/ ) {
+        my $minor = $1;
+        if( length($minor) % 3 ) {
+            # right-pad with zeroes so that the number of digits after the dot
+            # is a multiple of 3
+            $minor .= '0' x ( 3 - length($minor) % 3 );
+        }
+
+        my $ver = 0 + substr( $minor, 0, 3 );
+        if( length($minor) > 3 ) {
+            $ver .= '.' . ( 0 + substr( $minor, 3 ) );
+        }
+        $v =~ s/\.\d+$/.$ver/;
+    }
+
+    return $v;
+}
+
 sub find_debs_for_modules {
 
     my ( $self, $dep_hash, $apt_contents ) = @_;
@@ -1045,12 +1066,8 @@ sub find_debs_for_modules {
                 $v =~ s/^v//;    # strip leading 'v' from version
 
                 # perl versions need special handling
-                if ( $module eq 'perl' and $v =~ /\.(\d+)$/ ) {
-                    my $ver = 0 + substr( $1, 0, 3 );
-                    if( length($1) > 3 ) {
-                        $ver .= '.' . ( 0 + substr( $1, 3 ) );
-                    }
-                    $v =~ s/\.\d+$/.$ver/;
+                if ( $module eq 'perl' ) {
+                    $v = $self->nice_perl_ver($v);
 
                     # no point depending on ancient perl versions
                     # perl is Priority: standard
