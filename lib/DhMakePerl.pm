@@ -1030,16 +1030,19 @@ sub find_debs_for_modules {
 
     foreach my $module (@uses) {
 
-        my $deb;
+        my $dep;
         if ( $module eq 'perl' ) {
-            $deb = 'perl';
+            $dep = Debian::Dependency->new( 'perl',
+                $self->nice_perl_ver( $dep_hash->{$module} ) );
         }
         elsif ($apt_contents) {
-            $deb = $apt_contents->find_perl_module_package($module);
+            $dep = $apt_contents->find_perl_module_package( $module,
+                $dep_hash->{$module} );
         }
 
-        if ($deb) {
-            print "+ $module found in $deb\n" if $self->cfg->verbose;
+        if ($dep) {
+            print "+ $module found in " . $dep->pkg ."\n"
+                if $self->cfg->verbose;
         }
         else {
             print "- $module not found in any package\n";
@@ -1053,36 +1056,14 @@ sub find_debs_for_modules {
                 print "   CPAN contains it in $dist\n";
                 print "   substituting package name of $pkg\n";
 
-                $deb = $pkg;
+                $dep = Debian::Dependency->new( $pkg, $dep_hash->{$module} );
             }
             else {
                 print "   - it seems it is not available even via CPAN\n";
             }
         }
 
-        if ($deb) {
-            if ( exists $dep_hash->{$module} ) {
-                my $v = $dep_hash->{$module};
-                $v =~ s/^v//;    # strip leading 'v' from version
-
-                # perl versions need special handling
-                if ( $module eq 'perl' ) {
-                    $v = $self->nice_perl_ver($v);
-
-                    # no point depending on ancient perl versions
-                    # perl is Priority: standard
-                    next
-                    if $AptPkg::Config::_config->system->versioning->compare(
-                        $v, $min_perl_version
-                    ) <= 0;
-                }
-
-                $debs += Debian::Dependency->new( $deb, $v );
-            }
-            else {
-                $debs += Debian::Dependency->new($deb);
-            }
-        }
+        $debs->add($dep) if $dep;
     }
 
     return $debs, \@missing;
@@ -1992,20 +1973,13 @@ sub package_already_exists {
         warn "Description: $short_desc\n";
     }
     elsif ($apt_contents) {
-        my @possible_packages = $apt_contents->find_perl_module_package(
-            $perlname);
+        my $found = $apt_contents->find_perl_module_package($perlname);
 
-        if ( $found = shift @possible_packages ) {
+        if ($found) {
             my $mod_name = $perlname =~ s/-/::/g;
             warn "**********\n";
             warn "NOTICE: the package '$found', available in APT repositories\n";
             warn "        already contains a module named $perlname\n";
-
-            if ( @possible_packages > 1 ) {
-                shift @possible_packages;
-                warn "\n        Other packages that contain similarly named modules are:\n";
-                warn "          - $_\n" for @possible_packages;
-            }
         }
     }
 

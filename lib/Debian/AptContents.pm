@@ -11,7 +11,7 @@ Debian::AptContents - parse/search through apt-file's Contents files
 
     my $c = Debian::AptContents->new( { homedir => '~/.dh-make-perl' } );
     my @pkgs = $c->find_file_packages('/usr/bin/foo');
-    my @pkgs = $c->find_perl_module_packages('Foo::Bar');
+    my $dep = $c->find_perl_module_package('Foo::Bar');
 
 =head1 TODO
 
@@ -30,9 +30,11 @@ __PACKAGE__->mk_accessors(
     )
 );
 
-use Storable;
+use Debian::Dependency;
 use File::Spec::Functions qw( catfile catdir splitpath );
 use IO::Uncompress::Gunzip;
+use Module::CoreList ();
+use Storable;
 
 =head1 CONSTRUCTOR
 
@@ -388,16 +390,25 @@ sub find_file_packages {
     return @packages;
 }
 
-=item find_perl_module_package
+=item find_perl_module_package( $module, $version )
 
-Given Perl module name (e.g. Foo::Bar), returns a list of package names where
-that module was found. The list is sorted so that the most likely package is
-first.
+Given Perl module name (e.g. Foo::Bar), returns a L<Debian::Dependency> object
+representing the required Debian package and version. If the module is a core
+one, suitable dependency on perl-modules is returned.
 
 =cut
 
 sub find_perl_module_package {
-    my ( $self, $module ) = @_;
+    my ( $self, $module, $version ) = @_;
+
+    my $core_ver = Module::CoreList->first_release( $module, $version );
+
+    if($core_ver) {
+        $core_ver = version->new($core_ver);            # v5.9.2
+        ( $core_ver = $core_ver->normal ) =~ s/^v//;    # "5.9.2"
+
+        return Debian::Dependency->new( 'perl-modules', $core_ver );
+    }
 
     my $module_file = $module;
     $module_file =~ s|::|/|g;
@@ -411,7 +422,10 @@ sub find_perl_module_package {
         else                      { return $a cmp $b; }    # or 0?
     } @matches;
 
-    return $matches[0];
+    return Debian::Dependency->new( $matches[0], $version )
+        if @matches;
+
+    return;
 }
 
 1;

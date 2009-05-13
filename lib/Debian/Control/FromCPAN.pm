@@ -114,10 +114,9 @@ sub parse_meta_dep_list {
     my $deps = Debian::Dependencies->new;
 
     while( my($k,$v) = each %$src ) {
-        my $pkg = $apt_contents->find_perl_module_package($k);
+        my $pkg_dep = $apt_contents->find_perl_module_package( $k, $v );
 
-        $deps->add( Debian::Dependency->new( $pkg, $v || () ) )
-                if $pkg;
+        $deps->add($pkg_dep) if $pkg_dep;
     }
 
     return $deps;
