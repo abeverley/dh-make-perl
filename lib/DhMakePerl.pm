@@ -1008,24 +1008,24 @@ sub find_debs_for_modules {
     my ( $self, $dep_hash, $apt_contents ) = @_;
 
     my @uses;
+    my $debs = Debian::Dependencies->new();
 
     foreach my $module ( keys(%$dep_hash) ) {
         if ( $self->is_core_module($module) ) {
             print "= $module is a core module\n" if $self->cfg->verbose;
 
-            # TODO
-            # see if there is a version requirement and if the core
-            # module satisfies it. If it does, see if previous perl
-            # releases satisfy it too and if needed, bump the perl
-            # dependency to the lowest version that contains module
-            # version satisfying the dependency
+            my $perl_ver = Module::CoreList->first_release(
+                $module,
+                $dep_hash->{$module},
+            );
+            $debs->add( 'perl-modules', $self->nice_perl_ver($perl_ver) );
+
             next;
         }
 
         push @uses, $module;
     }
 
-    my $debs = Debian::Dependencies->new();
     my @missing;
 
     foreach my $module (@uses) {
