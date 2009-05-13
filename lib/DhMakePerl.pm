@@ -369,9 +369,9 @@ sub get_apt_contents {
 }
 
 sub is_core_module {
-    my ( $self, $module ) = @_;
+    my ( $self, $module, $ver ) = @_;
 
-    my $v = Module::CoreList->first_release($module);   # 5.009002
+    my $v = Module::CoreList->first_release($module, $ver);   # 5.009002
 
     return unless defined $v;
 
@@ -1011,14 +1011,11 @@ sub find_debs_for_modules {
     my $debs = Debian::Dependencies->new();
 
     foreach my $module ( keys(%$dep_hash) ) {
-        if ( $self->is_core_module($module) ) {
+        if ( my $ver = $self->is_core_module( $module, $dep_hash->{$module} )
+        ) {
             print "= $module is a core module\n" if $self->cfg->verbose;
 
-            my $perl_ver = Module::CoreList->first_release(
-                $module,
-                $dep_hash->{$module},
-            );
-            $debs->add( 'perl-modules', $self->nice_perl_ver($perl_ver) );
+            $debs->add( 'perl-modules', $ver );
 
             next;
         }
