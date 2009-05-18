@@ -8,3 +8,6 @@
   mapping perl core versions to debian versions would be nice, otherwise we end up
   with something like "perl-modules (>= 5.9.4)" (happened with libparams-classify-perl).
   also, depending on perl-base is perhaps not a good idea
+* use Dpkg::Version::vercmp(v1, v2) for comparing versions all over (grep for
+  compare)
+* investigate using Cmd::App
