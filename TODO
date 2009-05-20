@@ -24,3 +24,5 @@
 
   it shall output a tree-like structure of missing dependencies without
   preparing any packaging yet
+* when a dependency is not packaged, search wnpp's bugs and report if there is
+  ITP about the package
