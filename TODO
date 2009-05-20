@@ -18,3 +18,9 @@
   May be similar to #525847
 * when ITP for the package is found, try to deduce short/long description from
   the bug report
+* add new command, --trace-depends. To be used like
+
+   dh-make-perl --trace-depends --cpan Foo-Bar
+
+  it shall output a tree-like structure of missing dependencies without
+  preparing any packaging yet
