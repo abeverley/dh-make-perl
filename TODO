@@ -1,3 +1,12 @@
+* Dependency: add support vor alternatiives: foo (>= 1.2) | bar
+
+* --refresh failures:
+  02:12 gregoa dam: --refresh again: in libnet-imap-client-perl suddenly some 
+               build dependencies, which were already in B-D-I, were added to
+               B-D
+  02:17 gregoa dam: and "perl" is missing from B-D-I
+
+
 * --refresh: add --[no-]backups option (on by default)
   used for controlling creation of backup files of things that are rewritten
 
