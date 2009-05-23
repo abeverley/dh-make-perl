@@ -175,19 +175,34 @@ Only dependencies that are subset of the given dependencies are removed:
     $deps->remove('foo, bar (>= 2.0)');
     print $deps;    # bar
 
+Returns the list of the dependencies removed.
+
 =cut
 
 sub remove {
     my( $self, @deps ) = @_;
+
+    my ( @kept, @removed );
 
     for my $deps(@deps) {
         $deps = Debian::Dependencies->new($deps)
             unless ref($deps);
 
         for my $dep(@$deps) {
-            @$self = grep { ! $dep->satisfies($_) } @$self;
+            for( @$self ) {
+                if( $dep->satisfies($_) ) {
+                    push @removed, $_;
+                }
+                else {
+                    push @kept, $_;
+                }
+            }
         }
     }
+
+    @$self = @kept;
+
+    return @removed;
 }
 
 =item prune()
