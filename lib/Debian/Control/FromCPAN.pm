@@ -152,11 +152,19 @@ sub dependencies_from_cpan_meta {
     $bin->Recommends->add($recommends);
     $bin->Conflicts->add($conflicts);
 
-    if( $self->source->Architecture eq 'all' ) {
-        $self->source->Build_Depends_Indep->add($build_depends);
+    my $arch_dep = 0;
+    for( $self->binary->Values ) {
+        if( $_->Architecture ne 'all' ) {
+            $arch_dep = 1;
+            last;
+        }
+    }
+
+    if( $arch_dep ) {
+        $self->source->Build_Depends->add($build_depends);
     }
     else {
-        $self->source->Build_Depends->add($build_depends);
+        $self->source->Build_Depends_Indep->add($build_depends);
     }
 
     if ($opt_verbose) {
