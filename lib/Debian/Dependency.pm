@@ -5,6 +5,7 @@ use warnings;
 
 use AptPkg::Config;
 use Carp;
+use List::MoreUtils qw(mesh);
 
 =head1 NAME
 
@@ -37,7 +38,7 @@ Debian::Dependency -- dependency relationship between Debian packages
 =cut
 
 use base qw(Class::Accessor);
-__PACKAGE__->mk_accessors(qw( pkg ver rel ));
+__PACKAGE__->mk_accessors(qw( pkg ver rel alternatives ));
 
 use Carp;
 
@@ -51,16 +52,31 @@ use overload '""' => \&_stringify,
 
 =item new()
 
+Construnct a new instance.
+
 =item new( { pkg => 'package', rel => '>=', ver => '1.9' } )
 
-Construct new instance. If a reference is passed as an argument, it must be a
-hashref and is passed to L<Class::Accessor>.
+If a hash reference is passed as an argument, its contents are used to
+initialize the object.
+
+=item new( [ { pkg => 'foo' }, 'bar (<= 3)' ] );
+
+In an array reference is passed as an argument, its elements are used for
+constructing a dependency with alternatives.
+
+=item new('foo (= 42)')
+
+=item new('foo (= 42) | bar')
 
 If a single argument is given, the construction is passed to the C<parse>
 constructor.
 
+=item new( 'foo', '1.4' )
+
 Two arguments are interpreted as package name and version. The relation is
 assumed to be '>='.
+
+=item new( 'foo', '=', '42' )
 
 Three arguments are interpreted as package name, relation and version.
 
@@ -73,7 +89,7 @@ sub new {
     my $self = $class->SUPER::new();
     my( $pkg, $rel, $ver );
 
-    if( ref($_[0]) ) {
+    if( ref($_[0]) and ref($_[0]) eq 'HASH' ) {
         $pkg = delete $_[0]->{pkg};
         $rel = delete $_[0]->{rel};
         $ver = delete $_[0]->{ver};
@@ -81,6 +97,18 @@ sub new {
         while( my($k,$v) = each %{$_[0]} ) {
             $self->$k($v);
         }
+    }
+    elsif( ref($_[0]) and ref($_[0]) eq 'ARRAY' ) {
+        $self->alternatives(
+            [ map { $self->new($_) } @{ $_[0] } ],
+        );
+
+        for( @{ $self->alternatives } ) {
+            croak "Alternatives can't be nested"
+                if $_->alternatives;
+        }
+
+        return $self;
     }
     elsif( @_ == 1 ) {
         return $class->parse($_[0]);
@@ -106,7 +134,7 @@ sub new {
 
     $self->rel($rel) if $rel;
 
-    croak "pkg is mandatory" unless $pkg;
+    croak "pkg is mandatory" unless $pkg or $self->alternatives;
 
     $self->pkg($pkg);
 
@@ -115,6 +143,10 @@ sub new {
 
 sub _stringify {
     my $self = shift;
+
+    if( $self->alternatives ) {
+        return join( ' | ', @{ $self->alternatives } );
+    }
 
     return (
           $self->ver
@@ -143,6 +175,40 @@ our %rel_order = (
 
 sub _compare {
     my( $left, $right ) = @_;
+
+    if( $left->alternatives ) {
+        if( $right->alternatives ) {
+            my @pairs = mesh(
+                @{ $left->alternatives }, @{ $right->alternatives },
+            );
+
+            while(@pairs) {
+                my( $l, $r ) = splice @pairs, 0, 2;
+
+                return -1 unless $l;
+                return 1 unless $r;
+                my $res = _compare( $l, $r );
+                return $res if $res;
+            }
+
+            return 0;
+        }
+        else {
+            my $res = _compare( $left->alternatives->[0], $right );
+            return $res if $res;
+            return 1;
+        }
+    }
+    else {
+        if( $right->alternatives ) {
+            my $res = _compare( $left, $right->alternatives->[0] );
+            return $res if $res;
+            return -1;
+        }
+        else {
+            # nothing, the code below compares two plain dependencies
+        }
+    }
 
     my $res = $left->pkg cmp $right->pkg;
 
@@ -201,6 +267,15 @@ Examples:
 
 sub parse {
     my ( $class, $str ) = @_;
+
+    if( $str =~ /\|/ ) {
+        # alternative dependencies
+        return $class->new( {
+            alternatives => [
+                map { $class->new($_) } split( /\s*\|\s*/, $str )
+            ],
+        } );
+    }
 
     if ($str =~ m{
             ^               # start from the beginning
@@ -292,6 +367,25 @@ sub satisfies {
 
     $dep = Debian::Dependency->new($dep)
         unless ref($dep);
+
+    # we have alternatives? then we satisfy the dependency only if
+    # all of the alternatives satisfy it
+    if( $self->alternatives ) {
+        for( @{ $self->alternatives } ) {
+            return 0 unless $_->satisfies($dep);
+        }
+
+        return 1;
+    }
+
+    # $dep has alternatives? then we satisfy it if we satisfy any of them
+    if( $dep->alternatives ) {
+        for( @{ $dep->alternatives } ) {
+            return 1 if $self->satisfies($_);
+        }
+
+        return 0;
+    }
 
     # different package?
     return 0 unless $self->pkg eq $dep->pkg;

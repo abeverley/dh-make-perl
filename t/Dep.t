@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 145;
+use Test::More tests => 163;
 
 BEGIN {
     use_ok('Debian::Dependency');
@@ -45,6 +45,14 @@ is( "$d", 'foo', '0.000 version is ignored when given in new' );
 
 $d = Debian::Dependency->new('libfoo (>= 0.000)');
 is( "$d", 'libfoo', 'zero version is ignored when parsing' );
+
+$d = new_ok( 'Debian::Dependency', [ [ 'foo', 'bar' ] ] );
+isa_ok( $d->alternatives, 'ARRAY' );
+is( $d->alternatives->[0] . "", 'foo', "first alternative is foo" );
+is( $d->alternatives->[1] . "", 'bar', "second alternative is bar" );
+$d = new_ok( 'Debian::Dependency', [ 'foo | bar' ] );
+isa_ok( $d->alternatives, 'ARRAY' );
+is( "$d", "foo | bar", "alternative dependency stringifies" );
 
 sub sat( $ $ $ ) {
     my( $dep, $test, $expected ) = @_;
@@ -171,6 +179,15 @@ sat( $dep, 'foo (= 5)',  0 );
 sat( $dep, 'foo (<= 5)', 1 );
 sat( $dep, 'foo (<< 5)', 1 );
 
+$dep = Debian::Dependency->new('foo (<< 4) | bar ');
+sat( $dep, 'foo', 0 );
+sat( $dep, 'bar', 0 );
+
+$dep = Debian::Dependency->new('foo (<< 4)');
+sat( $dep, 'foo | bar', 1 );
+sat( $dep, 'foo (<= 5) | zoo', 1 );
+sat( $dep, 'zoo', 0 );
+
 sub comp {
     my( $one, $two, $expected ) = @_;
 
@@ -225,3 +242,10 @@ comp( 'foo (>> 2)', 'foo (<= 2)', 1 );
 comp( 'foo (>> 2)', 'foo (= 2)',  1 );
 comp( 'foo (>> 2)', 'foo (>= 2)', 1 );
 comp( 'foo (>> 2)', 'foo (>> 2)', 0 );
+
+comp( 'foo|bar', 'bar|foo', 1 );
+comp( 'bar|foo', 'foo|bar', -1 );
+comp( 'bar|foo', 'bar|baz', 1 );
+comp( 'foo|bar', 'foo|bar', 0 );
+comp( 'foo|bar', 'foo', 1 );
+comp( 'foo', 'foo|bar', -1 );

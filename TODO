@@ -1,5 +1,3 @@
-* Dependency: add support vor alternatiives: foo (>= 1.2) | bar
-
 * --refresh failures:
   02:12 gregoa dam: --refresh again: in libnet-imap-client-perl suddenly some 
                build dependencies, which were already in B-D-I, were added to
