@@ -89,6 +89,12 @@ sub new {
     return $self;
 }
 
+=item parse_command_line_options()
+
+Parses command line options and populates object members.
+
+=cut
+
 sub parse_command_line_options {
     my $self = shift;
 
@@ -147,6 +153,13 @@ sub parse_command_line_options {
     }
 }
 
+=item parse_config_file()
+
+Parse configuration file. I<config_file> member is used for location the file,
+if not set, F<dh-make-perl.conf> file in I<home_dir> is used.
+
+=cut
+
 sub parse_config_file {
     my $self = shift;
 
@@ -180,6 +193,13 @@ sub parse_config_file {
             if %$yaml;
     }
 }
+
+=item dump_config()
+
+Returns a string representation of all configuration options. Suitable for
+populating configuration file.
+
+=cut
 
 sub dump_config {
     my $self = shift;
