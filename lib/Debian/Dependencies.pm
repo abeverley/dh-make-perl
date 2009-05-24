@@ -205,6 +205,29 @@ sub remove {
     return @removed;
 }
 
+=item has(dep)
+
+Return true if the dependency list contains given dependency. In other words,
+this returns true if the list of dependencies guarantees that the given
+dependency will be satisfied. For example, I<foo, bar> satisfies I<foo>, but
+not I<foo (>= 5)>.
+
+=cut
+
+sub has {
+    my( $self, $dep ) = @_;
+
+    $dep = Debian::Dependency->new($dep)
+        unless eval { $dep->isa('Debian::Dependency') };
+
+    for( @$self ) {
+        return 1
+            if $_->satisfies($dep);
+    }
+
+    return 0;
+}
+
 =item prune()
 
 This method is deprecated. If you want to sort the dependency list, either call L</sort> or use normal perl sorting stuff on the dereferenced array.
