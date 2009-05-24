@@ -205,12 +205,12 @@ sub remove {
     return @removed;
 }
 
-=item has(dep)
+=item has( I<dep> )
 
 Return true if the dependency list contains given dependency. In other words,
 this returns true if the list of dependencies guarantees that the given
-dependency will be satisfied. For example, I<foo, bar> satisfies I<foo>, but
-not I<foo (>= 5)>.
+dependency will be satisfied. For example, C<foo, bar> satisfies C<foo>, but
+not C<< foo (>= 5) >>.
 
 =cut
 
@@ -241,7 +241,7 @@ sub prune {
     Carp::croak("prune() is deprecated and does nothing");
 }
 
-=item sort
+=item sort()
 
 Sorts the dependency list by packagee name, version and relation.
 
