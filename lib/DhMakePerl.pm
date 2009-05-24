@@ -195,9 +195,9 @@ sub run {
         $module_build
             = ( -f $self->main_file('Build.PL') ) ? "Module-Build" : "MakeMaker";
         $debiandir = './debian';
-        $self->extract_changelog($self->main_dir);
-        $self->extract_docs($self->main_dir);
-        $self->extract_examples($self->main_dir);
+        $self->extract_changelog;
+        $self->extract_docs;
+        $self->extract_examples;
         print "Found changelog: $changelog\n"
             if defined $changelog and $self->cfg->verbose;
         print "Found docs: @docs\n" if $self->cfg->verbose;
@@ -218,10 +218,10 @@ sub run {
         my $control = Debian::Control::FromCPAN->new;
         $control->read("$debiandir/control");
         if ( -e "$debiandir/patches/series" ) {
-            $self->add_quilt( $self->main_dir, $control );
+            $self->add_quilt( $control );
         }
         else {
-            $self->drop_quilt( $self->main_dir, $control );
+            $self->drop_quilt( $control );
         }
 
         if( my $apt_contents = $self->get_apt_contents ) {
@@ -330,26 +330,26 @@ EOF
     $depends += Debian::Dependency->new('${shlibs:Depends}')
         if $arch eq 'any';
     $depends += Debian::Dependency->new('${misc:Depends}');
-    my $extradeps = $self->extract_depends( $self->main_dir, $apt_contents, 0 );
+    my $extradeps = $self->extract_depends( $apt_contents, 0 );
     $depends += $extradeps;
     $depends += Debian::Dependencies->new( $self->cfg->depends )
         if $self->cfg->depends;
 
     $module_build = ( -f $self->main_file('Build.PL') ) ? "Module-Build" : "MakeMaker";
-    $self->extract_changelog($self->main_dir);
-    $self->extract_docs($self->main_dir);
-    $self->extract_examples($self->main_dir);
+    $self->extract_changelog;
+    $self->extract_docs;
+    $self->extract_examples;
 
     $bdepends += Debian::Dependency->new('libmodule-build-perl')
         if ( $module_build eq "Module-Build" );
 
     my ( $extrabdepends, $extrabdependsi );
     if ( $arch eq 'any' ) {
-        $extrabdepends = $self->extract_depends( $self->main_dir, $apt_contents, 1 )
+        $extrabdepends = $self->extract_depends( $apt_contents, 1 )
             + $extradeps;
     }
     else {
-        $extrabdependsi = $self->extract_depends( $self->main_dir, $apt_contents, 1 )
+        $extrabdependsi = $self->extract_depends( $apt_contents, 1 )
             + $extradeps,
             ;
     }
@@ -396,7 +396,7 @@ EOF
         ( defined $changelog ? $changelog : '' ),
         \@docs, \@examples );
     $self->apply_final_overrides();
-    $self->build_package($self->main_dir)
+    $self->build_package
         if $self->cfg->build or $self->cfg->install;
     $self->install_package($debiandir) if $self->cfg->install;
     print "--- Done\n" if $self->cfg->verbose;
@@ -572,14 +572,15 @@ sub setup_dir {
 }
 
 sub build_package {
-    my ( $self, $maindir ) = @_;
+    my ( $self ) = @_;
 
+    my $main_dir = $self->main_dir;
     # uhmf! dpkg-genchanges doesn't cope with the deb being in another dir..
     #system("dpkg-buildpackage -b -us -uc " . $self->cfg->dbflags) == 0
-    system("fakeroot make -C $maindir -f debian/rules clean");
-    system("make -C $maindir -f debian/rules build") == 0 
+    system("fakeroot make -C $main_dir -f debian/rules clean");
+    system("make -C $main_dir -f debian/rules build") == 0 
         || die "Cannot create deb package: 'debian/rules build' failed.\n";
-    system("fakeroot make -C $maindir -f debian/rules binary") == 0
+    system("fakeroot make -C $main_dir -f debian/rules binary") == 0
         || die "Cannot create deb package: 'fakeroot debian/rules binary' failed.\n";
 }
 
@@ -945,7 +946,9 @@ sub extract_desc {
 }
 
 sub extract_changelog {
-    my ( $self, $dir ) = @_;
+    my ( $self ) = @_;
+
+    my $dir = $self->main_dir;
 
     $dir .= '/' unless $dir =~ m(/$);
     find(
@@ -960,7 +963,9 @@ sub extract_changelog {
 }
 
 sub extract_docs {
-    my ( $self, $dir ) = @_;
+    my ( $self ) = @_;
+
+    my $dir = $self->main_dir;
 
     $dir .= '/' unless $dir =~ m(/$);
     find(
@@ -976,7 +981,9 @@ sub extract_docs {
 }
 
 sub extract_examples {
-    my ( $self, $dir ) = @_;
+    my ( $self ) = @_;
+
+    my $dir = $self->main_dir;
 
     $dir .= '/' unless $dir =~ m{/$};
     find(
@@ -991,18 +998,18 @@ sub extract_examples {
     );
 }
 
-# finds the list of modules that the distribution in $dir depends on
+# finds the list of modules that the distribution depends on
 # if $build_deps is true, returns build-time dependencies, otherwise
 # returns run-time dependencies
 sub run_depends {
-    my ( $self, $depends_module, $dir, $build_deps ) = @_;
+    my ( $self, $depends_module, $build_deps ) = @_;
 
     no warnings;
     local *STDERR;
     open( STDERR, ">/dev/null" );
     my $mod_dep = $depends_module->new();
 
-    $mod_dep->dist_dir($dir);
+    $mod_dep->dist_dir( $self->main_dir );
     $mod_dep->find_modules();
 
     my $deps = $build_deps ? $mod_dep->build_requires : $mod_dep->requires;
@@ -1127,19 +1134,17 @@ sub find_debs_for_modules {
 }
 
 sub extract_depends {
-    my ( $self, $dir, $apt_contents, $build_deps ) = @_;
+    my ( $self, $apt_contents, $build_deps ) = @_;
 
     my ($dep_hash);
-    local @INC = ( $dir, @INC );
-
-    $dir .= '/' unless $dir =~ m/\/$/;
+    local @INC = ( $self->main_dir, @INC );
 
     # try Module::Depends, but if that fails then
     # fall back to Module::Depends::Intrusive.
 
     eval {
         $dep_hash
-            = $self->run_depends( 'Module::Depends', $dir, $build_deps );
+            = $self->run_depends( 'Module::Depends', $build_deps );
     };
     if ($@) {
         if ($self->cfg->verbose) {
@@ -1152,8 +1157,7 @@ sub extract_depends {
 
         eval {
             $dep_hash
-                = $self->run_depends( 'Module::Depends::Intrusive', $dir,
-                $build_deps );
+                = $self->run_depends( 'Module::Depends::Intrusive', $build_deps );
         };
         if ($@) {
             if ($self->cfg->verbose) {
@@ -1247,7 +1251,7 @@ sub check_for_xs {
         };
 }
 
-=item add_quilt( $maindir, $control )
+=item add_quilt( $control )
 
 Plugs quilt into F<debian/rules> and F<debian/control>. Depends on
 F<debian/rules> being in DH7 three-liner format. Also bumps the debhelper
@@ -1257,10 +1261,10 @@ debian/README.source documenting quilt usage.
 =cut
 
 sub add_quilt {
-    my( $self, $maindir, $control ) = @_;
+    my( $self, $control ) = @_;
 
     my @rules;
-    tie @rules, 'Tie::File', catfile( $maindir, 'debian', 'rules' )
+    tie @rules, 'Tie::File', $self->debian_file('rules')
         or die "Unable to read rules: $!";
 
     splice @rules, 1, 0, ( '', 'include /usr/share/quilt/quilt.make' )
@@ -1294,7 +1298,7 @@ debian/patches and applied during the build.
 See /usr/share/doc/quilt/README.source for a detailed explaination.
 EOF
 
-    my $readme = catfile( $maindir, 'debian', 'README.source' );
+    my $readme = $self->debian_file('README.source');
     my $quilt_already_documented = 0;
     my $readme_source_exists = -e $readme;
     if($readme_source_exists) {
@@ -1324,7 +1328,7 @@ EOF
     }
 }
 
-=item drop_quilt( $maindir, $control )
+=item drop_quilt( $control )
 
 removes quilt from F<debian/rules> and F<debian/control>. Expects that
 L<|add_quilt> was used to add quilt to F<debian/rules>.
@@ -1335,10 +1339,10 @@ the file removed if empty after that).
 =cut
 
 sub drop_quilt {
-    my( $self, $maindir, $control ) = @_;
+    my( $self, $control ) = @_;
 
     my @rules;
-    tie @rules, 'Tie::File', catfile( $maindir, 'debian', 'rules' )
+    tie @rules, 'Tie::File', $self->debian_file('rules')
         or die "Unable to read rules: $!";
 
     # look for the quilt include line and remove it and the previous empty one
@@ -1382,7 +1386,7 @@ sub drop_quilt {
     }
 
     # README.source
-    my $readme = catfile( $maindir, 'debian', 'README.source' );
+    my $readme = $self->debian_file('README.source');
 
     if( -e $readme ) {
         my @readme;
