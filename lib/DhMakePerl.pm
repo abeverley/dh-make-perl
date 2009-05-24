@@ -398,7 +398,7 @@ EOF
     $self->apply_final_overrides();
     $self->build_package
         if $self->cfg->build or $self->cfg->install;
-    $self->install_package($debiandir) if $self->cfg->install;
+    $self->install_package if $self->cfg->install;
     print "--- Done\n" if $self->cfg->verbose;
 
     $self->package_already_exists($apt_contents);
