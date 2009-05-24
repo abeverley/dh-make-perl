@@ -7,7 +7,8 @@ use base 'Class::Accessor';
 use Dpkg::Source::Package;
 
 use constant options => (
-    'arch=s',          'basepkgs=s',
+    'arch=s',          'backups!',
+    'basepkgs=s',
     'bdepends=s',      'bdependsi=s',
     'build!',          'closes=i',
     'config-file=s',   'core-ok',
@@ -48,6 +49,7 @@ use Tie::IxHash ();
 use YAML        ();
 
 use constant DEFAULTS => {
+    backups      => 1,
     data_dir     => '/usr/share/dh-make-perl',
     dbflags      => ( $> == 0 ? "" : "-rfakeroot" ),
     dh           => 7,

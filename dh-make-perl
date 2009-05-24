@@ -125,6 +125,11 @@ This switches between arch-dependent and arch-independet packages. If B<--arch>
 isn't used, B<dh-make-perl> uses a relatively good-working algorithms to
 decide this alone.
 
+=item B<--backups> | B<--no-backups>
+
+In L</--refresh> mode, create backups of F<debian/copyright> and
+F<debian/rules> before overwritting them. On by default.
+
 =item B<--basepkgs>
 
 Explicitly gives a comma-separated list of packages to consider "base"
