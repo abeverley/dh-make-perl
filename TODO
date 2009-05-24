@@ -1,5 +1,3 @@
-* --refresh on libnet-imap-client-perl drops "perl" from B-D-I
-
 * --refresh: add --[no-]backups option (on by default)
   used for controlling creation of backup files of things that are rewritten
 

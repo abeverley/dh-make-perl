@@ -209,27 +209,26 @@ sub run {
         }
 
         # remove build-depending/conflicting on ancient perl versions
-        for ( qw( perl perl-modules ) ) {
-            $control->source->Build_Depends->remove(
-                "$_ (>= $oldest_perl_version)"
-            );
-            $control->source->Build_Depends_Indep->remove(
-                "$_ (>= $oldest_perl_version)"
-            );
+        for my $pkg ( qw( perl perl-base perl-modules ) ) {
+            for ( qw( Build_Depends Build_Depends_Indep ) ) {
+                $control->source->$_->add("$pkg (>= $min_perl_version)")
+                    if $control->source->$_->has($pkg);
+            }
             $control->source->Build_Conflicts->remove(
-                "$_ (<< $oldest_perl_version)"
+                "$pkg (<< $oldest_perl_version)"
             );
             $control->source->Build_Conflicts_Indep->remove(
-                "$_ (<< $oldest_perl_version)"
+                "$pkg (<< $oldest_perl_version)"
             );
         }
 
         # remove depending/conflicting on ancient perl versions
-        for my $perl ( qw( perl perl-modules ) ) {
+        for my $perl ( qw( perl perl-base perl-modules ) ) {
             for my $pkg ( $control->binary->Values ) {
-                $pkg->Depends->remove("$perl (>= $oldest_perl_version)");
-                $pkg->Recommends->remove("$perl (>= $oldest_perl_version)");
-                $pkg->Suggests->remove("$perl (>= $oldest_perl_version)");
+                for my $dep ( qw(Depends Recommends Suggests) ) {
+                    $pkg->$dep->add("$perl (>= $min_perl_version)")
+                        if $pkg->$dep->has($perl);
+                }
                 $pkg->Conflicts->remove("$perl (<< $oldest_perl_version)");
             }
         }
