@@ -6,7 +6,7 @@ use strict;
 use base 'Class::Accessor';
 use Pod::Usage;
 
-__PACKAGE__->mk_accessors( qw( cfg apt_contents ) );
+__PACKAGE__->mk_accessors( qw( cfg apt_contents main_dir ) );
 
 =head1 NAME
 
@@ -99,7 +99,7 @@ $startdir  = getcwd();
 # If we're being required rather than called as a main command, then
 # return now without doing any work.  This facilitates easier testing.
 
-my ( $perlname, $maindir, $modulepm, $meta );
+my ( $perlname, $modulepm, $meta );
 my ($pkgname, $srcname,
 
     # $version is the version from the perl module itself
@@ -115,6 +115,31 @@ my ($module_build);
 my ( @docs, @examples, $changelog, @args );
 
 my $mod_cpan_version;
+
+=item main_file(file_name)
+
+Constructs a file name relative to the main source directory, L</main_dir>
+
+=cut
+
+sub main_file {
+    my( $self, $file ) = @_;
+
+    catfile( $self->main_dir, $file );
+}
+
+=item debian_file(file_name)
+
+Constructs a file name relative to the debian/ subdurectory of the main source
+directory.
+
+=cut
+
+sub debian_file {
+    my( $self, $file ) = @_;
+
+    catfile( $self->main_file('debian'), $file );
+}
 
 sub run {
     my ($self) = @_;
@@ -155,7 +180,7 @@ sub run {
 
     if ( $self->cfg->command eq 'refresh' ) {
         print "Engaging refresh mode\n" if $self->cfg->verbose;
-        $maindir = '.';
+        $self->main_dir('.');
 
         die "debian/rules.bak already exists. Aborting!\n"
             if -e "debian/rules.bak";
@@ -163,16 +188,16 @@ sub run {
         die "debian/copyright.bak already exists. Aborting!\n"
             if -e "debian/copyright.bak";
 
-        $meta = $self->process_meta("$maindir/META.yml")
-            if ( -f "$maindir/META.yml" );
+        $meta = $self->process_meta( $self->main_file('META.yml') )
+            if ( -f $self->main_file('META.yml') );
         ( $pkgname, $version )
             = $self->extract_basic();    # also detects arch-dep package
         $module_build
-            = ( -f "$maindir/Build.PL" ) ? "Module-Build" : "MakeMaker";
+            = ( -f $self->main_file('Build.PL') ) ? "Module-Build" : "MakeMaker";
         $debiandir = './debian';
-        $self->extract_changelog($maindir);
-        $self->extract_docs($maindir);
-        $self->extract_examples($maindir);
+        $self->extract_changelog($self->main_dir);
+        $self->extract_docs($self->main_dir);
+        $self->extract_examples($self->main_dir);
         print "Found changelog: $changelog\n"
             if defined $changelog and $self->cfg->verbose;
         print "Found docs: @docs\n" if $self->cfg->verbose;
@@ -193,10 +218,10 @@ sub run {
         my $control = Debian::Control::FromCPAN->new;
         $control->read("$debiandir/control");
         if ( -e "$debiandir/patches/series" ) {
-            $self->add_quilt( $maindir, $control );
+            $self->add_quilt( $self->main_dir, $control );
         }
         else {
-            $self->drop_quilt( $maindir, $control );
+            $self->drop_quilt( $self->main_dir, $control );
         }
 
         if( my $apt_contents = $self->get_apt_contents ) {
@@ -276,8 +301,8 @@ EOF
 
     $self->load_overrides();
     my $tarball = $self->setup_dir();
-    $meta = $self->process_meta("$maindir/META.yml")
-        if ( -f "$maindir/META.yml" );
+    $meta = $self->process_meta( $self->main_file('META.yml') )
+        if ( -f $self->main_file('META.yml') );
     $self->findbin_fix();
 
     ( $pkgname, $version ) = $self->extract_basic();
@@ -305,26 +330,26 @@ EOF
     $depends += Debian::Dependency->new('${shlibs:Depends}')
         if $arch eq 'any';
     $depends += Debian::Dependency->new('${misc:Depends}');
-    my $extradeps = $self->extract_depends( $maindir, $apt_contents, 0 );
+    my $extradeps = $self->extract_depends( $self->main_dir, $apt_contents, 0 );
     $depends += $extradeps;
     $depends += Debian::Dependencies->new( $self->cfg->depends )
         if $self->cfg->depends;
 
-    $module_build = ( -f "$maindir/Build.PL" ) ? "Module-Build" : "MakeMaker";
-    $self->extract_changelog($maindir);
-    $self->extract_docs($maindir);
-    $self->extract_examples($maindir);
+    $module_build = ( -f $self->main_file('Build.PL') ) ? "Module-Build" : "MakeMaker";
+    $self->extract_changelog($self->main_dir);
+    $self->extract_docs($self->main_dir);
+    $self->extract_examples($self->main_dir);
 
     $bdepends += Debian::Dependency->new('libmodule-build-perl')
         if ( $module_build eq "Module-Build" );
 
     my ( $extrabdepends, $extrabdependsi );
     if ( $arch eq 'any' ) {
-        $extrabdepends = $self->extract_depends( $maindir, $apt_contents, 1 )
+        $extrabdepends = $self->extract_depends( $self->main_dir, $apt_contents, 1 )
             + $extradeps;
     }
     else {
-        $extrabdependsi = $self->extract_depends( $maindir, $apt_contents, 1 )
+        $extrabdependsi = $self->extract_depends( $self->main_dir, $apt_contents, 1 )
             + $extradeps,
             ;
     }
@@ -371,7 +396,7 @@ EOF
         ( defined $changelog ? $changelog : '' ),
         \@docs, \@examples );
     $self->apply_final_overrides();
-    $self->build_package($maindir)
+    $self->build_package($self->main_dir)
         if $self->cfg->build or $self->cfg->install;
     $self->install_package($debiandir) if $self->cfg->install;
     print "--- Done\n" if $self->cfg->verbose;
@@ -500,7 +525,7 @@ sub setup_dir {
             $mod->cpan_file );
         $dist->get || die "Cannot get ", $mod->cpan_file, "\n";
         $tarball .= $mod->cpan_file;
-        $maindir = $dist->dir;
+        $self->main_dir( $dist->dir );
 
         copy( $tarball, $ENV{'PWD'} );
         $tarball = $ENV{'PWD'} . "/" . basename($tarball);
@@ -518,9 +543,9 @@ sub setup_dir {
                 "Unpacked tarball already existed, directory renamed to $new_maindir.$$\n";
             print '=' x 70, "\n";
         }
-        system( "mv", "$maindir", "$new_maindir" ) == 0
-            or die "Failed to move $maindir to $new_maindir: $!";
-        $maindir = $new_maindir;
+        system( "mv", $self->main_dir, "$new_maindir" ) == 0
+            or die "Failed to move " . $self->main_dir . " to $new_maindir: $!";
+        $self->main_dir($new_maindir);
 
     }
     elsif ( $self->cfg->cpanplus ) {
@@ -534,11 +559,14 @@ sub setup_dir {
 # 		die "Cannot get " . $self->cfg->cpanplus . "\n" if keys(%$href) != 1;
 # 		$file = (values %$href)[0];
 # 		print $file, "\n\n";
-# 		$maindir = $cb->extract( files => [ $file ], extractdir => $ENV{'PWD'} )->{$file};
+# 		$self->main_dir(
+# 		    $cb->extract( files => [ $file ], extractdir => $ENV{'PWD'} )->{$file}
+# 		);
     }
     else {
-        $maindir = shift(@ARGV) || '.';
+        my $maindir = shift(@ARGV) || '.';
         $maindir =~ s/\/$//;
+        $self->main_dir($maindir);
     }
     return $tarball;
 }
@@ -600,7 +628,7 @@ sub process_meta {
 sub extract_basic_copyright {
     my ($self) = @_;
 
-    for my $f ( map( "$maindir/$_", qw(LICENSE LICENCE COPYING) ) ) {
+    for my $f ( map( $self->main_file($_), qw(LICENSE LICENCE COPYING) ) ) {
         if ( -f $f ) {
             my $fh = $self->_file_r($f);
             return join( '', $fh->getlines );
@@ -613,7 +641,7 @@ sub extract_basic {
     my ($self) = @_;
 
     ( $perlname, $version ) = $self->extract_name_ver();
-    find( sub { $self->check_for_xs }, $maindir );
+    find( sub { $self->check_for_xs }, $self->main_dir );
     $pkgname = lc $perlname;
     $pkgname = 'lib' . $pkgname unless $pkgname =~ /^lib/;
     $pkgname .= '-perl'
@@ -627,7 +655,7 @@ sub extract_basic {
     $version = "0$version" unless $version =~ /^\d/;
 
     print "Found: $perlname $version ($pkgname arch=$arch)\n" if $self->cfg->verbose;
-    $debiandir = "$maindir/debian";
+    $debiandir = $self->main_file('debian');
 
     $upsurl = "http://search.cpan.org/dist/$perlname/";
 
@@ -642,7 +670,7 @@ sub extract_basic {
                 && /\.(pm|pod)$/
                 && $self->extract_desc($_);
         },
-        $maindir
+        $self->main_dir
     );
 
     return ( $pkgname, $version );
@@ -651,7 +679,7 @@ sub extract_basic {
 sub makefile_pl {
     my ($self) = @_;
 
-    return "$maindir/Makefile.PL";
+    return $self->main_file('Makefile.PL');
 }
 
 sub findbin_fix {
@@ -1426,12 +1454,12 @@ sub fix_rules {
     else {
         $fh->print($_) for @content;
         if (@examples) {
-            open F, '>>', "$maindir/debian/$pkgname.examples" or die $!;
+            open F, '>>', $self->debian_file("$pkgname.examples") or die $!;
             print F "$_\n" foreach @examples;
             close F;
         }
         if (@docs) {
-            open F, '>>', "$maindir/debian/$pkgname.docs" or die $!;
+            open F, '>>', $self->debian_file("$pkgname.docs") or die $!;
             print F "$_\n" foreach @docs;
             close F;
         }
@@ -1966,7 +1994,7 @@ sub get_override_data {
         unless ref($data) eq 'HASH';
     if ( defined( $checkver = $data->{checkver} ) ) {
         die "checkver not a function\n" unless ( ref($checkver) eq 'CODE' );
-        $subkey = &$checkver($maindir);
+        $subkey = &$checkver( $self->main_dir );
     }
     else {
         $subkey = $pkgversion;
