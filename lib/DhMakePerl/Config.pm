@@ -89,6 +89,10 @@ sub new {
     return $self;
 }
 
+=head1 METHODS
+
+=over
+
 =item parse_command_line_options()
 
 Parses command line options and populates object members.
@@ -218,5 +222,9 @@ sub dump_config {
 
     return YAML::Dump( \%hash );
 }
+
+=back
+
+=cut
 
 1;
