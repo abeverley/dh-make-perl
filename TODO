@@ -8,7 +8,7 @@
 * use Dpkg::Version::vercmp(v1, v2) for comparing versions all over (grep for
   compare)
 * investigate using Cmd::App
-* ensure (with a test) that dependency lists are indentedd with one space
+* ensure (with a test) that dependency lists are indented with one space
 * ensure (with a test) that doing a refresh over the debian/ directory produced
   by --make doesn't change anything
 * --refresh on MIME-Charset 1.007 can't detect the dist name and cries.
@@ -23,3 +23,6 @@
   preparing any packaging yet
 * when a dependency is not packaged, search wnpp's bugs and report if there is
   ITP about the package
+* versioned dependencies should add the epochs too (found in
+  libpoex-role-sessioninstantiation-perl, where META.yml and Build.PL
+  request 'POE 1.005' which should translate to "libpoe-perl (>= 2:1.0050)")
