@@ -188,6 +188,9 @@ sub run {
         die "debian/copyright.bak already exists. Aborting!\n"
             if -e "debian/copyright.bak";
 
+        die "debian/control.bak already exists. Aborting!\n"
+            if -e "debian/control.bak";
+
         $meta = $self->process_meta( $self->main_file('META.yml') )
             if ( -f $self->main_file('META.yml') );
         ( $pkgname, $version )
@@ -260,6 +263,8 @@ sub run {
             }
         }
 
+        copy( "$debiandir/control", "$debiandir/control.bak" )
+            if $self->cfg->backups;
         $control->write("$debiandir/control");
 
         print "--- Done\n" if $self->cfg->verbose;

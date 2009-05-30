@@ -36,6 +36,9 @@ dh-make-perl (0.56) UNRELEASED; urgency=low
     + if apt-file data is available, update package dependencies from META
     + Dependencies are sorted
 
+  [ gregor herrmann ]
+  * Create backup of debian/control in --refresh mode.
+
  -- gregor herrmann <gregoa@debian.org>  Mon, 27 Apr 2009 16:42:59 +0200
 
 dh-make-perl (0.55) unstable; urgency=low
