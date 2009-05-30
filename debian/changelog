@@ -38,6 +38,8 @@ dh-make-perl (0.56) UNRELEASED; urgency=low
 
   [ gregor herrmann ]
   * Create backup of debian/control in --refresh mode.
+  * Append "-perl" to the module name when creating the package name
+    unconditionally (closes: #530675).
 
  -- gregor herrmann <gregoa@debian.org>  Mon, 27 Apr 2009 16:42:59 +0200
 

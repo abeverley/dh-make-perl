@@ -650,8 +650,7 @@ sub extract_basic {
     find( sub { $self->check_for_xs }, $self->main_dir );
     $pkgname = lc $perlname;
     $pkgname = 'lib' . $pkgname unless $pkgname =~ /^lib/;
-    $pkgname .= '-perl'
-        unless ( $pkgname =~ /-perl$/ and $self->cfg->cpan !~ /::perl$/i );
+    $pkgname .= '-perl';
 
     # ensure policy compliant names and versions (from Joeyh)...
     $pkgname =~ s/[^-.+a-zA-Z0-9]+/-/g;
