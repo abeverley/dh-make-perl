@@ -41,7 +41,10 @@ dh-make-perl (0.56) UNRELEASED; urgency=low
   * Append "-perl" to the module name when creating the package name
     unconditionally (closes: #530675).
 
- -- gregor herrmann <gregoa@debian.org>  Mon, 27 Apr 2009 16:42:59 +0200
+  [ Nathan Handler ]
+  * Mention that --refresh creates backup copies the files
+
+ -- Nathan Handler <nhandler@ubuntu.com>  Tue, 02 Jun 2009 02:25:03 +0000
 
 dh-make-perl (0.55) unstable; urgency=low
 

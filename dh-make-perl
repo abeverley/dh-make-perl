@@ -78,7 +78,8 @@ Fails with an error if F<debian/> directory already exists.
 =item --refresh
 
 To be run inside unpacked source package. Rebuilds F<debian/copyright>,
-F<debian/rules>, F<debian/compat> using the current templates.
+F<debian/rules>, F<debian/compat> using the current templates. Before any
+changes are made to these files, a backup copy is created with a .bak suffix.
 
 This is useful when F<debian/rules> was created using older templates and
 doesn't contain much customisations. As always, you're strongly encouraged to
