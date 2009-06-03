@@ -1830,7 +1830,7 @@ sub create_watch {
 
     my $fh = $self->_file_w($filename);
 
-    my $version_re = 'v?(\d[\d_.-]+)\.(?:tar(?:\.gz|\.bz2)?|tgz|zip)';
+    my $version_re = 'v?(\d[\d.-]+)\.(?:tar(?:\.gz|\.bz2)?|tgz|zip)';
 
     $fh->print(
         "version=3

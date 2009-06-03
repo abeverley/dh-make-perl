@@ -42,9 +42,12 @@ dh-make-perl (0.56) UNRELEASED; urgency=low
     unconditionally (closes: #530675).
 
   [ Nathan Handler ]
-  * Mention that --refresh creates backup copies the files
+  * dh-make-perl: 
+    - Mention that --refresh creates backup copies the files
+  * lib/DhMakePerl.pm:
+    - Make watch files ignore development releases (closes: #530639)
 
- -- Nathan Handler <nhandler@ubuntu.com>  Tue, 02 Jun 2009 02:25:03 +0000
+ -- Nathan Handler <nhandler@ubuntu.com>  Wed, 03 Jun 2009 19:42:53 +0000
 
 dh-make-perl (0.55) unstable; urgency=low
 
