@@ -51,6 +51,8 @@ dh-make-perl (0.56) unstable; urgency=low
     to object methods
   * Config: fix config file parsing when same options are given on the
     command line
+  * add explicit build-dependency on libtest-simple-perl (>= 0.82) as we use
+    new_ok(), which is not available before that (and in current perl-modules)
 
   [ gregor herrmann ]
   * Create backup of debian/control in --refresh mode.
