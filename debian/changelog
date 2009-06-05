@@ -1,4 +1,4 @@
-dh-make-perl (0.56) UNRELEASED; urgency=low
+dh-make-perl (0.56) unstable; urgency=low
 
   [ gregor herrmann ]
   * Add the whole Debian::Dependency object to the deps hash in
@@ -35,6 +35,22 @@ dh-make-perl (0.56) UNRELEASED; urgency=low
       date with regard to quilt usage
     + if apt-file data is available, update package dependencies from META
     + Dependencies are sorted
+  * move conversion from numerical perl version to deb version into a
+    sub and add tests about it
+  * substitute core module dependencies with dependencies on perl-
+    modules
+  * AptContents::find_perl_module_package returns Debian::Dependency
+    object
+  * fix a typo in NEWS.debian
+  * Dependency: add support for alternative dependencies (foo | bar)
+  * FromCPAN: fix detection of arch-indep packages
+  * Dependencies::remove: return the list of removed items
+  * Config: restore verbose to 1 by default
+  * add --[no-]backups option to --refresh, on by default
+  * DhMakePerl: convert "my $maindir" to "$self->main_dir" and stop passing it
+    to object methods
+  * Config: fix config file parsing when same options are given on the
+    command line
 
   [ gregor herrmann ]
   * Create backup of debian/control in --refresh mode.
@@ -49,7 +65,7 @@ dh-make-perl (0.56) UNRELEASED; urgency=low
   * debian/control:
     - Add myself to the uploaders list
 
- -- Nathan Handler <nhandler@ubuntu.com>  Wed, 03 Jun 2009 20:10:22 +0000
+ -- Damyan Ivanov <dmn@debian.org>  Fri, 05 Jun 2009 15:26:54 +0300
 
 dh-make-perl (0.55) unstable; urgency=low
 
