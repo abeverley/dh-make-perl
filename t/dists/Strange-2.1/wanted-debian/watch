@@ -1,2 +1,2 @@
 version=3
-http://search.cpan.org/dist/Strange/   .*/Strange-v?(\d[\d_.-]+)\.(?:tar(?:\.gz|\.bz2)?|tgz|zip)$
+http://search.cpan.org/dist/Strange/   .*/Strange-v?(\d[\d.-]+)\.(?:tar(?:\.gz|\.bz2)?|tgz|zip)$
