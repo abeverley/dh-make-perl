@@ -3,6 +3,12 @@ package DhMakePerl::Config;
 use strict;
 use warnings;
 
+=head1 NAME
+
+DhMakePerl::Config - dh-make-perl configuration class
+
+=cut
+
 use base 'Class::Accessor';
 use Dpkg::Source::Package;
 
