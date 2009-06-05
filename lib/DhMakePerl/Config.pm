@@ -184,12 +184,14 @@ sub parse_config_file {
              ( my $key = $_ ) =~ s/[!=|].*//;
 
             next unless exists $yaml->{$key};
+
+            my $value = delete $yaml->{$key};
             next
                 if $self->_explicitly_set
                     ->{$key};    # cmd-line opts take precedence
 
             ( my $opt = $key ) =~ s/-/_/g;
-            $self->$opt( delete $yaml->{$key} );
+            $self->$opt($value);
         }
 
         die "Error parsing $fn: the following keys are not known:\n"
