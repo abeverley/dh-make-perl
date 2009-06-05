@@ -29,6 +29,7 @@ dh-make-perl (0.56) unstable; urgency=low
       version relations are supported
     + Dependencies: add overloading of 'eq' and '<=>' operators
     + null versions ("0", "0.000" and similar) are now ignored
+    + add support for alternative dependencies (foo | bar)
   * --refresh additions
     + add/drop quilt from debian/rules and debian/control depending on
       presense of debian/patches/series; also try to keep README.source up to
@@ -42,9 +43,7 @@ dh-make-perl (0.56) unstable; urgency=low
   * AptContents::find_perl_module_package returns Debian::Dependency
     object
   * fix a typo in NEWS.debian
-  * Dependency: add support for alternative dependencies (foo | bar)
   * FromCPAN: fix detection of arch-indep packages
-  * Dependencies::remove: return the list of removed items
   * Config: restore verbose to 1 by default
   * add --[no-]backups option to --refresh, on by default
   * DhMakePerl: convert "my $maindir" to "$self->main_dir" and stop passing it
@@ -52,7 +51,8 @@ dh-make-perl (0.56) unstable; urgency=low
   * Config: fix config file parsing when same options are given on the
     command line
   * add explicit build-dependency on libtest-simple-perl (>= 0.82) as we use
-    new_ok(), which is not available before that (and in current perl-modules)
+    new_ok() in tests and it is not available before that (and in current
+    perl-modules)
 
   [ gregor herrmann ]
   * Create backup of debian/control in --refresh mode.
@@ -67,7 +67,7 @@ dh-make-perl (0.56) unstable; urgency=low
   * debian/control:
     - Add myself to the uploaders list
 
- -- Damyan Ivanov <dmn@debian.org>  Fri, 05 Jun 2009 15:26:54 +0300
+ -- Damyan Ivanov <dmn@debian.org>  Fri, 05 Jun 2009 15:49:05 +0300
 
 dh-make-perl (0.55) unstable; urgency=low
 
