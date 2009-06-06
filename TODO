@@ -7,7 +7,7 @@
   also, depending on perl-base is perhaps not a good idea
 * use Dpkg::Version::vercmp(v1, v2) for comparing versions all over (grep for
   compare)
-* investigate using Cmd::App
+* investigate using App::Cmd
 * ensure (with a test) that dependency lists are indented with one space
 * ensure (with a test) that doing a refresh over the debian/ directory produced
   by --make doesn't change anything
