@@ -238,30 +238,7 @@ sub run {
             warn "Dependencies not updated.\n";
         }
 
-        # remove build-depending/conflicting on ancient perl versions
-        for my $pkg ( qw( perl perl-base perl-modules ) ) {
-            for ( qw( Build_Depends Build_Depends_Indep ) ) {
-                $control->source->$_->add("$pkg (>= $min_perl_version)")
-                    if $control->source->$_->has($pkg);
-            }
-            $control->source->Build_Conflicts->remove(
-                "$pkg (<< $oldest_perl_version)"
-            );
-            $control->source->Build_Conflicts_Indep->remove(
-                "$pkg (<< $oldest_perl_version)"
-            );
-        }
-
-        # remove depending/conflicting on ancient perl versions
-        for my $perl ( qw( perl perl-base perl-modules ) ) {
-            for my $pkg ( $control->binary->Values ) {
-                for my $dep ( qw(Depends Recommends Suggests) ) {
-                    $pkg->$dep->add("$perl (>= $min_perl_version)")
-                        if $pkg->$dep->has($perl);
-                }
-                $pkg->Conflicts->remove("$perl (<< $oldest_perl_version)");
-            }
-        }
+        $control->prune_perl_deps();
 
         copy( "$debiandir/control", "$debiandir/control.bak" )
             if $self->cfg->backups;
