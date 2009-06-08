@@ -13,6 +13,7 @@ Debian::Control::FromCPAN - fill F<debian/control> from unpacked CPAN distributi
 package Debian::Control::FromCPAN;
 
 use strict;
+use Carp qw(croak);
 
 use base 'Debian::Control';
 
@@ -20,6 +21,7 @@ use YAML ();
 use File::Spec qw( catfile );
 
 use constant min_perl_version  => '5.6.0-12';
+use constant oldstable_perl_version => '5.8.8';
 
 =head1 CONSTRUCTOR
 
@@ -189,6 +191,141 @@ sub dependencies_from_cpan_meta {
         }
 
         print $missing_debs_str;
+    }
+}
+
+=item prune_simple_perl_dep
+
+Input:
+
+=over
+
+=item dependency object
+
+shall be a simple dependency (no alternatives)
+
+=item (optional) build dependency flag
+
+true value indicates the dependency is a build-time one
+
+=back
+
+
+The following checks are made
+
+=over
+
+=item dependencies on C<perl-modules>
+
+These are replaced with C<perl> as per Perl policy.
+
+=item dependencies on C<perl-base> and build-dependencies on C<perl> or
+C<perl-base>
+
+These are removed, unless they specify a version greater than the one available
+in C<oldstable> or the dependency relation is not C<< >= >> or C<<< >> >>>.
+
+=back
+
+Return value:
+
+=over
+
+=item undef
+
+if the dependency is redundant.
+
+=item pruned dependency
+
+otherwise. C<perl-modules> replaced with C<perl>.
+
+=back
+
+=cut
+
+sub prune_simple_perl_dep {
+    my( $self, $dep, $build ) = @_;
+
+    croak "No alternative dependencies can be given"
+        if $dep->alternatives;
+
+    return $dep unless $dep->pkg =~ /^(?:perl|perl-base|perl-modules)$/;
+
+    $dep->pkg('perl') if $dep->pkg eq 'perl-modules';
+
+    return undef
+        if ( $dep->pkg eq 'perl-base'
+                or $build )     # perl is build-essential
+            and (
+            not $dep->ver   # unversioned dependency is redundant
+                or $dep->rel =~ />/
+                and $AptPkg::Config::_config->system->versioning->compare(
+                    $dep->ver, $self->oldstable_perl_version ) <= 0
+            );
+
+    return $dep;
+}
+
+=item prune_perl_dep
+
+Similar to L</prune_simple_perl_dep>, but supports alternative dependencies.
+If any of the alternatives is redundant, the whole dependency is considered
+redundant.
+
+=cut
+
+sub prune_perl_dep {
+    my( $self, $dep, $build ) = @_;
+
+    return $self->prune_simple_perl_dep( $dep, $build )
+        unless $dep->alternatives;
+
+    for my $simple ( @{ $dep->alternatives } ) {
+        my $pruned = $self->prune_simple_perl_dep( $simple, $build );
+
+        # redundant alternative?
+        return undef unless $pruned;
+
+        $simple = $pruned;
+    }
+
+    return $dep;
+}
+
+=item prune_perl_deps
+
+Remove redundant (build-)dependencies on perl, perl-modules and perl-base.
+
+=cut
+
+sub prune_perl_deps {
+    my $self = shift;
+
+    # remove build-depending on ancient perl versions
+    for my $perl ( qw( perl perl-base perl-modules ) ) {
+        for ( qw( Build_Depends Build_Depends_Indep ) ) {
+            my @ess = $self->source->$_->remove($perl);
+            # put back non-redundant ones (possibly modified)
+            for my $dep (@ess) {
+                my $pruned = $self->prune_perl_dep( $dep, 1 );
+
+                $self->source->$_->add($pruned) if $pruned;
+            }
+        }
+    }
+
+    # remove depending on ancient perl versions
+    for my $perl ( qw( perl perl-base perl-modules ) ) {
+        for my $pkg ( $self->binary->Values ) {
+            for my $rel ( qw(Depends Recommends Suggests) ) {
+                my @ess = $self->$pkg->$rel->remove($perl);
+                for my $dep (@ess) {
+                    my $pruned = $self->prune_perl_dep( $dep, 0 );
+
+                    $self->$pkg->$rel->add($pruned) if $pruned;
+                }
+            }
+        }
     }
 }
 
