@@ -1,9 +1,3 @@
-* --refresh and core dependencies
-  when a dependency module is in the core, do not blindly copy the version
-  dependend on to perl-modules dependency, but use the first perl release the
-  dependency is included in.
-  mapping perl core versions to debian versions would be nice, otherwise we end up
-  with something like "perl-modules (>= 5.9.4)" (happened with libparams-classify-perl).
 * use Dpkg::Version::vercmp(v1, v2) for comparing versions all over (grep for
   compare)
 * investigate using App::Cmd

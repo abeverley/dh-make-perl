@@ -390,26 +390,76 @@ sub find_file_packages {
     return @packages;
 }
 
+=item find_core_perl_dependency( $module[, $version] )
+
+return a dependency on perl containing the required module version. If the
+module is not available in any perl as released by Debian, return undef.
+
+Currently Debian has only two releases of Perl: 5.8.8 (5.008008) and 5.10
+(5.010000).
+
+=cut
+
+our @debian_perls = qw( 5.008008 5.010000 );
+
+sub find_core_perl_dependency {
+    my ( $self, $module, $version ) = @_;
+
+    # see if the module is included in perl core
+    my $core_ver;
+    for (@debian_perls) {
+        my $core = Module::CoreList->find_version($_);
+        next unless exists $core->{$module};    # not in that perl version
+
+        # reaching here, the module is in the core version in $_
+        # if we don't need a particular version, we are done
+        unless( defined($version) ) {
+            $core_ver = $_;
+            last;
+        }
+
+        # OTOH, if we do need a particular version, but
+        # the core module has none, try next core release
+        my $ver = $core->{$module};
+        next unless defined($ver);
+
+        # if the core module version is sufficiently new, we're done
+        if( $AptPkg::Config::_config->system->versioning->compare( $ver, $version ) >= 0 ) {
+            $core_ver = $_;
+            last;
+        }
+    }
+
+    if($core_ver) {
+        $core_ver = version->new($core_ver);            # v5.9.2
+        ( $core_ver = $core_ver->normal ) =~ s/^v//;    # "5.9.2"
+
+        return Debian::Dependency->new( 'perl', $core_ver );
+    }
+
+    # not a core module
+    return undef;
+}
+
 =item find_perl_module_package( $module, $version )
 
 Given Perl module name (e.g. Foo::Bar), returns a L<Debian::Dependency> object
 representing the required Debian package and version. If the module is a core
-one, suitable dependency on perl-modules is returned.
+one, suitable dependency on perl is returned.
 
 =cut
 
 sub find_perl_module_package {
     my ( $self, $module, $version ) = @_;
 
-    my $core_ver = Module::CoreList->first_release( $module, $version );
+    # see if the module is included in perl core
+    my $core_dep = $self->find_core_perl_dependency( $module, $version );
 
-    if($core_ver) {
-        $core_ver = version->new($core_ver);            # v5.9.2
-        ( $core_ver = $core_ver->normal ) =~ s/^v//;    # "5.9.2"
+    return $core_dep if defined($core_dep);
 
-        return Debian::Dependency->new( 'perl-modules', $core_ver );
-    }
-
+    # not a core module (or at least not in any perl release available in
+    # Debian)
+    # try module packages
     my $module_file = $module;
     $module_file =~ s|::|/|g;
 
