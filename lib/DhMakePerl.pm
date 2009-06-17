@@ -76,7 +76,7 @@ my ($min_perl_version, $oldest_perl_version,
 );
 our %overrides;
 
-$debstdversion = '3.8.1';
+$debstdversion = '3.8.2';
 $priority      = 'optional';
 $section       = 'perl';
 $depends       = Debian::Dependencies->new('${perl:Depends}');
