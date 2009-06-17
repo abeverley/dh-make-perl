@@ -1,13 +1,9 @@
 dh-make-perl (0.57) UNRELEASED; urgency=low
 
-  * debian/control:
-    - Bump Standards-Version to 3.8.2
-  * t/dists/Strange-0.1/wanted-debian/control:
-    - Use Standards-Version 3.8.2
-  * t/dists/Strange-2.1/wanted-debian/control:
-    - Use Standards-Version 3.8.2
-  * lib/DhMakePerl.pm:
-    - Use Standards-Version 3.8.2
+  * Bump Standards-Version to 3.8.2
+    + in debian/control (no changes needed)
+    + in generated package's debian/control
+    + in t/dists
 
  -- Nathan Handler <nhandler@ubuntu.com>  Wed, 17 Jun 2009 13:24:08 +0000
 
