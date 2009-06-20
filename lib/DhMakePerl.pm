@@ -2118,7 +2118,7 @@ L<http://bugs.debian.org/dh-make-perl>
 
 =item Copyright (C) 2007-2008 Gregor Herrmann <gregoa@debian.org>
 
-=item Copyright (C) 2007-2008 Damyan Ivanov <dmn@debian.org>
+=item Copyright (C) 2007-2009 Damyan Ivanov <dmn@debian.org>
 
 =back
 
