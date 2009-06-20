@@ -318,7 +318,7 @@ sub prune_perl_deps {
     for my $perl ( qw( perl perl-base perl-modules ) ) {
         for my $pkg ( $self->binary->Values ) {
             for my $rel ( qw(Depends Recommends Suggests) ) {
-                my @ess = $self->$pkg->$rel->remove($perl);
+                my @ess = $pkg->$rel->remove($perl);
                 for my $dep (@ess) {
                     my $pruned = $self->prune_perl_dep( $dep, 0 );
 
