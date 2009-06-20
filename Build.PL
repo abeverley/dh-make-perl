@@ -6,7 +6,7 @@ my $builder = Module::Build->new(
     module_name         => 'DhMakePerl',
     license             => 'gpl',
     requires            => {
-        perl    => '5.008',
+        perl    => '5.010',
 
         'AptPkg::Cache'             => 0,
         'AptPkg::Config'            => 0,
