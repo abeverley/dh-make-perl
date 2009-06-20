@@ -36,7 +36,6 @@ TO BE FILLED
 =cut
 
 use AptPkg::Cache ();
-use AptPkg::Config ();
 use Config qw( %Config );
 use CPAN ();
 use Cwd qw( getcwd );
@@ -45,6 +44,7 @@ use Debian::Control ();
 use Debian::Control::FromCPAN ();
 use Debian::Dependencies ();
 use Debian::Dependency ();
+use Debian::Version qw(deb_ver_cmp);
 use Parse::DebianChangelog;
 use DhMakePerl::Config;
 use DhMakePerl::PodParser ();
@@ -1018,8 +1018,7 @@ sub prune_deps(@) {
 
             $deps{$p} = $v
                 if defined($v) and not defined($cur_ver)
-                    or $AptPkg::Config::_config->system->versioning->compare(
-                        $cur_ver, $v ) < 0;
+                    or deb_ver_cmp( $cur_ver, $v ) < 0;
         }
         else {
             $deps{$p} = $v;

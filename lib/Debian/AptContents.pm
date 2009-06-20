@@ -31,6 +31,7 @@ __PACKAGE__->mk_accessors(
 );
 
 use Debian::Dependency;
+use Debian::Version qw(deb_ver_cmp);
 use File::Spec::Functions qw( catfile catdir splitpath );
 use IO::Uncompress::Gunzip;
 use Module::CoreList ();
@@ -424,7 +425,7 @@ sub find_core_perl_dependency {
         next unless defined($ver);
 
         # if the core module version is sufficiently new, we're done
-        if( $AptPkg::Config::_config->system->versioning->compare( $ver, $version ) >= 0 ) {
+        if( deb_ver_cmp( $ver, $version ) >= 0 ) {
             $core_ver = $_;
             last;
         }

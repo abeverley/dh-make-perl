@@ -18,6 +18,7 @@ use Carp qw(croak);
 use base 'Debian::Control';
 
 use YAML ();
+use Debian::Version qw(deb_ver_cmp);
 use File::Spec qw( catfile );
 
 use constant min_perl_version  => '5.6.0-12';
@@ -259,8 +260,7 @@ sub prune_simple_perl_dep {
             and (
             not $dep->ver   # unversioned dependency is redundant
                 or $dep->rel =~ />/
-                and $AptPkg::Config::_config->system->versioning->compare(
-                    $dep->ver, $self->oldstable_perl_version ) <= 0
+                and deb_ver_cmp( $dep->ver, $self->oldstable_perl_version ) <= 0
             );
 
     return $dep;

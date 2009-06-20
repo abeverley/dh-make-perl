@@ -5,6 +5,7 @@ use warnings;
 
 use AptPkg::Config;
 use Carp;
+use Debian::Version qw(deb_ver_cmp);
 use List::MoreUtils qw(mesh);
 
 =head1 NAME
@@ -219,9 +220,7 @@ sub _compare {
 
     return 0 unless $left->ver; # both have no version
 
-    $res = $AptPkg::Config::_config->system->versioning->compare(
-        $left->ver, $right->ver,
-    );
+    $res = deb_ver_cmp( $left->ver, $right->ver );
 
     return $res if $res != 0;
 
@@ -397,9 +396,7 @@ sub satisfies {
     return 0 if not $self->rel;
 
     # from this point below both $dep and we have relation (and version)
-    my $cmpver = $AptPkg::Config::_config->system->versioning->compare(
-        $self->ver, $dep->ver,
-    );
+    my $cmpver = deb_ver_cmp( $self->ver, $dep->ver );
 
     if( $self->rel eq '>>' ) {
         # >> 4 satisfies also >> 3
