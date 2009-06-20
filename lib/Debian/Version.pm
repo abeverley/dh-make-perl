@@ -12,7 +12,7 @@ single comparison function.
 
 =cut
 
-use Exporter;
+use base 'Exporter';
 
 our @EXPORT_OK = qw( deb_ver_cmp );
 
