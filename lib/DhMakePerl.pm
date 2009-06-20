@@ -470,7 +470,7 @@ sub find_cpan_module {
         $file =~ s#.*/##;          # remove directory
         $file =~ s/(.*)-.*/$1/;    # remove version and extension
         $file =~ s/-/::/g;         # convert dashes to colons
-        if ( $file eq $self->cfg->cpan ) {
+        if ( $self->cfg->cpan and $file eq $self->cfg->cpan ) {
             $mod = $_;
             last;
         }
