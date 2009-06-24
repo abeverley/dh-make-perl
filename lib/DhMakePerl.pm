@@ -182,21 +182,21 @@ sub run {
         print "Engaging refresh mode\n" if $self->cfg->verbose;
         $self->main_dir('.');
 
-        die "debian/rules.bak already exists. Aborting!\n"
-            if -e "debian/rules.bak";
+        die $self->debian_file('rules.bak')." already exists. Aborting!\n"
+            if -e $self->debian_file('rules.bak');
 
-        die "debian/copyright.bak already exists. Aborting!\n"
-            if -e "debian/copyright.bak";
+        die $self->debian_file('copyright.bak')." already exists. Aborting!\n"
+            if -e $self->debian_file('copyright.bak');
 
-        die "debian/control.bak already exists. Aborting!\n"
-            if -e "debian/control.bak";
+        die $self->debian_file('control.bak')." already exists. Aborting!\n"
+            if -e $self->debian_file('control.bak');
 
         $self->process_meta;
         ( $pkgname, $version )
             = $self->extract_basic();    # also detects arch-dep package
         $module_build
             = ( -f $self->main_file('Build.PL') ) ? "Module-Build" : "MakeMaker";
-        $debiandir = './debian';
+
         $self->extract_changelog;
         $self->extract_docs;
         $self->extract_examples;
@@ -204,22 +204,22 @@ sub run {
             if defined $changelog and $self->cfg->verbose;
         print "Found docs: @docs\n" if $self->cfg->verbose;
         print "Found examples: @examples\n" if @examples and $self->cfg->verbose;
-        copy( "$debiandir/rules", "$debiandir/rules.bak" )
+        copy( $self->debian_file('rules'), $self->debian_file('rules.bak') )
             if $self->cfg->backups;
-        $self->create_rules("$debiandir/rules");
-        if (! -f "$debiandir/compat" or $self->cfg->dh == 7) {
-            $self->create_compat("$debiandir/compat");
+        $self->create_rules( $self->debian_file('rules') );
+        if (! -f $self->debian_file('compat') or $self->cfg->dh == 7) {
+            $self->create_compat( $self->debian_file('compat') );
         }
-        $self->fix_rules( "$debiandir/rules",
+        $self->fix_rules( $self->debian_file('rules'),
             ( defined $changelog ? $changelog : '' ),
             \@docs, \@examples, );
-        copy( "$debiandir/copyright", "$debiandir/copyright.bak" )
+        copy( $self->debian_file('copyright'), $self->debian_file('copyright.bak') )
             if $self->cfg->backups;
         $self->create_copyright("$debiandir/copyright");
 
         my $control = Debian::Control::FromCPAN->new;
-        $control->read("$debiandir/control");
-        if ( -e "$debiandir/patches/series" ) {
+        $control->read( $self->debian_file('control') );
+        if ( -e catfile( $self->debian_file('patches'), 'series' ) ) {
             $self->add_quilt( $control );
         }
         else {
@@ -239,9 +239,9 @@ sub run {
 
         $control->prune_perl_deps();
 
-        copy( "$debiandir/control", "$debiandir/control.bak" )
+        copy( $self->debian_file('control'), $self->debian_file('control.bak') )
             if $self->cfg->backups;
-        $control->write("$debiandir/control");
+        $control->write( $self->debian_file('control') );
 
         print "--- Done\n" if $self->cfg->verbose;
         return 0;
