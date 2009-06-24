@@ -141,6 +141,21 @@ sub debian_file {
     catfile( $self->main_file('debian'), $file );
 }
 
+=item backup_file(file_name)
+
+Creates a backup copy of the specified file by adding C<.bak> to its name.
+
+Does nothing unless the C<backups> option is set.
+
+=cut
+
+sub backup_file {
+    my( $self, $file ) = @_;
+
+    copy( $file, "$file.bak" )
+        if $self->cfg->backups;
+}
+
 sub run {
     my ($self) = @_;
 
