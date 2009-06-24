@@ -219,8 +219,7 @@ sub run {
             if defined $changelog and $self->cfg->verbose;
         print "Found docs: @docs\n" if $self->cfg->verbose;
         print "Found examples: @examples\n" if @examples and $self->cfg->verbose;
-        copy( $self->debian_file('rules'), $self->debian_file('rules.bak') )
-            if $self->cfg->backups;
+        $self->backup_file( $self->debian_file('rules') );
         $self->create_rules( $self->debian_file('rules') );
         if (! -f $self->debian_file('compat') or $self->cfg->dh == 7) {
             $self->create_compat( $self->debian_file('compat') );
@@ -228,8 +227,7 @@ sub run {
         $self->fix_rules( $self->debian_file('rules'),
             ( defined $changelog ? $changelog : '' ),
             \@docs, \@examples, );
-        copy( $self->debian_file('copyright'), $self->debian_file('copyright.bak') )
-            if $self->cfg->backups;
+        $self->backup_file( $self->debian_file('copyright') );
         $self->create_copyright("$debiandir/copyright");
 
         my $control = Debian::Control::FromCPAN->new;
@@ -254,8 +252,7 @@ sub run {
 
         $control->prune_perl_deps();
 
-        copy( $self->debian_file('control'), $self->debian_file('control.bak') )
-            if $self->cfg->backups;
+        $self->backup_file( $self->debian_file('control') );
         $control->write( $self->debian_file('control') );
 
         print "--- Done\n" if $self->cfg->verbose;
