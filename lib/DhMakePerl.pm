@@ -6,7 +6,7 @@ use strict;
 use base 'Class::Accessor';
 use Pod::Usage;
 
-__PACKAGE__->mk_accessors( qw( cfg apt_contents main_dir ) );
+__PACKAGE__->mk_accessors( qw( cfg apt_contents main_dir meta ) );
 
 =head1 NAME
 
@@ -99,7 +99,7 @@ $startdir  = getcwd();
 # If we're being required rather than called as a main command, then
 # return now without doing any work.  This facilitates easier testing.
 
-my ( $perlname, $modulepm, $meta );
+my ( $perlname, $modulepm );
 my ($pkgname, $srcname,
 
     # $version is the version from the perl module itself
@@ -191,8 +191,7 @@ sub run {
         die "debian/control.bak already exists. Aborting!\n"
             if -e "debian/control.bak";
 
-        $meta = $self->process_meta( $self->main_file('META.yml') )
-            if ( -f $self->main_file('META.yml') );
+        $self->process_meta;
         ( $pkgname, $version )
             = $self->extract_basic();    # also detects arch-dep package
         $module_build
@@ -229,7 +228,7 @@ sub run {
 
         if( my $apt_contents = $self->get_apt_contents ) {
             $control->dependencies_from_cpan_meta(
-                $meta, $self->get_apt_contents, $self->cfg->verbose );
+                $self->meta, $self->get_apt_contents, $self->cfg->verbose );
         }
         else {
             warn "No APT contents can be loaded.\n";
@@ -283,8 +282,7 @@ EOF
 
     $self->load_overrides();
     my $tarball = $self->setup_dir();
-    $meta = $self->process_meta( $self->main_file('META.yml') )
-        if ( -f $self->main_file('META.yml') );
+    $self->process_meta;
     $self->findbin_fix();
 
     ( $pkgname, $version ) = $self->extract_basic();
@@ -586,12 +584,23 @@ sub install_package {
 }
 
 sub process_meta {
-    my ( $self, $file ) = @_;
+    my ($self) = @_;
 
-    my $yaml;
+    my $file = $self->main_file('META.yml');
+
+    # META.yml non-existent?
+    unless ( -f $file ) {
+        $self->meta({});
+        return;
+    }
 
     # Command line option nometa causes this function not to be run
-    return {} if $self->cfg->nometa;
+    if( $self->cfg->nometa ) {
+        $self->meta({});
+        return;
+    }
+
+    my $yaml;
 
     # YAML::LoadFile has the bad habit of dying when it cannot properly parse
     # a file - Catch it in an eval, and if it dies, return -again- just an
@@ -605,7 +614,7 @@ sub process_meta {
     }
 
     # Returns a simple hashref with all the keys/values defined in META.yml
-    return $yaml;
+    $self->meta($yaml);
 }
 
 sub extract_basic_copyright {
@@ -681,9 +690,9 @@ sub extract_name_ver {
     my ( $name, $ver, $makefile );
     $makefile = $self->makefile_pl();
 
-    if ( defined $meta->{name} and defined $meta->{version} ) {
-        $name = $meta->{name};
-        $ver  = $meta->{version};
+    if ( defined $self->meta->{name} and defined $self->meta->{version} ) {
+        $name = $self->meta->{name};
+        $ver  = $self->meta->{version};
 
     }
     else {
@@ -862,10 +871,10 @@ sub extract_desc {
         # No-op - We already have it, probably from the command line
 
     }
-    elsif ( $meta->{abstract} ) {
+    elsif ( $self->meta->{abstract} ) {
 
         # Get it from META.yml
-        $desc = $meta->{abstract};
+        $desc = $self->meta->{abstract};
 
     }
     elsif ( my $my_desc = $parser->get('NAME') ) {
@@ -909,10 +918,10 @@ sub extract_desc {
         || $parser->get('LICENSE')
         || $parser->get('COPYRIGHT & LICENSE');
     if ( !$author ) {
-        if ( ref $meta->{author} ) {
+        if ( ref $self->meta->{author} ) {
 
             # Does the author information appear in META.yml?
-            $author = join( ', ', @{ $meta->{author} } );
+            $author = join( ', ', @{ $self->meta->{author} } );
         }
         else {
 
@@ -1697,7 +1706,7 @@ sub create_copyright {
             . "    and fix this file!"
     );
 
-    if ( $meta and $meta->{license} or $copyright ) {
+    if ( $self->meta->{license} or $copyright ) {
         my $mangle_cprt;
 
         # Pre-mangle the copyright information for the common similar cases
@@ -1709,7 +1718,7 @@ sub create_copyright {
         # mind that many licenses are not meant to be used as
         # templates (i.e. you must add the author name and some
         # information within the licensing text as such).
-        if (   $meta and $meta->{license} and $meta->{license} =~ /perl/i
+        if (   $self->meta->{license} and $self->meta->{license} =~ /perl/i
             or $mangle_cprt =~ /terms\s*as\s*Perl\s*itself/is )
         {
             push @res, "License-Alias: Perl";
