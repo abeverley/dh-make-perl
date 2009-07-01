@@ -1,9 +1,15 @@
 dh-make-perl (0.57) UNRELEASED; urgency=low
 
+  [ Nathan Handler ]
   * Bump Standards-Version to 3.8.2
     + in debian/control (no changes needed)
     + in generated package's debian/control
     + in t/dists
+
+  [ gregor herrmann ]
+  * Change parsing of sources.list in Debian::AptContents to make it work with
+    file:/ URIs, add a test. Thanks to Raphael Geissert for the bug report
+    (closes: #535017).
 
  -- Nathan Handler <nhandler@ubuntu.com>  Wed, 17 Jun 2009 13:24:08 +0000
 

@@ -152,10 +152,8 @@ sub repo_source_to_contents_path {
         (\S+)           # deb or deb-src
         \s+
         ([^:\s]+)       # ftp/http/file/cdrom
-        ://
-        (/?             # file:///
-            [^:/\s]+    # host name or path
-        )
+        ://?            # file:/ http:// ftp://
+        ([^:/\s]+)      # host name or path
         (?:
             :(\d+)      # optional port number
         )?
@@ -167,7 +165,7 @@ sub repo_source_to_contents_path {
         (\S+)           # distribution
         (?:
             \s+
-            (.+)            # components
+            (.+)        # components
         )?
     }x;
 

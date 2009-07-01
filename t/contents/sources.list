@@ -8,3 +8,4 @@ deb     http://www.kiberpipa.org/~minmax/cinelerra/builds/sid/ ./
 deb     http://debian.cihar.com/ unstable main contrib non-free
 deb-src http://debian.cihar.com/ unstable main contrib non-free
 deb http://nightlies.videolan.org/build/sid-i386/arch ./
+deb file:/home/jason/debian stable main contrib non-free

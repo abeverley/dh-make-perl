@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 19;
+use Test::More tests => 20;
 
 BEGIN {
     use_ok 'Debian::AptContents';
@@ -70,6 +70,13 @@ is(
         'deb     http://ftp.de.debian.org/debian/ unstable main contrib non-free'),
     'ftp.de.debian.org_debian_dists_unstable',
     'source line conversion 5',
+);
+
+is(
+    $apt_contents->repo_source_to_contents_path(
+        'deb file:/home/jason/debian stable main contrib non-free'),
+    'home_jason_debian_dists_stable',
+    'source line conversion 6',
 );
 
 $apt_contents = instance();
