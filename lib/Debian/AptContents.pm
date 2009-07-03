@@ -147,26 +147,15 @@ F<sources.list>), converts it to the correspondinf F<Contents> file name.
 sub repo_source_to_contents_path {
     my ( $self, $source ) = @_;
 
-    my ( $schema, $proto, $host, $port, $dir, $dist, $components ) = $source =~ m{
-        ^
-        (\S+)           # deb or deb-src
-        \s+
-        ([^:\s]+)       # ftp/http/file/cdrom
-        ://?            # file:/ http:// ftp://
-        ([^:/\s]+)      # host name or path
-        (?:
-            :(\d+)      # optional port number
+    my ( $schema, $uri, $dist, @extra ) = split /\s+/, $source;
+    my ( $proto, $host, $port, $dir ) = $uri =~ m{
+	^
+        (?:([^:/?\#]+):)?                      # proto
+        (?://
+        	([^:/?\#]*)                     # host
+                (?::(\d+))?                     # port
         )?
-        (?:
-            /
-            (\S*)       # path on server (or local)
-        )?
-        \s+
-        (\S+)           # distribution
-        (?:
-            \s+
-            (.+)        # components
-        )?
+        ([^?\s\#]*)                             # path
     }x;
 
     unless ( defined $schema ) {
@@ -184,12 +173,14 @@ sub repo_source_to_contents_path {
         }
     }
 
+    $host ||= '';   # set empty string if $host is undef
     $dir ||= '';    # deb http://there sid main
 
         s{/$}{} for( $host, $dir, $dist );  # remove trailing /
+	s{^/}{} for( $host, $dir, $dist );  # remove initial /
         s{/}{_}g for( $host, $dir, $dist ); # replace remaining /
 
-    return join( "_", $host, $dir||(), "dists", $dist );
+    return ( $host . "_" . join( "_", $dir||(), "dists", $dist ) );
 }
 
 =item get_contents_files

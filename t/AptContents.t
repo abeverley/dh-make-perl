@@ -75,7 +75,7 @@ is(
 is(
     $apt_contents->repo_source_to_contents_path(
         'deb file:/home/jason/debian stable main contrib non-free'),
-    'home_jason_debian_dists_stable',
+    '_home_jason_debian_dists_stable',
     'source line conversion 6',
 );
 
