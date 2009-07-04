@@ -152,10 +152,10 @@ sub repo_source_to_contents_path {
 	^
         (?:([^:/?\#]+):)?                      # proto
         (?://
-        	([^:/?\#]*)                     # host
-                (?::(\d+))?                     # port
+        	([^:/?\#]*)                    # host
+                (?::(\d+))?                    # port
         )?
-        ([^?\s\#]*)                             # path
+        ([^?\#]*)                              # path
     }x;
 
     unless ( defined $schema ) {

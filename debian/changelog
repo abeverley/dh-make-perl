@@ -17,7 +17,7 @@ dh-make-perl (0.57) UNRELEASED; urgency=low
   * Further improve gregoa's change and follow now that was apt-file is doing.
     (See #535017). 
 
- -- Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>  Fri, 03 Jul 2009 21:16:42 +0200
+ -- Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>  Sat, 04 Jul 2009 08:30:33 +0200
 
 dh-make-perl (0.56) unstable; urgency=low
 
