@@ -1,4 +1,4 @@
-dh-make-perl (0.57) UNRELEASED; urgency=low
+dh-make-perl (0.57) unstable; urgency=low
 
   [ Nathan Handler ]
   * Bump Standards-Version to 3.8.2
