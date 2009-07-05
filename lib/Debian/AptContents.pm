@@ -152,7 +152,7 @@ sub repo_source_to_contents_path {
 	^
         (?:([^:/?\#]+):)?                      # proto
         (?://
-        	([^:/?\#]*)                    # host
+                ([^:/?\#]*)                    # host
                 (?::(\d+))?                    # port
         )?
         ([^?\#]*)                              # path
@@ -177,7 +177,7 @@ sub repo_source_to_contents_path {
     $dir ||= '';    # deb http://there sid main
 
         s{/$}{} for( $host, $dir, $dist );  # remove trailing /
-	s{^/}{} for( $host, $dir, $dist );  # remove initial /
+        s{^/}{} for( $host, $dir, $dist );  # remove initial /
         s{/}{_}g for( $host, $dir, $dist ); # replace remaining /
 
     return ( $host . "_" . join( "_", $dir||(), "dists", $dist ) );
