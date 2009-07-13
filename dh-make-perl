@@ -256,6 +256,13 @@ dpkg-source's default values.
 Installs the freshly built package. Specifying --install implies --build - The
 package will not be installed unless it was built (obviously ;-) )
 
+=item B<--notest>
+
+This option for not running the automatic testing of the module as part of
+the build script has been removed in 0.54. Please put nocheck in the
+DEB_BUILD_OPTIONS environment variable if you want to skip the tests when
+building a package.
+
 =item B<--home-dir> I<DIRECTORY>
 
 Where user overrides and APT Contents cache is stored.

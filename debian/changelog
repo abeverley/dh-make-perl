@@ -1,3 +1,11 @@
+dh-make-perl (0.58) UNRELEASED; urgency=low
+
+  * POD: add a notice that --notest was removed and the new way to skip tests
+    is to add nocheck to the DEB_BUILD_OPTIONS environment variable
+    (closes: #536733).
+
+ -- gregor herrmann <gregoa@debian.org>  Mon, 13 Jul 2009 12:36:49 +0200
+
 dh-make-perl (0.57) unstable; urgency=low
 
   [ Nathan Handler ]
