@@ -7,7 +7,7 @@ Debian::Version - working with Debian package versions
 =head1 DESCRIPTION
 
 One day this package may be a class for encapsulating Debian versions with all
-of their epochs, versions and revisions. For now, thhough, it only provides a
+of their epochs, versions and revisions. For now, though, it only provides a
 single comparison function.
 
 =cut
@@ -24,7 +24,7 @@ use AptPkg::Config;
 
 =item deb_ver_cmp( $ver1, $ver2 )
 
-Compares teo Debian versions and returns -1, 0 or +1 if the first version is
+Compares the Debian versions and returns -1, 0 or +1 if the first version is
 smaller, equal or bigger than the second.
 
 This function is a short-named wrapper around C<<
