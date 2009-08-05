@@ -1,10 +1,20 @@
-dh-make-perl (0.58) UNRELEASED; urgency=low
+dh-make-perl (0.58) unstable; urgency=low
 
+  [ gregor herrmann ]
   * POD: add a notice that --notest was removed and the new way to skip tests
     is to add nocheck to the DEB_BUILD_OPTIONS environment variable
     (closes: #536733).
 
- -- gregor herrmann <gregoa@debian.org>  Mon, 13 Jul 2009 12:36:49 +0200
+  [ Ansgar Burchardt ]
+  * fix two typos in the documentation
+
+  [ Damyan Ivanov ]
+  * t/core-modules.t: add a bogus module test
+  * corelist.t: do not iterate over modules in /usr/share|lib/perl/$VER
+    some of the modules there aren't core, notably
+    CPANPLUS::Config::System. Closes: #536989
+
+ -- Damyan Ivanov <dmn@debian.org>  Tue, 04 Aug 2009 18:11:45 +0300
 
 dh-make-perl (0.57) unstable; urgency=low
 
