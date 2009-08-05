@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More 'no_plan';
+use Test::More tests => 7;
 
 use DhMakePerl;
 use Config;
@@ -16,18 +16,4 @@ foreach my $module ( qw(Fatal File::Copy FindBin CGI IO::Handle Safe) ) {
     ok($maker->is_core_module($module), "$module should be a core module");
 }
 
-my @files = File::Find::Rule->file()
-                            ->name('*.pm')
-                            ->in(
-                                "/usr/share/perl/$Config{version}",
-                                "/usr/lib/perl/$Config{version}",
-                            );
-
-for (@files) {
-    s{/usr/(?:share|lib)/perl/$Config{version}/}{}o;
-
-    s{/}{::}g;
-    s/\.pm$//;
-
-    ok( $maker->is_core_module($_), "$_ is core" );
-}
+ok( !$maker->is_core_module('Foo::Bar'), 'Foo::Bar is not a core module' );
