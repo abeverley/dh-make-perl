@@ -1,3 +1,9 @@
+dh-make-perl (0.59) UNRELEASED; urgency=low
+
+  * debian/rules: compact to (almost) 3 lines
+
+ -- Damyan Ivanov <dmn@debian.org>  Wed, 05 Aug 2009 10:06:33 +0300
+
 dh-make-perl (0.58) unstable; urgency=low
 
   [ gregor herrmann ]

@@ -1,23 +1,10 @@
 #!/usr/bin/make -f
-#-*- makefile -*-
-# Made with the aid of dh_make, by Craig Small
-# Sample debian/rules that uses debhelper. GNU copyright 1997 by Joey Hess.
-# Some lines taken from debmake, by Christoph Lameter.
 
-# Uncomment this to turn on verbose mode.
-#export DH_VERBOSE=1
-
-INST  = $(CURDIR)/debian/dh-make-perl
-PERL ?= /usr/bin/perl
-
-build: build-stamp
-build-stamp:
-	NO_NETWORK=1 dh build
-	touch $@
+%:
+	dh $@
 
 clean:
 	dh clean
-	#rm -f build-stamp
 
 	# clean after test packages
 	for i in Strange-0.1 Strange-2.1; do\
@@ -30,18 +17,3 @@ clean:
 		    ) \
 		fi \
 	done
-
-install: build
-	dh $@
-
-
-# Build architecture-independent files here.
-binary-arch: build install
-# We have nothing to do
-
-# Build architecture-dependent files here.
-binary-indep: build install
-	dh $@
-
-binary: binary-indep binary-arch
-.PHONY: build clean binary-indep binary-arch binary
