@@ -2,9 +2,9 @@ Source: libstrange-perl
 Section: misc
 Priority: Extra
 Build-Depends: perl6, xlib-dev
-Build-Depends-Indep: perl (>= 5.6.0-12)
+Build-Depends-Indep: perl
 Maintainer: Joe Maintainer <joemaint@test.local>
-Standards-Version: 3.8.2
+Standards-Version: 3.8.3
 Homepage: http://search.cpan.org/dist/Strange/
 
 Package: libstrange-perl

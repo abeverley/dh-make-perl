@@ -31,7 +31,7 @@ Uploaders: Gunnar Wolf <gwolf@debian.org>, Wolfgang Schemmel <debian@37.org>,
  Oliver Gorwits <oliver.gorwits@oucs.ox.ac.uk>,
  Ryan Niebur <ryanryan52@gmail.com>, Nathan Handler <nhandler@ubuntu.com>,
  Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
-Standards-Version: 3.8.2
+Standards-Version: 3.8.3
 Vcs-Svn: svn://svn.debian.org/pkg-perl/trunk/dh-make-perl/
 Vcs-Browser: http://svn.debian.org/viewsvn/pkg-perl/trunk/dh-make-perl/
 

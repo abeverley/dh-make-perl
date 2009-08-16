@@ -1,8 +1,13 @@
 dh-make-perl (0.59) UNRELEASED; urgency=low
 
+  [ Damyan Ivanov ]
   * debian/rules: compact to (almost) 3 lines
 
- -- Damyan Ivanov <dmn@debian.org>  Wed, 05 Aug 2009 10:06:33 +0300
+  [ Salvatore Bonaccorso ]
+  * Bump Standards-Version to 3.8.3 (dh-make-perl, tests and generated
+    packages).
+
+ -- Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>  Sun, 16 Aug 2009 11:38:38 +0200
 
 dh-make-perl (0.58) unstable; urgency=low
 

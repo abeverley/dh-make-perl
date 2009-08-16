@@ -68,7 +68,7 @@ use version qw( qv );
 # TODO:
 # * get more info from the package (maybe using CPAN methods)
 
-my ($min_perl_version, $oldest_perl_version,
+my ($oldest_perl_version,
     $debstdversion, $priority,  $section,
     $depends,          $bdepends,      $bdependsi, $maintainer,
     $arch,             $closes,        $date,      $debiandir,
@@ -76,22 +76,16 @@ my ($min_perl_version, $oldest_perl_version,
 );
 our %overrides;
 
-$debstdversion = '3.8.2';
+$debstdversion = '3.8.3';
 $priority      = 'optional';
 $section       = 'perl';
 $depends       = Debian::Dependencies->new('${perl:Depends}');
-
-# 5.6.0-12 is where arch-indep modules are moved in /usr/share/perl5
-# (according to dh_perl)
-# if the module has stricter requirements, this build-dependency
-# is replaced below by calling substitute_perl_dependency
-$min_perl_version = '5.6.0-12';
 
 # this is the version in 'oldstable'. No much point on depending on something
 # older
 $oldest_perl_version = '5.8.8-7';
 
-$bdependsi = Debian::Dependencies->new("perl (>= $min_perl_version)");
+$bdependsi = Debian::Dependencies->new("perl");
 $arch      = 'all';
 $date      = email_date(time);
 $startdir  = getcwd();
