@@ -33,11 +33,11 @@ Section: perl
 Priority: optional
 Build-Depends: debhelper (>= 7), libmodule-build-perl, libtest-simple-perl
 Build-Depends-Indep: libtest-pod-coverage-perl, libtest-pod-perl,
- libuniversal-require-perl, perl (>= 5.6.0-12)
+ libuniversal-require-perl, perl
 Maintainer: Debian Perl Group <pkg-perl-maintainers@lists.alioth.debian.org>
 Uploaders: Damyan Ivanov <dmn@debian.org>, Gregor Herrmann <gregoa@debian.org>,
  Gunnar Wolf <gwolf@debian.org>
-Standards-Version: 3.8.0
+Standards-Version: 3.8.3
 Homepage: http://search.cpan.org/dist/Test-Compile/
 Vcs-Svn: svn://svn.debian.org/pkg-perl/trunk/libtest-compile-perl/
 Vcs-Browser: http://svn.debian.org/viewsvn/pkg-perl/trunk/libtest-compile-perl/
@@ -62,7 +62,7 @@ my $c;
 lives_ok { $c = Debian::Control->new } 'Debian::Control constructs';
 lives_ok { $c->read(\$control) } 'parses a real control file';
 isa_ok( $c->source->Build_Depends_Indep, 'Debian::Dependencies', 'parsed source B-D-I is a Debian::Dependencies object' );
-ok( $c->source->Build_Depends_Indep eq 'libtest-pod-coverage-perl, libtest-pod-perl, libuniversal-require-perl, perl (>= 5.6.0-12)', 'parsed B-D-I as expected' );
+ok( $c->source->Build_Depends_Indep eq 'libtest-pod-coverage-perl, libtest-pod-perl, libuniversal-require-perl, perl', 'parsed B-D-I as expected' );
 
 my $written = "";
 lives_ok { $c->write(\$written) } 'Control writes can write to a scalar ref';

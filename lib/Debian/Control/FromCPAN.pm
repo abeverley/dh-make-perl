@@ -21,7 +21,6 @@ use YAML ();
 use Debian::Version qw(deb_ver_cmp);
 use File::Spec qw( catfile );
 
-use constant min_perl_version  => '5.6.0-12';
 use constant oldstable_perl_version => '5.8.8';
 
 =head1 CONSTRUCTOR

@@ -8,8 +8,13 @@ dh-make-perl (0.59) UNRELEASED; urgency=low
     packages).
     - The requirement for Perl modules to have a versioned Depend and
       Build-Depend on perl >= 5.6.0-16 has been removed.
+  * t/Control.t: Adjust use of perl dependency in Build-Depends-Indep
+    filed generated for test. Use Standards-Version 3.8.2 in generated
+    `real' control file too.
+  * lib/Debian/Control/FromCPAN.pm: get rid of the min_perl_version 
+    constant use. 
 
- -- Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>  Sun, 16 Aug 2009 12:03:22 +0200
+ -- Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>  Sun, 16 Aug 2009 14:14:13 +0200
 
 dh-make-perl (0.58) unstable; urgency=low
 
