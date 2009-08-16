@@ -6,8 +6,10 @@ dh-make-perl (0.59) UNRELEASED; urgency=low
   [ Salvatore Bonaccorso ]
   * Bump Standards-Version to 3.8.3 (dh-make-perl, tests and generated
     packages).
+    - The requirement for Perl modules to have a versioned Depend and
+      Build-Depend on perl >= 5.6.0-16 has been removed.
 
- -- Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>  Sun, 16 Aug 2009 11:38:38 +0200
+ -- Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>  Sun, 16 Aug 2009 12:03:22 +0200
 
 dh-make-perl (0.58) unstable; urgency=low
 
