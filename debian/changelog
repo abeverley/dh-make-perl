@@ -1,4 +1,4 @@
-dh-make-perl (0.59) UNRELEASED; urgency=low
+dh-make-perl (0.59) unstable; urgency=low
 
   [ Damyan Ivanov ]
   * debian/rules: compact to (almost) 3 lines
@@ -14,7 +14,7 @@ dh-make-perl (0.59) UNRELEASED; urgency=low
   * lib/Debian/Control/FromCPAN.pm: get rid of the min_perl_version 
     constant use. 
 
- -- Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>  Sun, 16 Aug 2009 14:34:19 +0200
+ -- Damyan Ivanov <dmn@debian.org>  Mon, 17 Aug 2009 20:30:25 +0300
 
 dh-make-perl (0.58) unstable; urgency=low
 
