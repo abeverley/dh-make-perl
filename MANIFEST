@@ -73,8 +73,10 @@ t/dists/Strange-2.1/wanted-debian/rules
 t/dists/Strange-2.1/wanted-debian/watch
 t/extract_name_ver_from_makefile.t
 t/makefiles/module-install-autodie.PL
+t/manifest.t
 t/perl-deps.t
 t/perl-versions.t
 t/pod-coverage.t
 t/pod.t
 TODO
+Makefile.PL

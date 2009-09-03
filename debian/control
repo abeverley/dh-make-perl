@@ -23,7 +23,8 @@ Build-Depends-Indep: perl,
  libtext-diff-perl,
  libtie-ixhash-perl,
  libwww-mechanize-perl,
- libyaml-perl
+ libyaml-perl,
+ libtest-distmanifest-perl
 Maintainer: Debian Perl Group <pkg-perl-maintainers@lists.alioth.debian.org>
 Uploaders: Gunnar Wolf <gwolf@debian.org>, Wolfgang Schemmel <debian@37.org>,
  Christopher Sacca <csacca@thecsl.org>,
