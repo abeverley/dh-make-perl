@@ -8,6 +8,10 @@ override_dh_auto_configure:
 	./Build distmeta
 	./Build manifest
 
+override_dh_auto_clean:
+	dh_auto_clean
+	[ ! -f MANIFEST.SKIP.bak ] || mv MANIFEST.SKIP.bak MANIFEST.SKIP
+
 clean:
 	dh clean
 
