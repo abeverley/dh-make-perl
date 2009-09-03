@@ -29,6 +29,7 @@ my $builder = Module::Build->new(
         'Module::Depends'           => 0,
         'Module::Depends::Intrusive'=> 0,
         'Parse::DebianChangelog'    => 0,
+        'Parse::DebControl'         => 0,
         'Storable'                  => 0,
         'Text::Diff'                => 0,
         'Text::Wrap'                => 0,

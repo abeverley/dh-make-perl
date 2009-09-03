@@ -9,6 +9,11 @@ abstract: create Debian source package from CPAN dist
 license: gpl
 resources:
   license: http://www.gnu.org/licenses/old-licenses/gpl-1.0.txt
+build_requires:
+  Test::Deep: 0
+  Test::Differences: 0
+  Test::Exception: 0
+  Test::More: 0
 requires:
   AptPkg::Cache: 0
   AptPkg::Config: 0
@@ -30,6 +35,7 @@ requires:
   Module::CoreList: 0
   Module::Depends: 0
   Module::Depends::Intrusive: 0
+  Parse::DebControl: 0
   Parse::DebianChangelog: 0
   Storable: 0
   Text::Diff: 0
@@ -41,11 +47,8 @@ requires:
   YAML: 0
   perl: 5.010
   version: 0
-build_requires:
-  Test::Deep: 0
-  Test::Differences: 0
-  Test::Exception: 0
-  Test::More: 0
+configure_requires:
+  Module::Build: 0.340201
 provides:
   Debian::AptContents:
     file: lib/Debian/AptContents.pm
@@ -72,7 +75,7 @@ provides:
     file: lib/DhMakePerl/Config.pm
   DhMakePerl::PodParser:
     file: lib/DhMakePerl/PodParser.pm
-generated_by: Module::Build version 0.33
+generated_by: Module::Build version 0.340201
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
   version: 1.4
