@@ -46,7 +46,7 @@ my $builder = Module::Build->new(
         'Test::More'        => 0,
     },
     add_to_cleanup      => [ 'DhMakePerl-*' ],
-    create_makefile_pl  => 'traditional',
+    create_makefile_pl  => 'passthrough',
     script_files        => [ 'dh-make-perl' ],
     install_path        => {
         share   => '/usr/share/dh-make-perl',

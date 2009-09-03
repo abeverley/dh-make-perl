@@ -3,6 +3,11 @@
 %:
 	dh $@
 
+override_dh_auto_configure:
+	dh_auto_configure
+	./Build distmeta
+	./Build manifest
+
 clean:
 	dh clean
 

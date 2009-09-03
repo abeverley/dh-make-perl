@@ -1,0 +1,78 @@
+---
+name: DhMakePerl
+version: 0.59
+author:
+  - |-
+    It is currently maintained by Gunnar Wolf and others, under the umbrella of the
+    Debian Perl Group <debian-perl@lists.debian.org>
+abstract: create Debian source package from CPAN dist
+license: gpl
+resources:
+  license: http://www.gnu.org/licenses/old-licenses/gpl-1.0.txt
+requires:
+  AptPkg::Cache: 0
+  AptPkg::Config: 0
+  CPAN: 0
+  Carp: 0
+  Cwd: 0
+  Dpkg::Source::Package: 0
+  Email::Date::Format: 0
+  File::Basename: 0
+  File::Copy: 0
+  File::Find::Rule: 0
+  File::Spec: 0
+  File::Spec::Functions: 0
+  FindBin: 0
+  Getopt::Long: 0
+  IO::File: 0
+  IO::Uncompress::Gunzip: 0
+  List::MoreUtils: 0
+  Module::CoreList: 0
+  Module::Depends: 0
+  Module::Depends::Intrusive: 0
+  Parse::DebianChangelog: 0
+  Storable: 0
+  Text::Diff: 0
+  Text::Wrap: 0
+  Tie::File: 0
+  Tie::IxHash: 0
+  User::pwent: 0
+  WWW::Mechanize: 0
+  YAML: 0
+  perl: 5.010
+  version: 0
+build_requires:
+  Test::Deep: 0
+  Test::Differences: 0
+  Test::Exception: 0
+  Test::More: 0
+provides:
+  Debian::AptContents:
+    file: lib/Debian/AptContents.pm
+  Debian::Control:
+    file: lib/Debian/Control.pm
+  Debian::Control::FromCPAN:
+    file: lib/Debian/Control/FromCPAN.pm
+  Debian::Control::Stanza:
+    file: lib/Debian/Control/Stanza.pm
+  Debian::Control::Stanza::Binary:
+    file: lib/Debian/Control/Stanza/Binary.pm
+  Debian::Control::Stanza::Source:
+    file: lib/Debian/Control/Stanza/Source.pm
+  Debian::Dependencies:
+    file: lib/Debian/Dependencies.pm
+  Debian::Dependency:
+    file: lib/Debian/Dependency.pm
+  Debian::Version:
+    file: lib/Debian/Version.pm
+  DhMakePerl:
+    file: lib/DhMakePerl.pm
+    version: 0.59
+  DhMakePerl::Config:
+    file: lib/DhMakePerl/Config.pm
+  DhMakePerl::PodParser:
+    file: lib/DhMakePerl/PodParser.pm
+generated_by: Module::Build version 0.33
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
