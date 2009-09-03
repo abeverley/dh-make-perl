@@ -45,6 +45,7 @@ my $builder = Module::Build->new(
         'Test::Exception'   => 0,
         'Test::Differences' => 0,
         'Test::More'        => 0,
+        'File::Touch'       => 0,
     },
     add_to_cleanup      => [ 'DhMakePerl-*' ],
     create_makefile_pl  => 'passthrough',
