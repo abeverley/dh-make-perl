@@ -2,8 +2,7 @@ dh-make-perl (0.60) UNRELEASED; urgency=low
 
   * fix MANIFEST file handling
   * use Test::DistManifest
-  * update META.yml/MANIFEST/Makefile.PL during build, commit them to
-    SVN
+  * update META.yml/MANIFEST/Makefile.PL during build
   * use a passthrough Makefile.PL, we use special Module::Build stuff
   * add missing requires for Parse::DebControl
   * add missing build_requires on File::Touch
