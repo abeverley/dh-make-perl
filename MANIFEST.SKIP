@@ -1,4 +1,7 @@
 #!include_default
 .git
 .svn
-debian/*.debhelper.log
+debian/.*.debhelper.log
+debian/files
+debian/dh-make-perl/.*
+debian/dh-make-perl.substvars

@@ -21,6 +21,7 @@ lib/Debian/Version.pm
 lib/DhMakePerl.pm
 lib/DhMakePerl/Config.pm
 lib/DhMakePerl/PodParser.pm
+Makefile.PL
 MANIFEST
 MANIFEST.SKIP
 META.yml
@@ -79,4 +80,3 @@ t/perl-versions.t
 t/pod-coverage.t
 t/pod.t
 TODO
-Makefile.PL
