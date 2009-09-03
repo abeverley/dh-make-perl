@@ -1,3 +1,9 @@
+dh-make-perl (0.60) UNRELEASED; urgency=low
+
+  * fix MANIFEST file handling
+
+ -- Ryan Niebur <ryanryan52@gmail.com>  Wed, 02 Sep 2009 21:46:19 -0700
+
 dh-make-perl (0.59) unstable; urgency=low
 
   [ Damyan Ivanov ]
