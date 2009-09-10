@@ -1,11 +1,16 @@
 dh-make-perl (0.60) UNRELEASED; urgency=low
 
+  [ Ryan Niebur ]
   * fix MANIFEST file handling
   * use Test::DistManifest
   * update META.yml/MANIFEST/Makefile.PL during build
   * use a passthrough Makefile.PL, we use special Module::Build stuff
   * add missing requires for Parse::DebControl
   * add missing build_requires on File::Touch
+
+  [ gregor herrmann ]
+  * Remove PREFIX from debhelper5 debian/rules templates, which won't work
+    with Perl 5.10.1 anymore (cf. #545904).
 
  -- Ryan Niebur <ryanryan52@gmail.com>  Wed, 02 Sep 2009 23:04:47 -0700
 
