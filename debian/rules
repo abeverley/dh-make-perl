@@ -14,7 +14,7 @@ override_dh_auto_clean:
 
 override_dh_auto_test:
 # leave this here for Test::DistManifest..I want it to happen on package build but not on CPAN install.
-	RELEASE_TESTING=1 dh_auto_test
+	NO_NETWORK=1 RELEASE_TESTING=1 dh_auto_test
 
 clean:
 	dh clean

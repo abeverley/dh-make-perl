@@ -11,6 +11,7 @@ dh-make-perl (0.60) UNRELEASED; urgency=low
   [ gregor herrmann ]
   * Remove PREFIX from debhelper5 debian/rules templates, which won't work
     with Perl 5.10.1 anymore (cf. #545904).
+  * Re-add "NO_NETWORK=1" to tests in debian/rules, got lost somewhere.
 
  -- Ryan Niebur <ryanryan52@gmail.com>  Wed, 02 Sep 2009 23:04:47 -0700
 
