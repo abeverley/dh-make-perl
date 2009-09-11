@@ -227,8 +227,10 @@ Uses the argument to --desc as short description for the package.
 
 Set desired debhelper version. If C<ver> is 7, generated debian/rules is
 minimalistic, using the auto-mode of debhelper. Also, any additional
-documentation and examples are listed in additional files under debian/, instead
-of being listed in debian/rules
+documentation and examples are listed in additional files under debian/,
+instead of being listed in debian/rules.
+
+Since version 0.60, B<7> is the only supported debhelper compatibility level.
 
 =item B<--dist> I<DISTRIBUTION>
 

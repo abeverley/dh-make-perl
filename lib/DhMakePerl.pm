@@ -1432,23 +1432,8 @@ sub fix_rules {
         if $self->cfg->notest;
 
     if ( $self->cfg->dh < 7 ) {
-        $test_line
-            = ( $module_build eq 'Module-Build' )
-            ? '$(PERL) Build test'
-            : '$(MAKE) test';
-        $test_line = "ifeq (,\$(filter nocheck,\$(DEB_BUILD_OPTIONS)))\n"
-                   . "\t$test_line\n"
-                   . "endif";
-
-        for (@content) {
-            s/#CHANGES#/$changelog_file/g;
-            s/#EXAMPLES#/join " ", @examples/eg;
-            s/\s+dh_installexamples\s+$//g
-                ;    # no need for empty dh_installexamples
-            s/#DOCS#/join " ", @docs/eg;
-            s/#TEST#/$test_line/g;
-            $fh->print($_);
-        }
+        warn "debhelper compatibility levels before 7 are not supported.\n";
+        exit(1);
     }
     else {
         $fh->print($_) for @content;
@@ -1541,12 +1526,7 @@ sub create_rules {
     my ( $self, $file ) = @_;
 
     my ( $rulesname, $error );
-    $rulesname = (
-          ( $self->cfg->dh eq 7 )
-        ? 'rules.dh7.tiny'
-        : $arch eq 'all' ? "rules.$module_build.noxs"
-        : "rules.$module_build.xs"
-    );
+    $rulesname = 'rules.dh7.tiny';
 
     for my $source (
         catfile( $self->cfg->home_dir, $rulesname ),

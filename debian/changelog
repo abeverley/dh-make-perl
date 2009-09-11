@@ -15,6 +15,9 @@ dh-make-perl (0.60) UNRELEASED; urgency=low
   * Call dh with "--buildsystem=perl_build", otherwise dh_auto_install gets
     confused by the existing Makefile.PL without a Makefile.
 
+  [ Damyan Ivanov ]
+  * Drop support for debhelper compatibility levels other than 7
+
  -- Ryan Niebur <ryanryan52@gmail.com>  Wed, 02 Sep 2009 23:04:47 -0700
 
 dh-make-perl (0.59) unstable; urgency=low
