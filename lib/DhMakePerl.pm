@@ -619,6 +619,11 @@ sub process_meta {
         $yaml = {};
     }
 
+    if (ref $yaml ne 'HASH') {
+        print "$file does not contain a hash - Ignoring it\n";
+        $yaml = {};
+    }
+
     # Returns a simple hashref with all the keys/values defined in META.yml
     $self->meta($yaml);
 }

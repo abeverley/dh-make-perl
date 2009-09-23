@@ -18,8 +18,9 @@ dh-make-perl (0.60) UNRELEASED; urgency=low
 
   [ Maximilian Gass ]
   * Added myself to uploaders
+  * Ignore META.yml when it's not a hash (closes: #543655)
 
- -- Maximilian Gass <mxey@cloudconnected.org>  Wed, 23 Sep 2009 09:34:17 +0200
+ -- Maximilian Gass <mxey@cloudconnected.org>  Wed, 23 Sep 2009 09:35:41 +0200
 
 dh-make-perl (0.59) unstable; urgency=low
 
