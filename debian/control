@@ -30,7 +30,7 @@ Uploaders: Gunnar Wolf <gwolf@debian.org>, Wolfgang Schemmel <debian@37.org>,
  Christopher Sacca <csacca@thecsl.org>,
  Damyan Ivanov <dmn@debian.org>, gregor herrmann <gregoa@debian.org>,
  Oliver Gorwits <oliver.gorwits@oucs.ox.ac.uk>,
- Ryan Niebur <ryanryan52@gmail.com>, Nathan Handler <nhandler@ubuntu.com>,
+ Ryan Niebur <ryan@debian.org>, Nathan Handler <nhandler@ubuntu.com>,
  Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>,
  Maximilian Gass <mxey@cloudconnected.org>
 Standards-Version: 3.8.3

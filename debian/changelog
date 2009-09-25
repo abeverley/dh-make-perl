@@ -7,6 +7,7 @@ dh-make-perl (0.60) UNRELEASED; urgency=low
   * use a passthrough Makefile.PL, we use special Module::Build stuff
   * add missing requires for Parse::DebControl
   * add missing build_requires on File::Touch
+  * Update ryan52's email address
 
   [ gregor herrmann ]
   * Re-add "NO_NETWORK=1" to tests in debian/rules, got lost somewhere.
@@ -20,7 +21,7 @@ dh-make-perl (0.60) UNRELEASED; urgency=low
   * Added myself to uploaders
   * Ignore META.yml when it's not a hash (closes: #543655)
 
- -- Maximilian Gass <mxey@cloudconnected.org>  Wed, 23 Sep 2009 09:35:41 +0200
+ -- Ryan Niebur <ryan@debian.org>  Fri, 25 Sep 2009 00:23:50 -0700
 
 dh-make-perl (0.59) unstable; urgency=low
 
