@@ -1078,11 +1078,13 @@ sub find_debs_for_modules {
     my $debs = Debian::Dependencies->new();
 
     foreach my $module ( keys(%$dep_hash) ) {
+        my $dep;
         if ( my $ver = $self->is_core_module( $module, $dep_hash->{$module} )
         ) {
             print "= $module is a core module\n" if $self->cfg->verbose;
 
-            $debs->add( 'perl-modules', $ver );
+            $dep = Debian::Dependency->new( 'perl-modules', $ver );
+            $debs->add($dep) if $dep->satisfies( "perl-modules (>= $oldest_perl_version)" );
 
             next;
         }

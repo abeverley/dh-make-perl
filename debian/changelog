@@ -13,6 +13,8 @@ dh-make-perl (0.60) UNRELEASED; urgency=low
   * Re-add "NO_NETWORK=1" to tests in debian/rules, got lost somewhere.
   * Call dh with "--buildsystem=perl_build", otherwise dh_auto_install gets
     confused by the existing Makefile.PL without a Makefile.
+  * Only add a dependency on perl-modules if we need a newer version than the
+    one in oldstable.
 
   [ Damyan Ivanov ]
   * Drop support for debhelper compatibility levels other than 7
