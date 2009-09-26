@@ -21,3 +21,5 @@
   otherwise existing packages are missed that have a different name (cf. #530675)
 * --refresh: add --only <file> option making --refresh update only specified file
 * quiltification: switch to "--with quilt" in d/rules and adjust build deps
+* Don't add libmodule-build-perl to Build-Depends if Makefile.PL is also
+  present, if its not just Module::Build::Compat
