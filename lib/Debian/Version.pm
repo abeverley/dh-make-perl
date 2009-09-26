@@ -24,8 +24,9 @@ use AptPkg::Config;
 
 =item deb_ver_cmp( $ver1, $ver2 )
 
-Compares the Debian versions and returns -1, 0 or +1 if the first version is
-smaller, equal or bigger than the second.
+Compares the Debian versions and returns a negative value, zero or a
+positive value if the first version is smaller, equal or bigger than the
+second.
 
 This function is a short-named wrapper around C<<
 $AptPkg::Config::_config->system->versioning->compare >>.  The rules for
