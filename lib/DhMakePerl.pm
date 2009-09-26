@@ -326,7 +326,7 @@ EOF
     $self->extract_docs;
     $self->extract_examples;
 
-    $bdepends += Debian::Dependency->new('libmodule-build-perl')
+    $bdepends += Debian::Dependency->new('perl-modules (>= 5.10) | libmodule-build-perl')
         if ( $module_build eq "Module-Build" );
 
     my ( $extrabdepends, $extrabdependsi );

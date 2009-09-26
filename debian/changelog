@@ -16,6 +16,7 @@ dh-make-perl (0.60) UNRELEASED; urgency=low
   * Only add a dependency on perl-modules if we need a newer version than the
     one in oldstable.
   * Documentation fix for Debian::Version::deb_ver_cmp.
+  * Add perl-modules (>= 5.10) to libmodule-build-perl.
 
   [ Damyan Ivanov ]
   * Drop support for debhelper compatibility levels other than 7
