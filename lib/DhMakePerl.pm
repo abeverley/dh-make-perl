@@ -989,8 +989,9 @@ sub extract_examples {
     $dir .= '/' unless $dir =~ m{/$};
     find(
         sub {
+            my $exampleguess = substr( $File::Find::name, length($dir) );
             push( @examples,
-                substr( $File::Find::name, length($dir) ) . '/*' )
+                ( -d $exampleguess ? $exampleguess . '/*' : $exampleguess ) )
                 if ( /^(examples?|eg|samples?)$/i
                 and ( !$self->cfg->exclude or $File::Find::name !~ $self->cfg->exclude )
                 );
