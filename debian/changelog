@@ -20,6 +20,8 @@ dh-make-perl (0.60) UNRELEASED; urgency=low
   * Check if the possible examples directory is actually a directory before
     adding "$directory/*" to <pkg>.examples; thanks to Slaven Rezic for the
     bug report (closes: #548950).
+  * Rewrite comment about YAML::LoadFile in lib/DhMakePerl.pm; thanks to
+    Slaven Rezic for the bug report (closes: #548935).
 
   [ Damyan Ivanov ]
   * Drop support for debhelper compatibility levels other than 7

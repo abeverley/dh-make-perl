@@ -608,10 +608,8 @@ sub process_meta {
 
     my $yaml;
 
-    # YAML::LoadFile has the bad habit of dying when it cannot properly parse
-    # a file - Catch it in an eval, and if it dies, return -again- just an
-    # empty hashref. Oh, were it not enough: It dies, but $! is not set, so we
-    # check against $@. Crap, crap, crap :-/
+    # YAML::LoadFile dies when it cannot properly parse a file - catch it in
+    # an eval, and if it dies, return -again- just an empty hashref.
     eval { $yaml = YAML::LoadFile($file); };
     if ($@) {
         print "Error parsing $file - Ignoring it.\n";
