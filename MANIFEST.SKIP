@@ -5,3 +5,6 @@ debian/.*.debhelper.log
 debian/files
 debian/dh-make-perl/.*
 debian/dh-make-perl.substvars
+blib/.*
+_build/.*
+Build$
