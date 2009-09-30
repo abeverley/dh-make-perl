@@ -21,6 +21,7 @@ dh-make-perl (0.60) UNRELEASED; urgency=low
 
   [ Damyan Ivanov ]
   * Drop support for debhelper compatibility levels other than 7
+  * stop creating Makefile from Build.PL
 
   [ Maximilian Gass ]
   * Added myself to uploaders
