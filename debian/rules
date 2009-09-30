@@ -3,15 +3,6 @@
 %:
 	dh $@
 
-override_dh_auto_configure:
-	dh_auto_configure
-	./Build distmeta
-	./Build manifest
-
-override_dh_auto_clean:
-	dh_auto_clean
-	[ ! -f MANIFEST.SKIP.bak ] || mv MANIFEST.SKIP.bak MANIFEST.SKIP
-
 override_dh_auto_test:
 # leave this here for Test::DistManifest..I want it to happen on package build but not on CPAN install.
 	NO_NETWORK=1 RELEASE_TESTING=1 dh_auto_test
