@@ -12,7 +12,7 @@ dh-make-perl (0.60) UNRELEASED; urgency=low
   * Only add a dependency on perl-modules if we need a newer version than the
     one in oldstable.
   * Documentation fix for Debian::Version::deb_ver_cmp.
-  * Add perl-modules (>= 5.10) to libmodule-build-perl.
+  * Add perl (>= 5.10) to as a preferred alternative to libmodule-build-perl.
   * Check if the possible examples directory is actually a directory before
     adding "$directory/*" to <pkg>.examples; thanks to Slaven Rezic for the
     bug report (closes: #548950).
