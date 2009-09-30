@@ -4,15 +4,12 @@ dh-make-perl (0.60) UNRELEASED; urgency=low
   * fix MANIFEST file handling
   * use Test::DistManifest
   * update META.yml/MANIFEST/Makefile.PL during build
-  * use a passthrough Makefile.PL, we use special Module::Build stuff
   * add missing requires for Parse::DebControl
   * add missing build_requires on File::Touch
   * Update ryan52's email address
 
   [ gregor herrmann ]
   * Re-add "NO_NETWORK=1" to tests in debian/rules, got lost somewhere.
-  * Call dh with "--buildsystem=perl_build", otherwise dh_auto_install gets
-    confused by the existing Makefile.PL without a Makefile.
   * Only add a dependency on perl-modules if we need a newer version than the
     one in oldstable.
   * Documentation fix for Debian::Version::deb_ver_cmp.

@@ -1,7 +1,7 @@
 #!/usr/bin/make -f
 
 %:
-	dh --buildsystem=perl_build $@
+	dh $@
 
 override_dh_auto_configure:
 	dh_auto_configure
