@@ -1,4 +1,4 @@
-dh-make-perl (0.60) UNRELEASED; urgency=low
+dh-make-perl (0.60) unstable; urgency=low
 
   [ Ryan Niebur ]
   * fix MANIFEST file handling
@@ -27,7 +27,7 @@ dh-make-perl (0.60) UNRELEASED; urgency=low
   * Added myself to uploaders
   * Ignore META.yml when it's not a hash (closes: #543655)
 
- -- Ryan Niebur <ryan@debian.org>  Fri, 25 Sep 2009 00:23:50 -0700
+ -- Damyan Ivanov <dmn@debian.org>  Wed, 30 Sep 2009 15:41:04 +0300
 
 dh-make-perl (0.59) unstable; urgency=low
 
