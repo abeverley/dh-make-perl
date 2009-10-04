@@ -1600,8 +1600,7 @@ sub create_copyright {
     $cprt_author =~ s/\n/\n    /gs;
     $cprt_author =~ s/^\s*$/    ./gm;
 
-    push @res, "Format-Specification:
-    http://wiki.debian.org/Proposals/CopyrightFormat?action=recall&rev=196";
+    push @res, "Format-Specification: http://dep.debian.net/deps/dep5/";
 
     # Header section
     %fields = (
@@ -1610,7 +1609,7 @@ sub create_copyright {
         Source     => $upsurl
     );
     for my $key ( keys %fields ) {
-        my $full = "Upstream-$key";
+        my $full = "$key";
         if ( $fields{$key} ) {
             push @res, "$full: $fields{$key}";
         }
@@ -1620,11 +1619,11 @@ sub create_copyright {
     }
     push( @res,
         "Disclaimer: This copyright info was automatically extracted ",
-        "    from the perl module. It may not be accurate, so you better ",
-        "    check the module sources in order to ensure the module for its ",
-        "    inclusion in Debian or for general legal information. Please, ",
-        "    if licensing information is incorrectly generated, file a bug ",
-        "    on dh-make-perl." );
+        " from the perl module. It may not be accurate, so you better ",
+        " check the module sources in order to ensure the module for its ",
+        " inclusion in Debian or for general legal information. Please, ",
+        " if licensing information is incorrectly generated, file a bug ",
+        " on dh-make-perl." );
     push @res, '';
 
     # Files section - We cannot "parse" the module's licensing
@@ -1643,60 +1642,67 @@ sub create_copyright {
     my ( %texts, %licenses );
     %texts = (
         'Artistic' =>
-            "    This program is free software; you can redistribute it and/or modify\n"
-            . "    it under the terms of the Artistic License, which comes with Perl.\n"
-            . "    On Debian GNU/Linux systems, the complete text of the Artistic License\n"
-            . "    can be found in `/usr/share/common-licenses/Artistic'",
+            " This program is free software; you can redistribute it and/or modify\n"
+            . " it under the terms of the Artistic License, which comes with Perl.\n"
+            . "X-Comment:\n"
+            . " On Debian GNU/Linux systems, the complete text of the Artistic License\n"
+            . " can be found in `/usr/share/common-licenses/Artistic'",
         'GPL-1+' =>
-            "    This program is free software; you can redistribute it and/or modify\n"
-            . "    it under the terms of the GNU General Public License as published by\n"
-            . "    the Free Software Foundation; either version 1, or (at your option)\n"
-            . "    any later version.\n"
-            . "    On Debian GNU/Linux systems, the complete text of the GNU General\n"
-            . "    Public License can be found in `/usr/share/common-licenses/GPL'",
+            " This program is free software; you can redistribute it and/or modify\n"
+            . " it under the terms of the GNU General Public License as published by\n"
+            . " the Free Software Foundation; either version 1, or (at your option)\n"
+            . " any later version.\n"
+            . "X-Comment:\n"
+            . " On Debian GNU/Linux systems, the complete text of the GNU General\n"
+            . " Public License can be found in `/usr/share/common-licenses/GPL'",
         'GPL-2' =>
-            "    This program is free software; you can redistribute it and/or modify\n"
-            . "    it under the terms of the GNU General Public License as published by\n"
-            . "    the Free Software Foundation; version 2 dated June, 1991.\n"
-            . "    On Debian GNU/Linux systems, the complete text of version 2 of the GNU\n"
-            . "    General Public License can be found in `/usr/share/common-licenses/GPL-2'",
+            " This program is free software; you can redistribute it and/or modify\n"
+            . " it under the terms of the GNU General Public License as published by\n"
+            . " the Free Software Foundation; version 2 dated June, 1991.\n"
+            . "X-Comment:\n"
+            . " On Debian GNU/Linux systems, the complete text of version 2 of the GNU\n"
+            . " General Public License can be found in `/usr/share/common-licenses/GPL-2'",
         'GPL-2+' =>
-            "    This program is free software; you can redistribute it and/or modify\n"
-            . "    it under the terms of the GNU General Public License as published by\n"
-            . "    the Free Software Foundation; version 2 dated June, 1991, or (at your\n"
-            . "    option) any later version.\n"
-            . "    On Debian GNU/Linux systems, the complete text of version 2 of the GNU\n"
-            . "    General Public License can be found in `/usr/share/common-licenses/GPL-2'",
+            " This program is free software; you can redistribute it and/or modify\n"
+            . " it under the terms of the GNU General Public License as published by\n"
+            . " the Free Software Foundation; version 2 dated June, 1991, or (at your\n"
+            . " option) any later version.\n"
+            . "X-Comment:\n"
+            . " On Debian GNU/Linux systems, the complete text of version 2 of the GNU\n"
+            . " General Public License can be found in `/usr/share/common-licenses/GPL-2'",
         'GPL-3' =>
-            "    This program is free software; you can redistribute it and/or modify\n"
-            . "    it under the terms of the GNU General Public License as published by\n"
-            . "    the Free Software Foundation; version 3 dated June, 2007.\n"
-            . "    On Debian GNU/Linux systems, the complete text of version 3 of the GNU\n"
-            . "    General Public License can be found in `/usr/share/common-licenses/GPL-3'",
+            " This program is free software; you can redistribute it and/or modify\n"
+            . " it under the terms of the GNU General Public License as published by\n"
+            . " the Free Software Foundation; version 3 dated June, 2007.\n"
+            . "X-Comment:\n"
+            . " On Debian GNU/Linux systems, the complete text of version 3 of the GNU\n"
+            . " General Public License can be found in `/usr/share/common-licenses/GPL-3'",
         'GPL-3+' =>
-            "    This program is free software; you can redistribute it and/or modify\n"
-            . "    it under the terms of the GNU General Public License as published by\n"
-            . "    the Free Software Foundation; version 3 dated June, 2007, or (at your\n"
-            . "    option) any later version\n"
-            . "    On Debian GNU/Linux systems, the complete text of version 3 of the GNU\n"
-            . "    General Public License can be found in `/usr/share/common-licenses/GPL-3'",
+            " This program is free software; you can redistribute it and/or modify\n"
+            . " it under the terms of the GNU General Public License as published by\n"
+            . " the Free Software Foundation; version 3 dated June, 2007, or (at your\n"
+            . " option) any later version\n"
+            . "X-Comment:\n"
+            . " On Debian GNU/Linux systems, the complete text of version 3 of the GNU\n"
+            . " General Public License can be found in `/usr/share/common-licenses/GPL-3'",
         'Apache-2.0' =>
-            "    Licensed under the Apache License, Version 2.0 (the \"License\");\n"
-            . "    you may not use this file except in compliance with the License.\n"
-            . "    You may obtain a copy of the License at\n"
-            . "        http://www.apache.org/licenses/LICENSE-2.0\n"
-            . "    Unless required by applicable law or agreed to in writing, software\n"
-            . "    distributed under the License is distributed on an \"AS IS\" BASIS,\n"
-            . "    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n"
-            . "    See the License for the specific language governing permissions and\n"
-            . "    limitations under the License.\n"
-            . "    On Debian GNU/Linux systems, the complete text of the Apache License,\n"
-            . "    Version 2.0 can be found in `/usr/share/common-licenses/Apache-2.0'",
+            " Licensed under the Apache License, Version 2.0 (the \"License\");\n"
+            . " you may not use this file except in compliance with the License.\n"
+            . " You may obtain a copy of the License at\n"
+            . "     http://www.apache.org/licenses/LICENSE-2.0\n"
+            . " Unless required by applicable law or agreed to in writing, software\n"
+            . " distributed under the License is distributed on an \"AS IS\" BASIS,\n"
+            . " WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n"
+            . " See the License for the specific language governing permissions and\n"
+            . " limitations under the License.\n"
+            . "X-Comment:\n"
+            . " On Debian GNU/Linux systems, the complete text of the Apache License,\n"
+            . " Version 2.0 can be found in `/usr/share/common-licenses/Apache-2.0'",
         'unparsable' =>
-            "    No known license could be automatically determined for this module.\n"
-            . "    If this module conforms to a commonly used license, please report this\n"
-            . "    as a bug in dh-make-perl. In any case, please find the proper license\n"
-            . "    and fix this file!"
+            " No known license could be automatically determined for this module.\n"
+            . " If this module conforms to a commonly used license, please report this\n"
+            . " as a bug in dh-make-perl. In any case, please find the proper license\n"
+            . " and fix this file!"
     );
 
     if ( $self->meta->{license} or $copyright ) {
@@ -1714,7 +1720,6 @@ sub create_copyright {
         if (   $self->meta->{license} and $self->meta->{license} =~ /perl/i
             or $mangle_cprt =~ /terms\s*as\s*Perl\s*itself/is )
         {
-            push @res, "License-Alias: Perl";
             $licenses{'GPL-1+'}   = 1;
             $licenses{'Artistic'} = 1;
         }
@@ -1759,7 +1764,7 @@ sub create_copyright {
             }
         }
 
-        push @res, "License: " . join( ' | ', keys %licenses );
+        push @res, "License: " . join( ' or ', keys %licenses );
 
     }
     else {
