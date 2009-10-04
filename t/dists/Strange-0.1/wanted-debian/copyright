@@ -3,11 +3,11 @@ Maintainer: A. U. Thor, a.u.thor@a.galaxy.far.far.away
 Source: http://search.cpan.org/dist/Strange/
 Name: Strange
 Disclaimer: This copyright info was automatically extracted 
-    from the perl module. It may not be accurate, so you better 
-    check the module sources in order to ensure the module for its 
-    inclusion in Debian or for general legal information. Please, 
-    if licensing information is incorrectly generated, file a bug 
-    on dh-make-perl.
+ from the perl module. It may not be accurate, so you better 
+ check the module sources in order to ensure the module for its 
+ inclusion in Debian or for general legal information. Please, 
+ if licensing information is incorrectly generated, file a bug 
+ on dh-make-perl.
 
 Files: *
 Copyright: A. U. Thor, a.u.thor@a.galaxy.far.far.away
