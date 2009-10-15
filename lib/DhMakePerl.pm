@@ -490,7 +490,11 @@ sub setup_dir {
     my ( $dist, $mod, $tarball );
     $mod_cpan_version = '';
     if ( $self->cfg->cpan ) {
-        my ($new_maindir);
+        my ($new_maindir, $orig_pwd);
+
+        # CPAN::Distribution::get() sets $ENV{'PWD'} to $CPAN::Config->{build_dir}
+        # so we have to save it here
+        $orig_pwd = $ENV{'PWD'};
 
         # Is the module a core module?
         if ( $self->is_core_module( $self->cfg->cpan ) ) {
@@ -509,16 +513,16 @@ sub setup_dir {
 
         $dist = $CPAN::META->instance( 'CPAN::Distribution',
             $mod->cpan_file );
-        $dist->get || die "Cannot get ", $mod->cpan_file, "\n";
+        $dist->get || die "Cannot get ", $mod->cpan_file, "\n"; # <- here $ENV{'PWD'} gets set to $HOME/.cpan/build
         $tarball .= $mod->cpan_file;
         $self->main_dir( $dist->dir );
 
-        copy( $tarball, $ENV{'PWD'} );
-        $tarball = $ENV{'PWD'} . "/" . basename($tarball);
+        copy( $tarball, $orig_pwd );
+        $tarball = $orig_pwd . "/" . basename($tarball);
 
         # build_dir contains a random part since 1.88_59
         # use the new CPAN::Distribution::base_id (introduced in 1.91_53)
-        $new_maindir = $ENV{PWD} . "/" . $dist->base_id;
+        $new_maindir = $orig_pwd . "/" . $dist->base_id;
 
         # rename existing directory
         if ( -d $new_maindir

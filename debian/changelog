@@ -1,8 +1,13 @@
 dh-make-perl (0.61) UNRELEASED; urgency=low
 
+  [ Salvatore Bonaccorso ]
   * Update template license text for debian/copyright to follow the DEP5
     Format-Specification at http://dep.debian.net/deps/dep5/. Update texts
     layout and drop use of License-Alias: Perl.
+
+  [ gregor herrmann ]
+  * Make sure we use the original $ENV{'PWD'} before CPAN::Distribution::get()
+    resets it.
 
  -- Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>  Sun, 04 Oct 2009 16:21:18 +0200
 
