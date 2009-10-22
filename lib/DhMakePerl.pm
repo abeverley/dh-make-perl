@@ -1627,7 +1627,9 @@ sub create_copyright {
         " check the module sources in order to ensure the module for its ",
         " inclusion in Debian or for general legal information. Please, ",
         " if licensing information is incorrectly generated, file a bug ",
-        " on dh-make-perl." );
+        " on dh-make-perl.",
+        " NOTE: Don't forget to remove this disclaimer once you are happy",
+        " with this file." );
     push @res, '';
 
     # Files section - We cannot "parse" the module's licensing

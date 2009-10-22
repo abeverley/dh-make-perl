@@ -8,6 +8,7 @@ dh-make-perl (0.61) UNRELEASED; urgency=low
   [ gregor herrmann ]
   * Make sure we use the original $ENV{'PWD'} before CPAN::Distribution::get()
     resets it.
+  * Add a note to the disclaimer in the generated debian/copyright file.
 
  -- Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>  Sun, 04 Oct 2009 16:21:18 +0200
 

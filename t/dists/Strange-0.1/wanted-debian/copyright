@@ -8,6 +8,8 @@ Disclaimer: This copyright info was automatically extracted
  inclusion in Debian or for general legal information. Please, 
  if licensing information is incorrectly generated, file a bug 
  on dh-make-perl.
+ NOTE: Don't forget to remove this disclaimer once you are happy
+ with this file.
 
 Files: *
 Copyright: A. U. Thor, a.u.thor@a.galaxy.far.far.away
