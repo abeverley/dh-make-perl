@@ -272,7 +272,7 @@ EOF
         my $mod = $ARGV[0];
 
         if ( defined( my $core_since = $self->is_core_module($mod) ) ) {
-            print "$mod is in Perl core (package perl-modules)";
+            print "$mod is in Perl core (package perl)";
             print $core_since ? " since $core_since\n" : "\n";
             return 0;
         }

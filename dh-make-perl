@@ -135,7 +135,7 @@ F<debian/rules> before overwritting them. On by default.
 
 Explicitly gives a comma-separated list of packages to consider "base"
 packages (i.e. packages that should always be available in Debian
-systems). This option defaults to C<perl,perl-base,perl-modules> - it
+systems). This option defaults to C<perl,perl-base> - it
 is used to check for module dependencies. If a needed module is in the
 C<basepkgs>, it won't be mentioned in the C<depends:> field of
 C<debian/control>.
