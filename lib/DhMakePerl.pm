@@ -1087,8 +1087,8 @@ sub find_debs_for_modules {
         ) {
             print "= $module is a core module\n" if $self->cfg->verbose;
 
-            $dep = Debian::Dependency->new( 'perl-modules', $ver );
-            $debs->add($dep) if $dep->satisfies( "perl-modules (>= $oldest_perl_version)" );
+            $dep = Debian::Dependency->new( 'perl', $ver );
+            $debs->add($dep) if $dep->satisfies( "perl (>= $oldest_perl_version)" );
 
             next;
         }
