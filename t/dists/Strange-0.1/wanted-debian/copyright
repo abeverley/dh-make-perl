@@ -22,7 +22,7 @@ License: Artistic or GPL-1+
 License: Artistic
  This program is free software; you can redistribute it and/or modify
  it under the terms of the Artistic License, which comes with Perl.
-X-Comment:
+ .
  On Debian GNU/Linux systems, the complete text of the Artistic License
  can be found in `/usr/share/common-licenses/Artistic'
 
@@ -31,6 +31,6 @@ License: GPL-1+
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation; either version 1, or (at your option)
  any later version.
-X-Comment:
+ .
  On Debian GNU/Linux systems, the complete text of the GNU General
  Public License can be found in `/usr/share/common-licenses/GPL'

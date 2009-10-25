@@ -1650,7 +1650,7 @@ sub create_copyright {
         'Artistic' =>
             " This program is free software; you can redistribute it and/or modify\n"
             . " it under the terms of the Artistic License, which comes with Perl.\n"
-            . "X-Comment:\n"
+            . " .\n"
             . " On Debian GNU/Linux systems, the complete text of the Artistic License\n"
             . " can be found in `/usr/share/common-licenses/Artistic'",
         'GPL-1+' =>
@@ -1658,14 +1658,14 @@ sub create_copyright {
             . " it under the terms of the GNU General Public License as published by\n"
             . " the Free Software Foundation; either version 1, or (at your option)\n"
             . " any later version.\n"
-            . "X-Comment:\n"
+            . " .\n"
             . " On Debian GNU/Linux systems, the complete text of the GNU General\n"
             . " Public License can be found in `/usr/share/common-licenses/GPL'",
         'GPL-2' =>
             " This program is free software; you can redistribute it and/or modify\n"
             . " it under the terms of the GNU General Public License as published by\n"
             . " the Free Software Foundation; version 2 dated June, 1991.\n"
-            . "X-Comment:\n"
+            . " .\n"
             . " On Debian GNU/Linux systems, the complete text of version 2 of the GNU\n"
             . " General Public License can be found in `/usr/share/common-licenses/GPL-2'",
         'GPL-2+' =>
@@ -1673,14 +1673,14 @@ sub create_copyright {
             . " it under the terms of the GNU General Public License as published by\n"
             . " the Free Software Foundation; version 2 dated June, 1991, or (at your\n"
             . " option) any later version.\n"
-            . "X-Comment:\n"
+            . " .\n"
             . " On Debian GNU/Linux systems, the complete text of version 2 of the GNU\n"
             . " General Public License can be found in `/usr/share/common-licenses/GPL-2'",
         'GPL-3' =>
             " This program is free software; you can redistribute it and/or modify\n"
             . " it under the terms of the GNU General Public License as published by\n"
             . " the Free Software Foundation; version 3 dated June, 2007.\n"
-            . "X-Comment:\n"
+            . " .\n"
             . " On Debian GNU/Linux systems, the complete text of version 3 of the GNU\n"
             . " General Public License can be found in `/usr/share/common-licenses/GPL-3'",
         'GPL-3+' =>
@@ -1688,7 +1688,7 @@ sub create_copyright {
             . " it under the terms of the GNU General Public License as published by\n"
             . " the Free Software Foundation; version 3 dated June, 2007, or (at your\n"
             . " option) any later version\n"
-            . "X-Comment:\n"
+            . " .\n"
             . " On Debian GNU/Linux systems, the complete text of version 3 of the GNU\n"
             . " General Public License can be found in `/usr/share/common-licenses/GPL-3'",
         'Apache-2.0' =>
@@ -1701,7 +1701,7 @@ sub create_copyright {
             . " WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n"
             . " See the License for the specific language governing permissions and\n"
             . " limitations under the License.\n"
-            . "X-Comment:\n"
+            . " .\n"
             . " On Debian GNU/Linux systems, the complete text of the Apache License,\n"
             . " Version 2.0 can be found in `/usr/share/common-licenses/Apache-2.0'",
         'unparsable' =>
