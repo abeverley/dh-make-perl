@@ -1790,7 +1790,7 @@ sub create_copyright {
     } else {
       push @res, "Copyright: $year, $maintainer";
     }
-    push @res, "License: " . join( ' | ', keys %licenses );
+    push @res, "License: " . join( ' or ', keys %licenses );
 
     map { $texts{$_} && push( @res, '', "License: $_", $texts{$_} ) }
         keys %licenses;
