@@ -1,16 +1,25 @@
-dh-make-perl was created by Paolo Molaro.
+Format-Specification: http://svn.debian.org/wsvn/dep/web/deps/dep5.mdwn?op=file&rev=59
+Maintainer: Debian Perl Group <debian-perl@lists.debian.org>
+Source: svn://svn.debian.org/pkg-perl/trunk/dh-make-perl/
+Name: dh-make-perl
 
-It is currently maintained by Gunnar Wolf and others, under the umbrella of the
-Debian Perl Group <debian-perl@lists.debian.org>
+Files: *
+Copyright:
+ 2000, 2001, Paolo Molaro <lupus@debian.org>
+ 2002, 2003, 2008, Ivan Kohler <ivan-debian@420.am>
+ 2003, 2004, Marc 'HE' Brockschmidt <he@debian.org>
+ 2005-2007, Gunnar Wolf <gwolf@debian.org>
+ 2006, Frank Lichtenheld <djpig@debian.org>
+ 2007-2009, gregor herrmann <gregoa@debian.org>
+ 2007-2009, Damyan Ivanov <dmn@debian.org>
+ 2008, Roberto C. Sanchez <roberto@connexer.com>
+ 2009, Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+License: GPL-2
 
-Copyright (c) 2000,2001 Paolo Molaro <lupus@debian.org>
-          (c) 2002,2003,2008 Ivan Kohler <ivan-debian@420.am>
-          (c) 2003,2004 Marc 'HE' Brockschmidt <he@debian.org>
-          (c) 2005-2007 Gunnar Wolf <gwolf@debian.org>
-          (c) 2006 Frank Lichtenheld <djpig@debian.org>
-          (c) 2007-2008 Gregor Herrmann <gregoa@debian.org>
-          (c) 2007-2009 Damyan Ivanov <dmn@debian.org>
-
-You can do anything with it according to the GPLv2: look
-in /usr/share/common-licenses/GPL-2 on your Debian system.
-
+License: GPL-2
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; version 2 dated June, 1991.
+ .
+ On Debian GNU/Linux systems, the complete text of version 2 of the GNU
+ General Public License can be found in `/usr/share/common-licenses/GPL-2'

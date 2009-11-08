@@ -10,6 +10,7 @@ dh-make-perl (0.61) UNRELEASED; urgency=low
     resets it.
   * Add a note to the disclaimer in the generated debian/copyright file.
   * Remove README, it's just an excerpt of the POD/manpage.
+  * debian/copyright: convert to the DEP5 format.
 
   [ Damyan Ivanov ]
   * when considering a core module dependency, use 'perl' package instead of
