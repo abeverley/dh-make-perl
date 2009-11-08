@@ -4,7 +4,6 @@ debian/changelog
 debian/compat
 debian/control
 debian/copyright
-debian/docs
 debian/links
 debian/NEWS
 debian/rules
@@ -24,7 +23,6 @@ lib/DhMakePerl/PodParser.pm
 MANIFEST			This list of files
 MANIFEST.SKIP
 META.yml
-README
 share/overrides
 share/rules.dh7+quilt.xs+noxs
 share/rules.dh7.noxs
