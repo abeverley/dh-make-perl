@@ -1,6 +1,6 @@
 ---
 name: DhMakePerl
-version: 0.60
+version: 0.61
 author:
   - |-
     It is currently maintained by Gunnar Wolf and others, under the umbrella of the
@@ -71,7 +71,7 @@ provides:
     file: lib/Debian/Version.pm
   DhMakePerl:
     file: lib/DhMakePerl.pm
-    version: 0.60
+    version: 0.61
   DhMakePerl::Config:
     file: lib/DhMakePerl/Config.pm
   DhMakePerl::PodParser:
