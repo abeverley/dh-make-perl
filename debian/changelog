@@ -1,4 +1,4 @@
-dh-make-perl (0.61) UNRELEASED; urgency=low
+dh-make-perl (0.61) unstable; urgency=low
 
   [ Salvatore Bonaccorso ]
   * Update template license text for debian/copyright to follow the DEP5
@@ -7,7 +7,8 @@ dh-make-perl (0.61) UNRELEASED; urgency=low
 
   [ gregor herrmann ]
   * Make sure we use the original $ENV{'PWD'} before CPAN::Distribution::get()
-    resets it.
+    resets it, otherwise the package ends up under $HOME/.cpan with the --cpan
+    option.
   * Add a note to the disclaimer in the generated debian/copyright file.
   * Remove README, it's just an excerpt of the POD/manpage.
   * debian/copyright: convert to the DEP5 format.
@@ -16,7 +17,7 @@ dh-make-perl (0.61) UNRELEASED; urgency=low
   * when considering a core module dependency, use 'perl' package instead of
     'perl-modules'
 
- -- Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>  Sun, 04 Oct 2009 16:21:18 +0200
+ -- gregor herrmann <gregoa@debian.org>  Wed, 11 Nov 2009 17:10:05 +0100
 
 dh-make-perl (0.60) unstable; urgency=low
 
