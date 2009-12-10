@@ -974,7 +974,7 @@ sub extract_docs {
     find(
         sub {
             push( @docs, substr( $File::Find::name, length($dir) ) )
-                if ( /^(README|TODO|BUGS|NEWS|ANNOUNCE)/i
+                if ( /^\b(README|TODO|BUGS|NEWS|ANNOUNCE)\b/i
                 and ( !$self->cfg->exclude or $File::Find::name !~ $self->cfg->exclude )
                 and !/\.svn-base$/
                 );
