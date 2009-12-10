@@ -1,6 +1,7 @@
 dh-make-perl (0.62) UNRELEASED; urgency=low
 
   * tighten matching READMEs a bit; Closes: #560165
+  * while looking for docs, do not delve into SVN and GIT dirs
 
  -- Damyan Ivanov <dmn@debian.org>  Thu, 10 Dec 2009 07:29:05 +0200
 
