@@ -26,7 +26,7 @@ use base qw(Class::Accessor);
 __PACKAGE__->mk_accessors(
     qw(
         cache homedir cache_file contents_dir contents_files verbose
-        source sources_file dist
+        source sources dist
     )
 );
 
@@ -36,6 +36,7 @@ use File::Spec::Functions qw( catfile catdir splitpath );
 use IO::Uncompress::Gunzip;
 use Module::CoreList ();
 use Storable;
+use AptPkg::Config;
 
 =head1 CONSTRUCTOR
 
@@ -60,9 +61,10 @@ Constructs new instance of the class. Expects at least C<homedir> option.
 Directory where L<apt-file> stores Contents files are stored. Default is
 F</var/cache/apt/apt-file>
 
-=item sources_file
+=item sources
 
-Path to the F<sources.list> file. Default is F</etc/apt/sources.list>.
+A path to a F<sources.list> file or an array ref of paths to sources.list
+files. If not given uses AptPkg's Config to get the list.
 
 =item dist
 
@@ -71,8 +73,8 @@ L<sources.list>. Default is empty, meaning no filtering.
 
 =item contents_files
 
-Arrayref of F<Contents> file names. Default is to parse C<sources_file> and to
-look in C<contents_dir> for matching files.
+Arrayref of F<Contents> file names. Default is to parse the files in C<sources>
+and to look in C<contents_dir> for matching files.
 
 =item cache_file
 
@@ -105,8 +107,16 @@ sub new
     # some defaults
     $self->contents_dir( '/var/cache/apt/apt-file' )
         unless $self->contents_dir;
-    $self->sources_file('/etc/apt/sources.list')
-        unless defined( $self->sources_file );
+    $self->sources( [ $self->sources ] )
+        if $self->sources and not ref( $self->sources );
+    $self->sources(
+        [   $AptPkg::Config::_config->get_file('Dir::Etc::sourcelist'),
+            glob(
+                $AptPkg::Config::_config->get_dir('Dir::Etc::sourceparts')
+                    . '/*.list'
+            )
+        ]
+    ) unless defined( $self->sources );
     $self->contents_files( $self->get_contents_files )
         unless $self->contents_files;
     $self->cache_file( catfile( $self->homedir, 'Contents.cache' ) )
@@ -195,34 +205,36 @@ sub get_contents_files
 {
     my $self = shift;
 
-    my $sources = IO::File->new( $self->sources_file, 'r' )
-        or die "Unable to open '" . $self->sources_file . "': $!\n";
-
     my $archspec = `dpkg --print-architecture`;
     chomp($archspec);
 
     my @res;
 
-    while( <$sources> ) {
-        chomp;
-        s/#.*//;
-        s/^\s+//;
-        s/\s+$//;
-        next unless $_;
+    for my $s ( @{ $self->sources } ) {
+        my $src = IO::File->new( $s, 'r' )
+            or die "Unable to open '$s': $!\n";
 
-        my $path = $self->repo_source_to_contents_path($_);
+        while( <$src> ) {
+            chomp;
+            s/#.*//;
+            s/^\s+//;
+            s/\s+$//;
+            next unless $_;
 
-        next unless $path;
+            my $path = $self->repo_source_to_contents_path($_);
 
-        # try all of with/out architecture and
-        # un/compressed
-        for my $a ( '', "-$archspec" ) {
-            for my $c ( '', '.gz' ) {
-                my $f = catfile(
-                    $self->contents_dir,
-                    "${path}_Contents$a$c",
-                );
-                push @res, $f if -e $f;
+            next unless $path;
+
+            # try all of with/out architecture and
+            # un/compressed
+            for my $a ( '', "-$archspec" ) {
+                for my $c ( '', '.gz' ) {
+                    my $f = catfile(
+                        $self->contents_dir,
+                        "${path}_Contents$a$c",
+                    );
+                    push @res, $f if -e $f;
+                }
             }
         }
     }

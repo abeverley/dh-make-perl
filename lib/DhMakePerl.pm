@@ -399,10 +399,10 @@ sub get_apt_contents {
         if $self->apt_contents;
 
     my $apt_c = Debian::AptContents->new(
-        {   homedir      => $self->cfg->home_dir,
-            dist         => $self->cfg->dist,
-            sources_file => $self->cfg->sources_list,
-            verbose      => $self->cfg->verbose,
+        {   homedir => $self->cfg->home_dir,
+            dist    => $self->cfg->dist,
+            sources => $self->cfg->sources_list,
+            verbose => $self->cfg->verbose,
         }
     );
 

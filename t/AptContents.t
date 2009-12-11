@@ -20,7 +20,7 @@ sub instance
         homedir => $Bin,
         contents_dir    => "$Bin/contents",
         verbose => 0,
-        sources_file    => "$Bin/contents/sources.list",
+        sources    => "$Bin/contents/sources.list",
         @_,
     });
 }

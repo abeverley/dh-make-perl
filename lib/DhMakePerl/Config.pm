@@ -63,7 +63,6 @@ use constant DEFAULTS => {
     email        => '',
     exclude      => qr/$Dpkg::Source::Package::diff_ignore_default_regexp/,
     home_dir     => "$ENV{HOME}/.dh-make-perl",
-    sources_list => '/etc/apt/sources.list',
     verbose      => 1,
 };
 

@@ -296,7 +296,7 @@ given file should be parsed or not. Contents files not matching any line in
 B<sources.list> are not parsed in order to save you time parsing old files from
 mirrors you no longer use.
 
-Default: C</etc/apt/sources.list>
+Default: apt's default.
 
 =item B<--verbose> | B<--no-verbose>
 
