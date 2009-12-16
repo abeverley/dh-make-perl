@@ -1,11 +1,15 @@
 dh-make-perl (0.62) UNRELEASED; urgency=low
 
+  [ Damyan Ivanov ]
   * tighten matching READMEs a bit; Closes: #560165
   * while looking for docs, do not delve into SVN and GIT dirs
   * add perl (>= 5.10.1) as a preferred alternative (build) dependency to
     libmodule-corelist-perl (>= 2.14) and libtest-simple-perl (>= 0.82)
   * replace the hard-coded default to /etc/apt/sources.list with querying
     AptPkg's Config about possible sources.list files. Closes: #557961
+
+  [ gregor herrmann ]
+  * Add Provides and Replaces to lib/Debian/Control/Stanza{,/Binary}.pm.
 
  -- Damyan Ivanov <dmn@debian.org>  Thu, 10 Dec 2009 07:29:05 +0200
 

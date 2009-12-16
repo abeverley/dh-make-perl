@@ -45,17 +45,21 @@ replaced with underscores.
 
 =item Enhances
 
+=item Replaces
+
 =item Pre_Depends
 
 =item Conflicts
+
+=item Provides
 
 =item Description
 
 =back
 
-C<Depends>, C<Conflicts>, C<Recommends>, C<Suggests>, C<Enhances> and
-C<Pre_Depends> fields are converted to objects of L<Debian::Dependencies> class
-upon construction.
+C<Depends>, C<Conflicts>, C<Recommends>, C<Suggests>, C<Enhances>, C<Replaces>, 
+and C<Pre_Depends> fields are converted to objects of L<Debian::Dependencies> 
+class upon construction.
 
 =cut
 
@@ -67,7 +71,7 @@ use base 'Debian::Control::Stanza';
 
 use constant fields => qw(
     Package Architecture Section Priority Essential Depends Recommends Suggests
-    Enhances Pre_Depends Conflicts Description
+    Enhances Replaces Pre_Depends Conflicts Provides Description
 );
 
 =head1 CONSTRUCTOR

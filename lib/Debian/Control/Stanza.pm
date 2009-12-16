@@ -123,6 +123,8 @@ Returns true if I<$field> contains a list of dependencies. By default returns tr
 
 =item Enhances
 
+=item Replaces
+
 =item Breaks
 
 =item Pre_Depends
@@ -138,7 +140,7 @@ Returns true if I<$field> contains a list of dependencies. By default returns tr
 our %dependency_list = map(
     ( $_ => 1 ),
     qw( Build-Depends Build-Depends-Indep Build-Conflicts Build-Conflicts-Indep
-    Depends Conflicts Enhances Breaks Pre-Depends Recommends Suggests ),
+    Depends Conflicts Enhances Replaces Breaks Pre-Depends Recommends Suggests ),
 );
 
 sub is_dependency_list {
