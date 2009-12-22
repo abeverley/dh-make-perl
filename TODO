@@ -24,3 +24,5 @@
 * Don't add libmodule-build-perl to Build-Depends if Makefile.PL is also
   present, if its not just Module::Build::Compat
 * 3.0 source format support for dh-make-perl (low prio)
+* .examples and .docs are opened with ">>", so on refresh we have duplicated
+  entries
