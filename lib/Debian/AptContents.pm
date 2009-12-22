@@ -38,6 +38,8 @@ use Module::CoreList ();
 use Storable;
 use AptPkg::Config;
 
+$AptPkg::Config::_config->init();
+
 =head1 CONSTRUCTOR
 
 =over

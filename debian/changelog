@@ -7,6 +7,7 @@ dh-make-perl (0.62) UNRELEASED; urgency=low
     libmodule-corelist-perl (>= 2.14) and libtest-simple-perl (>= 0.82)
   * replace the hard-coded default to /etc/apt/sources.list with querying
     AptPkg's Config about possible sources.list files. Closes: #557961
+  * call AptPkg::Config::_config->init before asking for configuration details
 
   [ gregor herrmann ]
   * Add Provides and Replaces to lib/Debian/Control/Stanza{,/Binary}.pm.
