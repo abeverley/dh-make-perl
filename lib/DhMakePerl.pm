@@ -980,8 +980,11 @@ sub extract_docs {
                 return;
             }
             push( @docs, substr( $File::Find::name, length($dir) ) )
-                if ( /^\b(README|TODO|BUGS|NEWS|ANNOUNCE)\b/i
-                and ( !$self->cfg->exclude or $File::Find::name !~ $self->cfg->exclude )
+                if (
+                    /^\b(README|TODO|BUGS|NEWS|ANNOUNCE)\b/i
+                and !/\.(pod|pm)$/
+                and ( !$self->cfg->exclude
+                    or $File::Find::name !~ $self->cfg->exclude )
                 and !/\.svn-base$/
                 );
         },
