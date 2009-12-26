@@ -12,7 +12,11 @@ dh-make-perl (0.62) UNRELEASED; urgency=low
   [ gregor herrmann ]
   * Add Provides and Replaces to lib/Debian/Control/Stanza{,/Binary}.pm.
 
- -- Damyan Ivanov <dmn@debian.org>  Thu, 10 Dec 2009 07:29:05 +0200
+  [ Salvatore Bonaccorso ]
+  * debian/copyright: Update to revision 135 of DEP5 Format-Specification for
+    machine readable copyright file. 
+
+ -- Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>  Sat, 26 Dec 2009 13:42:51 +0100
 
 dh-make-perl (0.61) unstable; urgency=low
 
