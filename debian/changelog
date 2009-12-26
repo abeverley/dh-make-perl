@@ -15,8 +15,10 @@ dh-make-perl (0.62) UNRELEASED; urgency=low
   [ Salvatore Bonaccorso ]
   * debian/copyright: Update to revision 135 of DEP5 Format-Specification for
     machine readable copyright file. 
+  * Referesh template for debian/copyright to follow the revision 135 or DEP5
+    Format-Specification. Update URI of the format specification.
 
- -- Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>  Sat, 26 Dec 2009 13:42:51 +0100
+ -- Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>  Sat, 26 Dec 2009 13:45:44 +0100
 
 dh-make-perl (0.61) unstable; urgency=low
 
