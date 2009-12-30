@@ -21,8 +21,9 @@
   otherwise existing packages are missed that have a different name (cf. #530675)
 * --refresh: add --only <file> option making --refresh update only specified file
 * quiltification: switch to "--with quilt" in d/rules and adjust build deps
+  -- or just to "3.0 (quilt)"
 * Don't add libmodule-build-perl to Build-Depends if Makefile.PL is also
   present, if its not just Module::Build::Compat
-* 3.0 source format support for dh-make-perl (low prio)
+* 3.0 source format support for dh-make-perl
 * .examples and .docs are opened with ">>", so on refresh we have duplicated
   entries
