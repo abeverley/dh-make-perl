@@ -27,3 +27,8 @@
 * 3.0 source format support for dh-make-perl
 * .examples and .docs are opened with ">>", so on refresh we have duplicated
   entries
+* module versions: if META.yml contains e.g. "v1.002000" for 1.2.0 then
+  extract_name_ver returns exactly "v1.002000" (not good), and extract_basic
+  adds a leading "0" (even worse). we somehow need to get those versions
+  back. or strip the "v". or something. - at least if the tarball is
+  Foo-Bar-v1.2.0.
