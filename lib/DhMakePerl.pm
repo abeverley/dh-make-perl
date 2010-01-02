@@ -1000,7 +1000,7 @@ sub extract_examples {
     $dir .= '/' unless $dir =~ m{/$};
     find(
         sub {
-            return unless length($_) > length($dir);  # skip the directory itself
+            return if $_ eq '.';  # skip the directory itself
             my $exampleguess = substr( $File::Find::name, length($dir) );
             push( @examples,
                 ( -d $exampleguess ? $exampleguess . '/*' : $exampleguess ) )
