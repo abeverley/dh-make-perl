@@ -1,3 +1,4 @@
+
 =head1 NAME
 
 Debian::Control - manage Debian source package control files
@@ -46,7 +47,7 @@ package Debian::Control;
 use base 'Class::Accessor';
 use strict;
 
-__PACKAGE__->mk_accessors( qw( source binary _parser ) );
+__PACKAGE__->mk_accessors(qw( source binary _parser ));
 
 use Parse::DebControl;
 use Debian::Control::Stanza::Source;
@@ -99,8 +100,8 @@ sub read {
 
     my $parser_method = 'parse_file';
 
-    if( ref($file) ) {
-        $file = $$file;
+    if ( ref($file) ) {
+        $file          = $$file;
         $parser_method = 'parse_mem';
     }
 
@@ -109,14 +110,11 @@ sub read {
 
     for (@$stanzas) {
         if ( $_->{Source} ) {
-            $self->source(
-                Debian::Control::Stanza::Source->new($_)
-            );
+            $self->source( Debian::Control::Stanza::Source->new($_) );
         }
         elsif ( $_->{Package} ) {
             $self->binary->Push(
-                $_->{Package} => Debian::Control::Stanza::Binary->new($_)
-            );
+                $_->{Package} => Debian::Control::Stanza::Binary->new($_) );
         }
         else {
             die "Got control stanza with neither Source nor Package field\n";
@@ -139,16 +137,16 @@ All dependency lists are sorted before writing.
 sub write {
     my ( $self, $file ) = @_;
 
-    for my $s( $self->source, $self->binary->Values ) {
-        for( $s->fields ) {
+    for my $s ( $self->source, $self->binary->Values ) {
+        for ( $s->fields ) {
             $s->$_->sort if $s->is_dependency_list($_);
         }
     }
 
-    if( ref($file) and ref($file) eq 'SCALAR' ) {
+    if ( ref($file) and ref($file) eq 'SCALAR' ) {
         $$file = join( "\n", $self->source, $self->binary->Values );
     }
-    elsif( ref($file) and ref($file) eq 'GLOB' ) {
+    elsif ( ref($file) and ref($file) eq 'GLOB' ) {
         $file->print( join( "\n", $self->source, $self->binary->Values ) );
     }
     else {
