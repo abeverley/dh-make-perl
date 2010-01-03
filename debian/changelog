@@ -22,8 +22,9 @@ dh-make-perl (0.62) UNRELEASED; urgency=low
     to avoid dublicated entries in package.examples and package.docs when using
     --refresh. 
   * debian/control: Add libarray-unique-perl to (Build-)Depends. 
+  * Small code readability changes in dh-make-perl modules. 
 
- -- Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>  Sun, 03 Jan 2010 01:33:01 +0100
+ -- Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>  Sun, 03 Jan 2010 11:03:37 +0100
 
 dh-make-perl (0.61) unstable; urgency=low
 
