@@ -195,13 +195,14 @@ sub run {
         print "Engaging refresh mode\n" if $self->cfg->verbose;
         $self->main_dir('.');
 
-        die $self->debian_file('rules.bak')." already exists. Aborting!\n"
+        die $self->debian_file('rules.bak') . " already exists. Aborting!\n"
             if -e $self->debian_file('rules.bak');
 
-        die $self->debian_file('copyright.bak')." already exists. Aborting!\n"
+        die $self->debian_file('copyright.bak')
+            . " already exists. Aborting!\n"
             if -e $self->debian_file('copyright.bak');
 
-        die $self->debian_file('control.bak')." already exists. Aborting!\n"
+        die $self->debian_file('control.bak') . " already exists. Aborting!\n"
             if -e $self->debian_file('control.bak');
 
         $self->process_meta;
@@ -445,11 +446,11 @@ sub configure_cpan {
     unshift( @{ $CPAN::Config->{'urllist'} }, $self->cfg->cpan_mirror )
         if $self->cfg->cpan_mirror;
 
-    $CPAN::Config->{'build_dir'} = $ENV{'HOME'} . "/.cpan/build";
-    $CPAN::Config->{'cpan_home'} = $ENV{'HOME'} . "/.cpan/";
-    $CPAN::Config->{'histfile'}  = $ENV{'HOME'} . "/.cpan/history";
+    $CPAN::Config->{'build_dir'}         = $ENV{'HOME'} . "/.cpan/build";
+    $CPAN::Config->{'cpan_home'}         = $ENV{'HOME'} . "/.cpan/";
+    $CPAN::Config->{'histfile'}          = $ENV{'HOME'} . "/.cpan/history";
     $CPAN::Config->{'keep_source_where'} = $ENV{'HOME'} . "/.cpan/source";
-    $CPAN::Config->{'tar_verbosity'} = $self->cfg->verbose ? 'v' : '';
+    $CPAN::Config->{'tar_verbosity'}     = $self->cfg->verbose ? 'v' : '';
     $CPAN::Config->{'load_module_verbosity'}
         = $self->cfg->verbose ? 'verbose' : 'silent';
 }
