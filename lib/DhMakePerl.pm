@@ -6,7 +6,7 @@ use strict;
 use base 'Class::Accessor';
 use Pod::Usage;
 
-__PACKAGE__->mk_accessors( qw( cfg apt_contents main_dir meta ) );
+__PACKAGE__->mk_accessors(qw( cfg apt_contents main_dir meta ));
 
 =head1 NAME
 
@@ -40,11 +40,11 @@ use Array::Unique;
 use Config qw( %Config );
 use CPAN ();
 use Cwd qw( getcwd );
-use Debian::AptContents ();
-use Debian::Control ();
+use Debian::AptContents       ();
+use Debian::Control           ();
 use Debian::Control::FromCPAN ();
-use Debian::Dependencies ();
-use Debian::Dependency ();
+use Debian::Dependencies      ();
+use Debian::Dependency        ();
 use Debian::Version qw(deb_ver_cmp);
 use Parse::DebianChangelog;
 use DhMakePerl::Config;
@@ -54,25 +54,24 @@ use File::Basename qw( basename dirname );
 use File::Copy qw( copy move );
 use File::Find qw( find );
 use File::Spec::Functions qw( catfile );
-use IO::File ();
-use Module::CoreList ();
+use IO::File                   ();
+use Module::CoreList           ();
 use Module::Depends::Intrusive ();
-use Module::Depends ();
+use Module::Depends            ();
 use Text::Wrap qw( fill wrap );
 use Tie::File;
 use User::pwent qw(:FIELDS);
 use WWW::Mechanize ();
-use YAML ();
+use YAML           ();
 use version qw( qv );
-
 
 # TODO:
 # * get more info from the package (maybe using CPAN methods)
 
-my ($oldest_perl_version,
-    $debstdversion, $priority,  $section,
-    $depends,          $bdepends,      $bdependsi, $maintainer,
-    $arch,             $closes,        $date,      $debiandir,
+my ($oldest_perl_version, $debstdversion, $priority,
+    $section,             $depends,       $bdepends,
+    $bdependsi,           $maintainer,    $arch,
+    $closes,              $date,          $debiandir,
     $startdir,
 );
 our %overrides;
@@ -111,7 +110,7 @@ my ( @docs, @examples, $changelog, @args );
 
 # use Array::Unique for @docs and @examples
 tie @examples, 'Array::Unique';
-tie @docs, 'Array::Unique';
+tie @docs,     'Array::Unique';
 
 my $mod_cpan_version;
 
