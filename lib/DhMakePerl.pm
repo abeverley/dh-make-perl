@@ -1664,7 +1664,7 @@ sub create_copyright {
         }
     }
     push( @res,
-        "Disclaimer: This copyright info was automatically extracted ",
+        "DISCLAIMER: This copyright info was automatically extracted ",
         " from the perl module. It may not be accurate, so you better ",
         " check the module sources in order to ensure the module for its ",
         " inclusion in Debian or for general legal information. Please, ",
