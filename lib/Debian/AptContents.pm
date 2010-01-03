@@ -360,7 +360,7 @@ sub store_cache {
     $dir = catdir( $vol, $dir );
     unless ( -d $dir ) {
         mkdir $dir
-            or die "Error creating directory '$dir': $!\n"
+            or die "Error creating directory '$dir': $!\n";
     }
 
     Storable::store( $self->cache, $self->cache_file . '-new' );
