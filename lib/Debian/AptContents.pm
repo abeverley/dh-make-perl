@@ -27,7 +27,7 @@ __PACKAGE__->mk_accessors(
     qw(
         cache homedir cache_file contents_dir contents_files verbose
         source sources dist
-    )
+        )
 );
 
 use Debian::Dependency;
@@ -96,8 +96,7 @@ Verbosity level. 0 means silent, the bigger the more the jabber. Default is 1.
 
 =cut
 
-sub new
-{
+sub new {
     my $class = shift;
     $class = ref($class) if ref($class);
     my $self = $class->SUPER::new(@_);
@@ -107,7 +106,7 @@ sub new
         or die "No homedir given";
 
     # some defaults
-    $self->contents_dir( '/var/cache/apt/apt-file' )
+    $self->contents_dir('/var/cache/apt/apt-file')
         unless $self->contents_dir;
     $self->sources( [ $self->sources ] )
         if $self->sources and not ref( $self->sources );
@@ -142,9 +141,8 @@ C<verbose>.
 
 =cut
 
-sub warning
-{
-    my( $self, $level, $msg ) = @_;
+sub warning {
+    my ( $self, $level, $msg ) = @_;
 
     warn "$msg\n" if $self->verbose >= $level;
 }
@@ -179,20 +177,21 @@ sub repo_source_to_contents_path {
 
     if ( $self->dist ) {
         if ( $self->dist =~ /^\s*{\s*(.+)\s*}\s*$/ ) {
-            return unless grep { /^$dist$/ } split(/\s*,\s*/, $1);
-        } else {
+            return unless grep {/^$dist$/} split( /\s*,\s*/, $1 );
+        }
+        else {
             return if $dist ne $self->dist;
         }
     }
 
-    $host ||= '';   # set empty string if $host is undef
-    $dir ||= '';    # deb http://there sid main
+    $host ||= '';    # set empty string if $host is undef
+    $dir  ||= '';    # deb http://there sid main
 
-        s{/$}{} for( $host, $dir, $dist );  # remove trailing /
-        s{^/}{} for( $host, $dir, $dist );  # remove initial /
-        s{/}{_}g for( $host, $dir, $dist ); # replace remaining /
+    s{/$}{}  for ( $host, $dir, $dist );    # remove trailing /
+    s{^/}{}  for ( $host, $dir, $dist );    # remove initial /
+    s{/}{_}g for ( $host, $dir, $dist );    # replace remaining /
 
-    return ( $host . "_" . join( "_", $dir||(), "dists", $dist ) );
+    return ( $host . "_" . join( "_", $dir || (), "dists", $dist ) );
 }
 
 =item get_contents_files
@@ -203,8 +202,7 @@ Contents files.
 
 =cut
 
-sub get_contents_files
-{
+sub get_contents_files {
     my $self = shift;
 
     my $archspec = `dpkg --print-architecture`;
@@ -216,7 +214,7 @@ sub get_contents_files
         my $src = IO::File->new( $s, 'r' )
             or die "Unable to open '$s': $!\n";
 
-        while( <$src> ) {
+        while (<$src>) {
             chomp;
             s/#.*//;
             s/^\s+//;
@@ -231,10 +229,8 @@ sub get_contents_files
             # un/compressed
             for my $a ( '', "-$archspec" ) {
                 for my $c ( '', '.gz' ) {
-                    my $f = catfile(
-                        $self->contents_dir,
-                        "${path}_Contents$a$c",
-                    );
+                    my $f = catfile( $self->contents_dir,
+                        "${path}_Contents$a$c", );
                     push @res, $f if -e $f;
                 }
             }
@@ -259,7 +255,7 @@ sub read_cache {
     my $cache;
 
     if ( -r $self->cache_file ) {
-        $cache = eval { Storable::retrieve(  $self->cache_file ) };
+        $cache = eval { Storable::retrieve( $self->cache_file ) };
         undef($cache) unless ref($cache) and ref($cache) eq 'HASH';
     }
 
@@ -272,7 +268,7 @@ sub read_cache {
         # file lists are the same?
         # see if any of the files has changed since we
         # last read it
-        if ( $cache ) {
+        if ($cache) {
             for ( @{ $self->contents_files } ) {
                 if ( ( stat($_) )[9] > $cache->{stamp} ) {
                     undef($cache);
@@ -292,7 +288,8 @@ sub read_cache {
         $cache->{apt_contents}   = {};
         for ( @{ $self->contents_files } ) {
             push @{ $cache->{contents_files} }, $_;
-            my $f = /\.gz$/
+            my $f
+                = /\.gz$/
                 ? IO::Uncompress::Gunzip->new($_)
                 : IO::File->new( $_, 'r' );
 
@@ -335,9 +332,7 @@ sub read_cache {
     else {
         $self->source('cache');
         $self->warning( 1,
-            "Using cached Contents from "
-            . localtime( $cache->{stamp} )
-        );
+            "Using cached Contents from " . localtime( $cache->{stamp} ) );
 
         $self->cache($cache);
     }
@@ -379,17 +374,17 @@ Returns an empty list of the file is not found in any package.
 =cut
 
 sub find_file_packages {
-    my( $self, $file ) = @_;
+    my ( $self, $file ) = @_;
 
     my $packages = $self->cache->{apt_contents}{$file};
 
     return () unless $packages;
 
-    my @packages = split( /,/, $packages );     # Contents contains a
-                                                # comma-delimitted list
-                                                # of packages
+    my @packages = split( /,/, $packages );    # Contents contains a
+                                               # comma-delimitted list
+                                               # of packages
 
-    s{[^/]+/}{} for @packages;  # remove section
+    s{[^/]+/}{} for @packages;                 # remove section
 
     return @packages;
 }
@@ -417,7 +412,7 @@ sub find_core_perl_dependency {
 
         # reaching here, the module is in the core version in $_
         # if we don't need a particular version, we are done
-        unless( defined($version) ) {
+        unless ( defined($version) ) {
             $core_ver = $_;
             last;
         }
@@ -428,14 +423,14 @@ sub find_core_perl_dependency {
         next unless defined($ver);
 
         # if the core module version is sufficiently new, we're done
-        if( deb_ver_cmp( $ver, $version ) >= 0 ) {
+        if ( deb_ver_cmp( $ver, $version ) >= 0 ) {
             $core_ver = $_;
             last;
         }
     }
 
-    if($core_ver) {
-        $core_ver = version->new($core_ver);            # v5.9.2
+    if ($core_ver) {
+        $core_ver = version->new($core_ver);    # v5.9.2
         ( $core_ver = $core_ver->normal ) =~ s/^v//;    # "5.9.2"
 
         return Debian::Dependency->new( 'perl', $core_ver );
