@@ -36,6 +36,7 @@ TO BE FILLED
 =cut
 
 use AptPkg::Cache ();
+use Array::Unique;
 use Config qw( %Config );
 use CPAN ();
 use Cwd qw( getcwd );
@@ -107,6 +108,10 @@ my ($pkgname, $srcname,
 my ( $extrasfields, $extrapfields );
 my ($module_build);
 my ( @docs, @examples, $changelog, @args );
+
+# use Array::Unique for @docs and @examples
+tie @examples, 'Array::Unique';
+tie @docs, 'Array::Unique';
 
 my $mod_cpan_version;
 
@@ -1458,12 +1463,40 @@ sub fix_rules {
     else {
         $fh->print($_) for @content;
         if (@examples) {
-            open F, '>>', $self->debian_file("$pkgname.examples") or die $!;
+            # pkgname.examples file
+            my $pkg_examples_file = $self->debian_file("$pkgname.examples");
+
+            # if a package.examples exists read these values first
+            if ( -r $pkg_examples_file ) {
+                my $fh                = $self->_file_r($pkg_examples_file);
+                my @existing_examples = $fh->getlines;
+                chomp(@existing_examples);
+
+                # make list of files for package.examples unique
+                push @examples, @existing_examples;
+            }
+
+            # write package.examples file with unique entries
+            open F, '>', $pkg_examples_file or die $!;
             print F "$_\n" foreach @examples;
             close F;
         }
         if (@docs) {
-            open F, '>>', $self->debian_file("$pkgname.docs") or die $!;
+            # pkgname.docs file
+            my $pkg_docs_file = $self->debian_file("$pkgname.docs");
+
+            # if a apcakge.docs exists read these values first
+            if ( -r $pkg_docs_file ) {
+                my $fh            = $self->_file_r($pkg_docs_file);
+                my @existing_docs = $fh->getlines;
+                chomp(@existing_docs);
+
+                # make list of files for package.docs unique
+                push @docs, @existing_docs;
+            }
+
+            # write package.docs with unique entries
+            open F, '>', $pkg_docs_file or die $!;
             print F "$_\n" foreach @docs;
             close F;
         }

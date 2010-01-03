@@ -17,8 +17,13 @@ dh-make-perl (0.62) UNRELEASED; urgency=low
     machine readable copyright file. 
   * Referesh template for debian/copyright to follow the revision 135 or DEP5
     Format-Specification. Update URI of the format specification.
+  * Do not append found entry for examples and docs to the corresponding file,
+    but open a new file with the found entries. Slightly improve the routines
+    avoid dublicated entries in package.examples and package.docs when using
+    --refresh. 
+  * debian/control: Add libarray-unique-perl to (Build-)Depends. 
 
- -- Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>  Sat, 26 Dec 2009 13:45:44 +0100
+ -- Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>  Sun, 03 Jan 2010 01:29:29 +0100
 
 dh-make-perl (0.61) unstable; urgency=low
 
