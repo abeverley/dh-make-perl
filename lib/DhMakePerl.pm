@@ -2,6 +2,7 @@ package DhMakePerl;
 
 use warnings;
 use strict;
+use 5.010;    # we use smart matching
 
 use base 'Class::Accessor';
 use Pod::Usage;
