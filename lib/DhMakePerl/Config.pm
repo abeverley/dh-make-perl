@@ -129,7 +129,8 @@ sub parse_command_line_options {
                                                                        # back to defaults
 
     # handle comma-separated multiple values in --only
-    $opts{only} = [ split( /,/, join( ',', @{ $opts{only} || [] } ) ) ];
+    $opts{only} = [ split( /,/, join( ',', @{ $opts{only} } ) ) ]
+        if exists $opts{only};
 
     while ( my ( $k, $v ) = each %opts ) {
         my $field = $k;
