@@ -13,7 +13,7 @@ dh-make-perl (0.62) UNRELEASED; urgency=low
   * Add Provides and Replaces to lib/Debian/Control/Stanza{,/Binary}.pm.
   * Uppercase "DISCLAIMER" in generated debian/copyright to make it more
     easily visible.
-  * New option "--only": update only specified file in --refresh mode.
+  * New option "--only": update only specified file(s) in --refresh mode.
 
   [ Salvatore Bonaccorso ]
   * debian/copyright: Update to revision 135 of DEP5 Format-Specification for
