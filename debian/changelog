@@ -8,6 +8,8 @@ dh-make-perl (0.62) UNRELEASED; urgency=low
   * replace the hard-coded default to /etc/apt/sources.list with querying
     AptPkg's Config about possible sources.list files. Closes: #557961
   * call AptPkg::Config::_config->init before asking for configuration details
+  * bump perl (build-) dependencies to 5.10 as we use language features not
+    found in 5.8
 
   [ gregor herrmann ]
   * Add Provides and Replaces to lib/Debian/Control/Stanza{,/Binary}.pm.
