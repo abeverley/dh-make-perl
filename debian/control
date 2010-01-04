@@ -54,7 +54,7 @@ Depends: debhelper (>= 7), ${perl:Depends}, ${misc:Depends},
  libtie-ixhash-perl,
  libwww-mechanize-perl,
  libyaml-perl
-Recommends: apt-file (>= 2.1.0), perl (>= 5.10) | libmodule-build-perl
+Recommends: apt-file (>= 2.1.0)
 Description: helper for creating Debian packages from perl modules
  dh-make-perl will create the files required to build a Debian source
  package out of a perl package.  This works for most simple packages
