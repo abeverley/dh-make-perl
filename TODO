@@ -30,3 +30,5 @@
   adds a leading "0" (even worse). we somehow need to get those versions
   back. or strip the "v". or something. - at least if the tarball is
   Foo-Bar-v1.2.0.
+* cleanup lib/DhMakePerl.pm: Changes is extracted and never used, fix_rules
+  doesn't fix rules anymore but only writes examples and docs, ...

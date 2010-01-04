@@ -196,14 +196,14 @@ sub run {
         $self->main_dir('.');
 
         die $self->debian_file('rules.bak') . " already exists. Aborting!\n"
-            if -e $self->debian_file('rules.bak');
+            if ( -e $self->debian_file('rules.bak') and 'rules' ~~ $self->cfg->only );
 
         die $self->debian_file('copyright.bak')
             . " already exists. Aborting!\n"
-            if -e $self->debian_file('copyright.bak');
+            if ( -e $self->debian_file('copyright.bak') and 'copyright' ~~ $self->cfg->only );
 
         die $self->debian_file('control.bak') . " already exists. Aborting!\n"
-            if -e $self->debian_file('control.bak');
+            if ( -e $self->debian_file('control.bak') and 'control' ~~ $self->cfg->only );
 
         $self->process_meta;
         ( $pkgname, $version )
@@ -212,47 +212,58 @@ sub run {
             = ( -f $self->main_file('Build.PL') ) ? "Module-Build" : "MakeMaker";
 
         $self->extract_changelog;
-        $self->extract_docs;
-        $self->extract_examples;
+        $self->extract_docs if 'docs' ~~ $self->cfg->only;
+        $self->extract_examples if 'examples' ~~ $self->cfg->only;
         print "Found changelog: $changelog\n"
             if defined $changelog and $self->cfg->verbose;
-        print "Found docs: @docs\n" if $self->cfg->verbose;
+        print "Found docs: @docs\n" if @docs and $self->cfg->verbose;
         print "Found examples: @examples\n" if @examples and $self->cfg->verbose;
-        $self->backup_file( $self->debian_file('rules') );
-        $self->create_rules( $self->debian_file('rules') );
-        if (! -f $self->debian_file('compat') or $self->cfg->dh == 7) {
-            $self->create_compat( $self->debian_file('compat') );
+
+        if ( 'rules' ~~ $self->cfg->only ) {
+            $self->backup_file( $self->debian_file('rules') );
+            $self->create_rules( $self->debian_file('rules') );
+            if (! -f $self->debian_file('compat') or $self->cfg->dh == 7) {
+                $self->create_compat( $self->debian_file('compat') );
+            }
         }
+
+        if ( 'docs' ~~ $self->cfg->only or 'examples' ~~ $self->cfg->only) {
         $self->fix_rules( $self->debian_file('rules'),
             ( defined $changelog ? $changelog : '' ),
             \@docs, \@examples, );
-        $self->backup_file( $self->debian_file('copyright') );
-        $self->create_copyright("$debiandir/copyright");
-
-        my $control = Debian::Control::FromCPAN->new;
-        $control->read( $self->debian_file('control') );
-        if ( -e catfile( $self->debian_file('patches'), 'series' ) ) {
-            $self->add_quilt( $control );
-        }
-        else {
-            $self->drop_quilt( $control );
         }
 
-        if( my $apt_contents = $self->get_apt_contents ) {
-            $control->dependencies_from_cpan_meta(
-                $self->meta, $self->get_apt_contents, $self->cfg->verbose );
-        }
-        else {
-            warn "No APT contents can be loaded.\n";
-            warn "Please install 'apt-file' package and run 'apt-file update'\n";
-            warn "as root.\n";
-            warn "Dependencies not updated.\n";
+        if ( 'copyright' ~~ $self->cfg->only ) {
+            $self->backup_file( $self->debian_file('copyright') );
+            $self->create_copyright("$debiandir/copyright");
         }
 
-        $control->prune_perl_deps();
+        if ( 'control' ~~ $self->cfg->only ) {
+            my $control = Debian::Control::FromCPAN->new;
+            $control->read( $self->debian_file('control') );
+            if ( -e catfile( $self->debian_file('patches'), 'series' ) ) {
+                $self->add_quilt( $control );
+            }
+            else {
+                $self->drop_quilt( $control );
+            }
 
-        $self->backup_file( $self->debian_file('control') );
-        $control->write( $self->debian_file('control') );
+            if( my $apt_contents = $self->get_apt_contents ) {
+                $control->dependencies_from_cpan_meta(
+                    $self->meta, $self->get_apt_contents, $self->cfg->verbose );
+            }
+            else {
+                warn "No APT contents can be loaded.\n";
+                warn "Please install 'apt-file' package and run 'apt-file update'\n";
+                warn "as root.\n";
+                warn "Dependencies not updated.\n";
+            }
+
+            $control->prune_perl_deps();
+
+            $self->backup_file( $self->debian_file('control') );
+            $control->write( $self->debian_file('control') );
+        }
 
         print "--- Done\n" if $self->cfg->verbose;
         return 0;

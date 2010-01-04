@@ -20,7 +20,7 @@ dh-make-perl - Create debian source packages from Perl modules
 
 =item dh-make-perl [--make] {I<SOURCE_DIR> | --cpan I<MODULE>} I<options...>
 
-=item dh-make-perl --refresh I<options...>
+=item dh-make-perl --refresh {I<--only ...>}
 
 =item dh-make-perl --locate Foo::Bar
 
@@ -270,6 +270,11 @@ building a package.
 Where user overrides and APT Contents cache is stored.
 
 Default: ~/.dh-make-perl
+
+=item B<--only> | B<-o> I<control|copyright|docs|examples|rules>
+
+This option allows to update only one specific file in the debian/ directory
+when B<dh-make-perl> is run in L</--refresh> mode.
 
 =item B<--packagename> | B<-p> I<PACKAGENAME>
 
