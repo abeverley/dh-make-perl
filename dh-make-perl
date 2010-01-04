@@ -275,7 +275,8 @@ Default: ~/.dh-make-perl
 
 This option allows to update only one or more file(s) in the debian/
 directory when B<dh-make-perl> is run in L</--refresh> mode. Filenames are
-separated by space.
+separated by a comma. The option can be given multiple times, accumulating
+arguments.
 
 =item B<--packagename> | B<-p> I<PACKAGENAME>
 

@@ -26,7 +26,7 @@ use constant options => (
     'exclude|i:s{,}',  'help',
     'home-dir=s',      'install!',
     'nometa',          'notest',
-    'only|o=s@{,}',
+    'only|o=s@',
     'packagename|p=s', 'pkg-perl!',
     'requiredeps',     'sources-list=s',
     'verbose!',        'version=s',
@@ -127,6 +127,9 @@ sub parse_command_line_options {
                                                                        # take everything
     $opts{exclude} = $self->DEFAULTS->{'exclude'} if ! $opts{exclude}; # arguments not specified
                                                                        # back to defaults
+
+    # handle comma-separated multiple values in --only
+    $opts{only} = [ split( /,/, join( ',', @{ $opts{only} } ) ) ];
 
     while ( my ( $k, $v ) = each %opts ) {
         my $field = $k;
