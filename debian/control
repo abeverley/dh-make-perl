@@ -2,8 +2,8 @@ Source: dh-make-perl
 Section: perl
 Priority: optional
 Build-Depends: debhelper (>= 7.0.50),
- perl (>= 5.10) | libmodule-build-perl
-Build-Depends-Indep: perl (>= 5.10),
+ perl (>= 5.10)
+Build-Depends-Indep: 
  libapt-pkg-perl,
  libarray-unique-perl,
  libclass-accessor-perl,
