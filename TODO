@@ -19,7 +19,8 @@
   request 'POE 1.005' which should translate to "libpoe-perl (>= 2:1.0050)")
 * package_already_exists(): maybe search for the module and not the package name;
   otherwise existing packages are missed that have a different name (cf. #530675)
-* --refresh: add --only <file> option making --refresh update only specified file
+* --refresh: add --only <file> option: done, but "--only control" also
+  touches d/rules if quilt is used
 * quiltification: switch to "--with quilt" in d/rules and adjust build deps
   -- or just to "3.0 (quilt)"
 * Don't add libmodule-build-perl to Build-Depends if Makefile.PL is also
