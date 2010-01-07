@@ -12,6 +12,10 @@
 
   it shall output a tree-like structure of missing dependencies without
   preparing any packaging yet
+
+  Ryan52 already has a program which does this, in svn as
+   ./scripts/cpan-unpackaged-deps.pl. Steal code. or wait for Ryan52
+   to eventually do it himself.
 * when a dependency is not packaged, search wnpp's bugs and report if there is
   ITP about the package
 * versioned dependencies should add the epochs too (found in
