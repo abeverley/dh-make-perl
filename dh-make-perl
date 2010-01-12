@@ -88,6 +88,13 @@ verify if F<debian/rules> looks sane.
 --refresh also tries to update dependency lists in F<debian/control> from
 F<META.yml>. It hooks L<quilt(1)> into F<debian/rules> and creates F<debian/README.source>
 
+=item B<--only> | B<-o> I<control|copyright|docs|examples|rules>
+
+This option allows to update only one or more file(s) in the debian/
+directory when B<dh-make-perl> is run in L</--refresh> mode. Filenames are
+separated by a comma. The option can be given multiple times, accumulating
+arguments.
+
 =item --locate I<MODULE>
 
 Tries to locate the package that conains the given Perl I<MODULE>.
@@ -270,13 +277,6 @@ building a package.
 Where user overrides and APT Contents cache is stored.
 
 Default: ~/.dh-make-perl
-
-=item B<--only> | B<-o> I<control|copyright|docs|examples|rules>
-
-This option allows to update only one or more file(s) in the debian/
-directory when B<dh-make-perl> is run in L</--refresh> mode. Filenames are
-separated by a comma. The option can be given multiple times, accumulating
-arguments.
 
 =item B<--packagename> | B<-p> I<PACKAGENAME>
 
