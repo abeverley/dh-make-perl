@@ -10,6 +10,7 @@ my $builder = Module::Build->new(
 
         'AptPkg::Cache'             => 0,
         'AptPkg::Config'            => 0,
+        'Array::Unique'             => 0,
         'Carp'                      => 0,
         'CPAN'                      => 0,
         'Cwd'                       => 0,

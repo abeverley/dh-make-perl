@@ -31,6 +31,9 @@ dh-make-perl (0.62) unstable; urgency=low
   * debian/control: Add libarray-unique-perl to (Build-)Depends. 
   * Small code readability changes in dh-make-perl modules. 
 
+  [ Brian Cassidy ]
+  * Add Array::Unique to dependencies listed in Build.PL.
+
  -- gregor herrmann <gregoa@debian.org>  Tue, 05 Jan 2010 21:14:37 +0100
 
 dh-make-perl (0.61) unstable; urgency=low
