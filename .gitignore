@@ -9,3 +9,6 @@ MANIFEST*
 !MANIFEST.SKIP
 *~
 *.tar.gz
+*.tmp
+Build
+_build

@@ -19,6 +19,7 @@
 \bpm_to_blib$
 \bblibdirs\.ts$         # 6.18 through 6.25 generated this
 ^MANIFEST\.SKIP$
+^DhMakePerl-*           # Temp dir when building dist
 
 # Avoid Module::Build generated and utility files.
 \bBuild$
@@ -30,6 +31,7 @@
 \#$
 \b\.#
 \.bak$
+\.tmp$
 
 # Avoid Devel::Cover files.
 \bcover_db\b
