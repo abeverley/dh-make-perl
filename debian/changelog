@@ -1,3 +1,9 @@
+dh-make-perl (0.62) UNRELEASED; urgency=low
+
+  * Add Array::Unique to dependencies listed in Build.PL.
+
+ -- Brian Cassidy <brian.cassidy@gmail.com>  Fri, 22 Jan 2010 08:24:47 -0400
+
 dh-make-perl (0.62) unstable; urgency=low
 
   [ Damyan Ivanov ]
@@ -30,9 +36,6 @@ dh-make-perl (0.62) unstable; urgency=low
     --refresh. 
   * debian/control: Add libarray-unique-perl to (Build-)Depends. 
   * Small code readability changes in dh-make-perl modules. 
-
-  [ Brian Cassidy ]
-  * Add Array::Unique to dependencies listed in Build.PL.
 
  -- gregor herrmann <gregoa@debian.org>  Tue, 05 Jan 2010 21:14:37 +0100
 
