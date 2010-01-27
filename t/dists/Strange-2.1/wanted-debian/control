@@ -8,7 +8,7 @@ Standards-Version: 3.8.4
 Homepage: http://search.cpan.org/dist/Strange/
 
 Package: libstrange-perl
-Architecture: all
+Architecture: any
 Depends: perl6
 Conflicts: ba-ba-buma
 Description: really ugly module to test dh-make-perl
