@@ -16,10 +16,7 @@ $overrides{'Strange'} = {
 	bdepends => 'perl6, xlib-dev',
 	desc => 'really ugly module to test dh-make-perl',
 	longdesc => "A really ugly long description\nfor a really ugly perl module.",
-	arch => 'all',
-	# starting from version 2 it's an xs module
 	checkver => sub {return 'v2-' if (($version || "") =~ /^[2-9]\./);return '';},
-	'v2-arch' => 'any',
 	'v2-version' => sub {
 		if (($version || "") =~ /^\d+\.(\d+)/ && length($1) < 3) {
 			return $version.("0"x(3-length($1))); # maitain 3 digits after the dot
