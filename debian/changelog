@@ -5,6 +5,7 @@ dh-make-perl (0.63) UNRELEASED; urgency=low
 
   [ Damyan Ivanov ]
   * Create packages with Standards-Version: 3.8.4
+  * control: Standards-Version: 3.8.4 (no changes needed)
 
  -- Brian Cassidy <brian.cassidy@gmail.com>  Fri, 22 Jan 2010 08:24:47 -0400
 
