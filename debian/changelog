@@ -1,4 +1,4 @@
-dh-make-perl (0.62) UNRELEASED; urgency=low
+dh-make-perl (0.63) UNRELEASED; urgency=low
 
   * Add Array::Unique to dependencies listed in Build.PL.
 
