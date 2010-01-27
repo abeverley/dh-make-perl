@@ -1276,6 +1276,11 @@ sub get_itp {
 sub check_for_xs {
     my ($self) = @_;
 
+    # we need the relative path here. Otherwise the check will give bogus
+    # results if the working dir matches the pattern
+    my $rel_path = substr( $File::Find::name, length( $self->main_dir ) );
+    ( $rel_path !~ m{/(?:examples?|samples|eg|t|docs?)/} )
+            and
     ( !$self->cfg->exclude or $File::Find::name !~ $self->cfg->exclude )
         && /\.(xs|c|cpp|cxx)$/i
         && do {
