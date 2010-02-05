@@ -226,7 +226,7 @@ sub run {
         }
 
         if ( 'docs' ~~ $self->cfg->only or 'examples' ~~ $self->cfg->only) {
-        $self->fix_rules( $self->debian_file('rules'), \@docs, \@examples, );
+            $self->update_file_list( docs => \@docs, examples => \@examples );
         }
 
         if ( 'copyright' ~~ $self->cfg->only ) {
@@ -387,7 +387,7 @@ EOF
 
     #create_readme("$debiandir/README.Debian");
     $self->create_copyright("$debiandir/copyright");
-    $self->fix_rules( "$debiandir/rules", \@docs, \@examples );
+    $self->update_file_list( docs => \@docs, examples => \@examples );
     $self->apply_final_overrides();
     $self->build_package
         if $self->cfg->build or $self->cfg->install;
@@ -1432,67 +1432,41 @@ sub drop_quilt {
     }
 }
 
-sub fix_rules {
-    my ( $self, $rules_file, $docs, $examples ) = @_;
+sub update_file_list( $ % ) {
+    my ( $self, %p ) = @_;
 
-    my ( $test_line, $fh, @content );
+    while ( my ( $file, $new_content ) = each %p ) {
+        # pkgname.foo file
+        my $pkg_file = $self->debian_file("$pkgname.$file");
+        my %uniq_content;
 
-    $fh      = $self->_file_rw($rules_file);
-    @content = $fh->getlines;
+        # if a package.foo exists read its values first
+        if ( -r $pkg_file ) {
+            my $fh                = $self->_file_r($pkg_file);
+            my @existing_content = $fh->getlines;
+            chomp(@existing_content);
 
-    $fh->seek( 0, 0 ) || die "Can't rewind $rules_file: $!";
-    $fh->truncate(0) || die "Can't truncate $rules_file: $!";
-
-    warn "--notest ignored. if you don't want to run the tests when building the package, add 'nocheck' to DEB_BUILD_OPTIONS\n"
-        if $self->cfg->notest;
-
-    if ( $self->cfg->dh < 7 ) {
-        warn "debhelper compatibility levels before 7 are not supported.\n";
-        exit(1);
-    }
-    else {
-        $fh->print($_) for @content;
-        if (@examples) {
-            # pkgname.examples file
-            my $pkg_examples_file = $self->debian_file("$pkgname.examples");
-
-            # if a package.examples exists read these values first
-            if ( -r $pkg_examples_file ) {
-                my $fh                = $self->_file_r($pkg_examples_file);
-                my @existing_examples = $fh->getlines;
-                chomp(@existing_examples);
-
-                # make list of files for package.examples unique
-                push @examples, @existing_examples;
-            }
-
-            # write package.examples file with unique entries
-            open F, '>', $pkg_examples_file or die $!;
-            print F "$_\n" foreach @examples;
-            close F;
+            # make list of files for package.foo unique
+            $uniq_content{$_} = 1 for @existing_examples;
         }
-        if (@docs) {
-            # pkgname.docs file
-            my $pkg_docs_file = $self->debian_file("$pkgname.docs");
 
-            # if a apcakge.docs exists read these values first
-            if ( -r $pkg_docs_file ) {
-                my $fh            = $self->_file_r($pkg_docs_file);
-                my @existing_docs = $fh->getlines;
-                chomp(@existing_docs);
+        $uniq_content{$_} = 1 for @$new_content;
 
-                # make list of files for package.docs unique
-                push @docs, @existing_docs;
-            }
+        # write package.foo file with unique entries
+        open F, '>', $pkg_file or die $!;
+        for ( @content, @$new_content ) {
 
-            # write package.docs with unique entries
-            open F, '>', $pkg_docs_file or die $!;
-            print F "$_\n" foreach @docs;
-            close F;
+            # we have the unique hash
+            # we delete from it each printed line
+            # so if a line is not in the hash, this means we have already
+            # printed it
+            next unless exists $uniq_content{$_};
+
+            delete $uniq_content{$_};
+            print F "$_\n";
         }
+        close F;
     }
-
-    $fh->close;
 }
 
 sub create_control {

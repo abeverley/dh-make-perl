@@ -166,6 +166,8 @@ sub parse_command_line_options {
         $self->build(1);
         $self->command('make');
     }
+
+    $self->check_obsolete_entries;
 }
 
 =item parse_config_file()
@@ -208,6 +210,8 @@ sub parse_config_file {
         die "Error parsing $fn: the following keys are not known:\n"
             . join( "\n", map( "  - $_", keys %$yaml ) )
             if %$yaml;
+
+        $self->check_obsolete_entries;
     }
 }
 
@@ -234,6 +238,25 @@ sub dump_config {
     local $YAML::Stringify  = 1;
 
     return YAML::Dump( \%hash );
+}
+
+=item check_obsolete_entries
+
+Checks for presense of deprecated/obsolete entries and warns/dies if any is
+found.
+
+=cut
+
+sub check_obsolete_enties {
+    my ($self) = @_;
+
+    warn "--notest ignored. if you don't want to run the tests when building the package, add 'nocheck' to DEB_BUILD_OPTIONS\n"
+        if $self->notest;
+
+    if ( $self->dh < 7 ) {
+        warn "debhelper compatibility levels before 7 are not supported.\n";
+        exit(1);
+    }
 }
 
 =back
