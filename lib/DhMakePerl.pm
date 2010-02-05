@@ -107,7 +107,7 @@ my ($pkgname, $srcname,
 );
 my ( $extrasfields, $extrapfields );
 my ($module_build);
-my ( @docs, @examples, $changelog, @args );
+my ( @docs, @examples, @args );
 
 # use Array::Unique for @docs and @examples
 tie @examples, 'Array::Unique';
@@ -212,11 +212,8 @@ sub run {
         $module_build
             = ( -f $self->main_file('Build.PL') ) ? "Module-Build" : "MakeMaker";
 
-        $self->extract_changelog;
         $self->extract_docs if 'docs' ~~ $self->cfg->only;
         $self->extract_examples if 'examples' ~~ $self->cfg->only;
-        print "Found changelog: $changelog\n"
-            if defined $changelog and $self->cfg->verbose;
         print "Found docs: @docs\n" if @docs and $self->cfg->verbose;
         print "Found examples: @examples\n" if @examples and $self->cfg->verbose;
 
@@ -229,9 +226,7 @@ sub run {
         }
 
         if ( 'docs' ~~ $self->cfg->only or 'examples' ~~ $self->cfg->only) {
-        $self->fix_rules( $self->debian_file('rules'),
-            ( defined $changelog ? $changelog : '' ),
-            \@docs, \@examples, );
+        $self->fix_rules( $self->debian_file('rules'), \@docs, \@examples, );
         }
 
         if ( 'copyright' ~~ $self->cfg->only ) {
@@ -339,7 +334,6 @@ EOF
         if $self->cfg->depends;
 
     $module_build = ( -f $self->main_file('Build.PL') ) ? "Module-Build" : "MakeMaker";
-    $self->extract_changelog;
     $self->extract_docs;
     $self->extract_examples;
 
@@ -374,8 +368,6 @@ EOF
         if ( !defined $longdesc or $longdesc =~ /^\s*\.?\s*$/ )
             and $self->cfg->verbose;
     print "Using maintainer: $maintainer\n" if $self->cfg->verbose;
-    print "Found changelog: $changelog\n"
-        if defined $changelog and $self->cfg->verbose;
     print "Found docs: @docs\n" if $self->cfg->verbose;
     print "Found examples: @examples\n" if @examples and $self->cfg->verbose;
 
@@ -395,9 +387,7 @@ EOF
 
     #create_readme("$debiandir/README.Debian");
     $self->create_copyright("$debiandir/copyright");
-    $self->fix_rules( "$debiandir/rules",
-        ( defined $changelog ? $changelog : '' ),
-        \@docs, \@examples );
+    $self->fix_rules( "$debiandir/rules", \@docs, \@examples );
     $self->apply_final_overrides();
     $self->build_package
         if $self->cfg->build or $self->cfg->install;
@@ -965,23 +955,6 @@ sub extract_desc {
     $parser->cleanup;
 }
 
-sub extract_changelog {
-    my ( $self ) = @_;
-
-    my $dir = $self->main_dir;
-
-    $dir .= '/' unless $dir =~ m(/$);
-    find(
-        sub {
-            $changelog = substr( $File::Find::name, length($dir) )
-                if ( !defined($changelog) && /^change(s|log)$/i
-                and ( !$self->cfg->exclude or $File::Find::name !~ $self->cfg->exclude )
-                );
-        },
-        $dir
-    );
-}
-
 sub extract_docs {
     my ( $self ) = @_;
 
@@ -1460,7 +1433,7 @@ sub drop_quilt {
 }
 
 sub fix_rules {
-    my ( $self, $rules_file, $changelog_file, $docs, $examples ) = @_;
+    my ( $self, $rules_file, $docs, $examples ) = @_;
 
     my ( $test_line, $fh, @content );
 
@@ -1996,12 +1969,6 @@ sub apply_overrides {
     $arch = $val
         if (
         defined( $val = $self->get_override_val( $data, $subkey, 'arch' ) ) );
-    $changelog = $val
-        if (
-        defined(
-            $val = $self->get_override_val( $data, $subkey, 'changelog' )
-        )
-        );
     @docs = split( /\s+/, $val )
         if (
         defined( $val = $self->get_override_val( $data, $subkey, 'docs' ) ) );
