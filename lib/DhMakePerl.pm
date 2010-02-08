@@ -1574,7 +1574,8 @@ sub copyright_from_changelog {
   my ( $self, $firstmaint, $firstyear ) = @_;
   my %maintainers = ();
   @{$maintainers{$firstmaint}} = ($firstyear);
-  my $chglog = Parse::DebianChangelog->init( { infile => 'debian/changelog' } );
+my $chglog = Parse::DebianChangelog->init(
+    { infile => $self->debian_file('changelog') } );
   foreach($chglog->data()) {
     my $person = $_->Maintainer;
     my $date = $_->Date;
