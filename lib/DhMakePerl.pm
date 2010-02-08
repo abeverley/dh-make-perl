@@ -231,7 +231,7 @@ sub run {
 
         if ( 'copyright' ~~ $self->cfg->only ) {
             $self->backup_file( $self->debian_file('copyright') );
-            $self->create_copyright("$debiandir/copyright");
+            $self->create_copyright( $self->debian_file('copyright') );
         }
 
         if ( 'control' ~~ $self->cfg->only ) {
