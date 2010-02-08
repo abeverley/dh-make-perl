@@ -247,7 +247,7 @@ found.
 
 =cut
 
-sub check_obsolete_enties {
+sub check_obsolete_entries {
     my ($self) = @_;
 
     warn "--notest ignored. if you don't want to run the tests when building the package, add 'nocheck' to DEB_BUILD_OPTIONS\n"
