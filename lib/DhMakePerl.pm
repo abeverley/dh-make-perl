@@ -713,7 +713,10 @@ sub extract_name_ver {
     if ( defined $self->meta->{name} and defined $self->meta->{version} ) {
         $name = $self->meta->{name};
         $ver  = $self->meta->{version};
-
+        if ( $ver =~ s/^v// ) {    # v4.43.43?
+            $ver =~ s/\.(\d\d\d)(\d\d\d)/.$1.$2/;    # 2.003004 -> 2.003.004
+            $ver =~ s/\.0+/./g;                      # 2.003.004 -> 2.3.4
+        }
     }
     else {
         ( $name, $ver ) = $self->extract_name_ver_from_makefile($makefile);

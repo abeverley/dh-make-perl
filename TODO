@@ -30,8 +30,3 @@
 * Don't add libmodule-build-perl to Build-Depends if Makefile.PL is also
   present, if its not just Module::Build::Compat
 * 3.0 source format support for dh-make-perl
-* module versions: if META.yml contains e.g. "v1.002000" for 1.2.0 then
-  extract_name_ver returns exactly "v1.002000" (not good), and extract_basic
-  adds a leading "0" (even worse). we somehow need to get those versions
-  back. or strip the "v". or something. - at least if the tarball is
-  Foo-Bar-v1.2.0.
