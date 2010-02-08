@@ -707,8 +707,7 @@ sub findbin_fix {
 sub extract_name_ver {
     my ($self) = @_;
 
-    my ( $name, $ver, $makefile );
-    $makefile = $self->makefile_pl();
+    my ( $name, $ver );
 
     if ( defined $self->meta->{name} and defined $self->meta->{version} ) {
         $name = $self->meta->{name};
@@ -719,7 +718,7 @@ sub extract_name_ver {
         }
     }
     else {
-        ( $name, $ver ) = $self->extract_name_ver_from_makefile($makefile);
+        ( $name, $ver ) = $self->extract_name_ver_from_makefile( $self->makefile_pl );
     }
 
     $name =~ s/::/-/g;
