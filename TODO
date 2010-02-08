@@ -23,6 +23,10 @@
   request 'POE 1.005' which should translate to "libpoe-perl (>= 2:1.0050)")
 * package_already_exists(): maybe search for the module and not the package name;
   otherwise existing packages are missed that have a different name (cf. #530675)
+  This is true for distributions that don't match the contained module, like
+  libintl-perl, which has Locale::* modules.
+  The way to solve this is perhaps to extract "package Foo::Bar" from all *.pm
+  files and look them in the apt file contents. Lots of work for little gain.
 * --refresh: add --only <file> option: done, but "--only control" also
   touches d/rules if quilt is used
 * quiltification: switch to "--with quilt" in d/rules and adjust build deps
