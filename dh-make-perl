@@ -20,7 +20,7 @@ dh-make-perl - Create debian source packages from Perl modules
 
 =item dh-make-perl [--make] {I<SOURCE_DIR> | --cpan I<MODULE>} I<options...>
 
-=item dh-make-perl --refresh {I<--only ...>}
+=item dh-make-perl --refresh {I<--only ...>} [directory]
 
 =item dh-make-perl --locate Foo::Bar
 
@@ -75,11 +75,12 @@ the Debian Perl policy, the packaging manual and so on.
 Default command if no command is given. Creates debianisation from scratch.
 Fails with an error if F<debian/> directory already exists.
 
-=item --refresh
+=item --refresh [directory]
 
-To be run inside unpacked source package. Rebuilds F<debian/copyright>,
-F<debian/rules>, F<debian/compat> using the current templates. Before any
-changes are made to these files, a backup copy is created with a .bak suffix.
+For refreshing a package. C<directory> defaults to the current working
+directory. Rebuilds F<debian/copyright>, F<debian/rules>, F<debian/compat>
+using the current templates. Before any changes are made to these files, a
+backup copy is created with a .bak suffix.
 
 This is useful when F<debian/rules> was created using older templates and
 doesn't contain much customisations. As always, you're strongly encouraged to

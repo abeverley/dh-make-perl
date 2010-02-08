@@ -5,6 +5,7 @@ dh-make-perl (0.64) UNRELEASED; urgency=low
     examples and docs and checks for deprecated/obsolete entries in
     DhMakePerl::Config
   * when finding dist version, convert "v1.002003" as "1.2.3"
+  * --directory now accepts an optional directory argument
 
  -- Damyan Ivanov <dmn@debian.org>  Fri, 05 Feb 2010 09:05:25 +0200
 

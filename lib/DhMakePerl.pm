@@ -193,8 +193,9 @@ sub run {
     $desc = $self->cfg->desc || '';
 
     if ( $self->cfg->command eq 'refresh' ) {
-        print "Engaging refresh mode\n" if $self->cfg->verbose;
-        $self->main_dir('.');
+        $self->main_dir( $ARGV[0] || '.' );
+        print "Engaging refresh mode in " . $self->main_dir . "\n"
+            if $self->cfg->verbose;
 
         die $self->debian_file('rules.bak') . " already exists. Aborting!\n"
             if ( -e $self->debian_file('rules.bak') and 'rules' ~~ $self->cfg->only );
