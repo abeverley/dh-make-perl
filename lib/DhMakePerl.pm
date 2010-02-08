@@ -1439,22 +1439,23 @@ sub update_file_list( $ % ) {
         # pkgname.foo file
         my $pkg_file = $self->debian_file("$pkgname.$file");
         my %uniq_content;
+        my @existing_content;
 
         # if a package.foo exists read its values first
         if ( -r $pkg_file ) {
             my $fh                = $self->_file_r($pkg_file);
-            my @existing_content = $fh->getlines;
+            @existing_content = $fh->getlines;
             chomp(@existing_content);
 
             # make list of files for package.foo unique
-            $uniq_content{$_} = 1 for @existing_examples;
+            $uniq_content{$_} = 1 for @existing_content;
         }
 
         $uniq_content{$_} = 1 for @$new_content;
 
         # write package.foo file with unique entries
         open F, '>', $pkg_file or die $!;
-        for ( @content, @$new_content ) {
+        for ( @existing_content, @$new_content ) {
 
             # we have the unique hash
             # we delete from it each printed line
