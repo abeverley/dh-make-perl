@@ -87,7 +87,10 @@ doesn't contain much customisations. As always, you're strongly encouraged to
 verify if F<debian/rules> looks sane.
 
 --refresh also tries to update dependency lists in F<debian/control> from
-F<META.yml>. It hooks L<quilt(1)> into F<debian/rules> and creates F<debian/README.source>
+F<META.yml>. It hooks L<quilt(1)> into F<debian/rules> and creates
+F<debian/README.source>
+
+B<Note:> override mechanism is not used during refresh.
 
 =item B<--only> | B<-o> I<control|copyright|docs|examples|rules>
 
@@ -341,6 +344,8 @@ population of F<dh-make-perl.conf>.
 File that overrides information retreived (or guessed) about the package.
 All the files in the library directories are loaded: entries in the home
 take precedence. See the distributed overrides file for usage information.
+
+B<Note:> override mechanism is not used during B<--refresh> operation.
 
 =item * rules.MakeMaker.noxs
 
