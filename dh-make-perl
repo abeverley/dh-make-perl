@@ -131,6 +131,11 @@ Useful for populating L<dh-make-perl.conf> file.
 
 =over
 
+=item B<--apt-contents-dir> I<dir>
+
+Location of L<apt-file> Contents directory. Default is
+F</var/cache/apt/apt-file>
+
 =item B<--arch> I<any> | I<all>
 
 This switches between arch-dependent and arch-independet packages. If B<--arch>

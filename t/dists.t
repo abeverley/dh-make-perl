@@ -56,7 +56,9 @@ sub dist_ok($) {
     my $dist = "$Bin/dists/$dist_dir";
 
     system( "$Bin/../dh-make-perl", "--no-verbose",
-            "--home-dir", "$Bin/contents", "--data-dir", "$Bin/../share",
+            "--home-dir", "$Bin/contents",
+            "--apt-contents-dir", "$Bin/contents",
+            "--data-dir", "$Bin/../share",
             "--sources-list",
             "$Bin/contents/sources.list", "--email", "joemaint\@test.local",
             $dist );
@@ -83,6 +85,8 @@ sub dist_ok($) {
                     ->in("$dist/debian");
 
     rmdir "$dist/debian" or die "rmdir($dist/debian): $!";
+
+    unlink "$Bin/contents/Contents.cache" or die "unlink($Bin/contents.cache): $!";
 }
 
 $ENV{DEBFULLNAME} = "Joe Maintainer";

@@ -13,6 +13,7 @@ use base 'Class::Accessor';
 use Dpkg::Source::Package;
 
 use constant options => (
+    'apt-contents-dir=s',
     'arch=s',          'backups!',
     'basepkgs=s',
     'bdepends=s',      'bdependsi=s',
