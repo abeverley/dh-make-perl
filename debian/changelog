@@ -8,6 +8,7 @@ dh-make-perl (0.64) UNRELEASED; urgency=low
   * --directory now accepts an optional directory argument
   * document that override mechanism is not used with --refresh
   * add tests for --refresh
+  * when a required dependency is not found, scan WNPP for a corresponding ITP
 
  -- Damyan Ivanov <dmn@debian.org>  Fri, 05 Feb 2010 09:05:25 +0200
 

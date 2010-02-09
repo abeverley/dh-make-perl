@@ -1199,19 +1199,29 @@ sub extract_depends {
     if (@$missing) {
         my ($missing_debs_str);
         if ($apt_contents) {
-            $missing_debs_str = join( "\n",
-                "Needs the following modules for which there are no debian packages available",
-                map( {" - $_"} @$missing ),
-                '' );
+            $missing_debs_str
+                = "Needs the following modules for which there are no debian packages available:\n";
+            for (@$missing) {
+                my $itp = $self->get_itp($_);
+                $missing_debs_str .= " - $_";
+                $missing_debs_str .= " (ITP #$itp)" if $itp;
+                $missing_debs_str .= "\n";
+            }
         }
         else {
-            $missing_debs_str = join( "\n",
-                "The following Perl modules are required and not installed in your system:",
-                map( {" - $_"} @$missing ),
-                "You do not have 'apt-file' currently installed, or have not ran",
-                "'apt-file update' - If you install it and run 'apt-file update' as",
-                "root, I will be able to tell you which Debian packages are those",
-                "modules in (if they are packaged)." );
+            $missing_debs_str = "The following Perl modules are required and not installed in your system:\n";
+            for (@$missing) {
+                my $itp = $self->get_itp($_);
+                $missing_debs_str .= " - $_";
+                $missing_debs_str .= " (ITP #$itp)" if $itp;
+                $missing_debs_str .= "\n";
+            }
+            $missing_debs_str .= <<EOF
+You do not have 'apt-file' currently installed, or have not ran
+'apt-file update' - If you install it and run 'apt-file update' as
+root, I will be able to tell you which Debian packages are those
+modules in (if they are packaged).
+EOF
         }
 
         if ($self->cfg->requiredeps) {
