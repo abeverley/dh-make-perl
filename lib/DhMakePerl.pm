@@ -1227,7 +1227,7 @@ sub extract_depends {
 }
 
 sub get_itp {
-    return if $ENV{NO_NETWORK};
+    return undef if $ENV{NO_NETWORK};
 
     my ( $self, $package ) = @_;
 
@@ -1247,7 +1247,7 @@ sub get_itp {
         }
 
     }
-    return 0;
+    return undef;
 }
 
 sub check_for_xs {
