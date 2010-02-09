@@ -3,18 +3,19 @@
 use strict;
 use warnings;
 
-use Test::More tests => 15;
+use Test::More tests => 30;
 
 use FindBin qw($Bin);
 use File::Spec::Functions qw(splitpath);
 
 sub compare {
-    my ( $dist, $path ) = @_;
+    my ( $dist, $path, $refresh ) = @_;
     my ( $vol, $dir, $name ) = splitpath($path);
 
     return unless -f $path;
 
     my $real = $path;
+    $path =~ s{/wanted-debian/}{/wanted-debian--refresh/} if $refresh;
     $real =~ s{/wanted-debian/}{/debian/};
     my $diff = diff($path, $real);
 
@@ -48,7 +49,8 @@ sub compare {
         $diff = '' if $only_date_differs;
     }
 
-    is($diff, '', "$dist/debian/$name is OK");
+    is( $diff, '',
+        "$dist/debian/$name is OK" . ( $refresh ? " after --refresh" : '' ) );
 }
 
 sub dist_ok($) {
@@ -77,6 +79,19 @@ sub dist_ok($) {
             )
          ->in("$dist/wanted-debian");
     compare( $dist_dir, $_) for @files;
+
+    system( "$Bin/../dh-make-perl", "--verbose",
+            "--home-dir", "$Bin/contents",
+            "--apt-contents-dir", "$Bin/contents",
+            "--data-dir", "$Bin/../share",
+            "--sources-list",
+            "$Bin/contents/sources.list", "--email", "joemaint\@test.local",
+            "--refresh",
+            $dist );
+
+    is( $?, 0, "$dist_dir --refresh: system returned 0" );
+
+    compare( $dist_dir, $_, 1) for @files;
 
     # clean after the test
     File::Find::Rule->file

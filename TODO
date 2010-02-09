@@ -1,7 +1,5 @@
 * investigate using App::Cmd
 * ensure (with a test) that dependency lists are indented with one space
-* ensure (with a test) that doing a refresh over the debian/ directory produced
-  by --make doesn't change anything
 * --refresh on MIME-Charset 1.007 can't detect the dist name and cries.
   May be similar to #525847
 * when ITP for the package is found, try to deduce short/long description from
