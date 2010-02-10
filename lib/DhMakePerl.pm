@@ -1245,7 +1245,12 @@ sub get_itp {
         = "http://bugs.debian.org/cgi-bin/pkgreport.cgi?pkg=wnpp;includesubj=ITP: $package";
     my $mech = WWW::Mechanize->new();
 
-    $mech->get($wnpp);
+    eval { $mech->get($wnpp) };
+    if ($@) {
+        warn "Error while looking for ITP of $package:\n";
+        warn $@;
+        return undef;
+    }
 
     my @links = $mech->links();
 
