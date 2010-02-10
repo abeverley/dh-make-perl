@@ -61,6 +61,7 @@ sub dist_ok($) {
             "--home-dir", "$Bin/contents",
             "--apt-contents-dir", "$Bin/contents",
             "--data-dir", "$Bin/../share",
+            $ENV{NO_NETWORK} ? '--no-network' : (),
             "--sources-list",
             "$Bin/contents/sources.list", "--email", "joemaint\@test.local",
             $dist );
@@ -84,6 +85,7 @@ sub dist_ok($) {
             "--home-dir", "$Bin/contents",
             "--apt-contents-dir", "$Bin/contents",
             "--data-dir", "$Bin/../share",
+            $ENV{NO_NETWORK} ? '--no-network' : (),
             "--sources-list",
             "$Bin/contents/sources.list", "--email", "joemaint\@test.local",
             "--refresh",

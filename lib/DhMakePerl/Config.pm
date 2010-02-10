@@ -26,6 +26,7 @@ use constant options => (
     'dist=s',          'email|e=s',
     'exclude|i:s{,}',  'help',
     'home-dir=s',      'install!',
+    'network!',
     'nometa',          'notest',
     'only|o=s@',
     'packagename|p=s', 'pkg-perl!',
@@ -65,6 +66,7 @@ use constant DEFAULTS => {
     email        => '',
     exclude      => qr/$Dpkg::Source::Package::diff_ignore_default_regexp/,
     home_dir     => "$ENV{HOME}/.dh-make-perl",
+    network      => 1,
     only         => ['control', 'copyright', 'docs', 'examples', 'rules'],
     verbose      => 1,
 };

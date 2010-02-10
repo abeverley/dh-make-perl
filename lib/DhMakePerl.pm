@@ -1237,9 +1237,9 @@ EOF
 }
 
 sub get_itp {
-    return undef if $ENV{NO_NETWORK};
-
     my ( $self, $package ) = @_;
+
+    return undef unless $self->cfg->network;
 
     my $wnpp
         = "http://bugs.debian.org/cgi-bin/pkgreport.cgi?pkg=wnpp;includesubj=ITP: $package";

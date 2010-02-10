@@ -10,6 +10,7 @@ dh-make-perl (0.64) UNRELEASED; urgency=low
   * add tests for --refresh
   * when a required dependency is not found, scan WNPP for a corresponding ITP
   * do not die when WNPP can't be checked for ITPs
+  * add --network option (defaults to true)
 
  -- Damyan Ivanov <dmn@debian.org>  Fri, 05 Feb 2010 09:05:25 +0200
 

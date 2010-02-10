@@ -274,6 +274,11 @@ dpkg-source's default values.
 Installs the freshly built package. Specifying --install implies --build - The
 package will not be installed unless it was built (obviously ;-) )
 
+=item B<--network>
+
+Enables querying of Debian WNPP lists for ITP and similar bugs. Enabled by
+default, use C<--no-network> to disable.
+
 =item B<--notest>
 
 This option for not running the automatic testing of the module as part of
