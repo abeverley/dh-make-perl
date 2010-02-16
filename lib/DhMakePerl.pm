@@ -47,7 +47,7 @@ use Debian::Control::FromCPAN ();
 use Debian::Dependencies      ();
 use Debian::Dependency        ();
 use Debian::Version qw(deb_ver_cmp);
-use Debian::WNPP::Bug;
+use Debian::WNPP::Query;
 use Parse::DebianChangelog;
 use DhMakePerl::Config;
 use DhMakePerl::PodParser ();
@@ -1244,32 +1244,10 @@ sub get_wnpp {
 
     return undef unless $self->cfg->network;
 
-    my $wnpp
-        = "http://bugs.debian.org/cgi-bin/pkgreport.cgi?pkg=wnpp;includesubj=ITP: $package";
-    my $mech = WWW::Mechanize->new();
-
-    eval { $mech->get($wnpp) };
-    if ($@) {
-        warn "Error while looking for ITP of $package:\n";
-        warn $@;
-        return undef;
-    }
-
-    my @links = $mech->links();
-
-    foreach my $link (@links) {
-        my $desc = $link->text();
-
-        if ( $desc && $desc =~ /^ITP: $package / ) {
-            return Debian::WNPP::Bug->new(
-                type   => 'ITP',
-                number => $1,
-                title  => $desc
-            ) if $link->url =~ m/bug=(\d+)$/;
-        }
-
-    }
-    return undef;
+    my $wnpp = Debian::WNPP::Query->new(
+        { cache_file => catfile( $self->cfg->home_dir, 'wnpp.cache' ) } );
+    my @bugs = $wnpp->bugs_for_package($package);
+    return $bugs[0];
 }
 
 sub check_for_xs {

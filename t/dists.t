@@ -104,6 +104,8 @@ sub dist_ok($) {
     rmdir "$dist/debian" or die "rmdir($dist/debian): $!";
 
     unlink "$Bin/contents/Contents.cache" or die "unlink($Bin/contents.cache): $!";
+    -e "$Bin/contents/wnpp.cache" and unlink "$Bin/contents/wnpp.cache"
+        or die "unlink($Bin/contents/wnpp.cache): $!";
 }
 
 $ENV{DEBFULLNAME} = "Joe Maintainer";
