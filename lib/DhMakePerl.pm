@@ -47,6 +47,7 @@ use Debian::Control::FromCPAN ();
 use Debian::Dependencies      ();
 use Debian::Dependency        ();
 use Debian::Version qw(deb_ver_cmp);
+use Debian::WNPPBug;
 use Parse::DebianChangelog;
 use DhMakePerl::Config;
 use DhMakePerl::PodParser ();
@@ -379,7 +380,7 @@ EOF
         $closes = $self->cfg->closes;
     }
     else {
-        $closes = $self->get_itp($pkgname);
+        $closes = $self->get_wnpp($pkgname);
     }
     $self->create_changelog( "$debiandir/changelog", $closes );
     $self->create_rules("$debiandir/rules");
@@ -1202,18 +1203,20 @@ sub extract_depends {
             $missing_debs_str
                 = "Needs the following modules for which there are no debian packages available:\n";
             for (@$missing) {
-                my $itp = $self->get_itp($_);
+                my $bug = $self->get_wnpp($_);
                 $missing_debs_str .= " - $_";
-                $missing_debs_str .= " (ITP #$itp)" if $itp;
+                $missing_debs_str .= " (" . $bug->type_and_number . ')'
+                    if $bug;
                 $missing_debs_str .= "\n";
             }
         }
         else {
             $missing_debs_str = "The following Perl modules are required and not installed in your system:\n";
             for (@$missing) {
-                my $itp = $self->get_itp($_);
+                my $bug = $self->get_wnpp($_);
                 $missing_debs_str .= " - $_";
-                $missing_debs_str .= " (ITP #$itp)" if $itp;
+                $missing_debs_str .= " (" . $bug->type_and_number . ')'
+                    if $bug;
                 $missing_debs_str .= "\n";
             }
             $missing_debs_str .= <<EOF
@@ -1236,7 +1239,7 @@ EOF
     return $debs;
 }
 
-sub get_itp {
+sub get_wnpp {
     my ( $self, $package ) = @_;
 
     return undef unless $self->cfg->network;
@@ -1257,8 +1260,12 @@ sub get_itp {
     foreach my $link (@links) {
         my $desc = $link->text();
 
-        if ($desc && $desc =~ /^ITP: $package /) {
-            return $1 if $link->url =~ m/bug=(\d+)$/;
+        if ( $desc && $desc =~ /^ITP: $package / ) {
+            return Debian::WNPPBug->new(
+                type   => 'ITP',
+                number => $1,
+                title  => $desc
+            ) if $link->url =~ m/bug=(\d+)$/;
         }
 
     }
