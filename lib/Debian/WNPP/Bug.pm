@@ -1,15 +1,15 @@
-package Debian::WNPPBug;
+package Debian::WNPP::Bug;
 
 use strict;
 use warnings;
 
 =head1 NAME
 
-Debian::WNPPBug - handy representation of Debian WNPP bug reports
+Debian::WNPP::Bug - handy representation of Debian WNPP bug reports
 
 =head1 SYNOPSIS
 
-    my $b = Debian::WNPBug->new(
+    my $b = Debian::WNPP::Bug->new(
         {   number            => 1234,
             title             => 'RFP: nice-package -- do nice things easier',
             type              => 'rfp',

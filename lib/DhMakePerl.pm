@@ -47,7 +47,7 @@ use Debian::Control::FromCPAN ();
 use Debian::Dependencies      ();
 use Debian::Dependency        ();
 use Debian::Version qw(deb_ver_cmp);
-use Debian::WNPPBug;
+use Debian::WNPP::Bug;
 use Parse::DebianChangelog;
 use DhMakePerl::Config;
 use DhMakePerl::PodParser ();
@@ -1261,7 +1261,7 @@ sub get_wnpp {
         my $desc = $link->text();
 
         if ( $desc && $desc =~ /^ITP: $package / ) {
-            return Debian::WNPPBug->new(
+            return Debian::WNPP::Bug->new(
                 type   => 'ITP',
                 number => $1,
                 title  => $desc
