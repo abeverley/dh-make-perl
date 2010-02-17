@@ -310,6 +310,11 @@ F<debian/control> accordingly.
 Fail if a dependency Perl package was not found (dependency tracking
 requires the apt-file package installed and updated)
 
+=item B<--source-format> I<format>
+
+When creating or refreshing packaging, use the specified source format.
+Defaults to C<1.0>.
+
 =item B<--sources-list> I<FILE>
 
 Instruct the C<Contents> file parser to use this B<file> when determining if a

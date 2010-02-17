@@ -31,6 +31,7 @@ use constant options => (
     'only|o=s@',
     'packagename|p=s', 'pkg-perl!',
     'requiredeps',     'sources-list=s',
+    'source-format=s',
     'verbose!',        'version=s',
 );
 
@@ -58,17 +59,18 @@ use Tie::IxHash ();
 use YAML        ();
 
 use constant DEFAULTS => {
-    backups      => 1,
-    data_dir     => '/usr/share/dh-make-perl',
-    dbflags      => ( $> == 0 ? "" : "-rfakeroot" ),
-    dh           => 7,
-    dist         => '',
-    email        => '',
-    exclude      => qr/$Dpkg::Source::Package::diff_ignore_default_regexp/,
-    home_dir     => "$ENV{HOME}/.dh-make-perl",
-    network      => 1,
-    only         => ['control', 'copyright', 'docs', 'examples', 'rules'],
-    verbose      => 1,
+    backups       => 1,
+    data_dir      => '/usr/share/dh-make-perl',
+    dbflags       => ( $> == 0 ? "" : "-rfakeroot" ),
+    dh            => 7,
+    dist          => '',
+    email         => '',
+    exclude       => qr/$Dpkg::Source::Package::diff_ignore_default_regexp/,
+    home_dir      => "$ENV{HOME}/.dh-make-perl",
+    network       => 1,
+    only          => [ 'control', 'copyright', 'docs', 'examples', 'rules' ],
+    source_format => '1.0',
+    verbose       => 1,
 };
 
 use constant cpan2deb_DEFAULTS => {

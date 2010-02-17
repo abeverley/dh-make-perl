@@ -14,6 +14,7 @@ dh-make-perl (0.64) UNRELEASED; urgency=low
   * rewrite get_itp() as get_wnpp()
     + looks for all kinds of WNPP bugs
     + uses the lists on http://www.debian.org/devel/wnpp
+  * add --source-format option (defaults to "1.0")
 
  -- Damyan Ivanov <dmn@debian.org>  Fri, 05 Feb 2010 09:05:25 +0200
 
