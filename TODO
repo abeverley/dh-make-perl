@@ -26,7 +26,6 @@
 * --refresh: add --only <file> option: done, but "--only control" also
   touches d/rules if quilt is used
 * quiltification: switch to "--with quilt" in d/rules and adjust build deps
-  -- or just to "3.0 (quilt)"
+  in non-'3.0 (quilt)' source formats
 * Don't add libmodule-build-perl to Build-Depends if Makefile.PL is also
   present, if its not just Module::Build::Compat
-* 3.0 source format support for dh-make-perl

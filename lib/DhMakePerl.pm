@@ -55,7 +55,8 @@ use Email::Date::Format qw(email_date);
 use File::Basename qw( basename dirname );
 use File::Copy qw( copy move );
 use File::Find qw( find );
-use File::Spec::Functions qw( catfile );
+use File::Path ();
+use File::Spec::Functions qw( catdir catfile splitpath );
 use IO::File                   ();
 use Module::CoreList           ();
 use Module::Depends::Intrusive ();
@@ -239,12 +240,17 @@ sub run {
         if ( 'control' ~~ $self->cfg->only ) {
             my $control = Debian::Control::FromCPAN->new;
             $control->read( $self->debian_file('control') );
-            if ( -e catfile( $self->debian_file('patches'), 'series' ) ) {
-                $self->add_quilt( $control );
+            if ( -e catfile( $self->debian_file('patches'), 'series' )
+                and $self->cfg->source_format ne '3.0 (quilt)' )
+            {
+                $self->add_quilt($control);
             }
             else {
-                $self->drop_quilt( $control );
+                $self->drop_quilt($control);
             }
+
+            $self->write_source_format(
+                catfile( $debiandir, 'source', 'format' ) );
 
             if( my $apt_contents = $self->get_apt_contents ) {
                 $control->dependencies_from_cpan_meta(
@@ -376,6 +382,7 @@ EOF
     # start writing out the data
     mkdir( $debiandir, 0755 ) || die "Cannot create $debiandir dir: $!\n";
     $self->create_control("$debiandir/control");
+    $self->write_source_format( catfile( $debiandir, 'source', 'format' ) );
     if ( defined $self->cfg->closes ) {
         $closes = $self->cfg->closes;
     }
@@ -2044,6 +2051,26 @@ sub package_already_exists {
     }
 
     return $found ? 1 : 0;
+}
+
+sub write_source_format {
+    my ( $self, $path ) = @_;
+
+    my ( $vol, $dir, $file ) = splitpath($path);
+    $dir = catdir( $vol, $dir );
+
+    if ( $self->cfg->source_format eq '1.0' ) {
+        # this is the default, remove debian/source
+        File::Path::rmtree($dir);
+    }
+    else {
+        # make sure the directory exists
+        File::Path::mkpath($dir) unless -d $dir;
+
+        my $fh = $self->_file_w($path);
+        $fh->print( $self->cfg->source_format, "\n" );
+        $fh->close;
+    }
 }
 
 sub _warn_incomplete_copyright {
