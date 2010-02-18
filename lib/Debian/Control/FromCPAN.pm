@@ -260,6 +260,13 @@ sub prune_simple_perl_dep {
             and deb_ver_cmp( $dep->ver, $self->oldstable_perl_version ) <= 0
     );
 
+    # if the dependency is considered unversioned, make sure there is no
+    # version
+    if ($unversioned) {
+        $dep->ver(undef);
+        $dep->rel(undef);
+    }
+
     # perl-base is (build-)essential
     return undef
         if $dep->pkg eq 'perl-base' and $unversioned;

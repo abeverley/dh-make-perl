@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 20;
+use Test::More tests => 21;
 use Test::Exception;
 use Test::Differences;
 
@@ -81,4 +81,11 @@ $c->binary->FETCH('libtest-compile-perl')->Depends->add('perl (>= 5.8.8)');
 $c->prune_perl_deps;
 is( $c->binary->FETCH('libtest-compile-perl')->Depends . '',
     '${misc:Depends}, ${perl:Depends}, libuniversal-require-perl'
+);
+
+# same thing, with B-D
+$c->source->Build_Depends_Indep->add('perl (>= 5.8.8)');
+$c->prune_perl_deps;
+is( $c->source->Build_Depends_Indep . '',
+    'libtest-pod-coverage-perl, libtest-pod-perl, libuniversal-require-perl, perl'
 );
