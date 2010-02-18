@@ -321,7 +321,7 @@ sub prune_perl_deps {
                 for my $dep (@ess) {
                     my $pruned = $self->prune_perl_dep( $dep, 0 );
 
-                    $self->$pkg->$rel->add($pruned) if $pruned;
+                    $pkg->$rel->add($pruned) if $pruned;
                 }
             }
         }
