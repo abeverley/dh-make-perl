@@ -182,25 +182,27 @@ Returns the list of the dependencies removed.
 sub remove {
     my( $self, @deps ) = @_;
 
-    my ( @kept, @removed );
+    my @removed;
 
     for my $deps(@deps) {
         $deps = Debian::Dependencies->new($deps)
             unless ref($deps);
 
         for my $dep(@$deps) {
+            my @kept;
+
             for( @$self ) {
-                if( $dep->satisfies($_) ) {
+                if( $_->satisfies($dep) ) {
                     push @removed, $_;
                 }
                 else {
                     push @kept, $_;
                 }
             }
+
+            @$self = @kept;
         }
     }
-
-    @$self = @kept;
 
     return @removed;
 }
