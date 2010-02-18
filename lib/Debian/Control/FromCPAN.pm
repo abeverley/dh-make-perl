@@ -267,9 +267,9 @@ sub prune_simple_perl_dep {
     # perl is needed in build-dependencies (see Policy 4.2)
     return $dep if $dep->pkg eq 'perl' and $build;
 
-    # unversioned perl should be replaced with ${perl:Depends} in
-    # non-build-dependencies
-    return '${perl:Depends}'
+    # unversioned perl non-build-dependency is redundant, because it will be
+    # covered by ${perl:Depends}
+    return undef
         if not $build
             and $dep->pkg eq 'perl'
             and $unversioned;
