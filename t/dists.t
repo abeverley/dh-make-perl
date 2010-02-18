@@ -3,56 +3,71 @@
 use strict;
 use warnings;
 
-use Test::More tests => 30;
+use Test::More tests => 12;
 
 use FindBin qw($Bin);
+use File::Compare ();
+use File::DirCompare;
+use File::Find::Rule;
 use File::Spec::Functions qw(splitpath);
+use File::Path ();
+use Text::Diff qw(diff);
 
-sub compare {
-    my ( $dist, $path, $variant ) = @_;
-    my ( $vol, $dir, $name ) = splitpath($path);
+sub compare_tree {
+    my ( $real, $wanted, $hint ) = @_;
 
-    return unless -f $path;
+    my @errors;
+    File::DirCompare->compare(
+        $real, $wanted,
+        sub {
+            my ( $a, $b ) = @_;
+            return
+                if $a and $a =~ m{/\.(?:svn|gh|git|CVS)/}
+                    or $b and $b =~ m{/\.(?:svn|gh|git|CVS)/};
+            return
+                if $a and $a =~ /\.bak$/
+                    or $b and $b =~ /\.bak$/;
 
-    $variant //= '';
+            unless ( defined($b) ) {
+                push @errors, diff( $a, '/dev/null' );
+                return;
+            }
+            unless ( defined($a) ) {
+                push @errors, diff( $a, '/dev/null' );
+                return;
+            }
+            push @errors, diff( $a, $b );
+        },
+        {   cmp => sub {
+                File::Compare::compare_text(
+                    @_,
+                    sub {
+                        my ( $a, $b ) = @_;
 
-    my $real = $path;
-    $path =~ s{/wanted-debian/}{/wanted-debian$variant/};
-    $real =~ s{/wanted-debian/}{/debian/};
-    my $diff = diff($path, $real);
+                        # different copyright years are normal
+                        # (test written in 2002 and run in 2020
+                        return 0
+                            if $a
+                                =~ /^Copyright: \d+, Joe Maintainer <joemaint\@test\.local>$/
+                                and $b
+                                =~ /^Copyright: \d+, Joe Maintainer <joemaint\@test\.local>$/;
 
-    if ( $name eq 'changelog' ) {
-        my $only_date_differs = 1;
-        for ( split( /\n/, $diff ) ) {
-            next if /^--- / or /^\+\+\+ /;
-            next unless /^[-+] /;
-            next if /^[-+] -- Joe Maintainer <joemaint\@test\.local>  /;
+                        # likewise, it is normal that the timestamp in the changelog differs
+                        return 0
+                            if $a
+                                =~ /^ -- Joe Maintainer <joemaint\@test\.local>  \w+, \d+ \w+ \d+ \d+:\d+:\d+ \+\d+$/
+                                and $b
+                                =~ /^ -- Joe Maintainer <joemaint\@test\.local>  \w+, \d+ \w+ \d+ \d+:\d+:\d+ \+\d+$/;
 
-            $only_date_differs = 0;
-            diag $name;
-            last;
+                        return $a ne $b;
+                    }
+                );
+            },
         }
+    );
 
-        $diff = '' if $only_date_differs;
-    }
-
-    if ( $name eq 'copyright' ) {
-        my $only_date_differs = 1;
-        for ( split( /\n/, $diff ) ) {
-            next if /^--- / or /^\+\+\+ /;
-            next unless /^[-+] /;
-            next if /^[-+] Copyright: \d+, Joe Maintainer <joemaint\@test\.local>/;
-
-            $only_date_differs = 0;
-            diag $name;
-            last;
-        }
-
-        $diff = '' if $only_date_differs;
-    }
-
-    is( $diff, '',
-        "$dist/debian/$name is OK" . ( $variant ? " ($variant)" : '' ) );
+    is( join( "\n", @errors ), '',
+        'Generated tree matches template' . ( $hint ? " ($hint)" : '' ) );
 }
 
 sub dist_ok($) {
@@ -70,18 +85,7 @@ sub dist_ok($) {
 
     is( $?, 0, "$dist_dir: system returned 0" );
 
-    use File::Find::Rule qw();
-    use Text::Diff qw(diff);
-    my @files = File::Find::Rule->or(
-               File::Find::Rule->new
-                    ->directory
-                    ->name( '.svn', 'CVS', '.git', '.hg' )
-                    ->prune
-                    ->discard,
-               File::Find::Rule->new,
-            )
-         ->in("$dist/wanted-debian");
-    compare( $dist_dir, $_) for @files;
+    compare_tree( "$dist/debian", "$dist/wanted-debian" );
 
     system( "$Bin/../dh-make-perl", "--verbose",
             "--home-dir", "$Bin/contents",
@@ -95,15 +99,32 @@ sub dist_ok($) {
 
     is( $?, 0, "$dist_dir --refresh: system returned 0" );
 
-    compare( $dist_dir, $_, '--refresh') for @files;
+    compare_tree( "$dist/debian", "$dist/wanted-debian--refresh", '--refresh' );
+
+    unlink File::Find::Rule->file->name('*.bak')->in("$dist/debian");
+
+    system( "$Bin/../dh-make-perl", "--verbose",
+            "--home-dir", "$Bin/contents",
+            "--apt-contents-dir", "$Bin/contents",
+            "--data-dir", "$Bin/../share",
+            $ENV{NO_NETWORK} ? '--no-network' : (),
+            "--sources-list",
+            "$Bin/contents/sources.list", "--email", "joemaint\@test.local",
+            "--refresh", '--source-format', '3.0 (quilt)',
+            $dist );
+
+    is( $?, 0,
+        "$dist_dir --refresh --source-format '3.0 (quilt)': system returned 0"
+    );
+
+    compare_tree(
+        "$dist/debian",
+        "$dist/wanted-debian--refresh--source-format=3.0_quilt",
+        '--refresh --source-format 3.0 (quilt)'
+    );
 
     # clean after the test
-    File::Find::Rule->file
-                    ->exec( sub{ unlink $_[2]
-                                or die "unlink($_[2]): $!" } )
-                    ->in("$dist/debian");
-
-    rmdir "$dist/debian" or die "rmdir($dist/debian): $!";
+    File::Path::rmtree("$dist/debian");
 
     unlink "$Bin/contents/Contents.cache" or die "unlink($Bin/contents.cache): $!";
     -e "$Bin/contents/wnpp.cache" and ( unlink "$Bin/contents/wnpp.cache"

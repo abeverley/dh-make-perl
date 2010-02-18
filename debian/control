@@ -8,6 +8,7 @@ Build-Depends-Indep:
  libarray-unique-perl,
  libclass-accessor-perl,
  libemail-date-format-perl,
+ libfile-dircompare-perl,
  libfile-find-rule-perl,
  libfile-touch-perl,
  liblist-moreutils-perl,
