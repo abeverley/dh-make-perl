@@ -1451,6 +1451,7 @@ sub update_file_list( $ % ) {
     my ( $self, %p ) = @_;
 
     while ( my ( $file, $new_content ) = each %p ) {
+        next unless @$new_content;
         # pkgname.foo file
         my $pkg_file = $self->debian_file("$pkgname.$file");
         my %uniq_content;
