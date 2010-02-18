@@ -1,5 +1,6 @@
 dh-make-perl (0.64) UNRELEASED; urgency=low
 
+  [ Damyan Ivanov ]
   * DhMakePerl: drop unused extract_changelog()
   * DhMakePerl: fix_rules() replaced with update_file_list() for updating
     examples and docs and checks for deprecated/obsolete entries in
@@ -15,6 +16,10 @@ dh-make-perl (0.64) UNRELEASED; urgency=low
     + looks for all kinds of WNPP bugs
     + uses the lists on http://www.debian.org/devel/wnpp
   * add --source-format option (defaults to "1.0")
+
+  [ gregor herrmann ]
+  * DhMakePerl: update_file_list() allows to --refresh --only docs and
+    examples separately now.
 
  -- Damyan Ivanov <dmn@debian.org>  Fri, 05 Feb 2010 09:05:25 +0200
 

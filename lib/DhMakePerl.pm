@@ -228,8 +228,12 @@ sub run {
             }
         }
 
-        if ( 'docs' ~~ $self->cfg->only or 'examples' ~~ $self->cfg->only) {
-            $self->update_file_list( docs => \@docs, examples => \@examples );
+        if ( 'examples' ~~ $self->cfg->only) {
+            $self->update_file_list( examples => \@examples );
+        }
+
+        if ( 'docs' ~~ $self->cfg->only) {
+            $self->update_file_list( docs => \@docs );
         }
 
         if ( 'copyright' ~~ $self->cfg->only ) {
