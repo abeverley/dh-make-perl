@@ -254,9 +254,11 @@ sub prune_simple_perl_dep {
     # perl-modules is replaced with perl
     $dep->pkg('perl') if $dep->pkg eq 'perl-modules';
 
-    my $unversioned = not $dep->ver
-        or $dep->rel =~ />/
-        and deb_ver_cmp( $dep->ver, $self->oldstable_perl_version ) <= 0;
+    my $unversioned = (
+        not $dep->ver
+            or $dep->rel =~ />/
+            and deb_ver_cmp( $dep->ver, $self->oldstable_perl_version ) <= 0
+    );
 
     # perl-base is (build-)essential
     return undef
