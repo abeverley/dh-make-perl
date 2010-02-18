@@ -18,6 +18,7 @@ dh-make-perl (0.64) UNRELEASED; urgency=low
   * add --source-format option (defaults to "1.0")
   * --refresh: fix pruning of binary package dependencies
     + also fix pruning of redundant perl(-base) (build-)dependencies
+  * when looking for READMEs to include in .docs, skip debian/README.source
 
   [ gregor herrmann ]
   * DhMakePerl: update_file_list() allows to --refresh --only docs and

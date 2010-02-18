@@ -992,6 +992,7 @@ sub extract_docs {
                 and ( !$self->cfg->exclude
                     or $File::Find::name !~ $self->cfg->exclude )
                 and !/\.svn-base$/
+                and $File::Find::name !~ m{debian/README\.source}
                 );
         },
         $dir
