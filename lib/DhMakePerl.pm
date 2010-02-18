@@ -56,7 +56,7 @@ use File::Basename qw( basename dirname );
 use File::Copy qw( copy move );
 use File::Find qw( find );
 use File::Path ();
-use File::Spec::Functions qw( catdir catfile splitpath );
+use File::Spec::Functions qw( catdir catfile catpath splitpath );
 use IO::File                   ();
 use Module::CoreList           ();
 use Module::Depends::Intrusive ();
@@ -2057,7 +2057,7 @@ sub write_source_format {
     my ( $self, $path ) = @_;
 
     my ( $vol, $dir, $file ) = splitpath($path);
-    $dir = catdir( $vol, $dir );
+    $dir = catpath( $vol, $dir );
 
     if ( $self->cfg->source_format eq '1.0' ) {
         # this is the default, remove debian/source
