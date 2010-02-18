@@ -9,13 +9,15 @@ use FindBin qw($Bin);
 use File::Spec::Functions qw(splitpath);
 
 sub compare {
-    my ( $dist, $path, $refresh ) = @_;
+    my ( $dist, $path, $variant ) = @_;
     my ( $vol, $dir, $name ) = splitpath($path);
 
     return unless -f $path;
 
+    $variant //= '';
+
     my $real = $path;
-    $path =~ s{/wanted-debian/}{/wanted-debian--refresh/} if $refresh;
+    $path =~ s{/wanted-debian/}{/wanted-debian$variant/};
     $real =~ s{/wanted-debian/}{/debian/};
     my $diff = diff($path, $real);
 
@@ -50,7 +52,7 @@ sub compare {
     }
 
     is( $diff, '',
-        "$dist/debian/$name is OK" . ( $refresh ? " after --refresh" : '' ) );
+        "$dist/debian/$name is OK" . ( $variant ? " ($variant)" : '' ) );
 }
 
 sub dist_ok($) {
@@ -93,7 +95,7 @@ sub dist_ok($) {
 
     is( $?, 0, "$dist_dir --refresh: system returned 0" );
 
-    compare( $dist_dir, $_, 1) for @files;
+    compare( $dist_dir, $_, '--refresh') for @files;
 
     # clean after the test
     File::Find::Rule->file
