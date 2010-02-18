@@ -65,3 +65,9 @@ $list->add('debhelper (>= 7)');
 $list->add('libtest-simple-perl');
 is( "$list", 'debhelper (>= 7), libmodule-build-perl, libtest-simple-perl',
     'adding duplicated keeps order' );
+
+# the example for 'remove' from POD
+$list = Debian::Dependencies->new('foo (>= 1.2), bar');
+$list->remove('foo, bar (>= 2.0)');
+is( "$list", 'bar' );
+
