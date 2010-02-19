@@ -1402,6 +1402,11 @@ sub drop_quilt {
         }
     }
 
+    # drop --with=quilt from dh command line
+    for(@rules) {
+        s/dh (.*)--with[= ]quilt\s*/dh $1/g;
+    }
+
     # remove build-dependency on quilt
     $control->source->Build_Depends->remove('quilt');
 

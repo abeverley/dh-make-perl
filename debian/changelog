@@ -21,6 +21,7 @@ dh-make-perl (0.64) UNRELEASED; urgency=low
   * when looking for READMEs to include in .docs, skip debian/README.source
   * do not rewrite completely debian/rules if it looks like using DH7 tiny
     rules
+  * drop_quilt(): remove --with=quilt from dh invocations
 
   [ gregor herrmann ]
   * DhMakePerl: update_file_list() allows to --refresh --only docs and
