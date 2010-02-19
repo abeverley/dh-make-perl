@@ -87,7 +87,7 @@ sub dist_ok($) {
 
     compare_tree( "$dist/debian", "$dist/wanted-debian" );
 
-    system( "$Bin/../dh-make-perl", "--verbose",
+    system( "$Bin/../dh-make-perl", "--no-verbose",
             "--home-dir", "$Bin/contents",
             "--apt-contents-dir", "$Bin/contents",
             "--data-dir", "$Bin/../share",
@@ -103,7 +103,7 @@ sub dist_ok($) {
 
     unlink File::Find::Rule->file->name('*.bak')->in("$dist/debian");
 
-    system( "$Bin/../dh-make-perl", "--verbose",
+    system( "$Bin/../dh-make-perl", "--no-verbose",
             "--home-dir", "$Bin/contents",
             "--apt-contents-dir", "$Bin/contents",
             "--data-dir", "$Bin/../share",
