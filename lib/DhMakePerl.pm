@@ -1563,6 +1563,24 @@ sub create_rules {
     my ( $rulesname, $error );
     $rulesname = 'rules.dh7.tiny';
 
+    # if debian/rules already exists, check if it looks like usind Debhelper 7
+    # tiny rules. If it does, ldo not re-create the file as it may have
+    # valuable customizations
+    if ( -e $file ) {
+        my @rules;
+        tie @rules, 'Tie::File', $file or die "Error opening '$file': $!";
+
+        for ( 0 .. $#rules - 1 ) {
+            if (    $rules[$_] =~ /^%:/
+                and $rules[ $_ + 1 ] =~ /^\tdh .* \$\@/ )
+            {
+                print "$file already yses DH7 tiny rules\n"
+                    if $self->cfg->verbose;
+                return;
+            }
+        }
+    }
+
     for my $source (
         catfile( $self->cfg->home_dir, $rulesname ),
         catfile( $self->cfg->data_dir, $rulesname )
