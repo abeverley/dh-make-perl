@@ -1579,7 +1579,7 @@ sub create_rules {
             if (    $rules[$_] =~ /^%:/
                 and $rules[ $_ + 1 ] =~ /^\tdh .* \$\@/ )
             {
-                print "$file already yses DH7 tiny rules\n"
+                print "$file already uses DH7 tiny rules\n"
                     if $self->cfg->verbose;
                 return;
             }
