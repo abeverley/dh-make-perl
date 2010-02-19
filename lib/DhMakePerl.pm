@@ -144,7 +144,8 @@ sub debian_file {
 
 =item backup_file(file_name)
 
-Creates a backup copy of the specified file by adding C<.bak> to its name.
+Creates a backup copy of the specified file by adding C<.bak> to its name. If
+the backup already exists, it is overwritten.
 
 Does nothing unless the C<backups> option is set.
 
@@ -153,8 +154,11 @@ Does nothing unless the C<backups> option is set.
 sub backup_file {
     my( $self, $file ) = @_;
 
-    copy( $file, "$file.bak" )
-        if $self->cfg->backups;
+    if ( $self->cfg->backups ) {
+        warn "W: overwriting $file.bak\n"
+            if -e "$file.bak" and $self->cfg->verbose;
+        copy( $file, "$file.bak" );
+    }
 }
 
 sub run {
@@ -198,16 +202,6 @@ sub run {
         $self->main_dir( $ARGV[0] || '.' );
         print "Engaging refresh mode in " . $self->main_dir . "\n"
             if $self->cfg->verbose;
-
-        die $self->debian_file('rules.bak') . " already exists. Aborting!\n"
-            if ( -e $self->debian_file('rules.bak') and 'rules' ~~ $self->cfg->only );
-
-        die $self->debian_file('copyright.bak')
-            . " already exists. Aborting!\n"
-            if ( -e $self->debian_file('copyright.bak') and 'copyright' ~~ $self->cfg->only );
-
-        die $self->debian_file('control.bak') . " already exists. Aborting!\n"
-            if ( -e $self->debian_file('control.bak') and 'control' ~~ $self->cfg->only );
 
         $self->process_meta;
         ( $pkgname, $version )
