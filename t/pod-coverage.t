@@ -14,7 +14,15 @@ my $min_pc = 0.18;
 eval "use Pod::Coverage $min_pc";
 plan skip_all => "Pod::Coverage $min_pc required for testing POD coverage"
     if $@;
-plan skip_all => "POD coverage is not full. set TEST_POD_COVERAGE if you want to see what is missing."
-    unless $ENV{TEST_POD_COVERAGE};
 
-all_pod_coverage_ok( { coverage_class => 'Pod::Coverage::CountParents' } );
+my @modules = all_modules();
+
+plan tests => scalar(@modules);
+
+for (@modules) {
+SKIP: {
+        skip "DhModPerl is not entirely documented", 1, if $_ eq 'DhMakePerl';
+        pod_coverage_ok( $_,
+            { coverage_class => 'Pod::Coverage::CountParents' } );
+    }
+}
