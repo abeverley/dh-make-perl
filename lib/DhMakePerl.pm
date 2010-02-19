@@ -323,11 +323,16 @@ EOF
     move( $tarball, dirname($tarball) . "/${pkgname}_${version}.orig.tar.gz" )
         if ( $tarball && $tarball =~ /(?:\.tar\.gz|\.tgz)$/ );
 
-    # fail before further inspection of the source
-    # $debiandir is set by extract_basic() above
-    -d $debiandir
-        && die
-        "The directory $debiandir is already present and I won't overwrite it: remove it yourself.\n";
+    if ( -d $debiandir ) {
+        warn "W: $debiandir already exists\n" if $self->cfg->verbose;
+        warn "W: moving to $debiandir.bak" if $self->cfg->verbose;
+        if ( -d "$debiandir.bak" ) {
+            warn "W: overwriting existing $debiandir.bak\n"
+                if $self->cfg->verbose;
+            File::Path::rmtree("$debiandir.bak");
+        }
+        rename $debiandir, "$debiandir.bak" or die $!;
+    }
 
     my $apt_contents = $self->get_apt_contents;
 
