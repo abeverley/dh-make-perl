@@ -1568,8 +1568,8 @@ sub create_rules {
     my ( $rulesname, $error );
     $rulesname = 'rules.dh7.tiny';
 
-    # if debian/rules already exists, check if it looks like usind Debhelper 7
-    # tiny rules. If it does, ldo not re-create the file as it may have
+    # if debian/rules already exists, check if it looks like using Debhelper 7
+    # tiny rules. If it does, do not re-create the file as it may have
     # valuable customizations
     if ( -e $file ) {
         my @rules;
