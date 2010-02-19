@@ -277,7 +277,9 @@ L<Debian::Dependency>
 
 =over 4
 
-=item Copyright (C) 2008 Damyan Ivanov <dmn@debian.org>
+=item Copyright (C) 2008, 2009, 2010 Damyan Ivanov <dmn@debian.org>
+
+=item Copyright (C) 2009 gregor herrmann <gregoa@debian.org>
 
 =back
 

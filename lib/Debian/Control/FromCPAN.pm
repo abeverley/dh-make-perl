@@ -351,7 +351,7 @@ sub prune_perl_deps {
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright (C) 2009 Damyan Ivanov L<dmn@debian.org>
+Copyright (C) 2009, 2010 Damyan Ivanov L<dmn@debian.org>
 
 This program is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License version 2 as published by the Free
