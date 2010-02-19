@@ -51,7 +51,7 @@ The unique ID of the big in the BTS.
 
 =item title
 
-The title of the bug. Usualy something like
+The title of the bug. Usually something like
 
     RFP: nice-package -- do nice things easier
 

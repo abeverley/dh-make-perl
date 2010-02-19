@@ -4,7 +4,7 @@ use warnings;
 
 =head1 NAME
 
-Debian::WNPP::Cache - offline storage of Debians work-needing package lists
+Debian::WNPP::Cache - offline storage of Debian's work-needing package lists
 
 =head1 SYNOPSIS
 
