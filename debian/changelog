@@ -1,4 +1,4 @@
-dh-make-perl (0.64) UNRELEASED; urgency=low
+dh-make-perl (0.64) unstable; urgency=low
 
   [ Damyan Ivanov ]
   * DhMakePerl: drop unused extract_changelog()
@@ -27,7 +27,7 @@ dh-make-perl (0.64) UNRELEASED; urgency=low
   * DhMakePerl: update_file_list() allows to --refresh --only docs and
     examples separately now.
 
- -- Damyan Ivanov <dmn@debian.org>  Fri, 05 Feb 2010 09:05:25 +0200
+ -- gregor herrmann <gregoa@debian.org>  Fri, 19 Feb 2010 20:50:04 +0100
 
 dh-make-perl (0.63) unstable; urgency=low
 
