@@ -10,7 +10,7 @@ use Pod::Usage;
 __PACKAGE__->mk_accessors(
     qw(
         cfg apt_contents main_dir debian_dir meta bdepends bdependsi depends
-        priority section maintainer arch start_dir
+        priority section maintainer arch start_dir overrides
         )
 );
 
@@ -75,8 +75,6 @@ use version qw( qv );
 
 # TODO:
 # * get more info from the package (maybe using CPAN methods)
-
-our %overrides;
 
 use constant debstdversion => '3.8.4';
 
@@ -1923,6 +1921,9 @@ sub get_maintainer {
     return "$name <$email>";
 }
 
+# a package glocal is needed here so that the 'do $overrides' below sees it
+our %overrides;
+
 sub load_overrides {
     my ($self) = @_;
 
@@ -1931,6 +1932,8 @@ sub load_overrides {
         do $overrides if -f $overrides;
         $overrides = catfile( $self->cfg->home_dir, 'overrides');
         do $overrides if -f $overrides;
+
+        $self->overrides( \%overrides );
     };
     if ($@) {
         die "Error when processing the overrides files: $@";
@@ -2045,7 +2048,7 @@ sub get_override_data {
     my ($self) = @_;
 
     my ( $data, $checkver, $subkey );
-    $data = $overrides{$perlname};
+    $data = $self->overrides->{$perlname};
 
     return unless defined $data;
     die "Value of '$perlname' in overrides not a hashref\n"
