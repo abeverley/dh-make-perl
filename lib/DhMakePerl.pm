@@ -8,7 +8,7 @@ use base 'Class::Accessor';
 use Pod::Usage;
 
 __PACKAGE__->mk_accessors(
-    qw( cfg apt_contents main_dir debian_dir meta priority ));
+    qw( cfg apt_contents main_dir debian_dir meta priority section ));
 
 =head1 NAME
 
@@ -73,7 +73,7 @@ use version qw( qv );
 # * get more info from the package (maybe using CPAN methods)
 
 my (
-    $section,             $depends,       $bdepends,
+    $depends,       $bdepends,
     $bdependsi,           $maintainer,    $arch,
     $closes,              $date,
     $startdir,
@@ -81,7 +81,6 @@ my (
 our %overrides;
 
 use constant debstdversion => '3.8.4';
-$section       = 'perl';
 $depends       = Debian::Dependencies->new('${perl:Depends}');
 
 # this is the version in 'oldstable'. No much point on depending on something
@@ -90,6 +89,7 @@ use constant oldest_perl_version => '5.8.8-7';
 
 our %DEFAULTS = (
     priority => 'optional',
+    section  => 'perl',
 );
 
 sub new {
@@ -1527,7 +1527,7 @@ sub create_control {
     }
 
     $fh->print("Source: $srcname\n");
-    $fh->print("Section: $section\n");
+    $fh->printf("Section: %s\n", $self->section );
     $fh->printf( "Priority: %s\n", $self->priority );
     local $Text::Wrap::break     = ', ';
     local $Text::Wrap::separator = ",\n";
@@ -1958,7 +1958,7 @@ sub apply_overrides {
             $val = $self->get_override_val( $data, $subkey, 'srcname' )
         )
         );
-    $section = $val
+    $self->section($val)
         if (
         defined(
             $val = $self->get_override_val( $data, $subkey, 'section' )
