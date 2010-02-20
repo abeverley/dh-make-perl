@@ -2101,6 +2101,23 @@ sub write_source_format {
     }
 }
 
+=item warning I<string> ...
+
+In verbose mode, prints supplied arguments on STDERR, prepended with C<W: > and
+suffixed with a new line.
+
+Does nothing in non-verbose mode.
+
+=cut
+
+sub warning {
+    my $self = shift;
+
+    return unless $self->cfg->verbose;
+
+    warn "W: ", @_, "\n";
+}
+
 sub _warn_incomplete_copyright {
     my $self = shift;
 
