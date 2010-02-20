@@ -9,7 +9,8 @@ use Pod::Usage;
 
 __PACKAGE__->mk_accessors(
     qw(
-        cfg apt_contents main_dir debian_dir meta depends priority section
+        cfg apt_contents main_dir debian_dir meta bdepends depends priority
+        section
         )
 );
 
@@ -76,7 +77,6 @@ use version qw( qv );
 # * get more info from the package (maybe using CPAN methods)
 
 my (
-    $bdepends,
     $bdependsi,           $maintainer,    $arch,
     $closes,              $date,
     $startdir,
@@ -192,9 +192,8 @@ sub run {
 
     chomp($date);
 
-    $bdepends = Debian::Dependencies->new(
-        'debhelper (>=' . $self->cfg->dh . ')',
-    );
+    $self->bdepends(
+        Debian::Dependencies->new( 'debhelper (>=' . $self->cfg->dh . ')' ) );
 
     # Help requested? Nice, we can just die! Isn't it helpful?
     die pod2usage(-message => "See `man 1 dh-make-perl' for details.\n") if $self->cfg->help;
@@ -368,7 +367,8 @@ EOF
     $self->extract_docs;
     $self->extract_examples;
 
-    $bdepends += Debian::Dependency->new('perl (>= 5.10) | libmodule-build-perl')
+    $self->bdepends->add(
+        Debian::Dependency->new('perl (>= 5.10) | libmodule-build-perl') )
         if ( $module_build eq "Module-Build" );
 
     my ( $extrabdepends, $extrabdependsi );
@@ -382,9 +382,9 @@ EOF
             ;
     }
 
-    $bdepends += Debian::Dependencies->new( $self->cfg->bdepends )
+    $self->bdepends->add( Debian::Dependencies->new( $self->cfg->bdepends ) )
         if $self->cfg->bdepends;
-    $bdepends += $extrabdepends;
+    $self->bdepends->add($extrabdepends);
 
     $bdependsi += Debian::Dependencies->new( $self->cfg->bdependsi )
         if $self->cfg->bdependsi;
@@ -1525,7 +1525,7 @@ sub create_control {
         and !defined($self->cfg->bdepends)
         and !defined($self->cfg->bdependsi) )
     {
-        $bdepends += $bdependsi;
+        $self->bdepends->add($bdependsi);
         @$bdependsi = ();
     }
 
@@ -1534,7 +1534,8 @@ sub create_control {
     $fh->printf( "Priority: %s\n", $self->priority );
     local $Text::Wrap::break     = ', ';
     local $Text::Wrap::separator = ",\n";
-    $fh->print( wrap( '', ' ', "Build-Depends: $bdepends\n" ) ) if $bdepends;
+    $fh->print( wrap( '', ' ', "Build-Depends: " . $self->bdepends . "\n" ) )
+        if $self->bdepends;
 
     $fh->print( wrap( '', ' ', "Build-Depends-Indep: $bdependsi\n" ) )
         if $bdependsi;
@@ -1980,7 +1981,7 @@ sub apply_overrides {
             $val = $self->get_override_val( $data, $subkey, 'depends' )
         )
         );
-    $bdepends = Debian::Dependencies->new($val)
+    $self->bdepends( Debian::Dependencies->new($val) )
         if (
         defined(
             $val = $self->get_override_val( $data, $subkey, 'bdepends' )
