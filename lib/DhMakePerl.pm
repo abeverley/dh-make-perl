@@ -10,7 +10,7 @@ use Pod::Usage;
 __PACKAGE__->mk_accessors(
     qw(
         cfg apt_contents main_dir debian_dir meta bdepends bdependsi depends
-        priority section maintainer
+        priority section maintainer arch
         )
 );
 
@@ -77,7 +77,6 @@ use version qw( qv );
 # * get more info from the package (maybe using CPAN methods)
 
 my (
-    $arch,
     $closes,              $date,
     $startdir,
 );
@@ -90,6 +89,7 @@ use constant debstdversion => '3.8.4';
 use constant oldest_perl_version => '5.8.8-7';
 
 our %DEFAULTS = (
+    arch      => 'all',
     bdependsi => Debian::Dependencies->new("perl"),
     depends   => Debian::Dependencies->new('${perl:Depends}'),
     priority  => 'optional',
@@ -109,7 +109,6 @@ sub new {
     return $self;
 }
 
-$arch      = 'all';
 $date      = email_date(time);
 $startdir  = getcwd();
 
@@ -211,7 +210,7 @@ sub run {
         return 0;
     }
 
-    $arch = $self->cfg->arch if $self->cfg->arch;
+    $self->arch( $self->cfg->arch ) if $self->cfg->arch;
 
     $self->maintainer( $self->get_maintainer( $self->cfg->email ) );
 
@@ -356,7 +355,7 @@ EOF
     my $apt_contents = $self->get_apt_contents;
 
     $self->depends->add( Debian::Dependency->new('${shlibs:Depends}') )
-        if $arch eq 'any';
+        if $self->arch eq 'any';
     $self->depends->add( Debian::Dependency->new('${misc:Depends}') );
     my $extradeps = $self->extract_depends( $apt_contents, 0 );
     $self->depends->add($extradeps);
@@ -372,7 +371,7 @@ EOF
         if ( $module_build eq "Module-Build" );
 
     my ( $extrabdepends, $extrabdependsi );
-    if ( $arch eq 'any' ) {
+    if ( $self->arch eq 'any' ) {
         $extrabdepends = $self->extract_depends( $apt_contents, 1 )
             + $extradeps;
     }
@@ -623,12 +622,12 @@ sub install_package {
 
     my ( $archspec, $debname );
 
-    if ( $arch eq 'any' ) {
+    if ( $self->arch eq 'any' ) {
         $archspec = `dpkg --print-architecture`;
         chomp($archspec);
     }
     else {
-        $archspec = $arch;
+        $archspec = $self->arch;
     }
 
     $debname = "${pkgname}_$version-1_$archspec.deb";
@@ -702,7 +701,9 @@ sub extract_basic {
     $version =~ s/[^-.+a-zA-Z0-9]+/-/g;
     $version = "0$version" unless $version =~ /^\d/;
 
-    print "Found: $perlname $version ($pkgname arch=$arch)\n" if $self->cfg->verbose;
+    printf( "Found: %s %s (%s arch=%s)\n",
+        $perlname, $version, $pkgname, $self->arch )
+        if $self->cfg->verbose;
     $self->debian_dir( $self->main_file('debian') );
 
     $upsurl = "http://search.cpan.org/dist/$perlname/";
@@ -1299,7 +1300,7 @@ sub check_for_xs {
     ( !$self->cfg->exclude or $rel_path !~ $self->cfg->exclude )
         && /\.(xs|c|cpp|cxx)$/i
         && do {
-        $arch = 'any';
+        $self->arch('any');
         };
 }
 
@@ -1523,7 +1524,7 @@ sub create_control {
 
     my $fh = $self->_file_w($file);
 
-    if (    $arch ne 'all'
+    if (    $self->arch ne 'all'
         and !defined($self->cfg->bdepends)
         and !defined($self->cfg->bdependsi) )
     {
@@ -1565,7 +1566,7 @@ sub create_control {
     } if $self->cfg->pkg_perl;
     $fh->print("\n");
     $fh->print("Package: $pkgname\n");
-    $fh->print("Architecture: $arch\n");
+    $fh->printf( "Architecture: %s\n", $self->arch );
     $fh->print( wrap( '', ' ', "Depends: " . $self->depends . "\n" ) )
         if $self->depends;
     $fh->print($extrapfields) if defined $extrapfields;
@@ -2012,7 +2013,7 @@ sub apply_overrides {
             $val = $self->get_override_val( $data, $subkey, 'version' )
         )
         );
-    $arch = $val
+    $self->arch($val)
         if (
         defined( $val = $self->get_override_val( $data, $subkey, 'arch' ) ) );
     @docs = split( /\s+/, $val )
