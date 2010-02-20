@@ -10,11 +10,9 @@ $maker->cfg( DhMakePerl::Config->new );
 
 $maker->meta( { name => 'Foo::Bar', version => 'v1.002003' } );
 
-my ($name, $ver);
-
-eval { ( $name, $ver ) = $maker->extract_name_ver; };
+eval { $maker->extract_name_ver; };
 
 is($@, "", "Calling extract_name_ver should not die");
 
-is($name, "Foo-Bar", "Dist name should be Foo-Bar");
-is($ver,  "1.2.3",   "Dist version should be 1.2.3");
+is($maker->perlname, "Foo-Bar", "Dist name should be Foo-Bar");
+is($maker->version,  "1.2.3",   "Dist version should be 1.2.3");

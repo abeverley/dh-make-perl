@@ -11,6 +11,7 @@ __PACKAGE__->mk_accessors(
     qw(
         cfg apt_contents main_dir debian_dir meta bdepends bdependsi depends
         priority section maintainer arch start_dir overrides
+        perlname version pkgversion pkgname srcname
         )
 );
 
@@ -107,15 +108,8 @@ sub new {
 # If we're being required rather than called as a main command, then
 # return now without doing any work.  This facilitates easier testing.
 
-my ( $perlname, $modulepm );
-my ($pkgname, $srcname,
-
-    # $version is the version from the perl module itself
-    $version,
-
-    # $pkgversion is the resulting version of the package: User's
-    # --version=s or "$version-1"
-    $pkgversion,
+my ( $modulepm );
+my (
     $desc, $longdesc, $copyright, $author, $upsurl
 );
 my ( $extrasfields, $extrapfields );
@@ -212,8 +206,7 @@ sub run {
             if $self->cfg->verbose;
 
         $self->process_meta;
-        ( $pkgname, $version )
-            = $self->extract_basic();    # also detects arch-dep package
+        $self->extract_basic();    # also detects arch-dep package
         $module_build
             = ( -f $self->main_file('Build.PL') ) ? "Module-Build" : "MakeMaker";
 
@@ -317,19 +310,24 @@ EOF
     $self->process_meta;
     $self->findbin_fix();
 
-    ( $pkgname, $version ) = $self->extract_basic();
+    $self->extract_basic();
     if ( defined $self->cfg->packagename ) {
-        $pkgname = $self->cfg->packagename;
+        $self->pkgname( $self->cfg->packagename );
     }
     unless ( defined $self->cfg->version ) {
-        $pkgversion = $version . "-1";
+        $self->pkgversion( $self->version . '-1' );
     }
     else {
-        $pkgversion = $self->cfg->version;
+        $self->pkgversion( $self->cfg->version );
     }
 
-    move( $tarball, dirname($tarball) . "/${pkgname}_${version}.orig.tar.gz" )
-        if ( $tarball && $tarball =~ /(?:\.tar\.gz|\.tgz)$/ );
+    move(
+        $tarball,
+        sprintf(
+            "%s/%s_%s.orig.tar.gz",
+            dirname($tarball), $self->pkgname, $self->version
+        )
+    ) if ( $tarball && $tarball =~ /(?:\.tar\.gz|\.tgz)$/ );
 
     if ( -d $self->debian_dir ) {
         $self->warning( $self->debian_dir . 'already exists' );
@@ -400,7 +398,7 @@ EOF
     $self->write_source_format(
         catfile( $self->debian_dir, 'source', 'format' ) );
     $self->create_changelog( $self->debian_file('changelog'),
-        $self->cfg->closes // $self->get_wnpp($pkgname) );
+        $self->cfg->closes // $self->get_wnpp( $self->pkgname ) );
     $self->create_rules( $self->debian_file('rules') );
     $self->create_compat( $self->debian_file('compat') );
     $self->create_watch( $self->debian_file('watch') ) if $upsurl;
@@ -615,7 +613,8 @@ sub install_package {
         $archspec = $self->arch;
     }
 
-    $debname = "${pkgname}_$version-1_$archspec.deb";
+    $debname = sprintf( "%s_%s-1_%s.deb", $self->pkgname, $self->version,
+        $archspec );
 
     my $deb = $self->start_dir . "/$debname";
     system("dpkg -i $deb") == 0
@@ -674,25 +673,23 @@ sub extract_basic_copyright {
 sub extract_basic {
     my ($self) = @_;
 
-    ( $perlname, $version ) = $self->extract_name_ver();
+    $self->extract_name_ver();
     find( sub { $self->check_for_xs }, $self->main_dir );
-    $pkgname = lc $perlname;
+    my $pkgname = lc $self->perlname;
     $pkgname = 'lib' . $pkgname unless $pkgname =~ /^lib/;
     $pkgname .= '-perl';
 
     # ensure policy compliant names and versions (from Joeyh)...
     $pkgname =~ s/[^-.+a-zA-Z0-9]+/-/g;
 
-    $srcname = $pkgname;
-    $version =~ s/[^-.+a-zA-Z0-9]+/-/g;
-    $version = "0$version" unless $version =~ /^\d/;
+    $self->pkgname($pkgname);
 
     printf( "Found: %s %s (%s arch=%s)\n",
-        $perlname, $version, $pkgname, $self->arch )
+        $self->perlname, $self->version, $self->pkgname, $self->arch )
         if $self->cfg->verbose;
     $self->debian_dir( $self->main_file('debian') );
 
-    $upsurl = "http://search.cpan.org/dist/$perlname/";
+    $upsurl = sprintf( "http://search.cpan.org/dist/%s/", $self->perlname );
 
     $copyright = $self->extract_basic_copyright();
     if ($modulepm) {
@@ -708,7 +705,8 @@ sub extract_basic {
         $self->main_dir
     );
 
-    return ( $pkgname, $version );
+    $self->pkgname($pkgname);
+    $self->srcname($pkgname);
 }
 
 sub makefile_pl {
@@ -742,11 +740,19 @@ sub extract_name_ver {
         }
     }
     else {
-        ( $name, $ver ) = $self->extract_name_ver_from_makefile( $self->makefile_pl );
+        $self->extract_name_ver_from_makefile( $self->makefile_pl );
+        $name = $self->perlname;
+        $ver  = $self->version;
     }
 
+    # final sanitazing of name and version
+    $ver =~ s/[^-.+a-zA-Z0-9]+/-/g;
+    $ver = "0$ver" unless $ver =~ /^\d/;
+
     $name =~ s/::/-/g;
-    return ( $name, $ver );
+
+    $self->perlname($name);
+    $self->version($ver);
 }
 
 sub extract_name_ver_from_makefile {
@@ -901,7 +907,8 @@ sub extract_name_ver_from_makefile {
         }
     }
 
-    return ( $name, $ver );
+    $self->perlname($name);
+    $self->version($ver);
 }
 
 sub extract_desc {
@@ -942,7 +949,7 @@ sub extract_desc {
             = $parser->get('DESCRIPTION')
             || $parser->get('DETAILS')
             || $desc;
-        ( $modulename = $perlname ) =~ s/-/::/g;
+        ( $modulename = $self->perlname ) =~ s/-/::/g;
         $longdesc =~ s/This module/$modulename/;
 
         local ($Text::Wrap::columns) = 78;
@@ -1472,7 +1479,7 @@ sub update_file_list( $ % ) {
     while ( my ( $file, $new_content ) = each %p ) {
         next unless @$new_content;
         # pkgname.foo file
-        my $pkg_file = $self->debian_file("$pkgname.$file");
+        my $pkg_file = $self->debian_file( $self->pkgname .".$file" );
         my %uniq_content;
         my @existing_content;
 
@@ -1518,8 +1525,8 @@ sub create_control {
         @{ $self->bdependsi } = ();
     }
 
-    $fh->print("Source: $srcname\n");
-    $fh->printf("Section: %s\n", $self->section );
+    $fh->printf( "Source: %s\n", $self->srcname );
+    $fh->printf( "Section: %s\n", $self->section );
     $fh->printf( "Priority: %s\n", $self->priority );
     local $Text::Wrap::break     = ', ';
     local $Text::Wrap::separator = ",\n";
@@ -1544,14 +1551,15 @@ sub create_control {
     $fh->printf( "Standards-Version: %s\n", $self->debstdversion );
     $fh->print("Homepage: $upsurl\n") if $upsurl;
     do {
-        $fh->print(
-            "Vcs-Svn: svn://svn.debian.org/pkg-perl/trunk/$srcname/\n");
-        $fh->print(
-            "Vcs-Browser: http://svn.debian.org/viewsvn/pkg-perl/trunk/$srcname/\n"
+        $fh->printf( "Vcs-Svn: svn://svn.debian.org/pkg-perl/trunk/%s/\n",
+            $self->srcname );
+        $fh->printf(
+            "Vcs-Browser: http://svn.debian.org/viewsvn/pkg-perl/trunk/%s/\n",
+            $self->srcname
         );
     } if $self->cfg->pkg_perl;
     $fh->print("\n");
-    $fh->print("Package: $pkgname\n");
+    $fh->printf( "Package: %s\n", $self->pkgname );
     $fh->printf( "Architecture: %s\n", $self->arch );
     $fh->print( wrap( '', ' ', "Depends: " . $self->depends . "\n" ) )
         if $self->depends;
@@ -1570,7 +1578,8 @@ sub create_changelog {
     my $closes = $bug ? " (Closes: #$bug)" : '';
     my $changelog_dist = $self->cfg->pkg_perl ? "UNRELEASED" : "unstable";
 
-    $fh->print("$srcname ($pkgversion) $changelog_dist; urgency=low\n");
+    $fh->printf( "%s (%s) %s; urgency=low\n",
+        $self->srcname, $self->pkgversion, $changelog_dist );
     $fh->print("\n  * Initial Release.$closes\n\n");
     $fh->printf( " -- %s  %s\n", $self->maintainer, email_date(time) );
 
@@ -1672,7 +1681,7 @@ sub create_copyright {
 
     # Header section
     %fields = (
-        Name       => $perlname,
+        Name       => $self->perlname,
         Maintainer => $cprt_author,
         Source     => $upsurl
     );
@@ -1874,7 +1883,7 @@ sub create_readme {
     $fh->printf(
         "This is the debian package for the %s module.
 It was created by %s using dh-make-perl.
-", $perlname, $self->maintainer,
+", $self->perlname, $self->maintainer,
     );
     $fh->close;
 }
@@ -1886,11 +1895,8 @@ sub create_watch {
 
     my $version_re = 'v?(\d[\d.-]+)\.(?:tar(?:\.gz|\.bz2)?|tgz|zip)';
 
-    $fh->print(
-        "version=3
-$upsurl   .*/$perlname-$version_re\$
-"
-    );
+    $fh->printf( "version=3\n$upsurl   .*/%s-%s\$\n",
+        $self->perlname, $version_re );
     $fh->close;
 }
 
@@ -1947,13 +1953,13 @@ sub apply_overrides {
 
     ( $data, $subkey ) = $self->get_override_data();
     return unless defined $data;
-    $pkgname = $val
+    $self->pkgname($val)
         if (
         defined(
             $val = $self->get_override_val( $data, $subkey, 'pkgname' )
         )
         );
-    $srcname = $val
+    $self->srcname($val)
         if (
         defined(
             $val = $self->get_override_val( $data, $subkey, 'srcname' )
@@ -1998,7 +2004,7 @@ sub apply_overrides {
             $val = $self->get_override_val( $data, $subkey, 'longdesc' )
         )
         );
-    $pkgversion = $val
+    $self->pkgversion($val)
         if (
         defined(
             $val = $self->get_override_val( $data, $subkey, 'version' )
@@ -2048,17 +2054,18 @@ sub get_override_data {
     my ($self) = @_;
 
     my ( $data, $checkver, $subkey );
-    $data = $self->overrides->{$perlname};
+    $data = $self->overrides->{ $self->perlname };
 
     return unless defined $data;
-    die "Value of '$perlname' in overrides not a hashref\n"
+    die sprintf( "Value of '%s' in overrides not a hashref\n",
+        $self->perlname )
         unless ref($data) eq 'HASH';
     if ( defined( $checkver = $data->{checkver} ) ) {
         die "checkver not a function\n" unless ( ref($checkver) eq 'CODE' );
         $subkey = &$checkver( $self->main_dir );
     }
     else {
-        $subkey = $pkgversion;
+        $subkey = $self->pkgversion;
     }
     return ( $data, $subkey );
 }
@@ -2079,25 +2086,27 @@ sub package_already_exists {
     my( $self, $apt_contents ) = @_;
 
     my $apt_cache = AptPkg::Cache->new;
-    my $found = $apt_cache->packages->lookup($pkgname);
+    my $found = $apt_cache->packages->lookup( $self->pkgname );
 
     if ($found) {
         warn "**********\n";
         warn "WARNING: a package named\n";
-        warn "              '$pkgname'\n";
+        warn "              '" . $self->pkgname ."'\n";
         warn "         is already available in APT repositories\n";
         warn "Maintainer: ", $found->{Maintainer}, "\n";
         my $short_desc = (split( /\n/, $found->{LongDesc} ))[0];
         warn "Description: $short_desc\n";
     }
     elsif ($apt_contents) {
-        my $found = $apt_contents->find_perl_module_package($perlname);
+        my $found
+            = $apt_contents->find_perl_module_package( $self->perlname );
 
         if ($found) {
-            my $mod_name = $perlname =~ s/-/::/g;
+            my $mod_name = $self->perlname =~ s/-/::/g;
             warn "**********\n";
             warn "NOTICE: the package '$found', available in APT repositories\n";
-            warn "        already contains a module named $perlname\n";
+            warn "        already contains a module named "
+                . $self->perlname . "\n";
         }
     }
 
