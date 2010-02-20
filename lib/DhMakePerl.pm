@@ -7,7 +7,7 @@ use 5.010;    # we use smart matching
 use base 'Class::Accessor';
 use Pod::Usage;
 
-__PACKAGE__->mk_accessors(qw( cfg apt_contents main_dir meta ));
+__PACKAGE__->mk_accessors(qw( cfg apt_contents main_dir debian_dir meta ));
 
 =head1 NAME
 
@@ -74,7 +74,7 @@ use version qw( qv );
 my ($oldest_perl_version, $debstdversion, $priority,
     $section,             $depends,       $bdepends,
     $bdependsi,           $maintainer,    $arch,
-    $closes,              $date,          $debiandir,
+    $closes,              $date,
     $startdir,
 );
 our %overrides;
@@ -248,7 +248,7 @@ sub run {
             }
 
             $self->write_source_format(
-                catfile( $debiandir, 'source', 'format' ) );
+                catfile( $self->debian_dir, 'source', 'format' ) );
 
             if( my $apt_contents = $self->get_apt_contents ) {
                 $control->dependencies_from_cpan_meta(
@@ -323,15 +323,15 @@ EOF
     move( $tarball, dirname($tarball) . "/${pkgname}_${version}.orig.tar.gz" )
         if ( $tarball && $tarball =~ /(?:\.tar\.gz|\.tgz)$/ );
 
-    if ( -d $debiandir ) {
-        warn "W: $debiandir already exists\n" if $self->cfg->verbose;
-        warn "W: moving to $debiandir.bak" if $self->cfg->verbose;
-        if ( -d "$debiandir.bak" ) {
-            warn "W: overwriting existing $debiandir.bak\n"
-                if $self->cfg->verbose;
-            File::Path::rmtree("$debiandir.bak");
+    if ( -d $self->debian_dir ) {
+        $self->warning( $self->debian_dir . 'already exists' );
+        my $bak = $self->debian_dir . '.bak';
+        $self->warning( "moving to $bak" );
+        if ( -d $bak ) {
+            $self->warning("overwriting existing $bak");
+            File::Path::rmtree($bak);
         }
-        rename $debiandir, "$debiandir.bak" or die $!;
+        rename $self->debian_dir, $bak or die $!;
     }
 
     my $apt_contents = $self->get_apt_contents;
@@ -383,22 +383,24 @@ EOF
     print "Found examples: @examples\n" if @examples and $self->cfg->verbose;
 
     # start writing out the data
-    mkdir( $debiandir, 0755 ) || die "Cannot create $debiandir dir: $!\n";
-    $self->create_control("$debiandir/control");
-    $self->write_source_format( catfile( $debiandir, 'source', 'format' ) );
+    mkdir( $self->debian_dir, 0755 )
+        || die "Cannot create " . $self->debian_dir . " dir: $!\n";
+    $self->create_control( $self->debian_file('control') );
+    $self->write_source_format(
+        catfile( $self->debian_dir, 'source', 'format' ) );
     if ( defined $self->cfg->closes ) {
         $closes = $self->cfg->closes;
     }
     else {
         $closes = $self->get_wnpp($pkgname);
     }
-    $self->create_changelog( "$debiandir/changelog", $closes );
-    $self->create_rules("$debiandir/rules");
-    $self->create_compat("$debiandir/compat");
-    $self->create_watch("$debiandir/watch") if $upsurl;
+    $self->create_changelog( $self->debian_file('changelog'), $closes );
+    $self->create_rules( $self->debian_file('rules') );
+    $self->create_compat( $self->debian_file('compat') );
+    $self->create_watch( $self->debian_file('watch') ) if $upsurl;
 
     #create_readme("$debiandir/README.Debian");
-    $self->create_copyright("$debiandir/copyright");
+    $self->create_copyright( $self->debian_file('copyright') );
     $self->update_file_list( docs => \@docs, examples => \@examples );
     $self->apply_final_overrides();
     $self->build_package
@@ -679,7 +681,7 @@ sub extract_basic {
     $version = "0$version" unless $version =~ /^\d/;
 
     print "Found: $perlname $version ($pkgname arch=$arch)\n" if $self->cfg->verbose;
-    $debiandir = $self->main_file('debian');
+    $self->debian_dir( $self->main_file('debian') );
 
     $upsurl = "http://search.cpan.org/dist/$perlname/";
 
