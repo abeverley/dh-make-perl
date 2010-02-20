@@ -8,7 +8,10 @@ use base 'Class::Accessor';
 use Pod::Usage;
 
 __PACKAGE__->mk_accessors(
-    qw( cfg apt_contents main_dir debian_dir meta priority section ));
+    qw(
+        cfg apt_contents main_dir debian_dir meta depends priority section
+        )
+);
 
 =head1 NAME
 
@@ -73,7 +76,7 @@ use version qw( qv );
 # * get more info from the package (maybe using CPAN methods)
 
 my (
-    $depends,       $bdepends,
+    $bdepends,
     $bdependsi,           $maintainer,    $arch,
     $closes,              $date,
     $startdir,
@@ -81,13 +84,13 @@ my (
 our %overrides;
 
 use constant debstdversion => '3.8.4';
-$depends       = Debian::Dependencies->new('${perl:Depends}');
 
 # this is the version in 'oldstable'. No much point on depending on something
 # older
 use constant oldest_perl_version => '5.8.8-7';
 
 our %DEFAULTS = (
+    depends  => Debian::Dependencies->new('${perl:Depends}'),
     priority => 'optional',
     section  => 'perl',
 );
@@ -353,12 +356,12 @@ EOF
 
     my $apt_contents = $self->get_apt_contents;
 
-    $depends += Debian::Dependency->new('${shlibs:Depends}')
+    $self->depends->add( Debian::Dependency->new('${shlibs:Depends}') )
         if $arch eq 'any';
-    $depends += Debian::Dependency->new('${misc:Depends}');
+    $self->depends->add( Debian::Dependency->new('${misc:Depends}') );
     my $extradeps = $self->extract_depends( $apt_contents, 0 );
-    $depends += $extradeps;
-    $depends += Debian::Dependencies->new( $self->cfg->depends )
+    $self->depends->add($extradeps);
+    $self->depends->add( Debian::Dependencies->new( $self->cfg->depends ) )
         if $self->cfg->depends;
 
     $module_build = ( -f $self->main_file('Build.PL') ) ? "Module-Build" : "MakeMaker";
@@ -1559,7 +1562,8 @@ sub create_control {
     $fh->print("\n");
     $fh->print("Package: $pkgname\n");
     $fh->print("Architecture: $arch\n");
-    $fh->print( wrap( '', ' ', "Depends: $depends\n" ) ) if $depends;
+    $fh->print( wrap( '', ' ', "Depends: " . $self->depends . "\n" ) )
+        if $self->depends;
     $fh->print($extrapfields) if defined $extrapfields;
     $fh->print(
         "Description:" . (($desc =~ m/^ /) ? "" : " ") . "$desc\n$longdesc\n .\n This description was automagically extracted from the module by dh-make-perl.\n"
@@ -1970,7 +1974,7 @@ sub apply_overrides {
             $val = $self->get_override_val( $data, $subkey, 'priority' )
         )
         );
-    $depends = Debian::Dependencies->new($val)
+    $self->depends( Debian::Dependencies->new($val) )
         if (
         defined(
             $val = $self->get_override_val( $data, $subkey, 'depends' )
