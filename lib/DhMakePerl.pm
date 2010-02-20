@@ -10,7 +10,7 @@ use Pod::Usage;
 __PACKAGE__->mk_accessors(
     qw(
         cfg apt_contents main_dir debian_dir meta bdepends bdependsi depends
-        priority section
+        priority section maintainer
         )
 );
 
@@ -77,7 +77,7 @@ use version qw( qv );
 # * get more info from the package (maybe using CPAN methods)
 
 my (
-    $maintainer,    $arch,
+    $arch,
     $closes,              $date,
     $startdir,
 );
@@ -213,7 +213,7 @@ sub run {
 
     $arch = $self->cfg->arch if $self->cfg->arch;
 
-    $maintainer = $self->get_maintainer( $self->cfg->email );
+    $self->maintainer( $self->get_maintainer( $self->cfg->email ) );
 
     $desc = $self->cfg->desc || '';
 
@@ -399,7 +399,8 @@ EOF
         " Please fill it in manually.\n"
         if ( !defined $longdesc or $longdesc =~ /^\s*\.?\s*$/ )
             and $self->cfg->verbose;
-    print "Using maintainer: $maintainer\n" if $self->cfg->verbose;
+    printf( "Using maintainer: %s\n", $self->maintainer )
+        if $self->cfg->verbose;
     print "Found docs: @docs\n" if $self->cfg->verbose;
     print "Found examples: @examples\n" if @examples and $self->cfg->verbose;
 
@@ -1548,10 +1549,10 @@ sub create_control {
         $fh->print(
             "Maintainer: Debian Perl Group <pkg-perl-maintainers\@lists.alioth.debian.org>\n"
         );
-        $fh->print("Uploaders: $maintainer\n");
+        $fh->printf( "Uploaders: %s\n", $self->maintainer );
     }
     else {
-        $fh->print("Maintainer: $maintainer\n");
+        $fh->printf( "Maintainer: %s\n", $self->maintainer );
     }
     $fh->printf( "Standards-Version: %s\n", $self->debstdversion );
     $fh->print("Homepage: $upsurl\n") if $upsurl;
@@ -1584,7 +1585,7 @@ sub create_changelog {
 
     $fh->print("$srcname ($pkgversion) $changelog_dist; urgency=low\n");
     $fh->print("\n  * Initial Release.$closes\n\n");
-    $fh->print(" -- $maintainer  $date\n");
+    $fh->printf( " -- %s  %s\n", $self->maintainer, $date );
 
     #$fh->print("Local variables:\nmode: debian-changelog\nEnd:\n");
     $fh->close;
@@ -1860,11 +1861,12 @@ sub create_copyright {
     $year = (localtime)[5] + 1900;
     push( @res, "", "Files: debian/*" );
     if($self->cfg->command eq 'refresh') {
-      my @from_changelog = $self->copyright_from_changelog($maintainer, $year);
+    my @from_changelog
+        = $self->copyright_from_changelog( $self->maintainer, $year );
       $from_changelog[0] = "Copyright:" . $from_changelog[0];
       push @res, @from_changelog;
     } else {
-      push @res, "Copyright: $year, $maintainer";
+      push @res, "Copyright: $year, " . $self->maintainer;
     }
     push @res, "License: " . join( ' or ', keys %licenses );
 
@@ -1882,10 +1884,10 @@ sub create_readme {
     my ( $self, $filename ) = @_;
 
     my $fh = $self->_file_w($filename);
-    $fh->print(
-        "This is the debian package for the $perlname module.
-It was created by $maintainer using dh-make-perl.
-"
+    $fh->printf(
+        "This is the debian package for the %s module.
+It was created by %s using dh-make-perl.
+", $perlname, $self->maintainer,
     );
     $fh->close;
 }
@@ -2029,7 +2031,7 @@ sub apply_overrides {
             $val = $self->get_override_val( $data, $subkey, 'pfields' )
         )
         );
-    $maintainer = $val
+    $self->maintainer($val)
         if (
         defined(
             $val = $self->get_override_val( $data, $subkey, 'maintainer' )
