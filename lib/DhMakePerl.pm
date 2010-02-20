@@ -7,7 +7,8 @@ use 5.010;    # we use smart matching
 use base 'Class::Accessor';
 use Pod::Usage;
 
-__PACKAGE__->mk_accessors(qw( cfg apt_contents main_dir debian_dir meta ));
+__PACKAGE__->mk_accessors(
+    qw( cfg apt_contents main_dir debian_dir meta priority ));
 
 =head1 NAME
 
@@ -71,7 +72,7 @@ use version qw( qv );
 # TODO:
 # * get more info from the package (maybe using CPAN methods)
 
-my ($priority,
+my (
     $section,             $depends,       $bdepends,
     $bdependsi,           $maintainer,    $arch,
     $closes,              $date,
@@ -80,13 +81,29 @@ my ($priority,
 our %overrides;
 
 use constant debstdversion => '3.8.4';
-$priority      = 'optional';
 $section       = 'perl';
 $depends       = Debian::Dependencies->new('${perl:Depends}');
 
 # this is the version in 'oldstable'. No much point on depending on something
 # older
 use constant oldest_perl_version => '5.8.8-7';
+
+our %DEFAULTS = (
+    priority => 'optional',
+);
+
+sub new {
+    my $class = shift;
+    $class = ref($class) if ref($class);
+
+    my $self = $class->SUPER::new(@_);
+
+    while( my( $k, $v ) = each %DEFAULTS ) {
+        $self->$k($v) unless defined $self->$k;
+    }
+
+    return $self;
+}
 
 $bdependsi = Debian::Dependencies->new("perl");
 $arch      = 'all';
@@ -1511,7 +1528,7 @@ sub create_control {
 
     $fh->print("Source: $srcname\n");
     $fh->print("Section: $section\n");
-    $fh->print("Priority: $priority\n");
+    $fh->printf( "Priority: %s\n", $self->priority );
     local $Text::Wrap::break     = ', ';
     local $Text::Wrap::separator = ",\n";
     $fh->print( wrap( '', ' ', "Build-Depends: $bdepends\n" ) ) if $bdepends;
@@ -1947,7 +1964,7 @@ sub apply_overrides {
             $val = $self->get_override_val( $data, $subkey, 'section' )
         )
         );
-    $priority = $val
+    $self->priority($val)
         if (
         defined(
             $val = $self->get_override_val( $data, $subkey, 'priority' )
