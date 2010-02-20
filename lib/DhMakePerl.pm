@@ -71,7 +71,7 @@ use version qw( qv );
 # TODO:
 # * get more info from the package (maybe using CPAN methods)
 
-my ($debstdversion, $priority,
+my ($priority,
     $section,             $depends,       $bdepends,
     $bdependsi,           $maintainer,    $arch,
     $closes,              $date,
@@ -79,7 +79,7 @@ my ($debstdversion, $priority,
 );
 our %overrides;
 
-$debstdversion = '3.8.4';
+use constant debstdversion => '3.8.4';
 $priority      = 'optional';
 $section       = 'perl';
 $depends       = Debian::Dependencies->new('${perl:Depends}');
@@ -1530,7 +1530,7 @@ sub create_control {
     else {
         $fh->print("Maintainer: $maintainer\n");
     }
-    $fh->print("Standards-Version: $debstdversion\n");
+    $fh->printf( "Standards-Version: %s\n", $self->debstdversion );
     $fh->print("Homepage: $upsurl\n") if $upsurl;
     do {
         $fh->print(
