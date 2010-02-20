@@ -77,7 +77,7 @@ use version qw( qv );
 # * get more info from the package (maybe using CPAN methods)
 
 my (
-    $closes,              $date,
+    $date,
     $startdir,
 );
 our %overrides;
@@ -409,13 +409,8 @@ EOF
     $self->create_control( $self->debian_file('control') );
     $self->write_source_format(
         catfile( $self->debian_dir, 'source', 'format' ) );
-    if ( defined $self->cfg->closes ) {
-        $closes = $self->cfg->closes;
-    }
-    else {
-        $closes = $self->get_wnpp($pkgname);
-    }
-    $self->create_changelog( $self->debian_file('changelog'), $closes );
+    $self->create_changelog( $self->debian_file('changelog'),
+        $self->cfg->closes // $self->get_wnpp($pkgname) );
     $self->create_rules( $self->debian_file('rules') );
     $self->create_compat( $self->debian_file('compat') );
     $self->create_watch( $self->debian_file('watch') ) if $upsurl;
