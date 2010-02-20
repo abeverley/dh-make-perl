@@ -71,7 +71,7 @@ use version qw( qv );
 # TODO:
 # * get more info from the package (maybe using CPAN methods)
 
-my ($oldest_perl_version, $debstdversion, $priority,
+my ($debstdversion, $priority,
     $section,             $depends,       $bdepends,
     $bdependsi,           $maintainer,    $arch,
     $closes,              $date,
@@ -86,7 +86,7 @@ $depends       = Debian::Dependencies->new('${perl:Depends}');
 
 # this is the version in 'oldstable'. No much point on depending on something
 # older
-$oldest_perl_version = '5.8.8-7';
+use constant oldest_perl_version => '5.8.8-7';
 
 $bdependsi = Debian::Dependencies->new("perl");
 $arch      = 'all';
@@ -1105,7 +1105,10 @@ sub find_debs_for_modules {
             print "= $module is a core module\n" if $self->cfg->verbose;
 
             $dep = Debian::Dependency->new( 'perl', $ver );
-            $debs->add($dep) if $dep->satisfies( "perl (>= $oldest_perl_version)" );
+            $debs->add($dep)
+                if $dep->satisfies(
+                        "perl (>= " . $self->oldest_perl_version . ")"
+                );
 
             next;
         }
