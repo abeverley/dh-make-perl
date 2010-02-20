@@ -108,7 +108,6 @@ sub new {
 # If we're being required rather than called as a main command, then
 # return now without doing any work.  This facilitates easier testing.
 
-my ( $modulepm );
 my (
     $desc, $longdesc, $copyright, $author, $upsurl
 );
@@ -692,9 +691,6 @@ sub extract_basic {
     $upsurl = sprintf( "http://search.cpan.org/dist/%s/", $self->perlname );
 
     $copyright = $self->extract_basic_copyright();
-    if ($modulepm) {
-        $self->extract_desc($modulepm);
-    }
 
     find(
         sub {
@@ -860,8 +856,6 @@ sub extract_name_ver_from_makefile {
 
     $dir = dirname($makefile) || './';
 
-    $modulepm = "$dir/$vfrom" if defined $vfrom;
-
     for ( ( $name, $ver ) ) {
         next unless defined;
         next unless /^\$/;
@@ -909,6 +903,8 @@ sub extract_name_ver_from_makefile {
 
     $self->perlname($name);
     $self->version($ver);
+
+    $self->extract_desc("$dir/$vfrom") if defined $vfrom;
 }
 
 sub extract_desc {
