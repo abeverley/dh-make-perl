@@ -9,8 +9,8 @@ use Pod::Usage;
 
 __PACKAGE__->mk_accessors(
     qw(
-        cfg apt_contents main_dir debian_dir meta bdepends depends priority
-        section
+        cfg apt_contents main_dir debian_dir meta bdepends bdependsi depends
+        priority section
         )
 );
 
@@ -77,7 +77,7 @@ use version qw( qv );
 # * get more info from the package (maybe using CPAN methods)
 
 my (
-    $bdependsi,           $maintainer,    $arch,
+    $maintainer,    $arch,
     $closes,              $date,
     $startdir,
 );
@@ -90,9 +90,10 @@ use constant debstdversion => '3.8.4';
 use constant oldest_perl_version => '5.8.8-7';
 
 our %DEFAULTS = (
-    depends  => Debian::Dependencies->new('${perl:Depends}'),
-    priority => 'optional',
-    section  => 'perl',
+    bdependsi => Debian::Dependencies->new("perl"),
+    depends   => Debian::Dependencies->new('${perl:Depends}'),
+    priority  => 'optional',
+    section   => 'perl',
 );
 
 sub new {
@@ -108,7 +109,6 @@ sub new {
     return $self;
 }
 
-$bdependsi = Debian::Dependencies->new("perl");
 $arch      = 'all';
 $date      = email_date(time);
 $startdir  = getcwd();
@@ -386,9 +386,10 @@ EOF
         if $self->cfg->bdepends;
     $self->bdepends->add($extrabdepends);
 
-    $bdependsi += Debian::Dependencies->new( $self->cfg->bdependsi )
+    $self->bdependsi->add(
+        Debian::Dependencies->new( $self->cfg->bdependsi ) )
         if $self->cfg->bdependsi;
-    $bdependsi += $extrabdependsi;
+    $self->bdependsi->add($extrabdependsi);
 
     $self->apply_overrides();
 
@@ -1525,8 +1526,8 @@ sub create_control {
         and !defined($self->cfg->bdepends)
         and !defined($self->cfg->bdependsi) )
     {
-        $self->bdepends->add($bdependsi);
-        @$bdependsi = ();
+        $self->bdepends->add( $self->bdependsi );
+        @{ $self->bdependsi } = ();
     }
 
     $fh->print("Source: $srcname\n");
@@ -1537,8 +1538,9 @@ sub create_control {
     $fh->print( wrap( '', ' ', "Build-Depends: " . $self->bdepends . "\n" ) )
         if $self->bdepends;
 
-    $fh->print( wrap( '', ' ', "Build-Depends-Indep: $bdependsi\n" ) )
-        if $bdependsi;
+    $fh->print(
+        wrap( '', ' ', "Build-Depends-Indep: " . $self->bdependsi . "\n" ) )
+        if $self->bdependsi;
 
     $fh->print($extrasfields) if defined $extrasfields;
 
@@ -1987,7 +1989,7 @@ sub apply_overrides {
             $val = $self->get_override_val( $data, $subkey, 'bdepends' )
         )
         );
-    $bdependsi = Debian::Dependencies->new($val)
+    $self->bdependsi( Debian::Dependencies->new($val) )
         if (
         defined(
             $val = $self->get_override_val( $data, $subkey, 'bdependsi' )
