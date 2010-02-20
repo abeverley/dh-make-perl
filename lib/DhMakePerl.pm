@@ -77,7 +77,6 @@ use version qw( qv );
 # * get more info from the package (maybe using CPAN methods)
 
 my (
-    $date,
     $startdir,
 );
 our %overrides;
@@ -109,7 +108,6 @@ sub new {
     return $self;
 }
 
-$date      = email_date(time);
 $startdir  = getcwd();
 
 # If we're being required rather than called as a main command, then
@@ -188,8 +186,6 @@ sub run {
         $self->cfg->parse_command_line_options;
         $self->cfg->parse_config_file;
     }
-
-    chomp($date);
 
     $self->bdepends(
         Debian::Dependencies->new( 'debhelper (>=' . $self->cfg->dh . ')' ) );
@@ -1581,7 +1577,7 @@ sub create_changelog {
 
     $fh->print("$srcname ($pkgversion) $changelog_dist; urgency=low\n");
     $fh->print("\n  * Initial Release.$closes\n\n");
-    $fh->printf( " -- %s  %s\n", $self->maintainer, $date );
+    $fh->printf( " -- %s  %s\n", $self->maintainer, email_date(time) );
 
     #$fh->print("Local variables:\nmode: debian-changelog\nEnd:\n");
     $fh->close;
