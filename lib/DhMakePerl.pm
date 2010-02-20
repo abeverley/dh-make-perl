@@ -10,7 +10,7 @@ use Pod::Usage;
 __PACKAGE__->mk_accessors(
     qw(
         cfg apt_contents main_dir debian_dir meta bdepends bdependsi depends
-        priority section maintainer arch
+        priority section maintainer arch start_dir
         )
 );
 
@@ -76,9 +76,6 @@ use version qw( qv );
 # TODO:
 # * get more info from the package (maybe using CPAN methods)
 
-my (
-    $startdir,
-);
 our %overrides;
 
 use constant debstdversion => '3.8.4';
@@ -93,6 +90,7 @@ our %DEFAULTS = (
     depends   => Debian::Dependencies->new('${perl:Depends}'),
     priority  => 'optional',
     section   => 'perl',
+    start_dir => getcwd(),
 );
 
 sub new {
@@ -107,8 +105,6 @@ sub new {
 
     return $self;
 }
-
-$startdir  = getcwd();
 
 # If we're being required rather than called as a main command, then
 # return now without doing any work.  This facilitates easier testing.
@@ -623,8 +619,9 @@ sub install_package {
 
     $debname = "${pkgname}_$version-1_$archspec.deb";
 
-    system("dpkg -i $startdir/$debname") == 0
-        || die "Cannot install package $startdir/$debname\n";
+    my $deb = $self->start_dir . "/$debname";
+    system("dpkg -i $deb") == 0
+        || die "Cannot install package $deb\n";
 }
 
 sub process_meta {
