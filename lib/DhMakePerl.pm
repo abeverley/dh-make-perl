@@ -12,7 +12,7 @@ __PACKAGE__->mk_accessors(
         cfg apt_contents main_dir debian_dir meta bdepends bdependsi depends
         priority section maintainer arch start_dir overrides
         perlname version pkgversion pkgname srcname
-        desc longdesc copyright
+        desc longdesc copyright author
         )
 );
 
@@ -110,7 +110,7 @@ sub new {
 # return now without doing any work.  This facilitates easier testing.
 
 my (
-    $author, $upsurl
+    $upsurl
 );
 my ( $extrasfields, $extrapfields );
 my ($module_build);
@@ -972,18 +972,19 @@ sub extract_desc {
             || $parser->get('LICENSE')
             || $parser->get('COPYRIGHT & LICENSE') )
         unless $self->copyright;
-    if ( !$author ) {
+    if ( !$self->author ) {
         if ( ref $self->meta->{author} ) {
 
             # Does the author information appear in META.yml?
-            $author = join( ', ', @{ $self->meta->{author} } );
+            $self->author( join( ', ', @{ $self->meta->{author} } ) );
         }
         else {
 
             # Get it from the POD - and clean up
             # trailing/preceding spaces!
-            $author = $parser->get('AUTHOR') || $parser->get('AUTHORS');
-            $author =~ s/^\s*(\S.*\S)\s*$/$1/gs if $author;
+            my $a = $parser->get('AUTHOR') || $parser->get('AUTHORS');
+            $a =~ s/^\s*(\S.*\S)\s*$/$1/gs if $a;
+            $self->author($a);
         }
     }
 
@@ -1675,8 +1676,8 @@ sub create_copyright {
     my ( $fh, %fields, @res, @incomplete, $year );
     $fh = $self->_file_w($filename);
 
-    # In case $author spawns more than one line, indent them all.
-    my $cprt_author = $author || '(information incomplete)';
+    # In case author string pawns more than one line, indent them all.
+    my $cprt_author = $self->author || '(information incomplete)';
     $cprt_author =~ s/\n/\n    /gs;
     $cprt_author =~ s/^\s*$/    ./gm;
 
