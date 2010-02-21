@@ -12,6 +12,7 @@ __PACKAGE__->mk_accessors(
         cfg apt_contents main_dir debian_dir meta bdepends bdependsi depends
         priority section maintainer arch start_dir overrides
         perlname version pkgversion pkgname srcname
+        desc
         )
 );
 
@@ -109,7 +110,7 @@ sub new {
 # return now without doing any work.  This facilitates easier testing.
 
 my (
-    $desc, $longdesc, $copyright, $author, $upsurl
+    $longdesc, $copyright, $author, $upsurl
 );
 my ( $extrasfields, $extrapfields );
 my ($module_build);
@@ -197,7 +198,7 @@ sub run {
 
     $self->maintainer( $self->get_maintainer( $self->cfg->email ) );
 
-    $desc = $self->cfg->desc || '';
+    $self->desc( $self->cfg->desc || '' );
 
     if ( $self->cfg->command eq 'refresh' ) {
         $self->main_dir( $ARGV[0] || '.' );
@@ -380,7 +381,7 @@ EOF
     $self->apply_overrides();
 
     die "Cannot find a description for the package: use the --desc switch\n"
-        unless $desc;
+        unless $self->desc;
     print "Package does not provide a long description - ",
         " Please fill it in manually.\n"
         if ( !defined $longdesc or $longdesc =~ /^\s*\.?\s*$/ )
@@ -915,7 +916,7 @@ sub extract_desc {
     return unless -f $file;
     $parser->set_names(qw(NAME DESCRIPTION DETAILS COPYRIGHT AUTHOR AUTHORS));
     $parser->parse_from_file($file);
-    if ($desc) {
+    if ( $self->desc ) {
 
         # No-op - We already have it, probably from the command line
 
@@ -923,7 +924,7 @@ sub extract_desc {
     elsif ( $self->meta->{abstract} ) {
 
         # Get it from META.yml
-        $desc = $self->meta->{abstract};
+        $self->desc( $self->meta->{abstract} );
 
     }
     elsif ( my $my_desc = $parser->get('NAME') ) {
@@ -934,17 +935,20 @@ sub extract_desc {
         $my_desc =~ s/\s+$//s;
         $my_desc =~ s/^([^\s])/ $1/mg;
         $my_desc =~ s/\n.*$//s;
-        $desc = $my_desc;
+        $self->desc($my_desc);
     }
 
-    # Replace linefeeds (not followed by a space) in $desc with spaces
-    $desc =~ s/\n(?=\S)/ /gs;
+    # Replace linefeeds (not followed by a space) in short description with
+    # spaces
+    my $tmp_desc = $self->desc;
+    $tmp_desc =~ s/\n(?=\S)/ /gs;
+    $self->desc($tmp_desc);
 
     unless ($longdesc) {
         $longdesc 
             = $parser->get('DESCRIPTION')
             || $parser->get('DETAILS')
-            || $desc;
+            || $self->desc;
         ( $modulename = $self->perlname ) =~ s/-/::/g;
         $longdesc =~ s/This module/$modulename/;
 
@@ -1560,8 +1564,9 @@ sub create_control {
     $fh->print( wrap( '', ' ', "Depends: " . $self->depends . "\n" ) )
         if $self->depends;
     $fh->print($extrapfields) if defined $extrapfields;
-    $fh->print(
-        "Description:" . (($desc =~ m/^ /) ? "" : " ") . "$desc\n$longdesc\n .\n This description was automagically extracted from the module by dh-make-perl.\n"
+    $fh->printf(
+        "Description:%s%s\n%s\n .\n This description was automagically extracted from the module by dh-make-perl.\n",
+        ( $self->desc =~ m/^ / ) ? "" : " ", $self->desc, $longdesc,
     );
     $fh->close;
 }
@@ -1991,7 +1996,7 @@ sub apply_overrides {
             $val = $self->get_override_val( $data, $subkey, 'bdependsi' )
         )
         );
-    $desc = $val
+    $self->desc($val)
         if (
         defined( $val = $self->get_override_val( $data, $subkey, 'desc' ) ) );
     $longdesc = $val
