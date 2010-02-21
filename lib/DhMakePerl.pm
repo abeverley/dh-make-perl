@@ -12,7 +12,7 @@ __PACKAGE__->mk_accessors(
         cfg apt_contents main_dir debian_dir meta bdepends bdependsi depends
         priority section maintainer arch start_dir overrides
         perlname version pkgversion pkgname srcname
-        desc
+        desc longdesc
         )
 );
 
@@ -110,7 +110,7 @@ sub new {
 # return now without doing any work.  This facilitates easier testing.
 
 my (
-    $longdesc, $copyright, $author, $upsurl
+    $copyright, $author, $upsurl
 );
 my ( $extrasfields, $extrapfields );
 my ($module_build);
@@ -384,8 +384,8 @@ EOF
         unless $self->desc;
     print "Package does not provide a long description - ",
         " Please fill it in manually.\n"
-        if ( !defined $longdesc or $longdesc =~ /^\s*\.?\s*$/ )
-            and $self->cfg->verbose;
+        if ( !defined $self->longdesc or $self->longdesc =~ /^\s*\.?\s*$/ )
+        and $self->cfg->verbose;
     printf( "Using maintainer: %s\n", $self->maintainer )
         if $self->cfg->verbose;
     print "Found docs: @docs\n" if $self->cfg->verbose;
@@ -944,25 +944,28 @@ sub extract_desc {
     $tmp_desc =~ s/\n(?=\S)/ /gs;
     $self->desc($tmp_desc);
 
-    unless ($longdesc) {
-        $longdesc 
-            = $parser->get('DESCRIPTION')
-            || $parser->get('DETAILS')
-            || $self->desc;
+    unless ($self->longdesc) {
+        my $long = $parser->get('DESCRIPTION')
+                || $parser->get('DETAILS')
+                || $self->desc;
         ( $modulename = $self->perlname ) =~ s/-/::/g;
-        $longdesc =~ s/This module/$modulename/;
+        $long =~ s/This module/$modulename/;
 
         local ($Text::Wrap::columns) = 78;
-        $longdesc = fill( "", "", $longdesc );
+        $long = fill( "", "", $long );
+        $self->longdesc($long);
     }
-    if ( defined $longdesc && $longdesc !~ /^$/ ) {
-        $longdesc =~ s/^\s+//s;
-        $longdesc =~ s/\s+$//s;
-        $longdesc =~ s/^\t/ /mg;
-        $longdesc =~ s/^\s*$/ ./mg;
-        $longdesc =~ s/^\s*/ /mg;
-        $longdesc =~ s/^([^\s])/ $1/mg;
-        $longdesc =~ s/\r//g;
+    my $ld = $self->longdesc;
+    if ( defined($ld) && $ld !~ /^$/ ) {
+        $ld =~ s/^\s+//s;
+        $ld =~ s/\s+$//s;
+        $ld =~ s/^\t/ /mg;
+        $ld =~ s/^\s*$/ ./mg;
+        $ld =~ s/^\s*/ /mg;
+        $ld =~ s/^([^\s])/ $1/mg;
+        $ld =~ s/\r//g;
+
+        $self->longdesc($ld);
     }
 
     $copyright 
@@ -1566,7 +1569,7 @@ sub create_control {
     $fh->print($extrapfields) if defined $extrapfields;
     $fh->printf(
         "Description:%s%s\n%s\n .\n This description was automagically extracted from the module by dh-make-perl.\n",
-        ( $self->desc =~ m/^ / ) ? "" : " ", $self->desc, $longdesc,
+        ( $self->desc =~ m/^ / ) ? "" : " ", $self->desc, $self->longdesc,
     );
     $fh->close;
 }
@@ -1999,7 +2002,7 @@ sub apply_overrides {
     $self->desc($val)
         if (
         defined( $val = $self->get_override_val( $data, $subkey, 'desc' ) ) );
-    $longdesc = $val
+    $self->longdesc($val)
         if (
         defined(
             $val = $self->get_override_val( $data, $subkey, 'longdesc' )
@@ -2038,7 +2041,9 @@ sub apply_overrides {
         );
 
     # fix longdesc if needed
-    $longdesc =~ s/^\s*/ /mg;
+    my $ld = $self->longdesc;
+    $ld =~ s/^\s*/ /mg;
+    $self->longdesc($ld);
 }
 
 sub apply_final_overrides {
