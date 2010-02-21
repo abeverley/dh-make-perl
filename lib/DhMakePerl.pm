@@ -109,9 +109,6 @@ sub new {
 # If we're being required rather than called as a main command, then
 # return now without doing any work.  This facilitates easier testing.
 
-my (
-    $upsurl
-);
 my ( $extrasfields, $extrapfields );
 my ($module_build);
 my ( @docs, @examples, @args );
@@ -401,7 +398,7 @@ EOF
         $self->cfg->closes // $self->get_wnpp( $self->pkgname ) );
     $self->create_rules( $self->debian_file('rules') );
     $self->create_compat( $self->debian_file('compat') );
-    $self->create_watch( $self->debian_file('watch') ) if $upsurl;
+    $self->create_watch( $self->debian_file('watch') );
 
     #create_readme("$debiandir/README.Debian");
     $self->create_copyright( $self->debian_file('copyright') );
@@ -688,8 +685,6 @@ sub extract_basic {
         $self->perlname, $self->version, $self->pkgname, $self->arch )
         if $self->cfg->verbose;
     $self->debian_dir( $self->main_file('debian') );
-
-    $upsurl = sprintf( "http://search.cpan.org/dist/%s/", $self->perlname );
 
     $self->extract_basic_copyright();
 
@@ -1552,7 +1547,7 @@ sub create_control {
         $fh->printf( "Maintainer: %s\n", $self->maintainer );
     }
     $fh->printf( "Standards-Version: %s\n", $self->debstdversion );
-    $fh->print("Homepage: $upsurl\n") if $upsurl;
+    $fh->printf( "Homepage: %s\n", $self->upsurl );
     do {
         $fh->printf( "Vcs-Svn: svn://svn.debian.org/pkg-perl/trunk/%s/\n",
             $self->srcname );
@@ -1687,7 +1682,7 @@ sub create_copyright {
     %fields = (
         Name       => $self->perlname,
         Maintainer => $cprt_author,
-        Source     => $upsurl
+        Source     => $self->upsurl
     );
     for my $key ( keys %fields ) {
         my $full = "$key";
@@ -1899,8 +1894,8 @@ sub create_watch {
 
     my $version_re = 'v?(\d[\d.-]+)\.(?:tar(?:\.gz|\.bz2)?|tgz|zip)';
 
-    $fh->printf( "version=3\n$upsurl   .*/%s-%s\$\n",
-        $self->perlname, $version_re );
+    $fh->printf( "version=3\n%s   .*/%s-%s\$\n",
+        $self->upsurl, $self->perlname, $version_re );
     $fh->close;
 }
 
@@ -2154,6 +2149,11 @@ sub warning {
     return unless $self->cfg->verbose;
 
     warn "W: ", @_, "\n";
+}
+
+sub upsurl {
+    my $self = shift;
+    return sprintf( "http://search.cpan.org/dist/%s/", $self->perlname );
 }
 
 sub _warn_incomplete_copyright {
