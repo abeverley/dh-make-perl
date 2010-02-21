@@ -12,7 +12,7 @@ __PACKAGE__->mk_accessors(
         cfg apt_contents main_dir debian_dir meta bdepends bdependsi depends
         priority section maintainer arch start_dir overrides
         perlname version pkgversion pkgname srcname
-        desc longdesc
+        desc longdesc copyright
         )
 );
 
@@ -110,7 +110,7 @@ sub new {
 # return now without doing any work.  This facilitates easier testing.
 
 my (
-    $copyright, $author, $upsurl
+    $author, $upsurl
 );
 my ( $extrasfields, $extrapfields );
 my ($module_build);
@@ -691,7 +691,7 @@ sub extract_basic {
 
     $upsurl = sprintf( "http://search.cpan.org/dist/%s/", $self->perlname );
 
-    $copyright = $self->extract_basic_copyright();
+    $self->extract_basic_copyright();
 
     find(
         sub {
@@ -968,11 +968,10 @@ sub extract_desc {
         $self->longdesc($ld);
     }
 
-    $copyright 
-        = $copyright
-        || $parser->get('COPYRIGHT')
-        || $parser->get('LICENSE')
-        || $parser->get('COPYRIGHT & LICENSE');
+    $self->copyright( $parser->get('COPYRIGHT')
+            || $parser->get('LICENSE')
+            || $parser->get('COPYRIGHT & LICENSE') )
+        unless $self->copyright;
     if ( !$author ) {
         if ( ref $self->meta->{author} ) {
 
@@ -1788,11 +1787,11 @@ sub create_copyright {
             . " and fix this file!"
     );
 
-    if ( $self->meta->{license} or $copyright ) {
+    if ( $self->meta->{license} or $self->copyright ) {
         my $mangle_cprt;
 
         # Pre-mangle the copyright information for the common similar cases
-        $mangle_cprt = $copyright || '';    # avoid warning
+        $mangle_cprt = $self->copyright || '';    # avoid warning
         $mangle_cprt =~ s/GENERAL PUBLIC LICENSE/GPL/g;
 
         # Of course, more licenses (i.e. LGPL, BSD-like, Public
