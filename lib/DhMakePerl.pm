@@ -110,7 +110,6 @@ sub new {
 # If we're being required rather than called as a main command, then
 # return now without doing any work.  This facilitates easier testing.
 
-my ($module_build);
 my ( @docs, @examples, @args );
 
 # use Array::Unique for @docs and @examples
@@ -204,8 +203,6 @@ sub run {
 
         $self->process_meta;
         $self->extract_basic();    # also detects arch-dep package
-        $module_build
-            = ( -f $self->main_file('Build.PL') ) ? "Module-Build" : "MakeMaker";
 
         $self->extract_docs if 'docs' ~~ $self->cfg->only;
         $self->extract_examples if 'examples' ~~ $self->cfg->only;
@@ -347,13 +344,12 @@ EOF
     $self->depends->add( Debian::Dependencies->new( $self->cfg->depends ) )
         if $self->cfg->depends;
 
-    $module_build = ( -f $self->main_file('Build.PL') ) ? "Module-Build" : "MakeMaker";
     $self->extract_docs;
     $self->extract_examples;
 
     $self->bdepends->add(
         Debian::Dependency->new('perl (>= 5.10) | libmodule-build-perl') )
-        if ( $module_build eq "Module-Build" );
+        if ( $self->module_build eq "Module-Build" );
 
     my ( $extrabdepends, $extrabdependsi );
     if ( $self->arch eq 'any' ) {
@@ -2154,6 +2150,12 @@ sub warning {
 sub upsurl {
     my $self = shift;
     return sprintf( "http://search.cpan.org/dist/%s/", $self->perlname );
+}
+
+sub module_build {
+    my $self = shift;
+
+    return ( -f $self->main_file('Build.PL') ) ? "Module-Build" : "MakeMaker";
 }
 
 sub _warn_incomplete_copyright {
