@@ -2221,7 +2221,8 @@ sub discover_utility_deps {
         my $mf = $self->_file_r( $self->main_file('Makefile.PL') );
         while( defined( $_ = <$mf> ) ) {
             if ( /Module::Build::Compat/ ) {
-                $deps->add('debhelper (>= 7.0.17)');
+                $deps->add( 'debhelper (>= 7.0.17)',
+                    'perl (>= 5.10) | libmodule-build-perl' );
                 last;
             }
         }
