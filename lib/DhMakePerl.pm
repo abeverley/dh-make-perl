@@ -1414,11 +1414,17 @@ sub drop_quilt {
 
     # remove unpatch dependency in clean
     for( my $i = 1; $i < @rules; $i++ ) {
-        if ( $rules[$i] eq ''
-                and $rules[$i+1] eq 'override_dh_auto_clean: unpatch'
-                and $rules[$i+2] eq "\tdh_auto_clean"
-                and $rules[$i+3] eq '' ) {
-            splice @rules, $i, 3;
+        if (    $rules[$i] eq 'override_dh_auto_clean: unpatch'
+            and $rules[ $i + 1 ] eq "\tdh_auto_clean"
+            and ( $i + 2 > $#rules or $rules[ $i + 2 ] !~ /^\t/ ) )
+        {
+            splice @rules, $i, 2;
+
+            # At this point there may be an extra empty line left.
+            # There may also be no empty line, if the clean override
+            # was at the end of the file
+            splice( @rules, $i, 1 )
+                if $#rules >= $i and $rules[$i] eq '';
             last;
         }
     }
