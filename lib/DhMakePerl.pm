@@ -110,7 +110,7 @@ sub new {
 # If we're being required rather than called as a main command, then
 # return now without doing any work.  This facilitates easier testing.
 
-my ( @docs, @examples, @args );
+my ( @docs, @examples );
 
 # use Array::Unique for @docs and @examples
 tie @examples, 'Array::Unique';
