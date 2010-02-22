@@ -11,4 +11,8 @@ if ($@) {
   plan skip_all => 'Test::DistManifest required to test MANIFEST';
 }
 
+unless ( -e 'MANIFEST' ) {
+    plan skip_all => 'MANIFEST testing skipped due to missing MANIFEST file';
+}
+
 manifest_ok();
