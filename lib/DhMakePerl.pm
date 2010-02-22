@@ -13,6 +13,7 @@ __PACKAGE__->mk_accessors(
         priority section maintainer arch start_dir overrides
         perlname version pkgversion pkgname srcname
         desc longdesc copyright author
+        extrasfields  extrapfields
         )
 );
 
@@ -109,7 +110,6 @@ sub new {
 # If we're being required rather than called as a main command, then
 # return now without doing any work.  This facilitates easier testing.
 
-my ( $extrasfields, $extrapfields );
 my ($module_build);
 my ( @docs, @examples, @args );
 
@@ -1535,7 +1535,7 @@ sub create_control {
         wrap( '', ' ', "Build-Depends-Indep: " . $self->bdependsi . "\n" ) )
         if $self->bdependsi;
 
-    $fh->print($extrasfields) if defined $extrasfields;
+    $fh->print( $self->extrasfields ) if defined $self->extrasfields;
 
     if ($self->cfg->pkg_perl) {
         $fh->print(
@@ -1561,7 +1561,7 @@ sub create_control {
     $fh->printf( "Architecture: %s\n", $self->arch );
     $fh->print( wrap( '', ' ', "Depends: " . $self->depends . "\n" ) )
         if $self->depends;
-    $fh->print($extrapfields) if defined $extrapfields;
+    $fh->print( $self->extrapfields ) if defined $self->extrapfields;
     $fh->printf(
         "Description:%s%s\n%s\n .\n This description was automagically extracted from the module by dh-make-perl.\n",
         ( $self->desc =~ m/^ / ) ? "" : " ", $self->desc, $self->longdesc,
@@ -2016,13 +2016,13 @@ sub apply_overrides {
         if (
         defined( $val = $self->get_override_val( $data, $subkey, 'docs' ) ) );
 
-    $extrasfields = $val
+    $self->extrasfields($val)
         if (
         defined(
             $val = $self->get_override_val( $data, $subkey, 'sfields' )
         )
         );
-    $extrapfields = $val
+    $self->extrapfields($val)
         if (
         defined(
             $val = $self->get_override_val( $data, $subkey, 'pfields' )
