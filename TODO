@@ -30,6 +30,3 @@
 * Don't add libmodule-build-perl to Build-Depends if Makefile.PL is also
   present, if its not just Module::Build::Compat
 * --make should use Debian::Control::FromCPAN for dependencies
-* detect needed debhelper version
-  - if Module::AutoInstall is used, 7.2.13 is needed for proper --skipdeps
-    passing
