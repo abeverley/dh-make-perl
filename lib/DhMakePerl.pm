@@ -2185,7 +2185,10 @@ build-dependency on C<quilt> is added.
 
 Targets named C<override_dh_...> are supported by debhelper since 7.0.50
 
-=back
+=item Makefile.PL created by Module::Build::Compat
+
+Building such packages requires debhelper 7.0.17 (see
+L<http://bugs.debian.org/496157>) =back
 
 =cut
 
