@@ -2167,6 +2167,11 @@ The following special cases are detected:
 
 =over
 
+=item Module::AutoInstall
+
+If L<Module::AutoInstall> is discovered in L<inc/>, debhelper dependency is
+raised to 7.2.13.
+
 =item dh --with=quilt
 
 C<dh --with=quilt> needs debhelper 7.0.8 and quilt 0.46-7.
@@ -2194,6 +2199,9 @@ sub discover_utility_deps {
 
     # start with the minimum
     $deps->add( Debian::Dependency->new( 'debhelper', $self->cfg->dh ) );
+
+    $deps->add('debhelper (>= 7.2.13)')
+        if -e catfile( $self->main_dir, qw( inc Module AutoInstall.pm ) );
 
     my $rules = $self->_file_r( $self->debian_file('rules') );
     while ( defined( $_ = <$rules> ) ) {
