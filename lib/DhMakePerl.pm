@@ -2211,6 +2211,8 @@ sub discover_utility_deps {
             if /^override_dh_/;
         $deps->add('quilt')
             if m{^include /usr/share/quilt/quilt.make};
+        $deps->add('debhelper (>= 7.4.4)')
+            if /dh.* --max-parallel/;
     }
 }
 
