@@ -33,6 +33,3 @@
 * detect needed debhelper version
   - if Module::AutoInstall is used, 7.2.13 is needed for proper --skipdeps
     passing
-  - rules overrides need 7.0.50
-  - dh --with needs 7.0.8 and quilt 0.46-7
-  + all this (and possibly others) should go in a specialized subroutine

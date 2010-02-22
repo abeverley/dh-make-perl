@@ -259,6 +259,7 @@ sub run {
                 warn "Dependencies not updated.\n";
             }
 
+            $self->discover_utility_deps($control);
             $control->prune_perl_deps();
 
             $self->backup_file( $self->debian_file('control') );
@@ -1304,9 +1305,8 @@ sub check_for_xs {
 =item add_quilt( $control )
 
 Plugs quilt into F<debian/rules> and F<debian/control>. Depends on
-F<debian/rules> being in DH7 three-liner format. Also bumps the debhelper
-build-dependency to 7.0.50 (the first version to support overrides) and adds
-debian/README.source documenting quilt usage.
+F<debian/rules> being in DH7 three-liner format. Also adds debian/README.source
+documenting quilt usage.
 
 =cut
 
@@ -1331,13 +1331,6 @@ sub add_quilt {
         'override_dh_auto_clean: unpatch',
         "\tdh_auto_clean"
         unless grep /override_dh_auto_clean:.*unpatch/, @rules;
-
-    # add build-dependency on quilt
-    $control->source->Build_Depends->add('quilt');
-
-    # bump build-dependency of DH to 7.0.50
-    $control->source->Build_Depends->add('debhelper (>= 7.0.50)');
-        # a later prune() will remove redundant >= 7
 
     # README.source
     my $quilt_mini_doc = <<EOF;
@@ -1380,7 +1373,7 @@ EOF
 
 =item drop_quilt( $control )
 
-removes quilt from F<debian/rules> and F<debian/control>. Expects that
+removes quilt from F<debian/rules>. Expects that
 L<|add_quilt> was used to add quilt to F<debian/rules>.
 
 If F<debian/README.source> exists, references to quilt are removed from it (and
@@ -1435,15 +1428,6 @@ sub drop_quilt {
     # drop --with=quilt from dh command line
     for(@rules) {
         s/dh (.*)--with[= ]quilt\s*/dh $1/g;
-    }
-
-    # remove build-dependency on quilt
-    $control->source->Build_Depends->remove('quilt');
-
-    # if no overrides are used, lower dh dependency from 7.0.50 to 7
-    if( not grep /^override_dh_/, @rules ) {
-        $control->source->Build_Depends->remove('debhelper (>= 7.0.50)');
-        $control->source->Build_Depends->add('debhelper (>= 7)');
     }
 
     # README.source
@@ -2172,6 +2156,54 @@ sub module_build {
     my $self = shift;
 
     return ( -f $self->main_file('Build.PL') ) ? "Module-Build" : "MakeMaker";
+}
+
+=item discover_utility_deps
+
+Determines whether a certain version of L<debhelper(1)> or L<quilt(1)> is
+needed by the build process.
+
+The following special cases are detected:
+
+=over
+
+=item dh --with=quilt
+
+C<dh --with=quilt> needs debhelper 7.0.8 and quilt 0.46-7.
+
+=item quilt.make
+
+If F</usr/share/quilt/quilt.make> is included in F<debian/rules>, a
+build-dependency on C<quilt> is added.
+
+=item dhebhelper override targets
+
+Targets named C<override_dh_...> are supported by debhelper since 7.0.50
+
+=back
+
+=cut
+
+sub discover_utility_deps {
+    my ( $self, $control ) = @_;
+
+    my $deps = $control->source->Build_Depends;
+
+    # remove any existing dependencies
+    $deps->remove( 'quilt', 'debhelper' );
+
+    # start with the minimum
+    $deps->add( Debian::Dependency->new( 'debhelper', $self->cfg->dh ) );
+
+    my $rules = $self->_file_r( $self->debian_file('rules') );
+    while ( defined( $_ = <$rules> ) ) {
+        $deps->add( 'debhelper (>= 7.0.8)', 'quilt (>= 0.46-7)' )
+            if /dh\s+.*--with[= ]quilt/;
+        $deps->add('debhelper (>= 7.0.50)')
+            if /^override_dh_/;
+        $deps->add('quilt')
+            if m{^include /usr/share/quilt/quilt.make};
+    }
 }
 
 sub _warn_incomplete_copyright {
