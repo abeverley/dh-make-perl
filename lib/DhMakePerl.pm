@@ -992,26 +992,29 @@ sub extract_docs {
 
     $dir .= '/' unless $dir =~ m(/$);
     find(
-        sub {
-            if (   $File::Find::dir eq '.svn-base'
-                or $File::Find::dir eq '.svn'
-                or $File::Find::dir eq '.git' )
-            {
-                $File::Find::prune = 1;
-                return;
-            }
-            push(
-                @{ $self->docs },
-                substr( $File::Find::name, length($dir) )
-                )
-                if (
-                    /^\b(README|TODO|BUGS|NEWS|ANNOUNCE)\b/i
-                and !/\.(pod|pm)$/
-                and ( !$self->cfg->exclude
-                    or $File::Find::name !~ $self->cfg->exclude )
-                and !/\.svn-base$/
-                and $File::Find::name !~ m{debian/README\.source}
-                );
+        {   preprocess => sub {
+                my $bn = basename $File::Find::dir;
+                return ()
+                    if $bn eq '.svn-base'
+                        or $bn eq '.svn'
+                        or $bn eq '.git';
+
+                return @_;
+            },
+            wanted => sub {
+                push(
+                    @{ $self->docs },
+                    substr( $File::Find::name, length($dir) )
+                    )
+                    if (
+                        /^\b(README|TODO|BUGS|NEWS|ANNOUNCE)\b/i
+                    and !/\.(pod|pm)$/
+                    and ( !$self->cfg->exclude
+                        or $File::Find::name !~ $self->cfg->exclude )
+                    and !/\.svn-base$/
+                    and $File::Find::name !~ m{debian/README\.source}
+                    );
+            },
         },
         $dir
     );
