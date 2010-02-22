@@ -2190,6 +2190,14 @@ Targets named C<override_dh_...> are supported by debhelper since 7.0.50
 Building such packages requires debhelper 7.0.17 (see
 L<http://bugs.debian.org/496157>) =back
 
+=item Module::Build
+
+The proper build-dependency in this case is
+
+    perl (>= 5.10 ) | libmodule-build-perl
+
+=back
+
 =cut
 
 sub discover_utility_deps {
@@ -2229,6 +2237,13 @@ sub discover_utility_deps {
                 last;
             }
         }
+    }
+
+    # there are old packages that still build-depend on libmodule-build-perl
+    # Since M::B is part of perl 5.10, the build-dependency needs correction
+    if ( $self->module_build eq 'Module-Build' ) {
+        $deps->remove('libmodule-build-perl');
+        $deps->add('perl (>= 5.10) | libmodule-build-perl');
     }
 }
 
