@@ -15,6 +15,7 @@ __PACKAGE__->mk_accessors(
         desc longdesc copyright author
         extrasfields  extrapfields
         mod_cpan_version
+        docs
         )
 );
 
@@ -105,17 +106,21 @@ sub new {
         $self->$k($v) unless defined $self->$k;
     }
 
+    my @docs;
+    tie @docs, 'Array::Unique';
+
+    $self->docs( \@docs );
+
     return $self;
 }
 
 # If we're being required rather than called as a main command, then
 # return now without doing any work.  This facilitates easier testing.
 
-my ( @docs, @examples );
+my ( @examples );
 
-# use Array::Unique for @docs and @examples
+# use Array::Unique for @examples
 tie @examples, 'Array::Unique';
-tie @docs,     'Array::Unique';
 
 =item main_file(file_name)
 
@@ -205,7 +210,8 @@ sub run {
 
         $self->extract_docs if 'docs' ~~ $self->cfg->only;
         $self->extract_examples if 'examples' ~~ $self->cfg->only;
-        print "Found docs: @docs\n" if @docs and $self->cfg->verbose;
+        print "Found docs: @{ $self->docs }\n"
+            if @{ $self->docs } and $self->cfg->verbose;
         print "Found examples: @examples\n" if @examples and $self->cfg->verbose;
 
         if ( 'rules' ~~ $self->cfg->only ) {
@@ -221,7 +227,7 @@ sub run {
         }
 
         if ( 'docs' ~~ $self->cfg->only) {
-            $self->update_file_list( docs => \@docs );
+            $self->update_file_list( docs => $self->docs );
         }
 
         if ( 'copyright' ~~ $self->cfg->only ) {
@@ -380,7 +386,7 @@ EOF
         and $self->cfg->verbose;
     printf( "Using maintainer: %s\n", $self->maintainer )
         if $self->cfg->verbose;
-    print "Found docs: @docs\n" if $self->cfg->verbose;
+    print "Found docs: @{ $self->docs }\n" if $self->cfg->verbose;
     print "Found examples: @examples\n" if @examples and $self->cfg->verbose;
 
     # start writing out the data
@@ -397,7 +403,7 @@ EOF
 
     #create_readme("$debiandir/README.Debian");
     $self->create_copyright( $self->debian_file('copyright') );
-    $self->update_file_list( docs => \@docs, examples => \@examples );
+    $self->update_file_list( docs => $self->docs, examples => \@examples );
     $self->apply_final_overrides();
     $self->build_package
         if $self->cfg->build or $self->cfg->install;
@@ -994,7 +1000,10 @@ sub extract_docs {
                 $File::Find::prune = 1;
                 return;
             }
-            push( @docs, substr( $File::Find::name, length($dir) ) )
+            push(
+                @{ $self->docs },
+                substr( $File::Find::name, length($dir) )
+                )
                 if (
                     /^\b(README|TODO|BUGS|NEWS|ANNOUNCE)\b/i
                 and !/\.(pod|pm)$/
@@ -2006,7 +2015,7 @@ sub apply_overrides {
     $self->arch($val)
         if (
         defined( $val = $self->get_override_val( $data, $subkey, 'arch' ) ) );
-    @docs = split( /\s+/, $val )
+    $self->docs( [ split( /\s+/, $val ) ] )
         if (
         defined( $val = $self->get_override_val( $data, $subkey, 'docs' ) ) );
 
