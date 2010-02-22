@@ -2214,6 +2214,18 @@ sub discover_utility_deps {
         $deps->add('debhelper (>= 7.4.4)')
             if /dh.* --max-parallel/;
     }
+
+    if (    -e $self->main_file('Makefile.PL')
+        and -e $self->main_file('Build.PL') )
+    {
+        my $mf = $self->_file_r( $self->main_file('Makefile.PL') );
+        while( defined( $_ = <$mf> ) ) {
+            if ( /Module::Build::Compat/ ) {
+                $deps->add('debhelper (>= 7.0.17)');
+                last;
+            }
+        }
+    }
 }
 
 sub _warn_incomplete_copyright {
