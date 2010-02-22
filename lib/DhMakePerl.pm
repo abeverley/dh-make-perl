@@ -994,6 +994,7 @@ sub extract_docs {
     find(
         sub {
             if (   $File::Find::dir eq '.svn-base'
+                or $File::Find::dir eq '.svn'
                 or $File::Find::dir eq '.git' )
             {
                 $File::Find::prune = 1;
