@@ -14,6 +14,7 @@ __PACKAGE__->mk_accessors(
         perlname version pkgversion pkgname srcname
         desc longdesc copyright author
         extrasfields  extrapfields
+        mod_cpan_version
         )
 );
 
@@ -115,8 +116,6 @@ my ( @docs, @examples );
 # use Array::Unique for @docs and @examples
 tie @examples, 'Array::Unique';
 tie @docs,     'Array::Unique';
-
-my $mod_cpan_version;
 
 =item main_file(file_name)
 
@@ -507,7 +506,6 @@ sub setup_dir {
     my ($self) = @_;
 
     my ( $dist, $mod, $tarball );
-    $mod_cpan_version = '';
     if ( $self->cfg->cpan ) {
         my ($new_maindir, $orig_pwd);
 
@@ -526,7 +524,7 @@ sub setup_dir {
 
         $mod = $self->find_cpan_module( $self->cfg->cpan )
             or die "Can't find '" . $self->cfg->cpan . "' module on CPAN\n";
-        $mod_cpan_version = $mod->cpan_version;
+        $self->mod_cpan_version( $mod->cpan_version );
 
         $tarball = $CPAN::Config->{'keep_source_where'} . "/authors/id/";
 
@@ -881,8 +879,8 @@ sub extract_name_ver_from_makefile {
             $fh->close;
         }
         else {
-            if ($mod_cpan_version) {
-                $ver = $mod_cpan_version;
+            if ( $self->mod_cpan_version ) {
+                $ver = $self->mod_cpan_version;
                 warn "Cannot use internal module data to gather the "
                     . "version; using cpan_version\n";
             }
