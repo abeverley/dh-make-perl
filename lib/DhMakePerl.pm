@@ -15,7 +15,7 @@ __PACKAGE__->mk_accessors(
         desc longdesc copyright author
         extrasfields  extrapfields
         mod_cpan_version
-        docs
+        docs examples
         )
 );
 
@@ -111,16 +111,16 @@ sub new {
 
     $self->docs( \@docs );
 
+    my @examples;
+    tie @examples, 'Array::Unique';
+
+    $self->examples( \@examples );
+
     return $self;
 }
 
 # If we're being required rather than called as a main command, then
 # return now without doing any work.  This facilitates easier testing.
-
-my ( @examples );
-
-# use Array::Unique for @examples
-tie @examples, 'Array::Unique';
 
 =item main_file(file_name)
 
@@ -212,7 +212,8 @@ sub run {
         $self->extract_examples if 'examples' ~~ $self->cfg->only;
         print "Found docs: @{ $self->docs }\n"
             if @{ $self->docs } and $self->cfg->verbose;
-        print "Found examples: @examples\n" if @examples and $self->cfg->verbose;
+        print "Found examples: @{ $self->examples }\n"
+            if @{ $self->examples } and $self->cfg->verbose;
 
         if ( 'rules' ~~ $self->cfg->only ) {
             $self->backup_file( $self->debian_file('rules') );
@@ -223,7 +224,7 @@ sub run {
         }
 
         if ( 'examples' ~~ $self->cfg->only) {
-            $self->update_file_list( examples => \@examples );
+            $self->update_file_list( examples => $self->examples );
         }
 
         if ( 'docs' ~~ $self->cfg->only) {
@@ -387,7 +388,8 @@ EOF
     printf( "Using maintainer: %s\n", $self->maintainer )
         if $self->cfg->verbose;
     print "Found docs: @{ $self->docs }\n" if $self->cfg->verbose;
-    print "Found examples: @examples\n" if @examples and $self->cfg->verbose;
+    print "Found examples: @{ $self->examples }\n"
+        if @{ $self->examples } and $self->cfg->verbose;
 
     # start writing out the data
     mkdir( $self->debian_dir, 0755 )
@@ -403,7 +405,7 @@ EOF
 
     #create_readme("$debiandir/README.Debian");
     $self->create_copyright( $self->debian_file('copyright') );
-    $self->update_file_list( docs => $self->docs, examples => \@examples );
+    $self->update_file_list( docs => $self->docs, examples => $self->examples );
     $self->apply_final_overrides();
     $self->build_package
         if $self->cfg->build or $self->cfg->install;
@@ -1027,7 +1029,7 @@ sub extract_examples {
         sub {
             return if $_ eq '.';  # skip the directory itself
             my $exampleguess = substr( $File::Find::name, length($dir) );
-            push( @examples,
+            push( @{ $self->examples },
                 ( -d $exampleguess ? $exampleguess . '/*' : $exampleguess ) )
                 if ( /^(examples?|eg|samples?)$/i
                 and ( !$self->cfg->exclude or $File::Find::name !~ $self->cfg->exclude )
