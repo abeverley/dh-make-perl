@@ -119,9 +119,6 @@ sub new {
     return $self;
 }
 
-# If we're being required rather than called as a main command, then
-# return now without doing any work.  This facilitates easier testing.
-
 =item main_file(file_name)
 
 Constructs a file name relative to the main source directory, L</main_dir>
