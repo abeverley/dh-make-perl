@@ -2266,9 +2266,6 @@ sub discover_utility_deps {
             $deps, 'quilt (>= 0.46-7)',
         ) if /dh\s+.*--with[= ]quilt/;
 
-        # bash-completion dh integration is active in binary-arch or
-        # binary-indep targets, depending on "architecturality" of the package
-        # (all vs. any)
         $self->explained_dependency(
             'dh -with=bash-completion',
             $deps,
