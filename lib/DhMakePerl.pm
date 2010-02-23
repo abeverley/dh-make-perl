@@ -2208,7 +2208,7 @@ C<dh --with=quilt> needs debhelper 7.0.8 and quilt 0.46-7.
 
 =item dh --with=bash_completion
 
-C<dh --with=bash_completion> needs debhelper 7.0.8 and quilt 1:1.0.
+C<dh --with=bash_completion> needs debhelper 7.0.8 and bash-completion 1:1.0-3.
 
 =item quilt.make
 
@@ -2268,7 +2268,7 @@ sub discover_utility_deps {
             $self->explained_dependency(
                 'dh -with=bash_completion',
                 $depsi,
-                'bash-completion (>= 1:1.0)'
+                'bash-completion (>= 1:1.0-3)'
             );
         }    
         $self->explained_dependency( 'override_dh_* target',
