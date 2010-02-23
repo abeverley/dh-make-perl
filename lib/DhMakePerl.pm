@@ -2082,8 +2082,15 @@ sub get_override_val {
 sub package_already_exists {
     my( $self, $apt_contents ) = @_;
 
-    my $apt_cache = AptPkg::Cache->new;
-    my $found = $apt_cache->packages->lookup( $self->pkgname );
+    my $found;
+
+    eval {
+        my $apt_cache = AptPkg::Cache->new;
+        $found = $apt_cache->packages->lookup( $self->pkgname )
+            if $apt_cache;
+    };
+
+    warn "Error initializing AptPkg::Cache: $@" if $@;
 
     if ($found) {
         warn "**********\n";
