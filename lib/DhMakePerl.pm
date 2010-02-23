@@ -2284,18 +2284,12 @@ sub discover_utility_deps {
     if (    -e $self->main_file('Makefile.PL')
         and -e $self->main_file('Build.PL') )
     {
-        my $mf = $self->_file_r( $self->main_file('Makefile.PL') );
-        while( defined( $_ = <$mf> ) ) {
-            if ( /Module::Build::Compat/ ) {
-                $self->explained_dependency(
-                    'Compatibility Makefile.PL',
-                    $deps,
-                    'debhelper (>= 7.0.17)',
-                    'perl (>= 5.10) | libmodule-build-perl'
-                );
-                last;
-            }
-        }
+        $self->explained_dependency(
+            'Compatibility Makefile.PL',
+            $deps,
+            'debhelper (>= 7.0.17)',
+            'perl (>= 5.10) | libmodule-build-perl'
+        ) if $self->makefile_pl_is_MBC;
     }
 
     # there are old packages that still build-depend on libmodule-build-perl
@@ -2305,6 +2299,32 @@ sub discover_utility_deps {
         $self->explained_dependency( 'Module::Build', $deps,
             'perl (>= 5.10) | libmodule-build-perl' );
     }
+}
+
+=item makefile_pl_is_MBC
+
+Checks if F<Makefile.PL> is a compatibility wrapper around Build.PL provided by
+Module::Build::Compat.
+
+=cut
+
+sub makefile_pl_is_MBC
+{
+    my $self = shift;
+
+    my $mf = $self->makefile_pl;
+
+    return undef unless -e $mf;
+
+    my $fh = $self->_file_r($mf);
+
+    while( defined( $_ = <$fh> ) ) {
+        if ( /Module::Build::Compat/ ) {
+            return 1;
+        }
+    }
+
+    return 0;
 }
 
 sub _warn_incomplete_copyright {
