@@ -2244,7 +2244,6 @@ sub discover_utility_deps {
     my ( $self, $control ) = @_;
 
     my $deps  = $control->source->Build_Depends;
-    my $depsi = $control->source->Build_Depends_Indep;
 
     # remove any existing dependencies
     $deps->remove( 'quilt', 'debhelper' );
@@ -2272,7 +2271,7 @@ sub discover_utility_deps {
         # (all vs. any)
         $self->explained_dependency(
             'dh -with=bash-completion',
-            $self->arch eq 'all' ? $depsi : $deps,
+            $deps,
             'bash-completion (>= 1:1.0-3)'
         ) if (/dh\s+.*--with[= ]bash[-_]completion/);
 
