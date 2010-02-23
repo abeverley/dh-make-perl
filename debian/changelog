@@ -6,6 +6,7 @@ dh-make-perl (0.65) UNRELEASED; urgency=low
     overwriting the later if it exists
   * when looking for docs, ignore .svn/ too
   * do not crash when APT's package cache cannot be opened
+  * explain reasons when bumping build-dependencies on debhelper/quilt/etc
 
  -- Damyan Ivanov <dmn@debian.org>  Fri, 19 Feb 2010 22:47:26 +0200
 

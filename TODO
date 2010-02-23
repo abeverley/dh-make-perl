@@ -30,4 +30,3 @@
 * Don't add libmodule-build-perl to Build-Depends if Makefile.PL is also
   present, if its not just Module::Build::Compat
 * --make should use Debian::Control::FromCPAN for dependencies
-* when bumping build-dependencies, explain why

@@ -2165,6 +2165,29 @@ sub module_build {
     return ( -f $self->main_file('Build.PL') ) ? "Module-Build" : "MakeMaker";
 }
 
+=item explained_dependency I<$reason>, I<$dependencies>, I<@dependencies>
+
+Adds the list of dependencies to I<$dependencies> and shows I<$reason> if in
+verbose mode.
+
+Used to both bump a dependency ant tell the user why.
+
+I<$dependencies> is an instance of L<Debian::Dependencies> class, and
+I<@dependencies> is a list of L<Debian::Dependency> instances or strings.
+
+The message printed looks like C<< $reason needs @dependencies >>.
+
+=cut
+
+sub explained_dependency {
+    my ( $self, $reason, $deps, @to_add ) = @_;
+
+    $deps->add(@to_add);
+
+    warn sprintf( "%s needs %s\n", $reason, join( ', ', @to_add ) );
+}
+
+
 =item discover_utility_deps
 
 Determines whether a certain version of L<debhelper(1)> or L<quilt(1)> is
@@ -2218,18 +2241,25 @@ sub discover_utility_deps {
     # start with the minimum
     $deps->add( Debian::Dependency->new( 'debhelper', $self->cfg->dh ) );
 
-    $deps->add('debhelper (>= 7.2.13)')
+    $self->explained_dependency( 'Module::AutoInstall', $deps,
+        'debhelper (>= 7.2.13)' )
         if -e catfile( $self->main_dir, qw( inc Module AutoInstall.pm ) );
 
     my $rules = $self->_file_r( $self->debian_file('rules') );
     while ( defined( $_ = <$rules> ) ) {
-        $deps->add( 'debhelper (>= 7.0.8)', 'quilt (>= 0.46-7)' )
-            if /dh\s+.*--with[= ]quilt/;
-        $deps->add('debhelper (>= 7.0.50)')
+        $self->explained_dependency(
+            'dh -with=quilt',
+            $deps,
+            'debhelper (>= 7.0.8)',
+            'quilt (>= 0.46-7)',
+        ) if /dh\s+.*--with[= ]quilt/;
+        $self->explained_dependency( 'override_dh_* target',
+            $deps, 'debhelper (>= 7.0.50)' )
             if /^override_dh_/;
-        $deps->add('quilt')
+        $self->explained_dependency( 'quilt.make', $deps, 'quilt' )
             if m{^include /usr/share/quilt/quilt.make};
-        $deps->add('debhelper (>= 7.4.4)')
+        $self->explained_dependency( 'dh* --max-parallel',
+            $deps, 'debhelper (>= 7.4.4)' )
             if /dh.* --max-parallel/;
     }
 
@@ -2239,8 +2269,12 @@ sub discover_utility_deps {
         my $mf = $self->_file_r( $self->main_file('Makefile.PL') );
         while( defined( $_ = <$mf> ) ) {
             if ( /Module::Build::Compat/ ) {
-                $deps->add( 'debhelper (>= 7.0.17)',
-                    'perl (>= 5.10) | libmodule-build-perl' );
+                $self->explained_dependency(
+                    'Compatibility Makefile.PL',
+                    $deps,
+                    'debhelper (>= 7.0.17)',
+                    'perl (>= 5.10) | libmodule-build-perl'
+                );
                 last;
             }
         }
@@ -2250,7 +2284,8 @@ sub discover_utility_deps {
     # Since M::B is part of perl 5.10, the build-dependency needs correction
     if ( $self->module_build eq 'Module-Build' ) {
         $deps->remove('libmodule-build-perl');
-        $deps->add('perl (>= 5.10) | libmodule-build-perl');
+        $self->explained_dependency( 'Module::Build', $deps,
+            'perl (>= 5.10) | libmodule-build-perl' );
     }
 }
 
