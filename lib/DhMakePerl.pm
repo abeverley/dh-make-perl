@@ -2206,6 +2206,10 @@ raised to 7.2.13.
 
 C<dh --with=quilt> needs debhelper 7.0.8 and quilt 0.46-7.
 
+=item dh --with=bash_completion
+
+C<dh --with=bash_completion> needs debhelper 7.0.8 and quilt 1:1.0.
+
 =item quilt.make
 
 If F</usr/share/quilt/quilt.make> is included in F<debian/rules>, a
@@ -2233,7 +2237,8 @@ The proper build-dependency in this case is
 sub discover_utility_deps {
     my ( $self, $control ) = @_;
 
-    my $deps = $control->source->Build_Depends;
+    my $deps  = $control->source->Build_Depends;
+    my $depsi = $control->source->Build_Depends_Indep;
 
     # remove any existing dependencies
     $deps->remove( 'quilt', 'debhelper' );
@@ -2253,6 +2258,19 @@ sub discover_utility_deps {
             'debhelper (>= 7.0.8)',
             'quilt (>= 0.46-7)',
         ) if /dh\s+.*--with[= ]quilt/;
+        if ( /dh\s+.*--with[= ]bash_completion/ )
+        {
+            $self->explained_dependency(
+                'dh -with=bash_completion',
+                $deps,
+                'debhelper (>= 7.0.8)',
+            );
+            $self->explained_dependency(
+                'dh -with=bash_completion',
+                $depsi,
+                'bash-completion (>= 1:1.0)'
+            );
+        }    
         $self->explained_dependency( 'override_dh_* target',
             $deps, 'debhelper (>= 7.0.50)' )
             if /^override_dh_/;
