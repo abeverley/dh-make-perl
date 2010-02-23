@@ -2267,9 +2267,14 @@ sub discover_utility_deps {
             $deps, 'quilt (>= 0.46-7)',
         ) if /dh\s+.*--with[= ]quilt/;
 
-        $self->explained_dependency( 'dh -with=bash-completion',
-            $depsi, 'bash-completion (>= 1:1.0-3)' )
-            if (/dh\s+.*--with[= ]bash[-_]completion/);
+        # bash-completion dh integration is active in binary-arch or
+        # binary-indep targets, depending on "architecturality" of the package
+        # (all vs. any)
+        $self->explained_dependency(
+            'dh -with=bash-completion',
+            $self->arch eq 'all' ? $depsi : $deps,
+            'bash-completion (>= 1:1.0-3)'
+        ) if (/dh\s+.*--with[= ]bash[-_]completion/);
         $self->explained_dependency( 'override_dh_* target',
             $deps, 'debhelper (>= 7.0.50)' )
             if /^override_dh_/;
