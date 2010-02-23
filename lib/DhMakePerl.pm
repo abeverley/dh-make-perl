@@ -2258,25 +2258,18 @@ sub discover_utility_deps {
 
     my $rules = $self->_file_r( $self->debian_file('rules') );
     while ( defined( $_ = <$rules> ) ) {
+        $self->explained_dependency( 'dh --with', $deps,
+            'debhelper (>= 7.0.8)' )
+            if /dh \s+.*--with/;
+
         $self->explained_dependency(
-            'dh -with=quilt',
-            $deps,
-            'debhelper (>= 7.0.8)',
-            'quilt (>= 0.46-7)',
+            'dh --with=quilt',
+            $deps, 'quilt (>= 0.46-7)',
         ) if /dh\s+.*--with[= ]quilt/;
-        if ( /dh\s+.*--with[= ]bash[-_]completion/ )
-        {
-            $self->explained_dependency(
-                'dh -with=bash-completion',
-                $deps,
-                'debhelper (>= 7.0.8)',
-            );
-            $self->explained_dependency(
-                'dh -with=bash-completion',
-                $depsi,
-                'bash-completion (>= 1:1.0-3)'
-            );
-        }    
+
+        $self->explained_dependency( 'dh -with=bash-completion',
+            $depsi, 'bash-completion (>= 1:1.0-3)' )
+            if (/dh\s+.*--with[= ]bash[-_]completion/);
         $self->explained_dependency( 'override_dh_* target',
             $deps, 'debhelper (>= 7.0.50)' )
             if /^override_dh_/;
