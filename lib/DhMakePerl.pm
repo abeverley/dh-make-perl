@@ -2162,6 +2162,12 @@ sub upsurl {
 sub module_build {
     my $self = shift;
 
+    # dehbelper prefers Makefile.PL over Build.PL unless the former is a
+    # Module::Build::Compat wrapper
+    return 'Module-Build' if $self->makefile_pl_is_MBC;
+
+    return 'MakeMaker' if -e $self->makefile_pl;
+
     return ( -f $self->main_file('Build.PL') ) ? "Module-Build" : "MakeMaker";
 }
 

@@ -27,6 +27,4 @@
   touches d/rules if quilt is used
 * quiltification: switch to "--with quilt" in d/rules and adjust build deps
   in non-'3.0 (quilt)' source formats
-* Don't add libmodule-build-perl to Build-Depends if Makefile.PL is also
-  present, if its not just Module::Build::Compat
 * --make should use Debian::Control::FromCPAN for dependencies
