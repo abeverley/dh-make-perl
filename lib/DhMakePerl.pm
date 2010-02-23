@@ -2206,9 +2206,9 @@ raised to 7.2.13.
 
 C<dh --with=quilt> needs debhelper 7.0.8 and quilt 0.46-7.
 
-=item dh --with=bash_completion
+=item dh --with=bash-completion
 
-C<dh --with=bash_completion> needs debhelper 7.0.8 and bash-completion 1:1.0-3.
+C<dh --with=bash-completion> needs debhelper 7.0.8 and bash-completion 1:1.0-3.
 
 =item quilt.make
 
@@ -2258,15 +2258,15 @@ sub discover_utility_deps {
             'debhelper (>= 7.0.8)',
             'quilt (>= 0.46-7)',
         ) if /dh\s+.*--with[= ]quilt/;
-        if ( /dh\s+.*--with[= ]bash_completion/ )
+        if ( /dh\s+.*--with[= ]bash[-_]completion/ )
         {
             $self->explained_dependency(
-                'dh -with=bash_completion',
+                'dh -with=bash-completion',
                 $deps,
                 'debhelper (>= 7.0.8)',
             );
             $self->explained_dependency(
-                'dh -with=bash_completion',
+                'dh -with=bash-completion',
                 $depsi,
                 'bash-completion (>= 1:1.0-3)'
             );
