@@ -2275,11 +2275,14 @@ sub discover_utility_deps {
             $self->arch eq 'all' ? $depsi : $deps,
             'bash-completion (>= 1:1.0-3)'
         ) if (/dh\s+.*--with[= ]bash[-_]completion/);
+
         $self->explained_dependency( 'override_dh_* target',
             $deps, 'debhelper (>= 7.0.50)' )
             if /^override_dh_/;
+
         $self->explained_dependency( 'quilt.make', $deps, 'quilt' )
             if m{^include /usr/share/quilt/quilt.make};
+
         $self->explained_dependency( 'dh* --max-parallel',
             $deps, 'debhelper (>= 7.4.4)' )
             if /dh.* --max-parallel/;
