@@ -1393,9 +1393,17 @@ sub drop_quilt {
 
     # look for the quilt include line and remove it and the previous empty one
     for( my $i = 1; $i < @rules; $i++ ) {
-        if ( $rules[$i] eq ''
-                and $rules[$i+1] eq 'include /usr/share/quilt/quilt.make' ) {
-            splice @rules, $i, 2;
+        if ( $rules[$i] eq 'include /usr/share/quilt/quilt.make' ) {
+            splice @rules, $i, 1;
+
+            # collapse two sequencial empty lines
+            # NOTE: this won't work if the include statement was the last line
+            # in the rules, but this is highly unlikely
+            splice( @rules, $i, 1 )
+                if $i < @rules
+                    and $rules[$i] eq ''
+                    and $rules[ $i - 1 ] eq '';
+
             last;
         }
     }
@@ -1434,10 +1442,15 @@ sub drop_quilt {
             splice @rules, $i, 2;
 
             # At this point there may be an extra empty line left.
-            # There may also be no empty line, if the clean override
-            # was at the end of the file
-            splice( @rules, $i, 1 )
-                if $#rules >= $i and $rules[$i] eq '';
+            # Remove an empty line after the removed target
+            # Or any trailing empty line (if the target was at EOF)
+            if ( $i > $#rules ) {
+                $#rules-- if $rules[-1] eq '';    # trim trailing empty line
+            }
+            elsif ( $rules[$i] eq '' ) {
+                splice( @rules, $i, 1 );
+            }
+
             last;
         }
     }
