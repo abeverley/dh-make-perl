@@ -25,6 +25,4 @@
   files and look them in the apt file contents. Lots of work for little gain.
 * --refresh: add --only <file> option: done, but "--only control" also
   touches d/rules if quilt is used
-* quiltification: switch to "--with quilt" in d/rules and adjust build deps
-  in non-'3.0 (quilt)' source formats
 * --make should use Debian::Control::FromCPAN for dependencies

@@ -1317,20 +1317,50 @@ sub add_quilt {
     tie @rules, 'Tie::File', $self->debian_file('rules')
         or die "Unable to read rules: $!";
 
-    splice @rules, 1, 0, ( '', 'include /usr/share/quilt/quilt.make' )
-        unless grep /quilt\.make/, @rules;
+    my $quiltified = 0;
+    my $dh7tiny = 0;
 
-    push @rules,
-        '',
-        'override_dh_auto_configure: $(QUILT_STAMPFN)',
-        "\tdh_auto_configure"
-        unless grep /QUILT_STAMPFN/, @rules;
+    # check if rules are dh7-tiny
+    for ( my $i = 1; $i < @rules; $i++ ) {
+        if (    $rules[$i] eq '%:'
+            and $i + 1 < @rules
+            and $rules[ $i + 1 ] =~ /^\tdh .*\$\@/ )
+        {
+            $dh7tiny = 1;
 
-    push @rules,
-        '',
-        'override_dh_auto_clean: unpatch',
-        "\tdh_auto_clean"
-        unless grep /override_dh_auto_clean:.*unpatch/, @rules;
+            if ( $rules[ $i + 1 ] =~ /--with[ =]quilt/ ) {
+                $quiltified = 1;
+                last;
+            }
+        }
+    }
+
+    unless ($quiltified) {
+        if ($dh7tiny) {
+            for (@rules) {
+                # add --with=quilt to every dh call
+                s/(?<=\s)dh /dh --with=quilt /
+                    unless /--with[= ]quilt/;   # unless it is already there
+            }
+        }
+        else {
+            # non-dh7tiny
+            splice @rules, 1, 0, ( '', 'include /usr/share/quilt/quilt.make' )
+                unless grep /quilt\.make/, @rules;
+
+            push @rules,
+                '',
+                'override_dh_auto_configure: $(QUILT_STAMPFN)',
+                "\tdh_auto_configure"
+                unless grep /QUILT_STAMPFN/, @rules;
+
+            push @rules,
+                '',
+                'override_dh_auto_clean: unpatch',
+                "\tdh_auto_clean"
+                unless grep /override_dh_auto_clean:.*unpatch/, @rules;
+        }
+    }
 
     # README.source
     my $quilt_mini_doc = <<EOF;
