@@ -1379,6 +1379,9 @@ L<|add_quilt> was used to add quilt to F<debian/rules>.
 If F<debian/README.source> exists, references to quilt are removed from it (and
 the file removed if empty after that).
 
+Both dh7-style (C<dh --with=quilt>) and old-fashioned (C<$(QUILT_STAMPFN)>
+target dependency) are supported.
+
 =cut
 
 sub drop_quilt {
@@ -1408,6 +1411,20 @@ sub drop_quilt {
         }
     }
 
+    # also remove $(QUILT_STAMPFN) as a target dependency
+    # note that the override_dh_auto_configure is handled above because in that
+    # case the whole makefile snipped is to be removed
+    # Here we deal with the more generic cases
+    for ( my $i = 1; $i <= $#rules; $i++ ) {
+        $rules[$i] =~ s{
+            ^                               # at the beginning of the line
+            ([^\s:]+):                      # target name, followed by a colon
+            (.*)                            # any other dependencies
+            \$\(QUILT_STAMPFN\)             # followed by $(QUILT_STAMPFN)
+        }{$1:$2}x;
+    }
+
+
     # remove unpatch dependency in clean
     for( my $i = 1; $i < @rules; $i++ ) {
         if (    $rules[$i] eq 'override_dh_auto_clean: unpatch'
@@ -1423,6 +1440,18 @@ sub drop_quilt {
                 if $#rules >= $i and $rules[$i] eq '';
             last;
         }
+    }
+
+
+    # similarly to the $(QUILT_STAMPFN) stripping, here we process a general
+    # ependency on the 'unpatch' rule
+    for ( my $i = 1; $i <= $#rules; $i++ ) {
+        $rules[$i] =~ s{
+            ^                               # at the beginning of the line
+            ([^\s:]+):                      # target name, followed by a colon
+            (.*)                            # any other dependencies
+            unpatch                         # followed by 'unpatch'
+        }{$1:$2}x;
     }
 
     # drop --with=quilt from dh command line
