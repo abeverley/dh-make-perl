@@ -26,3 +26,5 @@
 * --refresh: add --only <file> option: done, but "--only control" also
   touches d/rules if quilt is used
 * --make should use Debian::Control::FromCPAN for dependencies
+* do not blindly overwrite debian/rules in --refresh
+  keep it intact if it is already dh7tiny-style
