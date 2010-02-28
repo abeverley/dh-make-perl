@@ -2392,7 +2392,7 @@ sub makefile_pl_is_MBC
     my $fh = $self->_file_r($mf);
 
     while( defined( $_ = <$fh> ) ) {
-        if ( /Module::Build::Compat/ ) {
+        if ( /^[^#"]*Module::Build::Compat/ ) {
             return 1;
         }
     }
