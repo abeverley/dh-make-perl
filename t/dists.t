@@ -94,12 +94,12 @@ sub dist_ok($) {
             $ENV{NO_NETWORK} ? '--no-network' : (),
             "--sources-list",
             "$Bin/contents/sources.list", "--email", "joemaint\@test.local",
-            "--refresh",
+            "refresh",
             $dist );
 
-    is( $?, 0, "$dist_dir --refresh: system returned 0" );
+    is( $?, 0, "$dist_dir refresh: system returned 0" );
 
-    compare_tree( "$dist/debian", "$dist/wanted-debian--refresh", '--refresh' );
+    compare_tree( "$dist/debian", "$dist/wanted-debian--refresh", 'refresh' );
 
     unlink File::Find::Rule->file->name('*.bak')->in("$dist/debian");
 
@@ -110,17 +110,17 @@ sub dist_ok($) {
             $ENV{NO_NETWORK} ? '--no-network' : (),
             "--sources-list",
             "$Bin/contents/sources.list", "--email", "joemaint\@test.local",
-            "--refresh", '--source-format', '3.0 (quilt)',
+            "refresh", '--source-format', '3.0 (quilt)',
             $dist );
 
     is( $?, 0,
-        "$dist_dir --refresh --source-format '3.0 (quilt)': system returned 0"
+        "$dist_dir refresh --source-format '3.0 (quilt)': system returned 0"
     );
 
     compare_tree(
         "$dist/debian",
         "$dist/wanted-debian--refresh--source-format=3.0_quilt",
-        '--refresh --source-format 3.0 (quilt)'
+        'refresh --source-format 3.0 (quilt)'
     );
 
     # clean after the test

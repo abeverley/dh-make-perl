@@ -18,15 +18,15 @@ dh-make-perl - Create debian source packages from Perl modules
 
 =over
 
-=item dh-make-perl [--make] {I<SOURCE_DIR> | --cpan I<MODULE>} I<options...>
+=item dh-make-perl [make] {I<SOURCE_DIR> | --cpan I<MODULE>} I<options...>
 
-=item dh-make-perl --refresh {I<--only ...>} [directory]
+=item dh-make-perl refresh {I<--only ...>} [directory]
 
-=item dh-make-perl --locate Foo::Bar
+=item dh-make-perl locate Foo::Bar
 
-=item dh-make-perl --refresh-cache
+=item dh-make-perl refresh-cache
 
-=item dh-make-perl --dump-config
+=item dh-make-perl dump-config
 
 =item cpan2deb I<DIST> I<options...>
 
@@ -70,12 +70,12 @@ the Debian Perl policy, the packaging manual and so on.
 
 =over
 
-=item --make
+=item make
 
 Default command if no command is given. Creates debianisation from scratch.
 Fails with an error if F<debian/> directory already exists.
 
-=item --refresh [directory]
+=item refresh [directory]
 
 For refreshing a package. C<directory> defaults to the current working
 directory. Rebuilds F<debian/copyright>, F<debian/rules>, F<debian/compat>
@@ -99,7 +99,7 @@ directory when B<dh-make-perl> is run in L</--refresh> mode. Filenames are
 separated by a comma. The option can be given multiple times, accumulating
 arguments.
 
-=item --locate I<MODULE>
+=item locate I<MODULE>
 
 Tries to locate the package that conains the given Perl I<MODULE>.
 
@@ -107,7 +107,7 @@ Example:
 
     dh-make-perl --locate IPC::Run3
 
-=item --refresh-cache
+=item refresh-cache
 
 B<dh-make-perl> parses the Contents files, fetched by L<apt-file(1)> and stores
 the result in a cache. The cache is refreshed automatically if it is older than
@@ -118,7 +118,7 @@ to the cron job, right after C<apt-file update>.
 
 Does nothing if the cache is newer that the Contents files.
 
-=item --dump-config
+=item dump-config
 
 Causes the current config, including any default settings to be printed to the
 standard output.

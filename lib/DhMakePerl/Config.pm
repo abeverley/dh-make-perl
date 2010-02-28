@@ -150,12 +150,32 @@ sub parse_command_line_options {
     GetOptions( \%opts, $self->commands )
         or die "Error parsing command-line options\n";
 
-    # by default, create source package
-    %opts = ( make => 1 ) unless %opts;
+    if (%opts) {
+        my $cmd = ( keys %opts )[0];
+        warn "WARNING: double dashes in front of sub-commands are deprecated\n";
+        warn "WARNING: for instance, use '$cmd' instead of '--$cmd'\n";
+    }
+    else {
+        my %cmds;
+        for( $self->commands ) {
+            my $c = $_;
+            $c =~ s/\|.+//;     # strip short alternatives
+            $cmds{$c} = 1;
+        }
+
+        # treat the first non-option as command
+        # if it looks like one
+        $opts{ shift(@ARGV) } = 1
+            if $ARGV[0]
+                and $cmds{ $ARGV[0] };
+
+        # by default, create source package
+        $opts{make} = 1 unless %opts;
+    }
 
     if ( scalar( keys %opts ) > 1 ) {
         die "Only one of " .
-            map( "--$_", $self->commands ) . " can be specified\n";
+            map( $_, $self->commands ) . " can be specified\n";
     }
 
     $self->command( ( keys %opts )[0] );
