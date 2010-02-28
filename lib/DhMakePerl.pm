@@ -179,18 +179,14 @@ sub run {
     die pod2usage(-message => "See `man 1 dh-make-perl' for details.\n") if $self->cfg->help;
     die "CPANPLUS support disabled, sorry" if $self->cfg->cpanplus;
 
-    if ( $self->cfg->command eq 'refresh-cache' ) {
+    if (   $self->cfg->command eq 'refresh-cache'
+        or $self->cfg->command eq 'dump-config' )
+    {
         my $cmd_mod = $self->cfg->command;
         $cmd_mod =~ s/-/_/g;
         require "DhMakePerl/Command/$cmd_mod.pm";
         bless $self, "DhMakePerl::Command::$cmd_mod";
         return $self->execute;
-    }
-
-    if ( $self->cfg->command eq 'dump-config' ) {
-        print $self->cfg->dump_config;
-
-        return 0;
     }
 
     $self->arch( $self->cfg->arch ) if $self->cfg->arch;
