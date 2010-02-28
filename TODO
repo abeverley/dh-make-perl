@@ -28,6 +28,3 @@
 * --make should use Debian::Control::FromCPAN for dependencies
 * do not blindly overwrite debian/rules in --refresh
   keep it intact if it is already dh7tiny-style
-* grepping for "Module::Build::Compat" in Makefile.PL is not enough; when it's only
-  created with M:B:C we don't need a build-dep on M::B, only when it calls
-  M::B. detected when refreshing libtk-dirselect-perl
