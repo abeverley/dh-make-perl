@@ -181,7 +181,8 @@ sub run {
 
     if (   $self->cfg->command eq 'refresh-cache'
         or $self->cfg->command eq 'dump-config'
-        or $self->cfg->command eq 'locate' )
+        or $self->cfg->command eq 'locate'
+        or $self->cfg->command eq 'refresh' )
     {
         my $cmd_mod = $self->cfg->command;
         $cmd_mod =~ s/-/_/g;
@@ -195,79 +196,6 @@ sub run {
     $self->maintainer( $self->get_maintainer( $self->cfg->email ) );
 
     $self->desc( $self->cfg->desc || '' );
-
-    if ( $self->cfg->command eq 'refresh' ) {
-        $self->main_dir( $ARGV[0] || '.' );
-        print "Engaging refresh mode in " . $self->main_dir . "\n"
-            if $self->cfg->verbose;
-
-        $self->process_meta;
-        $self->extract_basic();    # also detects arch-dep package
-
-        $self->extract_docs if 'docs' ~~ $self->cfg->only;
-        $self->extract_examples if 'examples' ~~ $self->cfg->only;
-        print "Found docs: @{ $self->docs }\n"
-            if @{ $self->docs } and $self->cfg->verbose;
-        print "Found examples: @{ $self->examples }\n"
-            if @{ $self->examples } and $self->cfg->verbose;
-
-        if ( 'rules' ~~ $self->cfg->only ) {
-            $self->backup_file( $self->debian_file('rules') );
-            $self->create_rules( $self->debian_file('rules') );
-            if (! -f $self->debian_file('compat') or $self->cfg->dh == 7) {
-                $self->create_compat( $self->debian_file('compat') );
-            }
-        }
-
-        if ( 'examples' ~~ $self->cfg->only) {
-            $self->update_file_list( examples => $self->examples );
-        }
-
-        if ( 'docs' ~~ $self->cfg->only) {
-            $self->update_file_list( docs => $self->docs );
-        }
-
-        if ( 'copyright' ~~ $self->cfg->only ) {
-            $self->backup_file( $self->debian_file('copyright') );
-            $self->create_copyright( $self->debian_file('copyright') );
-        }
-
-        if ( 'control' ~~ $self->cfg->only ) {
-            my $control = Debian::Control::FromCPAN->new;
-            $control->read( $self->debian_file('control') );
-            if ( -e catfile( $self->debian_file('patches'), 'series' )
-                and $self->cfg->source_format ne '3.0 (quilt)' )
-            {
-                $self->add_quilt($control);
-            }
-            else {
-                $self->drop_quilt($control);
-            }
-
-            $self->write_source_format(
-                catfile( $self->debian_dir, 'source', 'format' ) );
-
-            if( my $apt_contents = $self->get_apt_contents ) {
-                $control->dependencies_from_cpan_meta(
-                    $self->meta, $self->get_apt_contents, $self->cfg->verbose );
-            }
-            else {
-                warn "No APT contents can be loaded.\n";
-                warn "Please install 'apt-file' package and run 'apt-file update'\n";
-                warn "as root.\n";
-                warn "Dependencies not updated.\n";
-            }
-
-            $self->discover_utility_deps($control);
-            $control->prune_perl_deps();
-
-            $self->backup_file( $self->debian_file('control') );
-            $control->write( $self->debian_file('control') );
-        }
-
-        print "--- Done\n" if $self->cfg->verbose;
-        return 0;
-    }
 
     $self->load_overrides();
     my $tarball = $self->setup_dir();
