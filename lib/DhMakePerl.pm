@@ -5,7 +5,6 @@ use strict;
 use 5.010;    # we use smart matching
 
 use base 'Class::Accessor';
-use Pod::Usage;
 
 __PACKAGE__->mk_accessors(
     qw(
@@ -175,14 +174,13 @@ sub run {
     $self->bdepends(
         Debian::Dependencies->new( 'debhelper (>=' . $self->cfg->dh . ')' ) );
 
-    # Help requested? Nice, we can just die! Isn't it helpful?
-    die pod2usage(-message => "See `man 1 dh-make-perl' for details.\n") if $self->cfg->help;
     die "CPANPLUS support disabled, sorry" if $self->cfg->cpanplus;
 
     if (   $self->cfg->command eq 'refresh-cache'
         or $self->cfg->command eq 'dump-config'
         or $self->cfg->command eq 'locate'
-        or $self->cfg->command eq 'refresh' )
+        or $self->cfg->command eq 'refresh'
+        or $self->cfg->command eq 'help' )
     {
         my $cmd_mod = $self->cfg->command;
         $cmd_mod =~ s/-/_/g;

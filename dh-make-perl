@@ -28,6 +28,8 @@ dh-make-perl - Create debian source packages from Perl modules
 
 =item dh-make-perl dump-config
 
+=item dh-make-perl help
+
 =item cpan2deb I<DIST> I<options...>
 
 =back
@@ -124,6 +126,10 @@ Causes the current config, including any default settings to be printed to the
 standard output.
 
 Useful for populating L<dh-make-perl.conf> file.
+
+=item help
+
+Displays short usage information.
 
 =back
 

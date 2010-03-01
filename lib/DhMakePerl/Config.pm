@@ -24,7 +24,7 @@ use constant options => (
     'dbflags=s',       'depends=s',
     'desc=s',          'dh=i',
     'dist=s',          'email|e=s',
-    'exclude|i:s{,}',  'help',
+    'exclude|i:s{,}',
     'home-dir=s',      'install!',
     'network!',
     'nometa',          'notest',
@@ -36,7 +36,7 @@ use constant options => (
 );
 
 use constant commands =>
-    ( 'make', 'refresh|R', 'refresh-cache', 'dump-config', 'locate' );
+    ( 'make', 'refresh|R', 'refresh-cache', 'dump-config', 'locate', 'help' );
 
 __PACKAGE__->mk_accessors(
     do {
