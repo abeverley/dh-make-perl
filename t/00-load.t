@@ -1,9 +1,13 @@
-#!perl -T
+#!perl
 
-use Test::More tests => 1;
+use strict;
 
-BEGIN {
-	use_ok( 'DhMakePerl' );
-}
+use Test::More;
+use Test::Compile;
 
-diag( "Testing DhMakePerl $DhMakePerl::VERSION, Perl $], $^X" );
+my @pms = all_pm_files;
+
+plan tests => @pms + 1;
+
+pm_file_ok($_) for @pms;
+pl_file_ok('dh-make-perl');
