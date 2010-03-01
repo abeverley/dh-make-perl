@@ -34,7 +34,7 @@ sub execute {
 
 =over
 
-=item Copyright (C) 2010 Damyan Ivanov <dmn@debian.org>
+=item Copyright (C) 2009, 2010 Damyan Ivanov <dmn@debian.org>
 
 =back
 
