@@ -62,7 +62,7 @@ If B<dh-make-perl> is called as
 
 it behaves like
 
-    dh-make-perl <options...> --build --cpan Foo-Bar
+    dh-make-perl make <options...> --build --cpan Foo-Bar
 
 Using this program is no excuse for not reading the
 debian developer documentation, including the Debian policy,
