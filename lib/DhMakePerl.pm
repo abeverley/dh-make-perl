@@ -1667,36 +1667,37 @@ sub create_compat {
 }
 
 sub copyright_from_changelog {
-  my ( $self, $firstmaint, $firstyear ) = @_;
-  my %maintainers = ();
-  @{$maintainers{$firstmaint}} = ($firstyear);
-my $chglog = Parse::DebianChangelog->init(
-    { infile => $self->debian_file('changelog') } );
-  foreach($chglog->data()) {
-    my $person = $_->Maintainer;
-    my $date = $_->Date;
-    my @date_pieces = split(" ", $date);
-    my $year = $date_pieces[3];
-    if(defined($maintainers{$person})) {
-      push @{$maintainers{$person}}, $year;
-      @{$maintainers{$person}} = sort(@{$maintainers{$person}});
-    } else {
-      @{$maintainers{$person}} = ($year);
+    my ( $self, $firstmaint, $firstyear ) = @_;
+    my %maintainers = ();
+    @{ $maintainers{$firstmaint} } = ($firstyear);
+    my $chglog = Parse::DebianChangelog->init(
+        { infile => $self->debian_file('changelog') } );
+    foreach ( $chglog->data() ) {
+        my $person      = $_->Maintainer;
+        my $date        = $_->Date;
+        my @date_pieces = split( " ", $date );
+        my $year        = $date_pieces[3];
+        if ( defined( $maintainers{$person} ) ) {
+            push @{ $maintainers{$person} }, $year;
+            @{ $maintainers{$person} } = sort( @{ $maintainers{$person} } );
+        }
+        else {
+            @{ $maintainers{$person} } = ($year);
+        }
     }
-  }
-  my @strings;
-  foreach my $maint_name (keys %maintainers) {
-    my $str = " ";
-    my %uniq = map { $_ => 0 } @{$maintainers{$maint_name}};
-    foreach(sort keys %uniq) {
-      $str .= $_;
-      $str .= ", ";
+    my @strings;
+    foreach my $maint_name ( keys %maintainers ) {
+        my $str = " ";
+        my %uniq = map { $_ => 0 } @{ $maintainers{$maint_name} };
+        foreach ( sort keys %uniq ) {
+            $str .= $_;
+            $str .= ", ";
+        }
+        $str .= $maint_name;
+        push @strings, $str;
     }
-    $str .= $maint_name;
-    push @strings, $str;
-  }
-  @strings = sort @strings;
-  return @strings;
+    @strings = sort @strings;
+    return @strings;
 }
 
 sub create_copyright {
