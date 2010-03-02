@@ -28,7 +28,7 @@ sub execute {
     my $self = shift;
 
     @ARGV == 1
-        or die "--locate command requires exactly one non-option argument\n";
+        or die "locate command requires exactly one non-option argument\n";
 
     my $apt_contents = $self->get_apt_contents;
 
