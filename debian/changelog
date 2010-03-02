@@ -8,6 +8,8 @@ dh-make-perl (0.65) UNRELEASED; urgency=low
   * do not crash when APT's package cache cannot be opened
   * explain reasons when bumping build-dependencies on debhelper/quilt/etc
   * fix build-system detection when Module::Build::Compat is in play
+  * package_already_exists: fix a 'Can't modify non-lvalue subroutine call'
+    warning. Thanks to Jozef Kutej for the report and the patch.
 
  -- Damyan Ivanov <dmn@debian.org>  Fri, 19 Feb 2010 22:47:26 +0200
 

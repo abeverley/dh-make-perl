@@ -2071,7 +2071,7 @@ sub package_already_exists {
             = $apt_contents->find_perl_module_package( $self->perlname );
 
         if ($found) {
-            my $mod_name = $self->perlname =~ s/-/::/g;
+            ( my $mod_name = $self->perlname ) =~ s/-/::/g;
             warn "**********\n";
             warn "NOTICE: the package '$found', available in APT repositories\n";
             warn "        already contains a module named "
