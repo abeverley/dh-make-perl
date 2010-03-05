@@ -220,7 +220,7 @@ sub run {
     ) if ( $tarball && $tarball =~ /(?:\.tar\.gz|\.tgz)$/ );
 
     if ( -d $self->debian_dir ) {
-        $self->warning( $self->debian_dir . 'already exists' );
+        $self->warning( $self->debian_dir . ' already exists' );
         my $bak = $self->debian_dir . '.bak';
         $self->warning( "moving to $bak" );
         if ( -d $bak ) {
