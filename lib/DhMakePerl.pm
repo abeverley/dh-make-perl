@@ -26,6 +26,20 @@ our $VERSION = '0.65';
 
     DhMakePerl->run;
 
+=head1 ACCESSORS
+
+=over
+
+=item apt_contents
+
+Stores the cached copy of L<Debian::AptContents>.
+
+=item cfg
+
+Stores the configuration, an instance of L<DhMakePerl::Config>
+
+=back
+
 =head1 CLASS METHODS
 
 =over
