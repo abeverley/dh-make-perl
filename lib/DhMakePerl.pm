@@ -134,25 +134,9 @@ sub get_apt_contents {
 
 =head1 COPYRIGHT & LICENSE
 
-=over 4
+=over
 
-=item Copyright (C) 2000, 2001 Paolo Molaro <lupus@debian.org>
-
-=item Copyright (C) 2002, 2003, 2008 Ivan Kohler <ivan-debian@420.am>
-
-=item Copyright (C) 2003, 2004 Marc 'HE' Brockschmidt <he@debian.org>
-
-=item Copyright (C) 2005-2007 Gunnar Wolf <gwolf@debian.org>
-
-=item Copyright (C) 2006 Frank Lichtenheld <djpig@debian.org>
-
-=item Copyright (C) 2007-2010 Gregor Herrmann <gregoa@debian.org>
-
-=item Copyright (C) 2007-2010 Damyan Ivanov <dmn@debian.org>
-
-=item Copyright (C) 2008, Roberto C. Sanchez <roberto@connexer.com>
-
-=item Copyright (C) 2009-2010, Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+=item Copyright (C) 2009, 2010 Damyan Ivanov <dmn@debian.org>
 
 =back
 
