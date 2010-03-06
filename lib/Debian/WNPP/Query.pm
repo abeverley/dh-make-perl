@@ -43,6 +43,8 @@ __PACKAGE__->mk_accessors(
 
 use autodie;
 use Debian::WNPP::Bug;
+use File::Basename qw(dirname);
+use File::Path;
 use Storable ();
 use WWW::Mechanize ();
 
@@ -89,6 +91,8 @@ sub _write_cache {
     my $self = shift;
 
     return unless $self->cache_file;
+
+    File::Path::make_path( dirname( $self->cache_file ) );
 
     $self->_cache->{timestamp} = scalar(time);
 
