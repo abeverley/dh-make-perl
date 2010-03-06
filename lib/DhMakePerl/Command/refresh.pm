@@ -13,6 +13,7 @@ This module implements the I<refresh> command of L<dh-make-perl(1)>.
 use strict; use warnings;
 
 use base 'DhMakePerl';
+use Debian::Rules ();
 use File::Spec::Functions qw(catfile);
 
 =head1 METHODS
@@ -32,6 +33,7 @@ sub execute {
     print "Engaging refresh mode in " . $self->main_dir . "\n"
         if $self->cfg->verbose;
 
+    $self->rules( Debian::Rules->new( $self->debian_file('rules') ) );
     $self->maintainer( $self->get_maintainer( $self->cfg->email ) );
     $self->process_meta;
     $self->extract_basic();    # also detects arch-dep package

@@ -14,7 +14,7 @@ __PACKAGE__->mk_accessors(
         desc longdesc copyright author
         extrasfields  extrapfields
         mod_cpan_version
-        docs examples
+        docs examples rules
         )
 );
 
@@ -55,6 +55,7 @@ use Debian::Control           ();
 use Debian::Control::FromCPAN ();
 use Debian::Dependencies      ();
 use Debian::Dependency        ();
+use Debian::Rules             ();
 use Debian::Version qw(deb_ver_cmp);
 use Debian::WNPP::Query;
 use Parse::DebianChangelog;
@@ -1205,54 +1206,7 @@ documenting quilt usage.
 sub add_quilt {
     my( $self, $control ) = @_;
 
-    my @rules;
-    tie @rules, 'Tie::File', $self->debian_file('rules')
-        or die "Unable to read rules: $!";
-
-    my $quiltified = 0;
-    my $dh7tiny = 0;
-
-    # check if rules are dh7-tiny
-    for ( my $i = 1; $i < @rules; $i++ ) {
-        if (    $rules[$i] eq '%:'
-            and $i + 1 < @rules
-            and $rules[ $i + 1 ] =~ /^\tdh .*\$\@/ )
-        {
-            $dh7tiny = 1;
-
-            if ( $rules[ $i + 1 ] =~ /--with[ =]quilt/ ) {
-                $quiltified = 1;
-                last;
-            }
-        }
-    }
-
-    unless ($quiltified) {
-        if ($dh7tiny) {
-            for (@rules) {
-                # add --with=quilt to every dh call
-                s/(?<=\s)dh /dh --with=quilt /
-                    unless /--with[= ]quilt/;   # unless it is already there
-            }
-        }
-        else {
-            # non-dh7tiny
-            splice @rules, 1, 0, ( '', 'include /usr/share/quilt/quilt.make' )
-                unless grep /quilt\.make/, @rules;
-
-            push @rules,
-                '',
-                'override_dh_auto_configure: $(QUILT_STAMPFN)',
-                "\tdh_auto_configure"
-                unless grep /QUILT_STAMPFN/, @rules;
-
-            push @rules,
-                '',
-                'override_dh_auto_clean: unpatch',
-                "\tdh_auto_clean"
-                unless grep /override_dh_auto_clean:.*unpatch/, @rules;
-        }
-    }
+    $self->rules->add_quilt;
 
     # README.source
     my $quilt_mini_doc = <<EOF;
@@ -1309,90 +1263,7 @@ target dependency) are supported.
 sub drop_quilt {
     my( $self, $control ) = @_;
 
-    my @rules;
-    tie @rules, 'Tie::File', $self->debian_file('rules')
-        or die "Unable to read rules: $!";
-
-    # look for the quilt include line and remove it and the previous empty one
-    for( my $i = 1; $i < @rules; $i++ ) {
-        if ( $rules[$i] eq 'include /usr/share/quilt/quilt.make' ) {
-            splice @rules, $i, 1;
-
-            # collapse two sequencial empty lines
-            # NOTE: this won't work if the include statement was the last line
-            # in the rules, but this is highly unlikely
-            splice( @rules, $i, 1 )
-                if $i < @rules
-                    and $rules[$i] eq ''
-                    and $rules[ $i - 1 ] eq '';
-
-            last;
-        }
-    }
-
-    # remove the QUILT_STAMPFN dependency override
-    for( my $i = 1; $i < @rules; $i++ ) {
-        if ( $rules[$i] eq ''
-                and $rules[$i+1] eq 'override_dh_auto_configure: $(QUILT_STAMPFN)'
-                and $rules[$i+2] eq "\tdh_auto_configure"
-                and $rules[$i+3] eq '' ) {
-            splice @rules, $i, 3;
-            last;
-        }
-    }
-
-    # also remove $(QUILT_STAMPFN) as a target dependency
-    # note that the override_dh_auto_configure is handled above because in that
-    # case the whole makefile snipped is to be removed
-    # Here we deal with the more generic cases
-    for ( my $i = 1; $i <= $#rules; $i++ ) {
-        $rules[$i] =~ s{
-            ^                               # at the beginning of the line
-            ([^\s:]+):                      # target name, followed by a colon
-            (.*)                            # any other dependencies
-            \$\(QUILT_STAMPFN\)             # followed by $(QUILT_STAMPFN)
-        }{$1:$2}x;
-    }
-
-
-    # remove unpatch dependency in clean
-    for( my $i = 1; $i < @rules; $i++ ) {
-        if (    $rules[$i] eq 'override_dh_auto_clean: unpatch'
-            and $rules[ $i + 1 ] eq "\tdh_auto_clean"
-            and ( $i + 2 > $#rules or $rules[ $i + 2 ] !~ /^\t/ ) )
-        {
-            splice @rules, $i, 2;
-
-            # At this point there may be an extra empty line left.
-            # Remove an empty line after the removed target
-            # Or any trailing empty line (if the target was at EOF)
-            if ( $i > $#rules ) {
-                $#rules-- if $rules[-1] eq '';    # trim trailing empty line
-            }
-            elsif ( $rules[$i] eq '' ) {
-                splice( @rules, $i, 1 );
-            }
-
-            last;
-        }
-    }
-
-
-    # similarly to the $(QUILT_STAMPFN) stripping, here we process a general
-    # ependency on the 'unpatch' rule
-    for ( my $i = 1; $i <= $#rules; $i++ ) {
-        $rules[$i] =~ s{
-            ^                               # at the beginning of the line
-            ([^\s:]+):                      # target name, followed by a colon
-            (.*)                            # any other dependencies
-            unpatch                         # followed by 'unpatch'
-        }{$1:$2}x;
-    }
-
-    # drop --with=quilt from dh command line
-    for(@rules) {
-        s/dh (.*)--with[= ]quilt\s*/dh $1/g;
-    }
+    $self->rules->drop_quilt;
 
     # README.source
     my $readme = $self->debian_file('README.source');
@@ -1549,39 +1420,27 @@ sub create_changelog {
 sub create_rules {
     my ( $self, $file ) = @_;
 
-    my ( $rulesname, $error );
-    $rulesname = 'rules.dh7.tiny';
+    my $rulesname = 'rules.dh7.tiny';
 
-    # if debian/rules already exists, check if it looks like using Debhelper 7
-    # tiny rules. If it does, do not re-create the file as it may have
-    # valuable customizations
-    if ( -e $file ) {
-        my @rules;
-        tie @rules, 'Tie::File', $file or die "Error opening '$file': $!";
+    $self->rules( Debian::Rules->new($file) );
 
-        for ( 0 .. $#rules - 1 ) {
-            if (    $rules[$_] =~ /^%:/
-                and $rules[ $_ + 1 ] =~ /^\tdh .* \$\@/ )
-            {
-                print "$file already uses DH7 tiny rules\n"
-                    if $self->cfg->verbose;
-                return;
-            }
-        }
+    if ( $self->rules->is_dh7tiny ) {
+        print "$file already uses DH7 tiny rules\n"
+            if $self->cfg->verbose;
+        return;
     }
 
     for my $source (
         catfile( $self->cfg->home_dir, $rulesname ),
         catfile( $self->cfg->data_dir, $rulesname )
     ) {
-        copy( $source, $file ) && do {
+        if ( -e $source ) {
             print "Using rules: $source\n" if $self->cfg->verbose;
+            $self->rules->copy_from($source);
             last;
         };
-        $error = $!;
     }
-    die "Cannot copy rules file ($rulesname): $error\n" unless -e $file;
-    chmod( 0755, $file );
+    chmod( 0755, $file ) or die "chmod($file): $!";
 }
 
 sub create_compat {
@@ -2220,8 +2079,7 @@ sub discover_utility_deps {
         'debhelper (>= 7.2.13)' )
         if -e catfile( $self->main_dir, qw( inc Module AutoInstall.pm ) );
 
-    my $rules = $self->_file_r( $self->debian_file('rules') );
-    while ( defined( $_ = <$rules> ) ) {
+    for ( @{ $self->rules->lines } ) {
         $self->explained_dependency( 'dh --with', $deps,
             'debhelper (>= 7.0.8)' )
             if /dh \s+.*--with/;
