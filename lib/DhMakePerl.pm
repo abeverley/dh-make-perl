@@ -2186,14 +2186,6 @@ sub _file_w {
     return $fh;
 }
 
-sub _file_rw {
-    my ( $self, $filename ) = @_;
-
-    my $fh = IO::File->new( $filename, 'r+' )
-        or die "Cannot open $filename: $!\n";
-    return $fh;
-}
-
 =back
 
 =head1 AUTHOR
