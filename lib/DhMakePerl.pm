@@ -32,14 +32,11 @@ our $VERSION = '0.65';
 
 =head1 SYNOPSIS
 
-TO BE FILLED
-
     use DhMakePerl;
 
-    my $foo = DhMakePerl->new();
-    ...
+    DhMakePerl->run;
 
-=head1 METHODS
+=head1 CLASS METHODS
 
 =over
 
@@ -49,6 +46,19 @@ use Debian::AptContents ();
 use DhMakePerl::Config;
 use Module::CoreList ();
 use version          ();
+
+=item run( I<%init> )
+
+Runs DhMakePerl.
+
+Unless the %init contains an I<cfg> member, constructs and instance of
+L<DhMakePerl::Config> and assigns it to I<$init{cfg}>.
+
+Then determines the dh-make-perl command requested (via cfg->command), loads
+the appropriate I<DhMakePerl::Command::$command> class, constructs an instance
+of it and calls its I<execute> method.
+
+=cut
 
 sub run {
     my ( $class, %c ) = @_;
@@ -72,6 +82,15 @@ sub run {
     return $self->execute;
 }
 
+=item is_core_module I<module>, I<version>
+
+Returns the version of the C<perl> package containing the given I<module> (at
+least version I<version>).
+
+Returns C<undef> if I<module> is not a core module.
+
+=cut
+
 sub is_core_module {
     my ( $self, $module, $ver ) = @_;
 
@@ -84,6 +103,12 @@ sub is_core_module {
 
     return $v;
 }
+
+=item get_apt_contents
+
+Returns (possibly cached) instance of L<Debian::AptContents>.
+
+=cut
 
 sub get_apt_contents {
     my $self = shift;
