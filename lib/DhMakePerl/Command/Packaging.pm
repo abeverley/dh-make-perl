@@ -21,6 +21,7 @@ use File::Path ();
 use File::Spec::Functions qw(catfile catpath splitpath);
 use Parse::DebianChangelog;
 use Text::Wrap qw(fill);
+use User::pwent;
 
 use constant debstdversion => '3.8.4';
 
