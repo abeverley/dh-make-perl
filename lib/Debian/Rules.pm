@@ -50,6 +50,7 @@ Reference to a tied (via <Tie::File>) array pointing to the rules file. Initiali
 =cut
 
 use base 'Class::Accessor';
+use Tie::File;
 
 __PACKAGE__->mk_accessors(
     qw(filename lines _is_dh7tiny _is_quiltified _parsed));
