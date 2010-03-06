@@ -6,17 +6,7 @@ use 5.010;    # we use smart matching
 
 use base 'Class::Accessor';
 
-__PACKAGE__->mk_accessors(
-    qw(
-        cfg apt_contents main_dir debian_dir meta bdepends bdependsi depends
-        priority section maintainer arch start_dir overrides
-        perlname version pkgversion pkgname srcname
-        desc longdesc copyright author
-        extrasfields  extrapfields
-        mod_cpan_version
-        docs examples
-        )
-);
+__PACKAGE__->mk_accessors( qw( cfg apt_contents ) );
 
 =head1 NAME
 
