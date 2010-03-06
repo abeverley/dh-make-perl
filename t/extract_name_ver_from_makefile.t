@@ -3,11 +3,11 @@ use strict;
 use Test::More 'no_plan';
 use FindBin qw($Bin);
 
-use DhMakePerl;
+use DhMakePerl::Command::make;
 use DhMakePerl::Config;
 
-my $maker = DhMakePerl->new;
-$maker->cfg( DhMakePerl::Config->new );
+my $maker
+    = DhMakePerl::Command::make->new( { cfg => DhMakePerl::Config->new } );
 
 eval {
     $maker->extract_name_ver_from_makefile("$Bin/makefiles/module-install-autodie.PL");

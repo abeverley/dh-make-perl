@@ -22,6 +22,8 @@ plan tests => scalar(@modules);
 for (@modules) {
 SKIP: {
         skip "DhModPerl is not entirely documented", 1, if $_ eq 'DhMakePerl';
+        skip "Command::Packaging needs documenting", 1, if $_ eq 'DhMakePerl::Command::Packaging';
+        skip "Command::make needs documenting", 1, if $_ eq 'DhMakePerl::Command::make';
         pod_coverage_ok( $_,
             { coverage_class => 'Pod::Coverage::CountParents' } );
     }

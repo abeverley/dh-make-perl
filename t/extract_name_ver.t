@@ -2,11 +2,11 @@
 use strict;
 use Test::More tests => 3;
 
-use DhMakePerl;
+use DhMakePerl::Command::make;
 use DhMakePerl::Config;
 
-my $maker = DhMakePerl->new;
-$maker->cfg( DhMakePerl::Config->new );
+my $maker
+    = DhMakePerl::Command::make->new( { cfg => DhMakePerl::Config->new } );
 
 $maker->meta( { name => 'Foo::Bar', version => 'v1.002003' } );
 

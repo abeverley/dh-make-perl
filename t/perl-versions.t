@@ -6,13 +6,13 @@ use warnings;
 use Test::More tests => 21;
 
 BEGIN {
-    use_ok('DhMakePerl');
+    use_ok('DhMakePerl::Command::make');
 };
 
 sub check {
     my( $src, $dst ) = @_;
 
-    is( DhMakePerl->nice_perl_ver($src), $dst, "perl version '$src' corresponds to Debian package version '$dst'" );
+    is( DhMakePerl::Command::make->nice_perl_ver($src), $dst, "perl version '$src' corresponds to Debian package version '$dst'" );
 }
 
 check( '5.006002', '5.6.2' );

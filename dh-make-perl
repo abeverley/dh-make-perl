@@ -5,8 +5,7 @@ use warnings;
 
 use DhMakePerl;
 
-my $app = DhMakePerl->new;
-exit $app->run();
+exit DhMakePerl->run;
 
 __END__
 
