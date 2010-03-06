@@ -4,11 +4,11 @@ use warnings;
 
 =head1 NAME
 
-Debian::WNPP::Cache - offline storage of Debian's work-needing package lists
+Debian::WNPP::Query - offline storage of Debian's work-needing package lists
 
 =head1 SYNOPSIS
 
-    my $wnpp = Debian::WNPP::Cache->new(
+    my $wnpp = Debian::WNPP::Query->new(
         {   cache_dir       => '/somewhere',
             network_enabled => 0,
             ttl             => 3600 * 24,
@@ -20,7 +20,7 @@ Debian::WNPP::Cache - offline storage of Debian's work-needing package lists
 
 =head1 DESCRIPTION
 
-Debian::WNPP::Cache provides a way to retrieve and cache the contents of
+Debian::WNPP::Query provides a way to retrieve and cache the contents of
 Debian's "Work-needing and prospective packages" lists.
 
 =head1 CONSTRUCTOR
