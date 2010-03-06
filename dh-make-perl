@@ -47,11 +47,6 @@ already unpacked sources. If neither L<--cpan|/cpan_dist> nor a directory
 is given as argument, B<dh-make-perl> tries to create a
 Perl package from the data in the current directory.
 
-There is an override mechanism in place to handle most of
-the little changes that may be needed for some modules
-(this hasn't been tested much, though, and the override
-database needs to be filled in).
-
 You can build and install the debian package using the L</--build>
 and L</--install> command line switches.
 
@@ -90,8 +85,6 @@ verify if F<debian/rules> looks sane.
 --refresh also tries to update dependency lists in F<debian/control> from
 F<META.yml>. It hooks L<quilt(1)> into F<debian/rules> and creates
 F<debian/README.source>
-
-B<Note:> override mechanism is not used during refresh.
 
 =item B<--only> | B<-o> I<control|copyright|docs|examples|rules>
 
@@ -293,7 +286,7 @@ building a package.
 
 =item B<--home-dir> I<DIRECTORY>
 
-Where user overrides and APT Contents cache is stored.
+Where APT Contents and other caches are stored.
 
 Default: ~/.dh-make-perl
 
@@ -358,14 +351,6 @@ as documented in L</OPTIONS> (without leading I<-->).
 
 See the output of C<dh-make-perl --dump-config>, which can also be used for
 population of F<dh-make-perl.conf>.
-
-=item * overrides
-
-File that overrides information retreived (or guessed) about the package.
-All the files in the library directories are loaded: entries in the home
-take precedence. See the distributed overrides file for usage information.
-
-B<Note:> override mechanism is not used during B<--refresh> operation.
 
 =item * rules.MakeMaker.noxs
 

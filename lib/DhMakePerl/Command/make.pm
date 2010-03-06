@@ -9,7 +9,7 @@ use base 'DhMakePerl::Command::Packaging';
 __PACKAGE__->mk_accessors(
     qw(
         cfg apt_contents main_dir debian_dir meta bdepends bdependsi depends
-        priority section maintainer arch start_dir overrides
+        priority section maintainer arch start_dir
         perlname version pkgversion pkgname srcname
         desc longdesc copyright author
         extrasfields  extrapfields
@@ -87,10 +87,25 @@ sub backup_file {
     }
 }
 
+sub check_deprecated_overrides {
+    my $self = shift;
+
+    my $overrides = catfile( $self->cfg->data_dir, 'overrides' );
+
+    if ( -e $overrides ) {
+        warn "*** deprecated overrides file ignored\n";
+        warn "***\n";
+        warn "*** Overrides mechanism is deprecated in dh-make-perl 0.65\n";
+        warn "*** You may want to remove $overrides\n";
+    }
+}
+
 sub execute {
     my ($self) = @_;
 
     die "CPANPLUS support disabled, sorry" if $self->cfg->cpanplus;
+
+    $self->check_deprecated_overrides;
 
     $self->arch( $self->cfg->arch ) if $self->cfg->arch;
 
@@ -98,7 +113,6 @@ sub execute {
 
     $self->desc( $self->cfg->desc || '' );
 
-    $self->load_overrides();
     my $tarball = $self->setup_dir();
     $self->process_meta;
     $self->findbin_fix();
@@ -170,8 +184,6 @@ sub execute {
         if $self->cfg->bdependsi;
     $self->bdependsi->add($extrabdependsi);
 
-    $self->apply_overrides();
-
     die "Cannot find a description for the package: use the --desc switch\n"
         unless $self->desc;
     print "Package does not provide a long description - ",
@@ -199,7 +211,6 @@ sub execute {
     #create_readme("$debiandir/README.Debian");
     $self->create_copyright( $self->debian_file('copyright') );
     $self->update_file_list( docs => $self->docs, examples => $self->examples );
-    $self->apply_final_overrides();
     $self->build_package
         if $self->cfg->build or $self->cfg->install;
     $self->install_package if $self->cfg->install;
@@ -735,163 +746,6 @@ sub create_watch {
     $fh->printf( "version=3\n%s   .*/%s-%s\$\n",
         $self->upsurl, $self->perlname, $version_re );
     $fh->close;
-}
-
-# a package glocal is needed here so that the 'do $overrides' below sees it
-our %overrides;
-
-sub load_overrides {
-    my ($self) = @_;
-
-    eval {
-        my $overrides = catfile( $self->cfg->data_dir, 'overrides' );
-        do $overrides if -f $overrides;
-        $overrides = catfile( $self->cfg->home_dir, 'overrides');
-        do $overrides if -f $overrides;
-
-        $self->overrides( \%overrides );
-    };
-    if ($@) {
-        die "Error when processing the overrides files: $@";
-    }
-}
-
-sub apply_overrides {
-    my ($self) = @_;
-
-    my ( $data, $val, $subkey );
-
-    ( $data, $subkey ) = $self->get_override_data();
-    return unless defined $data;
-    $self->pkgname($val)
-        if (
-        defined(
-            $val = $self->get_override_val( $data, $subkey, 'pkgname' )
-        )
-        );
-    $self->srcname($val)
-        if (
-        defined(
-            $val = $self->get_override_val( $data, $subkey, 'srcname' )
-        )
-        );
-    $self->section($val)
-        if (
-        defined(
-            $val = $self->get_override_val( $data, $subkey, 'section' )
-        )
-        );
-    $self->priority($val)
-        if (
-        defined(
-            $val = $self->get_override_val( $data, $subkey, 'priority' )
-        )
-        );
-    $self->depends( Debian::Dependencies->new($val) )
-        if (
-        defined(
-            $val = $self->get_override_val( $data, $subkey, 'depends' )
-        )
-        );
-    $self->bdepends( Debian::Dependencies->new($val) )
-        if (
-        defined(
-            $val = $self->get_override_val( $data, $subkey, 'bdepends' )
-        )
-        );
-    $self->bdependsi( Debian::Dependencies->new($val) )
-        if (
-        defined(
-            $val = $self->get_override_val( $data, $subkey, 'bdependsi' )
-        )
-        );
-    $self->desc($val)
-        if (
-        defined( $val = $self->get_override_val( $data, $subkey, 'desc' ) ) );
-    $self->longdesc($val)
-        if (
-        defined(
-            $val = $self->get_override_val( $data, $subkey, 'longdesc' )
-        )
-        );
-    $self->pkgversion($val)
-        if (
-        defined(
-            $val = $self->get_override_val( $data, $subkey, 'version' )
-        )
-        );
-    $self->arch($val)
-        if (
-        defined( $val = $self->get_override_val( $data, $subkey, 'arch' ) ) );
-    $self->docs( [ split( /\s+/, $val ) ] )
-        if (
-        defined( $val = $self->get_override_val( $data, $subkey, 'docs' ) ) );
-
-    $self->extrasfields($val)
-        if (
-        defined(
-            $val = $self->get_override_val( $data, $subkey, 'sfields' )
-        )
-        );
-    $self->extrapfields($val)
-        if (
-        defined(
-            $val = $self->get_override_val( $data, $subkey, 'pfields' )
-        )
-        );
-    $self->maintainer($val)
-        if (
-        defined(
-            $val = $self->get_override_val( $data, $subkey, 'maintainer' )
-        )
-        );
-
-    # fix longdesc if needed
-    my $ld = $self->longdesc;
-    $ld =~ s/^\s*/ /mg;
-    $self->longdesc($ld);
-}
-
-sub apply_final_overrides {
-    my ($self) = @_;
-
-    my ( $data, $val, $subkey );
-
-    ( $data, $subkey ) = $self->get_override_data();
-    return unless defined $data;
-    $self->get_override_val( $data, $subkey, 'finish' );
-}
-
-sub get_override_data {
-    my ($self) = @_;
-
-    my ( $data, $checkver, $subkey );
-    $data = $self->overrides->{ $self->perlname };
-
-    return unless defined $data;
-    die sprintf( "Value of '%s' in overrides not a hashref\n",
-        $self->perlname )
-        unless ref($data) eq 'HASH';
-    if ( defined( $checkver = $data->{checkver} ) ) {
-        die "checkver not a function\n" unless ( ref($checkver) eq 'CODE' );
-        $subkey = &$checkver( $self->main_dir );
-    }
-    else {
-        $subkey = $self->pkgversion;
-    }
-    return ( $data, $subkey );
-}
-
-sub get_override_val {
-    my ( $self, $data, $subkey, $key ) = @_;
-
-    my $val;
-    $val
-        = defined( $data->{ $subkey . $key } )
-        ? $data->{ $subkey . $key }
-        : $data->{$key};
-    return &$val() if ( defined($val) && ref($val) eq 'CODE' );
-    return $val;
 }
 
 sub package_already_exists {

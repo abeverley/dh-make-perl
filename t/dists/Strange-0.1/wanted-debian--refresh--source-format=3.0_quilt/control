@@ -1,7 +1,7 @@
 Source: libstrange-perl
-Section: misc
-Priority: Extra
-Build-Depends: debhelper (>= 7), perl6, xlib-dev
+Section: perl
+Priority: optional
+Build-Depends: debhelper (>= 7)
 Build-Depends-Indep: perl
 Maintainer: Joe Maintainer <joemaint@test.local>
 Standards-Version: 3.8.4
@@ -9,10 +9,11 @@ Homepage: http://search.cpan.org/dist/Strange/
 
 Package: libstrange-perl
 Architecture: all
-Depends: ${misc:Depends}, ${perl:Depends}, perl6
-Conflicts: ba-ba-buma
-Description: really ugly module to test dh-make-perl
- A really ugly long description
- for a really ugly perl module.
+Depends: ${misc:Depends}, ${perl:Depends}
+Description: Perl extension for blah blah blah
+ Stub documentation for Strange was created by h2xs. It looks like the author
+ of the extension was negligent enough to leave the stub unedited.
+ .
+ Blah blah blah.
  .
  This description was automagically extracted from the module by dh-make-perl.

@@ -1,3 +1,11 @@
+dh-make-perl (0.65) unstable; urgency=low
+
+  The overrides mechanism is now deprecated. A warning is issued if 'overrides'
+  file is found in the home directory (~/.dh-make-perl) and its contents are
+  ignored.
+
+ -- Damyan Ivanov <dmn@debian.org>  Sat, 06 Mar 2010 13:48:56 +0200
+
 dh-make-perl (0.54) unstable; urgency=low
 
   --notest is now ignored. If you use --build and want to skip tests, put
