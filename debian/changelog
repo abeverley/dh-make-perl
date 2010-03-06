@@ -2,6 +2,7 @@ dh-make-perl (0.65) UNRELEASED; urgency=low
 
   * in --refresh mode, overwrite the backups of the modified files under
     debian/
+    Closes: #550137 -- debian/* files may disturb package generation process
   * in --make mode, rename any existing debian/ directory to debian.bak/,
     overwriting the later if it exists
   * when looking for docs, ignore .svn/ too
