@@ -2,6 +2,8 @@ package DhMakePerl::Command::Packaging;
 
 use base 'DhMakePerl';
 
+__PACKAGE__->mk_accessors(qw( rules ));
+
 use Array::Unique;
 use Cwd qw( getcwd );
 use Debian::Dependencies;

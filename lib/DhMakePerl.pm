@@ -14,7 +14,7 @@ __PACKAGE__->mk_accessors(
         desc longdesc copyright author
         extrasfields  extrapfields
         mod_cpan_version
-        docs examples rules
+        docs examples
         )
 );
 
