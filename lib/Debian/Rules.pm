@@ -83,7 +83,7 @@ sub new {
 =item parse
 
 Parses the rules file and stores its findings for later use. Called
-automaticaly by L<is_dh7tiny> and L<is_quiltified>. The result of the parsing
+automatically by L<is_dh7tiny> and L<is_quiltified>. The result of the parsing
 is cached and subsequent calls to C<is_XXX> use the cache. To force cache
 refresh (for eample if the contents of the file have been changed), call
 C<parse> again.
