@@ -1,5 +1,11 @@
 package DhMakePerl::Command::Packaging;
 
+=head1 NAME
+
+DhMakePerl::Command::Packaging - common routines for 'make' and 'refresh' dh-make-perl commands
+
+=cut
+
 use base 'DhMakePerl';
 
 __PACKAGE__->mk_accessors(
