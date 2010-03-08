@@ -16,6 +16,7 @@ Build-Depends-Indep:
  libmodule-depends-perl,
  libparse-debcontrol-perl,
  libparse-debianchangelog-perl,
+ libtest-compile-perl,
  libtest-deep-perl,
  libtest-differences-perl,
  libtest-distmanifest-perl,
