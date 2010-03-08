@@ -1,4 +1,4 @@
-dh-make-perl (0.65) UNRELEASED; urgency=low
+dh-make-perl (0.65) unstable; urgency=low
 
   * in --refresh mode, overwrite the backups of the modified files under
     debian/
@@ -14,8 +14,14 @@ dh-make-perl (0.65) UNRELEASED; urgency=low
   * overrides mechanism deprecated
   * create WNPP cache dir on cache store.
     Closes: 572278. Thanks to Daniel Kahn Gillmor.
+  * obsolete using double-dashes in front of commands
+  * debian/rules no longer overwritten on refresh if it seems to be using
+    dh7-tiny style
+  * code reorganization:
+    + handling of each command now implemented as a separate module
+    + debian/rules manipulation separated in Debian::Rules
 
- -- Damyan Ivanov <dmn@debian.org>  Fri, 19 Feb 2010 22:47:26 +0200
+ -- Damyan Ivanov <dmn@debian.org>  Mon, 08 Mar 2010 15:55:22 +0200
 
 dh-make-perl (0.64) unstable; urgency=low
 
