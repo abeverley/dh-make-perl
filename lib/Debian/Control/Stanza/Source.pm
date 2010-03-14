@@ -29,8 +29,6 @@ replaced with underscores.
 
 =item Source
 
-=item Architecture
-
 =item Maintainer
 
 =item Uploaders
@@ -65,9 +63,9 @@ use strict;
 use base qw(Debian::Control::Stanza);
 
 use constant fields => qw (
-    Source Architecture Maintainer Uploaders Section Priority Build_Depends
-    Build_Depends_Indep Build_Conflicts Build_Conflicts_Indep Standards_Version
-    Homepage Vcs_Svn Vcs_Git Vcs_Bzr Vcs_CVS Vcs_Browser
+    Source Section Priority Build_Depends Build_Depends_Indep Build_Conflicts
+    Build_Conflicts_Indep Maintainer Uploaders
+    Standards_Version Homepage Vcs_Svn Vcs_Git Vcs_Bzr Vcs_CVS Vcs_Browser
 );
 
 =head1 CONSTRUCTOR
