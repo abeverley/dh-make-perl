@@ -248,6 +248,8 @@ sub as_string
 
     my @lines;
 
+    $self->Reorder( map{ ( my $s = $_ ) =~ s/_/-/g; $s } $self->fields );
+
     for my $k ( $self->Keys ) {
         # We don't' want the internal fields showing in the output
         next if $k =~ /^-/;     # _ in fielld names is replaced with dashes
