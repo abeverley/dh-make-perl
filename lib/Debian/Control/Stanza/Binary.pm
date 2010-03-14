@@ -61,6 +61,23 @@ C<Depends>, C<Conflicts>, C<Recommends>, C<Suggests>, C<Enhances>, C<Replaces>,
 and C<Pre_Depends> fields are converted to objects of L<Debian::Dependencies> 
 class upon construction.
 
+Two more accessor methods are provided for easier handling of package's short
+and long description.
+
+=over
+
+=item short_description
+
+=item long_description
+
+=back
+
+Setting them transparently modifies I<Description>. Note that the value of
+I<long_description> is "unmangled", that is without leading spaces, and empty
+lines are empty. I<Description> on the other hand is just as it looks in a
+regular debian/control file - the long part is indented with a single space and
+empty lines are replaced with dots.
+
 =cut
 
 package Debian::Control::Stanza::Binary;
@@ -73,6 +90,8 @@ use constant fields => qw(
     Package Architecture Section Priority Essential Depends Recommends Suggests
     Enhances Replaces Pre_Depends Conflicts Provides Description
 );
+
+__PACKAGE__->mk_accessors( qw( _short_description _long_description ) );
 
 =head1 CONSTRUCTOR
 
@@ -105,5 +124,62 @@ WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 PARTICULAR PURPOSE.
 
 =cut
+
+sub set {
+    my ( $self, $field, @value ) = @_;
+
+    my $res = $self->SUPER::set( $field, @value );
+
+    # re-split description in it was set
+    if ( $field eq 'Description' ) {
+        $self->_split_description;
+    }
+    elsif ( $field eq '_short_description' or $field eq '_long_description' ) {
+        $self->_format_description;
+    }
+
+    $res;
+}
+
+sub short_description {
+    shift->_short_description(@_);
+}
+
+sub long_description {
+    shift->_long_description(@_);
+}
+
+sub _format_description {
+    my $self = shift;
+
+    my $short = $self->_short_description;
+    my $long  = $self->_long_description;
+
+    if( defined($long) ) {
+        $long =~ s/\n\n/\n.\n/sg;       # add spacing between paragraphs
+        $long =~ s/^/ /mg;              # prepend every line with a space
+    }
+
+    # use SUPER::set to not trigger our implementation, which would cause
+    # endless loop (setting short_description updates Description, which is
+    # then split)
+    $self->SUPER::set( 'Description',
+        join( "\n", map { $_ // () } ( $short, $long ) ) );
+}
+
+sub _split_description {
+    my $self = shift;
+
+    my ( $short, $long ) = split( /\n/, $self->Description, 2 );
+
+    $long =~ s/^ //mg;
+    $long =~ s/^ \.$//mg;
+
+    # use SUPER::set to not trigger our implementation, which would cause
+    # endless loop (setting short_description updates Description, which is
+    # then split)
+    $self->SUPER::set( '_short_description', $short );
+    $self->SUPER::set( '_long_description', $long );
+}
 
 1;

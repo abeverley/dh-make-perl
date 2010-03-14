@@ -250,6 +250,8 @@ sub as_string
     my @lines;
 
     while( my($k,$v) = each %$self ) {
+        # We don't' want the internal fields showing in the output
+        next if $k =~ /^-/;     # _ in fielld names is replaced with dashes
         next unless defined($v);
         next if $self->is_dependency_list($k) and "$v" eq "";
         next if $self->is_comma_separated($k) and "$v" eq "";
