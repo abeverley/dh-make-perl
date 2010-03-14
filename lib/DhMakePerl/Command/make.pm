@@ -634,65 +634,6 @@ sub get_wnpp {
     return $bugs[0];
 }
 
-sub create_control {
-    my ( $self, $file ) = @_;
-
-    my $fh = $self->_file_w($file);
-
-    if (    $self->arch ne 'all'
-        and !defined($self->cfg->bdepends)
-        and !defined($self->cfg->bdependsi) )
-    {
-        $self->bdepends->add( $self->bdependsi );
-        @{ $self->bdependsi } = ();
-    }
-
-    $fh->printf( "Source: %s\n", $self->srcname );
-    $fh->printf( "Section: %s\n", $self->section );
-    $fh->printf( "Priority: %s\n", $self->priority );
-    local $Text::Wrap::break     = ', ';
-    local $Text::Wrap::separator = ",\n";
-    $fh->print( wrap( '', ' ', "Build-Depends: " . $self->bdepends . "\n" ) )
-        if $self->bdepends;
-
-    $fh->print(
-        wrap( '', ' ', "Build-Depends-Indep: " . $self->bdependsi . "\n" ) )
-        if $self->bdependsi;
-
-    $fh->print( $self->extrasfields ) if defined $self->extrasfields;
-
-    if ($self->cfg->pkg_perl) {
-        $fh->print(
-            "Maintainer: Debian Perl Group <pkg-perl-maintainers\@lists.alioth.debian.org>\n"
-        );
-        $fh->printf( "Uploaders: %s\n", $self->maintainer );
-    }
-    else {
-        $fh->printf( "Maintainer: %s\n", $self->maintainer );
-    }
-    $fh->printf( "Standards-Version: %s\n", $self->debstdversion );
-    $fh->printf( "Homepage: %s\n", $self->upsurl );
-    do {
-        $fh->printf( "Vcs-Svn: svn://svn.debian.org/pkg-perl/trunk/%s/\n",
-            $self->srcname );
-        $fh->printf(
-            "Vcs-Browser: http://svn.debian.org/viewsvn/pkg-perl/trunk/%s/\n",
-            $self->srcname
-        );
-    } if $self->cfg->pkg_perl;
-    $fh->print("\n");
-    $fh->printf( "Package: %s\n", $self->pkgname );
-    $fh->printf( "Architecture: %s\n", $self->arch );
-    $fh->print( wrap( '', ' ', "Depends: " . $self->depends . "\n" ) )
-        if $self->depends;
-    $fh->print( $self->extrapfields ) if defined $self->extrapfields;
-    $fh->printf(
-        "Description:%s%s\n%s\n .\n This description was automagically extracted from the module by dh-make-perl.\n",
-        ( $self->desc =~ m/^ / ) ? "" : " ", $self->desc, $self->longdesc,
-    );
-    $fh->close;
-}
-
 sub create_changelog {
     my ( $self, $file, $bug ) = @_;
 
