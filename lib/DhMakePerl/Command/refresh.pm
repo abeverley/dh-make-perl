@@ -35,7 +35,8 @@ sub execute {
         if $self->cfg->verbose;
 
     $self->rules( Debian::Rules->new( $self->debian_file('rules') ) );
-    $self->maintainer( $self->get_maintainer( $self->cfg->email ) );
+    $self->control->read( $self->debian_file('control') );
+    $self->fill_maintainer;
     $self->process_meta;
     $self->extract_basic();    # also detects arch-dep package
 
@@ -68,8 +69,7 @@ sub execute {
     }
 
     if ( 'control' ~~ $self->cfg->only ) {
-        my $control = Debian::Control::FromCPAN->new;
-        $control->read( $self->debian_file('control') );
+        my $control = $self->control;
         if ( -e catfile( $self->debian_file('patches'), 'series' )
             and $self->cfg->source_format ne '3.0 (quilt)' )
         {

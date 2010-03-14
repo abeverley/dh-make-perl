@@ -8,13 +8,13 @@ use base 'DhMakePerl::Command::Packaging';
 
 __PACKAGE__->mk_accessors(
     qw(
-        cfg apt_contents main_dir debian_dir meta bdepends bdependsi depends
-        priority section maintainer arch start_dir
-        perlname version pkgversion pkgname srcname
-        desc longdesc copyright author
+        cfg apt_contents main_dir debian_dir meta
+        start_dir
+        perlname version pkgversion
+        copyright author
         extrasfields  extrapfields
         mod_cpan_version
-        docs examples rules
+        docs examples
         )
 );
 
@@ -61,8 +61,6 @@ use Text::Wrap qw( wrap );
 # TODO:
 # * get more info from the package (maybe using CPAN methods)
 
-use constant debstdversion => '3.8.4';
-
 # this is the version in 'oldstable'. No much point on depending on something
 # older
 use constant oldest_perl_version => '5.8.8-7';
@@ -87,26 +85,24 @@ sub execute {
 
     $self->check_deprecated_overrides;
 
-    $self->arch( $self->cfg->arch ) if $self->cfg->arch;
-
-    $self->maintainer( $self->get_maintainer( $self->cfg->email ) );
-
-    $self->desc( $self->cfg->desc || '' );
-
     my $tarball = $self->setup_dir();
     $self->process_meta;
     $self->findbin_fix();
 
     $self->extract_basic();
-    if ( defined $self->cfg->packagename ) {
-        $self->pkgname( $self->cfg->packagename );
-    }
+
     unless ( defined $self->cfg->version ) {
         $self->pkgversion( $self->version . '-1' );
     }
     else {
         $self->pkgversion( $self->cfg->version );
     }
+
+    $self->fill_maintainer;
+
+    my $bin = $self->control->binary->Values(0);
+    $bin->short_description( $self->cfg->desc )
+        if $self->cfg->desc;
 
     move(
         $tarball,
@@ -128,50 +124,44 @@ sub execute {
     }
 
     my $apt_contents = $self->get_apt_contents;
+    my $src = $self->control->source;
 
-    $self->depends->add( Debian::Dependency->new('${shlibs:Depends}') )
-        if $self->arch eq 'any';
-    $self->depends->add( Debian::Dependency->new('${misc:Depends}') );
     my $extradeps = $self->extract_depends( $apt_contents, 0 );
-    $self->depends->add($extradeps);
-    $self->depends->add( Debian::Dependencies->new( $self->cfg->depends ) )
+    $bin->Depends->add($extradeps);
+    $bin->Depends->add( Debian::Dependencies->new( $self->cfg->depends ) )
         if $self->cfg->depends;
 
     $self->extract_docs;
     $self->extract_examples;
 
-    $self->bdepends->add(
-        Debian::Dependency->new('perl (>= 5.10) | libmodule-build-perl') )
-        if ( $self->module_build eq "Module-Build" );
-
     my ( $extrabdepends, $extrabdependsi );
-    if ( $self->arch eq 'any' ) {
-        $extrabdepends = $self->extract_depends( $apt_contents, 1 )
-            + $extradeps;
+    if ( $bin->Architecture eq 'any' ) {
+        $src->Build_Depends->add( $self->extract_depends( $apt_contents, 1 ),
+            $extradeps );
     }
     else {
-        $extrabdependsi = $self->extract_depends( $apt_contents, 1 )
-            + $extradeps,
-            ;
+        $src->Build_Depends_Indep->add(
+            $self->extract_depends( $apt_contents, 1 ), $extradeps );
     }
 
-    $self->bdepends->add( Debian::Dependencies->new( $self->cfg->bdepends ) )
+    $src->Build_Depends->add( $self->cfg->bdepends )
         if $self->cfg->bdepends;
-    $self->bdepends->add($extrabdepends);
 
-    $self->bdependsi->add(
-        Debian::Dependencies->new( $self->cfg->bdependsi ) )
+    $src->Build_Depends_Indep->add( $self->cfg->bdependsi )
         if $self->cfg->bdependsi;
-    $self->bdependsi->add($extrabdependsi);
 
     die "Cannot find a description for the package: use the --desc switch\n"
-        unless $self->desc;
+        unless $bin->short_description;
+
     print "Package does not provide a long description - ",
         " Please fill it in manually.\n"
-        if ( !defined $self->longdesc or $self->longdesc =~ /^\s*\.?\s*$/ )
+        if ( !defined $bin->long_description
+        or $bin->long_description =~ /^\s*\.?\s*$/ )
         and $self->cfg->verbose;
+
     printf( "Using maintainer: %s\n", $self->maintainer )
         if $self->cfg->verbose;
+
     print "Found docs: @{ $self->docs }\n" if $self->cfg->verbose;
     print "Found examples: @{ $self->examples }\n"
         if @{ $self->examples } and $self->cfg->verbose;
@@ -179,12 +169,18 @@ sub execute {
     # start writing out the data
     mkdir( $self->debian_dir, 0755 )
         || die "Cannot create " . $self->debian_dir . " dir: $!\n";
-    $self->create_control( $self->debian_file('control') );
     $self->write_source_format(
         catfile( $self->debian_dir, 'source', 'format' ) );
     $self->create_changelog( $self->debian_file('changelog'),
         $self->cfg->closes // $self->get_wnpp( $self->pkgname ) );
     $self->create_rules( $self->debian_file('rules') );
+
+    # now that rules are there, see if we need some dependency for them
+    $self->discover_utility_deps( $self->control );
+    $src->Standards_Version( $self->debstdversion );
+    $src->Homepage( $self->upsurl );
+    $self->control->write( $self->debian_file('control') );
+
     $self->create_compat( $self->debian_file('compat') );
     $self->create_watch( $self->debian_file('watch') );
 
@@ -568,7 +564,9 @@ sub extract_depends {
             }
         }
         else {
-            warn "If you understand the security implications, try --intrusive.\n";
+            warn
+                "If you understand the security implications, try --intrusive.\n"
+                if $self->cfg->verbose;
         }
         warn '=' x 70, "\n"
             if $self->cfg->verbose;
@@ -706,7 +704,8 @@ sub create_changelog {
     $fh->printf( "%s (%s) %s; urgency=low\n",
         $self->srcname, $self->pkgversion, $changelog_dist );
     $fh->print("\n  * Initial Release.$closes\n\n");
-    $fh->printf( " -- %s  %s\n", $self->maintainer, email_date(time) );
+    $fh->printf( " -- %s  %s\n", $self->control->source->Maintainer,
+        email_date(time) );
 
     #$fh->print("Local variables:\nmode: debian-changelog\nEnd:\n");
     $fh->close;

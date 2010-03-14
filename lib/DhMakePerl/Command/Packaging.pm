@@ -12,15 +12,17 @@ DhMakePerl::Command::Packaging - common routines for 'make' and 'refresh' dh-mak
 use base 'DhMakePerl';
 
 __PACKAGE__->mk_accessors(
-    qw( arch bdepends bdependsi depends
-        priority section maintainer
-        start_dir main_dir debian_dir
+    qw( start_dir main_dir debian_dir
         meta perlname author
-        pkgname srcname version rules docs examples desc longdesc copyright )
+        version rules docs examples copyright
+        control
+    )
 );
 
 use Array::Unique;
+use Carp qw(confess);
 use Cwd qw( getcwd );
+use Debian::Control::FromCPAN;
 use Debian::Dependencies;
 use Debian::Rules;
 use DhMakePerl::PodParser ();
@@ -35,11 +37,6 @@ use User::pwent;
 use constant debstdversion => '3.8.4';
 
 our %DEFAULTS = (
-    arch      => 'all',
-    bdependsi => Debian::Dependencies->new("perl"),
-    depends   => Debian::Dependencies->new('${perl:Depends}'),
-    priority  => 'optional',
-    section   => 'perl',
     start_dir => getcwd(),
 );
 
@@ -55,9 +52,6 @@ sub new {
 
     $self->cfg or die "cfg is mandatory";
 
-    $self->bdepends(
-        Debian::Dependencies->new( 'debhelper (>=' . $self->cfg->dh . ')' ) );
-
     my @docs;
     tie @docs, 'Array::Unique';
 
@@ -67,6 +61,9 @@ sub new {
     tie @examples, 'Array::Unique';
 
     $self->examples( \@examples );
+
+    $self->control( Debian::Control::FromCPAN->new )
+        unless $self->control;
 
     return $self;
 }
@@ -106,8 +103,10 @@ sub makefile_pl {
     return $self->main_file('Makefile.PL');
 }
 
-sub get_maintainer {
-    my ($self, $email ) = @_;
+sub fill_maintainer {
+    my $self = shift;
+
+    my $email = $self->cfg->email;
 
     my ( $user, $pwnam, $name, $mailh );
     $user = $ENV{LOGNAME} || $ENV{USER};
@@ -130,7 +129,17 @@ sub get_maintainer {
 
     $email =~ s/^(.*)\s+<(.*)>$/$2/;
 
-    return "$name <$email>";
+    if ( $self->cfg->pkg_perl ) {
+        my $old_maint = $self->control->source->Maintainer;
+        $self->control->source->Maintainer(
+            "Debian Perl Group <pkg-perl-maintainers\@lists.alioth.debian.org>"
+        );
+
+        $self->control->source->Uploaders->add($old_maint);
+    }
+    else {
+        $self->control->source->Maintainer( "$name <$email>" );
+    }
 }
 
 sub process_meta {
@@ -170,11 +179,9 @@ sub process_meta {
     $self->meta($yaml);
 }
 
-sub extract_basic {
-    my ($self) = @_;
+sub set_package_name {
+    my $self = shift;
 
-    $self->extract_name_ver();
-    find( sub { $self->check_for_xs }, $self->main_dir );
     my $pkgname = lc $self->perlname;
     $pkgname = 'lib' . $pkgname unless $pkgname =~ /^lib/;
     $pkgname .= '-perl';
@@ -182,11 +189,59 @@ sub extract_basic {
     # ensure policy compliant names and versions (from Joeyh)...
     $pkgname =~ s/[^-.+a-zA-Z0-9]+/-/g;
 
-    $self->pkgname($pkgname);
+    $self->control->source->Source($pkgname)
+        unless $self->control->source->Source;
 
-    printf( "Found: %s %s (%s arch=%s)\n",
-        $self->perlname, $self->version, $self->pkgname, $self->arch )
-        if $self->cfg->verbose;
+    $self->control->binary->Push( $pkgname =>
+            Debian::Control::Stanza::Binary->new( { Package => $pkgname } ) )
+        unless $self->control->binary->FETCH($pkgname);
+}
+
+sub pkgname {
+    @_ == 1 or die 'Syntax: $obj->pkgname()';
+
+    my $self = shift;
+
+    my $pkg = $self->control->binary->Values(0)->Package;
+
+    defined($pkg) and $pkg ne ''
+        or confess "called before set_package_name()";
+
+    return $pkg;
+}
+
+sub srcname {
+    @_ == 1 or die 'Syntax: $obj->srcname()';
+
+    my $self = shift;
+
+    my $pkg = $self->control->source->Source;
+
+    defined($pkg) and $pkg ne ''
+        or confess "called before set_package_name()";
+
+    return $pkg;
+}
+
+sub extract_basic {
+    my ($self) = @_;
+
+    $self->extract_name_ver();
+
+    my $src = $self->control->source;
+    my $bin = $self->control->binary->Values(0);
+
+    $src->Section('perl') unless defined $src->Section;
+    $src->Priority('optional') unless defined $src->Priority;
+
+    $bin->Architecture('all');
+    find( sub { $self->check_for_xs }, $self->main_dir );
+
+    printf(
+        "Found: %s %s (%s arch=%s)\n",
+        $self->perlname, $self->version,
+        $self->pkgname,  $bin->Architecture
+    ) if $self->cfg->verbose;
     $self->debian_dir( $self->main_file('debian') );
 
     $self->extract_basic_copyright();
@@ -199,9 +254,6 @@ sub extract_basic {
         },
         $self->main_dir
     );
-
-    $self->pkgname($pkgname);
-    $self->srcname($pkgname);
 }
 
 sub extract_name_ver {
@@ -231,6 +283,8 @@ sub extract_name_ver {
 
     $self->perlname($name);
     $self->version($ver);
+
+    $self->set_package_name;
 }
 
 sub extract_name_ver_from_makefile {
@@ -386,18 +440,25 @@ sub extract_name_ver_from_makefile {
     $self->perlname($name);
     $self->version($ver);
 
+    $self->set_package_name;
+
     $self->extract_desc("$dir/$vfrom") if defined $vfrom;
 }
 
 sub extract_desc {
     my ( $self, $file ) = @_;
 
+    my $bin = $self->control->binary->Values(0);
+    my $desc = $bin->short_description;
+
+    $desc and return;
+
     my ( $parser, $modulename );
     $parser = new DhMakePerl::PodParser;
     return unless -f $file;
     $parser->set_names(qw(NAME DESCRIPTION DETAILS COPYRIGHT AUTHOR AUTHORS));
     $parser->parse_from_file($file);
-    if ( $self->desc ) {
+    if ( $desc ) {
 
         # No-op - We already have it, probably from the command line
 
@@ -405,7 +466,7 @@ sub extract_desc {
     elsif ( $self->meta->{abstract} ) {
 
         # Get it from META.yml
-        $self->desc( $self->meta->{abstract} );
+        $desc = $self->meta->{abstract};
 
     }
     elsif ( my $my_desc = $parser->get('NAME') ) {
@@ -416,37 +477,37 @@ sub extract_desc {
         $my_desc =~ s/\s+$//s;
         $my_desc =~ s/^([^\s])/ $1/mg;
         $my_desc =~ s/\n.*$//s;
-        $self->desc($my_desc);
+        $desc = $my_desc;
     }
 
     # Replace linefeeds (not followed by a space) in short description with
     # spaces
-    my $tmp_desc = $self->desc;
-    $tmp_desc =~ s/\n(?=\S)/ /gs;
-    $self->desc($tmp_desc);
+    $desc =~ s/\n(?=\S)/ /gs;
+    $desc =~ s/^\s+//;      # strip leading spaces
+    $bin->short_description($desc);
 
-    unless ($self->longdesc) {
-        my $long = $parser->get('DESCRIPTION')
-                || $parser->get('DETAILS')
-                || $self->desc;
+    my $long_desc;
+    unless ( $bin->long_description ) {
+        $long_desc 
+            = $parser->get('DESCRIPTION')
+            || $parser->get('DETAILS')
+            || $self->desc;
         ( $modulename = $self->perlname ) =~ s/-/::/g;
-        $long =~ s/This module/$modulename/;
+        $long_desc =~ s/This module/$modulename/;
 
         local ($Text::Wrap::columns) = 78;
-        $long = fill( "", "", $long );
-        $self->longdesc($long);
+        $long_desc = fill( "", "", $long_desc );
     }
-    my $ld = $self->longdesc;
-    if ( defined($ld) && $ld !~ /^$/ ) {
-        $ld =~ s/^\s+//s;
-        $ld =~ s/\s+$//s;
-        $ld =~ s/^\t/ /mg;
-        $ld =~ s/^\s*$/ ./mg;
-        $ld =~ s/^\s*/ /mg;
-        $ld =~ s/^([^\s])/ $1/mg;
-        $ld =~ s/\r//g;
 
-        $self->longdesc($ld);
+    if ( defined($long_desc) && $long_desc !~ /^$/ ) {
+        $long_desc =~ s/^[\s\n]+//s;
+        $long_desc =~ s/\s+$//s;
+        $long_desc =~ s/^\t/ /mg;
+        $long_desc =~ s/\r//g;
+
+        $bin->long_description(
+            "$long_desc\n\nThis description was automagically extracted from the module by dh-make-perl.\n"
+        );
     }
 
     $self->copyright( $parser->get('COPYRIGHT')
@@ -483,7 +544,7 @@ sub check_for_xs {
     ( !$self->cfg->exclude or $rel_path !~ $self->cfg->exclude )
         && /\.(xs|c|cpp|cxx)$/i
         && do {
-        $self->arch('any');
+        $self->control->binary->Values(0)->Architecture('any');
         };
 }
 
@@ -591,10 +652,12 @@ sub create_compat {
 sub update_file_list( $ % ) {
     my ( $self, %p ) = @_;
 
+    my $pkgname = $self->control->binary->Values(0)->Package;
+
     while ( my ( $file, $new_content ) = each %p ) {
         next unless @$new_content;
         # pkgname.foo file
-        my $pkg_file = $self->debian_file( $self->pkgname .".$file" );
+        my $pkg_file = $self->debian_file("$pkgname.$file");
         my %uniq_content;
         my @existing_content;
 
@@ -819,11 +882,13 @@ sub create_copyright {
     push( @res, "", "Files: debian/*" );
     if($self->cfg->command eq 'refresh') {
     my @from_changelog
-        = $self->copyright_from_changelog( $self->maintainer, $year );
+        = $self->copyright_from_changelog( $self->control->source->Maintainer,
+        $year );
       $from_changelog[0] = "Copyright:" . $from_changelog[0];
       push @res, @from_changelog;
-    } else {
-      push @res, "Copyright: $year, " . $self->maintainer;
+    }
+    else {
+        push @res, "Copyright: $year, " . $self->control->source->Maintainer;
     }
     push @res, "License: " . join( ' or ', keys %licenses );
 
@@ -1005,6 +1070,13 @@ sub discover_utility_deps {
     # start with the minimum
     $deps->add( Debian::Dependency->new( 'debhelper', $self->cfg->dh ) );
 
+    if ( $control->binary->Values(0)->Architecture eq 'all' ) {
+        $control->source->Build_Depends_Indep->add('perl');
+    }
+    else {
+        $deps->add('perl');
+    }
+
     $self->explained_dependency( 'Module::AutoInstall', $deps,
         'debhelper (>= 7.2.13)' )
         if -e catfile( $self->main_dir, qw( inc Module AutoInstall.pm ) );
@@ -1057,8 +1129,9 @@ sub discover_utility_deps {
     }
 
     # some mandatory dependencies
-    my $bin_deps = $control->binary->[0]->Depends;
-    $bin_deps += '${shlibs:Depends}' if $self->arch eq 'any';
+    my $bin_deps = $control->binary->Values(0)->Depends;
+    $bin_deps += '${shlibs:Depends}'
+        if $self->control->binary->Values(0)->Architecture eq 'any';
     $bin_deps += '${misc:Depends}, ${perl:Depends}';
 }
 
