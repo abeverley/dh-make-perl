@@ -1,5 +1,8 @@
 package DhMakePerl::Command::Packaging;
 
+use strict;
+use warnings;
+
 =head1 NAME
 
 DhMakePerl::Command::Packaging - common routines for 'make' and 'refresh' dh-make-perl commands
