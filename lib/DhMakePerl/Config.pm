@@ -26,6 +26,7 @@ use constant options => (
     'dist=s',          'email|e=s',
     'exclude|i:s{,}',
     'home-dir=s',      'install!',
+    'intrusive!',
     'network!',
     'nometa',          'notest',
     'only|o=s@',

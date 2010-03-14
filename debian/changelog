@@ -1,3 +1,10 @@
+dh-make-perl (0.66) UNRELEASED; urgency=low
+
+  * when detecting dependencies, use Module::Depends::Intrusive only if
+    --intrusive is given
+
+ -- Damyan Ivanov <dmn@debian.org>  Tue, 09 Mar 2010 08:46:09 +0200
+
 dh-make-perl (0.65) unstable; urgency=low
 
   * in --refresh mode, overwrite the backups of the modified files under

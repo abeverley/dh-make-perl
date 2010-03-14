@@ -272,6 +272,13 @@ dpkg-source's default values.
 Installs the freshly built package. Specifying --install implies --build - The
 package will not be installed unless it was built (obviously ;-) )
 
+=item B<--intrusive>
+
+When determining module dependencies, if L<Module::Depends> fails, tries again
+with L<Module::Depends::Intrusive>. M:D:I loads all .pm files, intercepring
+loading of other modules, effectively running untrusted code on your behalf.
+Use with caution.
+
 =item B<--network>
 
 Enables querying of Debian WNPP lists for ITP and similar bugs. Enabled by

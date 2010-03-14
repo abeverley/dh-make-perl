@@ -55,7 +55,6 @@ use File::Basename qw( basename dirname );
 use File::Copy qw( copy move );
 use File::Path ();
 use File::Spec::Functions qw( catfile );
-use Module::Depends::Intrusive ();
 use Module::Depends            ();
 use Text::Wrap qw( wrap );
 
@@ -538,33 +537,41 @@ sub extract_depends {
     if ($@) {
         if ($self->cfg->verbose) {
             warn '=' x 70, "\n";
-            warn "First attempt (Module::Depends) at a dependency\n"
-                . "check failed. Missing/bad META.yml?\n"
-                . "Trying again with Module::Depends::Intrusive ... \n";
-            warn '=' x 70, "\n";
+            warn "Failed to detect dependencies using Module::Depends.\n";
+            warn "The error given was:\n";
+            warn "$@";
         }
 
-        eval {
-            $dep_hash
-                = $self->run_depends( 'Module::Depends::Intrusive', $build_deps );
-        };
-        if ($@) {
-            if ($self->cfg->verbose) {
-                warn '=' x 70, "\n";
-                warn
-                    "Could not find the " . ( $build_deps ? 'build-' : '' ) 
-                    . "dependencies for the requested module.\n";
-                warn "Generated error: $@";
+        if ( $self->cfg->intrusive ) {
+            warn "Trying again with Module::Depends::Intrusive ... \n";
+            eval {
+                require Module::Depends::Intrusive;
+                $dep_hash
+                    = $self->run_depends( 'Module::Depends::Intrusive', $build_deps );
+            };
+            if ($@) {
+                if ($self->cfg->verbose) {
+                    warn '=' x 70, "\n";
+                    warn
+                        "Could not find the " . ( $build_deps ? 'build-' : '' ) 
+                        . "dependencies for the requested module.\n";
+                    warn "Generated error: $@";
 
-                warn "Please bug the module author to provide a proper META.yml\n"
-                    . "file.\n"
-                    . "Automatic find of " . ( $build_deps ? 'build-' : '' )
-                    . "dependencies failed. You may want to \n"
-                    . "retry using the '" . ( $build_deps ? 'b' : '' )
-                    . "depends' option\n";
-                warn '=' x 70, "\n";
+                    warn "Please bug the module author to provide a proper META.yml\n"
+                        . "file.\n"
+                        . "Automatic find of " . ( $build_deps ? 'build-' : '' )
+                        . "dependencies failed. You may want to \n"
+                        . "retry using the '" . ( $build_deps ? 'b' : '' )
+                        . "depends' option\n"
+                        . "or just fill the dependency fields in debian/rules by hand\n";
+                }
             }
         }
+        else {
+            warn "If you understand the security implications, try --intrusive.\n";
+        }
+        warn '=' x 70, "\n"
+            if $self->cfg->verbose;
     }
 
     my ( $debs, $missing )
