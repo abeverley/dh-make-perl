@@ -27,6 +27,7 @@ use strict;
 use base qw( Class::Accessor Tie::IxHash );
 
 use Carp qw(croak);
+use Debian::Control::Stanza::CommaSeparated;
 use Debian::Dependencies;
 
 =head1 FIELDS
@@ -90,11 +91,16 @@ sub new {
     }
 
     # initialize any dependency lists with empty placeholders
+    # same for comma-separated lists
     for( $self->fields ) {
-        if( $self->is_dependency_list($_) and not $self->$_ ) {
+        if ( $self->is_dependency_list($_) and not $self->$_ ) {
             $self->$_( Debian::Dependencies->new );
         }
+        elsif ( $self->is_comma_separated($_) and not $self->$_ ) {
+            $self->$_( Debian::Control::Stanza::CommaSeparated->new );
+        }
     }
+
 
     return $self;
 }
@@ -218,6 +224,9 @@ sub set {
     $value = Debian::Dependencies->new($value)
         if not ref($value) and $self->is_dependency_list($field);
 
+    $value = Debian::Control::Stanza::CommaList->new($value)
+        if not ref($value) and $self->is_comma_separated($value);
+
     return ( tied %$self )->STORE( $field,  $value );
 }
 
@@ -243,6 +252,7 @@ sub as_string
     while( my($k,$v) = each %$self ) {
         next unless defined($v);
         next if $self->is_dependency_list($k) and "$v" eq "";
+        next if $self->is_comma_separated($k) and "$v" eq "";
 
         my $line = "$k: $v";
 
