@@ -78,9 +78,8 @@ sub new {
     my $class = shift;
     my $init = shift || {};
 
-    my $self = {};
+    my $self = Tie::IxHash->new;
 
-    tie %$self, 'Tie::IxHash';
     bless $self, $class;
 
     while( my($k,$v) = each %$init ) {
@@ -202,7 +201,7 @@ sub get {
 
     $field =~ s/_/-/g;
 
-    return ( tied %$self )->FETCH($field);
+    return $self->FETCH($field);
 }
 
 =item set( $field, $value )
@@ -227,7 +226,7 @@ sub set {
     $value = Debian::Control::Stanza::CommaList->new($value)
         if not ref($value) and $self->is_comma_separated($value);
 
-    return ( tied %$self )->STORE( $field,  $value );
+    return $self->STORE( $field,  $value );
 }
 
 =item as_string($width)
@@ -249,9 +248,10 @@ sub as_string
 
     my @lines;
 
-    while( my($k,$v) = each %$self ) {
+    for my $k ( $self->Keys ) {
         # We don't' want the internal fields showing in the output
         next if $k =~ /^-/;     # _ in fielld names is replaced with dashes
+        my $v = $self->FETCH($k);
         next unless defined($v);
         next if $self->is_dependency_list($k) and "$v" eq "";
         next if $self->is_comma_separated($k) and "$v" eq "";
