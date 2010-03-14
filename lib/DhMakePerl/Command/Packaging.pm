@@ -1052,6 +1052,11 @@ sub discover_utility_deps {
         $self->explained_dependency( 'Module::Build', $deps,
             'perl (>= 5.10) | libmodule-build-perl' );
     }
+
+    # some mandatory dependencies
+    my $bin_deps = $control->binary->[0]->Depends;
+    $bin_deps += '${shlibs:Depends}' if $self->arch eq 'any';
+    $bin_deps += '${misc:Depends}, ${perl:Depends}';
 }
 
 =item makefile_pl_is_MBC
