@@ -92,7 +92,6 @@ sub fill_from_cpan_meta {
 
     do {
         $src->Section('perl');
-        $bin->Section('perl');
     } unless defined( $src->Section ) or defined( $bin->Section );
     do {
         $src->Priority('optional');
