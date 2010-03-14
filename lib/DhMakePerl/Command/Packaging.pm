@@ -1103,7 +1103,7 @@ sub backup_file {
     if ( $self->cfg->backups ) {
         warn "W: overwriting $file.bak\n"
             if -e "$file.bak" and $self->cfg->verbose;
-        copy( $file, "$file.bak" );
+        rename( $file, "$file.bak" );
     }
 }
 
