@@ -68,25 +68,6 @@ use constant debstdversion => '3.8.4';
 # older
 use constant oldest_perl_version => '5.8.8-7';
 
-=item backup_file(file_name)
-
-Creates a backup copy of the specified file by adding C<.bak> to its name. If
-the backup already exists, it is overwritten.
-
-Does nothing unless the C<backups> option is set.
-
-=cut
-
-sub backup_file {
-    my( $self, $file ) = @_;
-
-    if ( $self->cfg->backups ) {
-        warn "W: overwriting $file.bak\n"
-            if -e "$file.bak" and $self->cfg->verbose;
-        copy( $file, "$file.bak" );
-    }
-}
-
 sub check_deprecated_overrides {
     my $self = shift;
 

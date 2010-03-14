@@ -105,25 +105,6 @@ sub execute {
     return 0;
 }
 
-=item backup_file(file_name)
-
-Creates a backup copy of the specified file by adding C<.bak> to its name. If
-the backup already exists, it is overwritten.
-
-Does nothing unless the C<backups> option is set.
-
-=cut
-
-sub backup_file {
-    my( $self, $file ) = @_;
-
-    if ( $self->cfg->backups ) {
-        warn "W: overwriting $file.bak\n"
-            if -e "$file.bak" and $self->cfg->verbose;
-        rename( $file, "$file.bak" );
-    }
-}
-
 =item add_quilt( $control )
 
 Plugs quilt into F<debian/rules> and F<debian/control>. Depends on
