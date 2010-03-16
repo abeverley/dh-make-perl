@@ -491,7 +491,7 @@ sub extract_desc {
         $long_desc 
             = $parser->get('DESCRIPTION')
             || $parser->get('DETAILS')
-            || $self->desc;
+            || $bin->short_description;
         ( $modulename = $self->perlname ) =~ s/-/::/g;
         $long_desc =~ s/This module/$modulename/;
 
