@@ -223,8 +223,8 @@ sub set {
     $value = Debian::Dependencies->new($value)
         if not ref($value) and $self->is_dependency_list($field);
 
-    $value = Debian::Control::Stanza::CommaList->new($value)
-        if not ref($value) and $self->is_comma_separated($value);
+    $value = Debian::Control::Stanza::CommaSeparated->new($value)
+        if not ref($value) and $self->is_comma_separated($field);
 
     return $self->STORE( $field,  $value );
 }
