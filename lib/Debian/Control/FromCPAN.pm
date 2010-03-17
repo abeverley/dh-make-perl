@@ -620,6 +620,14 @@ sub prune_perl_deps {
     }
 }
 
+=item nice_perl_ver I<version_string>
+
+Reformats perl version to match Debian's perl package versions.
+
+For example C<5.010> (and C<5.01>) is converted to C<5.10>.
+
+=cut
+
 sub nice_perl_ver {
     my( $self, $v ) = @_;
 
