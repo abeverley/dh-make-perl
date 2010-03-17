@@ -89,9 +89,8 @@ use base 'Debian::Control::Stanza';
 use constant fields => qw(
     Package Architecture Section Priority Essential Depends Recommends Suggests
     Enhances Replaces Pre_Depends Conflicts Provides Description
+    _short_description _long_description
 );
-
-__PACKAGE__->mk_accessors( qw( _short_description _long_description ) );
 
 =head1 CONSTRUCTOR
 
