@@ -264,7 +264,7 @@ sub extract_basic {
                 && $self->extract_desc($_);
         },
         $self->main_dir
-    );
+    ) unless $bin->short_description and $bin->long_description;
 }
 
 sub extract_name_ver {
