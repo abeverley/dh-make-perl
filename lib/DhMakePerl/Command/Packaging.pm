@@ -628,6 +628,8 @@ sub create_rules {
         return;
     }
 
+    $self->backup_file($file);
+
     for my $source (
         catfile( $self->cfg->home_dir, $rulesname ),
         catfile( $self->cfg->data_dir, $rulesname )

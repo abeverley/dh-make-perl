@@ -48,7 +48,6 @@ sub execute {
         if @{ $self->examples } and $self->cfg->verbose;
 
     if ( 'rules' ~~ $self->cfg->only ) {
-        $self->backup_file( $self->debian_file('rules') );
         $self->create_rules( $self->debian_file('rules') );
         if ( !-f $self->debian_file('compat') or $self->cfg->dh == 7 ) {
             $self->create_compat( $self->debian_file('compat') );
