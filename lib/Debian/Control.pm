@@ -157,6 +157,33 @@ sub write {
     }
 }
 
+=item is_arch_dep
+
+Returns true if the package is architecture-dependent. This is determined by
+the C<Architecture> field of the first binary package. If it equals to C<all>,
+then the package is architecture-independent; otherwise it is
+architecture-dependent.
+
+Returns I<undef> if it is not possible to determine whether the package is
+architecture-dependent or not. This is the case when there are no binary
+package stanzas present or the first has no C<Archiitecture> field.
+
+=cut
+
+sub is_arch_dep {
+    my $self = shift;
+
+    my $bin = $self->binary->Values(0);
+
+    return undef unless $bin;
+
+    my $arch = $bin->Architecture;
+
+    return undef unless defined($arch);
+
+    return ( $arch ne 'all' );
+}
+
 =back
 
 =head1 SEE ALSO
