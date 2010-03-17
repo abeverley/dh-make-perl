@@ -616,9 +616,9 @@ sub extract_examples {
 }
 
 sub create_rules {
-    my ( $self, $file ) = @_;
+    my ( $self ) = @_;
 
-    my $rulesname = 'rules.dh7.tiny';
+    my $file = $self->debian_file('rules');
 
     $self->rules( Debian::Rules->new($file) );
 
@@ -634,6 +634,8 @@ sub create_rules {
     $self->backup_file($file);
 
     $self->rules( Debian::Rules->new($file) );
+
+    my $rulesname = 'rules.dh7.tiny';
 
     for my $source (
         catfile( $self->cfg->home_dir, $rulesname ),

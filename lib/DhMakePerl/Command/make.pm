@@ -173,7 +173,7 @@ sub execute {
         catfile( $self->debian_dir, 'source', 'format' ) );
     $self->create_changelog( $self->debian_file('changelog'),
         $self->cfg->closes // $self->get_wnpp( $self->pkgname ) );
-    $self->create_rules( $self->debian_file('rules') );
+    $self->create_rules;
 
     # now that rules are there, see if we need some dependency for them
     $self->discover_utility_deps( $self->control );
