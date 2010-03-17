@@ -311,6 +311,8 @@ sub copy_from {
         push @{ $self->lines }, $_;
     }
     $self->_parsed(0);
+
+    ( tied @{ $self->lines } )->flush;
 }
 
 =back
