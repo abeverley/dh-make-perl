@@ -661,7 +661,7 @@ sub create_compat {
 sub update_file_list( $ % ) {
     my ( $self, %p ) = @_;
 
-    my $pkgname = $self->control->binary->Values(0)->Package;
+    my $pkgname = $self->pkgname;
 
     while ( my ( $file, $new_content ) = each %p ) {
         next unless @$new_content;
