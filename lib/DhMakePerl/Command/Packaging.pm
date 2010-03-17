@@ -628,7 +628,12 @@ sub create_rules {
         return;
     }
 
+    # first close the currently open filehandle
+    $self->rules(undef);
+
     $self->backup_file($file);
+
+    $self->rules( Debian::Rules->new($file) );
 
     for my $source (
         catfile( $self->cfg->home_dir, $rulesname ),
