@@ -297,6 +297,14 @@ EOF
     }
 }
 
+=item find_debs_for_modules I<dep hash>[, APT contents]
+
+Scans the given hash of dependencies ( module => version ) and returns matching
+Debian package dependency specification (as an instance of
+L<Debian::Dependencies> class) and a list of missing modules.
+
+=cut
+
 sub find_debs_for_modules {
 
     my ( $self, $dep_hash, $apt_contents ) = @_;
