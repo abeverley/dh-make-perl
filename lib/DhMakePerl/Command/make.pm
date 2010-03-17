@@ -159,7 +159,7 @@ sub execute {
         or $bin->long_description =~ /^\s*\.?\s*$/ )
         and $self->cfg->verbose;
 
-    printf( "Using maintainer: %s\n", $self->maintainer )
+    printf( "Using maintainer: %s\n", $src->Maintainer )
         if $self->cfg->verbose;
 
     print "Found docs: @{ $self->docs }\n" if $self->cfg->verbose;
