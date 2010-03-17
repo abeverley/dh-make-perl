@@ -223,6 +223,17 @@ sub srcname {
     return $pkg;
 }
 
+sub get_wnpp {
+    my ( $self, $package ) = @_;
+
+    return undef unless $self->cfg->network;
+
+    my $wnpp = Debian::WNPP::Query->new(
+        { cache_file => catfile( $self->cfg->home_dir, 'wnpp.cache' ) } );
+    my @bugs = $wnpp->bugs_for_package($package);
+    return $bugs[0];
+}
+
 sub extract_basic {
     my ($self) = @_;
 

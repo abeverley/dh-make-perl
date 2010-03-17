@@ -99,6 +99,272 @@ sub fill_from_cpan_meta {
     } unless defined( $src->Priority ) or defined( $bin->Priority );
 }
 
+=item discover_dependencies( [ { options hash } ] )
+
+Discovers module dependencies and fills the debendency fields in
+F<debian/control> accordingly.
+
+Options:
+
+=over
+
+=item apt_contents
+
+An instance of L<Debian::AptContents> to be used when locating to which package
+a required module belongs.
+
+=item dir
+
+The directory where the cpan distribution was unpacked.
+
+=item intrusive
+
+A flag indicating permission to use L<Module::Depends::Intrusive> for
+discovering dependencies in case L<Module::Depends> fails. Sinse this requires
+loading all Perl modules in the distribution (and running their BEGIN blocks
+(and the BEGIN blocks of their dependencies, recursively), it is recommended to
+use this only when dealing with trusted sources.
+
+=item require_deps
+
+If true, causes the method to die if some a package for some dependency cannot
+be found. Otherwise only a warning is issued.
+
+=item verbose
+
+=item wnpp_query
+
+An instance of L<Debian::WNPP::Query> to be used when checking for WNPP bugs of
+depeended upon packages.
+
+=back
+
+=cut
+
+sub discover_dependencies {
+    my ( $self, $opts ) = @_;
+
+    $opts //= {};
+    ref($opts) and ref($opts) eq 'HASH'
+        or die 'Usage: $obj->{ [ { opts hash } ] )';
+    my $apt_contents = delete $opts->{apt_contents};
+    my $dir = delete $opts->{dir};
+    my $intrusive = delete $opts->{intrusive};
+    my $require_deps = delete $opts->{require_deps};
+    my $verbose = delete $opts->{verbose};
+    my $wnpp_query = delete $opts->{wnpp_query};
+
+    die "Unsupported option(s) given: " . join( ', ', sort( keys(%$opts) ) )
+        if %$opts;
+
+    my $src = $self->source;
+    my $bin = $self->binary->Values(0);
+
+    local @INC = ( $dir, @INC );
+
+    # try Module::Depends, but if that fails then
+    # fall back to Module::Depends::Intrusive.
+
+    no warnings;
+    local *STDERR;
+    open( STDERR, ">/dev/null" );
+    my $finder = Module::Depends->new->dist_dir($dir);
+    my $deps = $finder->find_modules;
+
+    my $error = $finder->error();
+    if ($error) {
+        if ($verbose) {
+            warn '=' x 70, "\n";
+            warn "Failed to detect dependencies using Module::Depends.\n";
+            warn "The error given was:\n";
+            warn "$@";
+        }
+
+        if ( $intrusive ) {
+            warn "Trying again with Module::Depends::Intrusive ... \n"
+                if $verbose;
+            require Module::Depends::Intrusive;
+            $finder = Module::Depends::Intrusive->new->dist_dir($dir);
+            $deps = $finder->find_modules;
+
+            if ( $finder->error ) {
+                if ($verbose) {
+                    warn '=' x 70, "\n";
+                    warn
+                        "Could not find the "
+                        . "dependencies for the requested module.\n";
+                    warn "Generated error: " . $finder->error;
+
+                    warn "Please bug the module author to provide a"
+                        . " proper META.yml file.\n"
+                        . "Automatic find of" 
+                        . " dependencies failed. You may want to \n"
+                        . "retry using the '--[b]depends[i]' options\n"
+                        . "or just fill the dependency fields in debian/rules"
+                        . " by hand\n";
+
+                        return;
+                }
+            }
+        }
+        else {
+            warn
+                "If you understand the security implications, try --intrusive.\n"
+                if $verbose;
+        }
+        warn '=' x 70, "\n"
+            if $verbose;
+
+        return;
+    }
+
+    # run-time
+    my ( $debs, $missing )
+        = $self->find_debs_for_modules( $deps->{requires}, $apt_contents );
+
+    if (@$debs) {
+        if ($verbose) {
+            print "\n";
+            print "Needs the following debian packages: "
+                . join( ", ", @$debs ) . "\n";
+        }
+        $bin->Depends->add(@$debs);
+        if ( $bin->Architecture eq 'all' ) {
+            $src->Build_Depends_Indep->add(@$debs);
+        }
+        else {
+            $src->Build_Depends->add(@$debs);
+        }
+    }
+
+    # build-time
+    my ( $b_debs, $b_missing )
+        = $self->find_debs_for_modules( $deps->{build_requires}, $apt_contents );
+
+    if (@$b_debs) {
+        if ($verbose) {
+            print "\n";
+            print "Needs the following debian packages for during building: "
+                . join( ", ", @$b_debs ) . "\n";
+        }
+        if ( $self->is_arch_dep ) {
+            $src->Build_Depends->add(@$b_debs);
+        }
+        else {
+            $src->Build_Depends_Indep->add(@$b_debs);
+        }
+    }
+
+    push @$missing, @$b_missing;
+
+    if (@$missing) {
+        my ($missing_debs_str);
+        if ($apt_contents) {
+            $missing_debs_str
+                = "Needs the following modules for which there are no debian packages available:\n";
+            for (@$missing) {
+                my $bug = ( $wnpp_query->bugs_for_package($_) )[0];
+                $missing_debs_str .= " - $_";
+                $missing_debs_str .= " (" . $bug->type_and_number . ')'
+                    if $bug;
+                $missing_debs_str .= "\n";
+            }
+        }
+        else {
+            $missing_debs_str = "The following Perl modules are required and not installed in your system:\n";
+            for (@$missing) {
+                my $bug = ( $wnpp_query->bugs_for_package($_) )[0];
+                $missing_debs_str .= " - $_";
+                $missing_debs_str .= " (" . $bug->type_and_number . ')'
+                    if $bug;
+                $missing_debs_str .= "\n";
+            }
+            $missing_debs_str .= <<EOF
+You do not have 'apt-file' currently installed, or have not ran
+'apt-file update' - If you install it and run 'apt-file update' as
+root, I will be able to tell you which Debian packages are those
+modules in (if they are packaged).
+EOF
+        }
+
+        if ($require_deps) {
+            die $missing_debs_str;
+        }
+        else {
+            warn $missing_debs_str;
+        }
+
+    }
+}
+
+sub find_debs_for_modules {
+
+    my ( $self, $dep_hash, $apt_contents ) = @_;
+
+    my @uses;
+    my $debs = Debian::Dependencies->new();
+
+    foreach my $module ( keys(%$dep_hash) ) {
+        my $dep;
+        if ( my $ver = $self->is_core_module( $module, $dep_hash->{$module} )
+        ) {
+            print "= $module is a core module\n" if $self->cfg->verbose;
+
+            $dep = Debian::Dependency->new( 'perl', $ver );
+            $debs->add($dep)
+                if $dep->satisfies(
+                        "perl (>= " . $self->oldest_perl_version . ")"
+                );
+
+            next;
+        }
+
+        push @uses, $module;
+    }
+
+    my @missing;
+
+    foreach my $module (@uses) {
+
+        my $dep;
+        if ( $module eq 'perl' ) {
+            $dep = Debian::Dependency->new( 'perl',
+                $self->nice_perl_ver( $dep_hash->{$module} ) );
+        }
+        elsif ($apt_contents) {
+            $dep = $apt_contents->find_perl_module_package( $module,
+                $dep_hash->{$module} );
+        }
+
+        if ($dep) {
+            print "+ $module found in " . $dep->pkg ."\n"
+                if $self->cfg->verbose;
+        }
+        else {
+            print "- $module not found in any package\n";
+            push @missing, $module;
+
+            my $mod = $self->find_cpan_module($module);
+            if ($mod) {
+                ( my $dist = $mod->distribution->base_id ) =~ s/-v?\d[^-]*$//;
+                my $pkg = 'lib' . lc($dist) . '-perl';
+
+                print "   CPAN contains it in $dist\n";
+                print "   substituting package name of $pkg\n";
+
+                $dep = Debian::Dependency->new( $pkg, $dep_hash->{$module} );
+            }
+            else {
+                print "   - it seems it is not available even via CPAN\n";
+            }
+        }
+
+        $debs->add($dep) if $dep;
+    }
+
+    return $debs, \@missing;
+}
+
 =item parse_meta_dep_list( src, apt_depends, missing )
 
 Convert the given CPAN META dependency list (I<src>, hashref with module names
@@ -344,6 +610,27 @@ sub prune_perl_deps {
             }
         }
     }
+}
+
+sub nice_perl_ver {
+    my( $self, $v ) = @_;
+
+    if( $v =~ /\.(\d+)$/ ) {
+        my $minor = $1;
+        if( length($minor) % 3 ) {
+            # right-pad with zeroes so that the number of digits after the dot
+            # is a multiple of 3
+            $minor .= '0' x ( 3 - length($minor) % 3 );
+        }
+
+        my $ver = 0 + substr( $minor, 0, 3 );
+        if( length($minor) > 3 ) {
+            $ver .= '.' . ( 0 + substr( $minor, 3 ) );
+        }
+        $v =~ s/\.\d+$/.$ver/;
+    }
+
+    return $v;
 }
 
 =back
