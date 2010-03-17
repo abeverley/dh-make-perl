@@ -14,7 +14,6 @@ use strict; use warnings;
 
 use base 'DhMakePerl::Command::Packaging';
 use Debian::Control::FromCPAN;
-use Debian::Rules ();
 use File::Spec::Functions qw(catfile);
 
 =head1 METHODS
@@ -34,7 +33,6 @@ sub execute {
     print "Engaging refresh mode in " . $self->main_dir . "\n"
         if $self->cfg->verbose;
 
-    $self->rules( Debian::Rules->new( $self->debian_file('rules') ) );
     $self->control->read( $self->debian_file('control') );
     $self->fill_maintainer;
     $self->process_meta;
