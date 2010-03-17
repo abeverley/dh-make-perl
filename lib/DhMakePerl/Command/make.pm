@@ -130,6 +130,7 @@ sub execute {
         {   dir          => $self->main_dir,
             verbose      => $self->cfg->verbose,
             apt_contents => $self->apt_contents,
+            require_deps => $self->cfg->requiredeps,
             wnpp_query   => Debian::WNPP::Query->new(
                 {   cache_file =>
                         catfile( $self->cfg->home_dir, 'wnpp.cache' )
