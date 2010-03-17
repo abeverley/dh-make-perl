@@ -128,7 +128,7 @@ sub execute {
 
     my $extradeps = $self->extract_depends( $apt_contents, 0 );
     $bin->Depends->add($extradeps);
-    $bin->Depends->add( Debian::Dependencies->new( $self->cfg->depends ) )
+    $bin->Depends->add( $self->cfg->depends )
         if $self->cfg->depends;
 
     $self->extract_docs;
