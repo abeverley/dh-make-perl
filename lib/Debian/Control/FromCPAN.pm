@@ -20,6 +20,7 @@ use base 'Debian::Control';
 
 use Debian::Version qw(deb_ver_cmp);
 use File::Spec qw( catfile );
+use Module::Depends ();
 
 use constant oldstable_perl_version => '5.8.8';
 
@@ -93,11 +94,14 @@ sub discover_dependencies {
     # try Module::Depends, but if that fails then
     # fall back to Module::Depends::Intrusive.
 
-    no warnings;
-    local *STDERR;
-    open( STDERR, ">/dev/null" );
     my $finder = Module::Depends->new->dist_dir($dir);
-    my $deps = $finder->find_modules;
+    my $deps;
+    do {
+        no warnings;
+        local *STDERR;
+        open( STDERR, ">/dev/null" );
+        $deps = $finder->find_modules;
+    };
 
     my $error = $finder->error();
     if ($error) {
@@ -113,7 +117,12 @@ sub discover_dependencies {
                 if $verbose;
             require Module::Depends::Intrusive;
             $finder = Module::Depends::Intrusive->new->dist_dir($dir);
-            $deps = $finder->find_modules;
+            do {
+                no warnings;
+                local *STDERR;
+                open( STDERR, ">/dev/null" );
+                $deps = $finder->find_modules;
+            };
 
             if ( $finder->error ) {
                 if ($verbose) {
