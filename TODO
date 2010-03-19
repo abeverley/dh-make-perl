@@ -25,5 +25,3 @@
   files and look them in the apt file contents. Lots of work for little gain.
 * --refresh: add --only <file> option: done, but "--only control" also
   touches d/rules if quilt is used
-* refresh: should use the generic discover_dependencies from ::Packaging
-  instead of its own implementation

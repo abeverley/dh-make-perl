@@ -80,8 +80,18 @@ sub execute {
             catfile( $self->debian_dir, 'source', 'format' ) );
 
         if ( my $apt_contents = $self->get_apt_contents ) {
-            $control->dependencies_from_cpan_meta( $self->meta,
-                $self->get_apt_contents, $self->cfg->verbose );
+            $control->discover_dependencies(
+                {   dir          => $self->main_dir,
+                    verbose      => $self->cfg->verbose,
+                    apt_contents => $self->apt_contents,
+                    require_deps => $self->cfg->requiredeps,
+                    wnpp_query   => Debian::WNPP::Query->new(
+                        {   cache_file =>
+                                catfile( $self->cfg->home_dir, 'wnpp.cache' )
+                        }
+                    ),
+                }
+            );
         }
         else {
             warn "No APT contents can be loaded.\n";
