@@ -912,15 +912,14 @@ sub create_copyright {
     $licenses{'Artistic'} = $licenses{'GPL-1+'} = 1;
     $year = (localtime)[5] + 1900;
     push( @res, "", "Files: debian/*" );
-    if($self->cfg->command eq 'refresh') {
-    my @from_changelog
-        = $self->copyright_from_changelog( $self->control->source->Maintainer,
-        $year );
-      $from_changelog[0] = "Copyright:" . $from_changelog[0];
-      push @res, @from_changelog;
+    if ( $self->cfg->command eq 'refresh' ) {
+        my @from_changelog
+            = $self->copyright_from_changelog( $self->get_developer, $year );
+        $from_changelog[0] = "Copyright:" . $from_changelog[0];
+        push @res, @from_changelog;
     }
     else {
-        push @res, "Copyright: $year, " . $self->control->source->Maintainer;
+        push @res, "Copyright: $year, " . $self->get_developer;
     }
     push @res, "License: " . join( ' or ', keys %licenses );
 
