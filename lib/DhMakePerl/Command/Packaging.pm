@@ -1032,6 +1032,41 @@ sub explained_dependency {
     warn sprintf( "%s needs %s\n", $reason, join( ', ', @to_add ) );
 }
 
+=item discover_dependencies
+
+Just a wrapper around $self->control->discover_dependencies which provides the
+right parameters to it.
+
+=cut
+
+sub discover_dependencies {
+    my $self = shift;
+
+    if ( my $apt_contents = $self->get_apt_contents ) {
+
+        my $wnpp_query
+            = Debian::WNPP::Query->new(
+            { cache_file => catfile( $self->cfg->home_dir, 'wnpp.cache' ) } )
+            if $self->cfg->network;
+
+        warn 10;
+
+        $self->control->discover_dependencies(
+            {   dir          => $self->main_dir,
+                verbose      => $self->cfg->verbose,
+                apt_contents => $self->apt_contents,
+                require_deps => $self->cfg->requiredeps,
+                wnpp_query   => $wnpp_query,
+            }
+        );
+    }
+    else {
+        warn "No APT contents can be loaded.\n";
+        warn "Please install 'apt-file' package and run 'apt-file update'\n";
+        warn "as root.\n";
+        warn "Dependencies not updated.\n";
+    }
+}
 
 =item discover_utility_deps
 

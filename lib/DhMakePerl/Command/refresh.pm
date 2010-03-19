@@ -80,27 +80,7 @@ sub execute {
         $self->write_source_format(
             catfile( $self->debian_dir, 'source', 'format' ) );
 
-        if ( my $apt_contents = $self->get_apt_contents ) {
-            $control->discover_dependencies(
-                {   dir          => $self->main_dir,
-                    verbose      => $self->cfg->verbose,
-                    apt_contents => $self->apt_contents,
-                    require_deps => $self->cfg->requiredeps,
-                    wnpp_query   => Debian::WNPP::Query->new(
-                        {   cache_file =>
-                                catfile( $self->cfg->home_dir, 'wnpp.cache' )
-                        }
-                    ),
-                }
-            );
-        }
-        else {
-            warn "No APT contents can be loaded.\n";
-            warn
-                "Please install 'apt-file' package and run 'apt-file update'\n";
-            warn "as root.\n";
-            warn "Dependencies not updated.\n";
-        }
+        $self->discover_dependencies;
 
         $self->discover_utility_deps($control);
         $control->prune_perl_deps();

@@ -126,18 +126,7 @@ sub execute {
     my $apt_contents = $self->get_apt_contents;
     my $src = $self->control->source;
 
-    $self->control->discover_dependencies(
-        {   dir          => $self->main_dir,
-            verbose      => $self->cfg->verbose,
-            apt_contents => $self->apt_contents,
-            require_deps => $self->cfg->requiredeps,
-            wnpp_query   => Debian::WNPP::Query->new(
-                {   cache_file =>
-                        catfile( $self->cfg->home_dir, 'wnpp.cache' )
-                }
-            ),
-        }
-    );
+    $self->discover_dependencies;
 
     $bin->Depends->add( $self->cfg->depends )
         if $self->cfg->depends;
