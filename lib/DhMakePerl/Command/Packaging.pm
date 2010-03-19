@@ -103,7 +103,7 @@ sub makefile_pl {
     return $self->main_file('Makefile.PL');
 }
 
-sub fill_maintainer {
+sub get_developer {
     my $self = shift;
 
     my $email = $self->cfg->email;
@@ -129,6 +129,10 @@ sub fill_maintainer {
 
     $email =~ s/^(.*)\s+<(.*)>$/$2/;
 
+    return "$name <$email>";
+}
+
+sub fill_maintainer {
     if ( $self->cfg->pkg_perl ) {
         my $old_maint = $self->control->source->Maintainer;
         $self->control->source->Maintainer(
