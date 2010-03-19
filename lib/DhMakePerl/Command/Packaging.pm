@@ -133,16 +133,24 @@ sub get_developer {
 }
 
 sub fill_maintainer {
-    if ( $self->cfg->pkg_perl ) {
-        my $old_maint = $self->control->source->Maintainer;
-        $self->control->source->Maintainer(
-            "Debian Perl Group <pkg-perl-maintainers\@lists.alioth.debian.org>"
-        );
+    my $self = shift;
 
-        $self->control->source->Uploaders->add($old_maint);
+    my $src = $self->control->source;
+    my $maint = $self->get_developer;
+
+    if ( $self->cfg->pkg_perl ) {
+        my $pkg_perl_maint
+            = "Debian Perl Group <pkg-perl-maintainers\@lists.alioth.debian.org>";
+        unless ( ( $src->Maintainer // '' ) eq $pkg_perl_maint ) {
+            my $old_maint = $src->Maintainer;
+            $src->Maintainer($pkg_perl_maint);
+            $src->Uploaders->add($old_maint) if $old_maint;
+        }
+
+        $src->Uploaders->add($maint);
     }
     else {
-        $self->control->source->Maintainer( "$name <$email>" );
+        $src->Maintainer($maint);
     }
 }
 
