@@ -465,7 +465,10 @@ sub extract_name_ver_from_makefile {
 
     $self->set_package_name;
 
-    $self->extract_desc("$dir/$vfrom") if defined $vfrom;
+    if ( defined($vfrom) ) {
+        $self->extract_desc("$dir/$vfrom");
+        $self->extract_basic_copyright("$dir/$vfrom");
+    }
 }
 
 sub extract_desc {
@@ -479,7 +482,7 @@ sub extract_desc {
     my ( $parser, $modulename );
     $parser = new DhMakePerl::PodParser;
     return unless -f $file;
-    $parser->set_names(qw(NAME DESCRIPTION DETAILS COPYRIGHT AUTHOR AUTHORS));
+    $parser->set_names(qw(NAME DESCRIPTION DETAILS));
     $parser->parse_from_file($file);
     if ( $desc ) {
 
@@ -533,26 +536,6 @@ sub extract_desc {
         );
     }
 
-    $self->copyright( $parser->get('COPYRIGHT')
-            || $parser->get('LICENSE')
-            || $parser->get('COPYRIGHT & LICENSE') )
-        unless $self->copyright;
-    if ( !$self->author ) {
-        if ( ref $self->meta->{author} ) {
-
-            # Does the author information appear in META.yml?
-            $self->author( join( ', ', @{ $self->meta->{author} } ) );
-        }
-        else {
-
-            # Get it from the POD - and clean up
-            # trailing/preceding spaces!
-            my $a = $parser->get('AUTHOR') || $parser->get('AUTHORS');
-            $a =~ s/^\s*(\S.*\S)\s*$/$1/gs if $a;
-            $self->author($a);
-        }
-    }
-
     $parser->cleanup;
 }
 
@@ -572,15 +555,45 @@ sub check_for_xs {
 }
 
 sub extract_basic_copyright {
-    my ($self) = @_;
+    my ( $self, $file ) = @_;
 
     for my $f ( map( $self->main_file($_), qw(LICENSE LICENCE COPYING) ) ) {
         if ( -f $f ) {
             my $fh = $self->_file_r($f);
-            return join( '', $fh->getlines );
+            $self->copyright( join( '', $fh->getlines ) );
         }
     }
-    return;
+
+    if ( defined($file) ) {
+        my ( $parser, $modulename );
+        $parser = new DhMakePerl::PodParser;
+        return unless -f $file;
+        $parser->set_names(qw(COPYRIGHT AUTHOR AUTHORS));
+        $parser->parse_from_file($file);
+
+        $self->copyright( $parser->get('COPYRIGHT')
+                || $parser->get('LICENSE')
+                || $parser->get('COPYRIGHT & LICENSE') )
+            unless $self->copyright;
+
+        if ( !$self->author ) {
+            if ( ref $self->meta->{author} ) {
+
+                # Does the author information appear in META.yml?
+                $self->author( join( ', ', @{ $self->meta->{author} } ) );
+            }
+            else {
+
+                # Get it from the POD - and clean up
+                # trailing/preceding spaces!
+                my $a = $parser->get('AUTHOR') || $parser->get('AUTHORS');
+                $a =~ s/^\s*(\S.*\S)\s*$/$1/gs if $a;
+                $self->author($a);
+            }
+        }
+
+        $parser->cleanup;
+    }
 }
 
 sub extract_docs {
