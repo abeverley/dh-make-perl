@@ -1060,8 +1060,6 @@ sub discover_dependencies {
             { cache_file => catfile( $self->cfg->home_dir, 'wnpp.cache' ) } )
             if $self->cfg->network;
 
-        warn 10;
-
         $self->control->discover_dependencies(
             {   dir          => $self->main_dir,
                 verbose      => $self->cfg->verbose,
