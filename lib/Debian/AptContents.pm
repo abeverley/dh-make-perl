@@ -399,7 +399,7 @@ Currently Debian has only two releases of Perl: 5.8.8 (5.008008) and 5.10
 
 =cut
 
-our @debian_perls = qw( 5.008008 5.010000 );
+our @debian_perls = qw( 5.008008 5.010000 5.010001 );
 
 sub find_core_perl_dependency {
     my ( $self, $module, $version ) = @_;
