@@ -50,6 +50,7 @@ use CPAN ();
 use Debian::Dependencies      ();
 use Debian::Dependency        ();
 use Debian::WNPP::Query;
+use DhMakePerl::Utils qw(is_core_module);
 use Email::Date::Format qw(email_date);
 use File::Basename qw( basename dirname );
 use File::Copy qw( copy move );
@@ -259,7 +260,7 @@ sub setup_dir {
         $orig_pwd = $ENV{'PWD'};
 
         # Is the module a core module?
-        if ( $self->is_core_module( $self->cfg->cpan ) ) {
+        if ( is_core_module( $self->cfg->cpan ) ) {
             die $self->cfg->cpan 
             . " is a standard module. Will not build without --core-ok.\n"
                 unless $self->cfg->core_ok;

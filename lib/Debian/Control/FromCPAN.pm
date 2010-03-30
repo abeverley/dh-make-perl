@@ -19,6 +19,7 @@ use Carp qw(croak);
 use base 'Debian::Control';
 
 use Debian::Version qw(deb_ver_cmp);
+use DhMakePerl::Utils qw(is_core_module);
 use File::Spec qw( catfile );
 use Module::Depends ();
 
@@ -251,7 +252,7 @@ sub find_debs_for_modules {
 
     foreach my $module ( keys(%$dep_hash) ) {
         my $dep;
-        if ( my $ver = $self->is_core_module( $module, $dep_hash->{$module} )
+        if ( my $ver = is_core_module( $module, $dep_hash->{$module} )
         ) {
             print "= $module is a core module\n" if $self->cfg->verbose;
 

@@ -48,7 +48,6 @@ Stores the configuration, an instance of L<DhMakePerl::Config>
 
 use Debian::AptContents ();
 use DhMakePerl::Config;
-use Module::CoreList ();
 use version          ();
 
 =item run( I<%init> )
@@ -84,28 +83,6 @@ sub run {
     my $self = $cmd_mod->new( \%c );
 
     return $self->execute;
-}
-
-=item is_core_module I<module>, I<version>
-
-Returns the version of the C<perl> package containing the given I<module> (at
-least version I<version>).
-
-Returns C<undef> if I<module> is not a core module.
-
-=cut
-
-sub is_core_module {
-    my ( $self, $module, $ver ) = @_;
-
-    my $v = Module::CoreList->first_release($module, $ver);   # 5.009002
-
-    return unless defined $v;
-
-    $v = version->new($v);                              # v5.9.2
-    ( $v = $v->normal ) =~ s/^v//;                      # "5.9.2"
-
-    return $v;
 }
 
 =item get_apt_contents

@@ -14,6 +14,8 @@ use strict; use warnings;
 
 use base 'DhMakePerl';
 
+use DhMakePerl::Utils qw(is_core_module);
+
 =head1 METHODS
 
 =over
@@ -43,7 +45,7 @@ EOF
     }
     my $mod = $ARGV[0];
 
-    if ( defined( my $core_since = $self->is_core_module($mod) ) ) {
+    if ( defined( my $core_since = is_core_module($mod) ) ) {
         print "$mod is in Perl core (package perl)";
         print $core_since ? " since $core_since\n" : "\n";
         return 0;
