@@ -62,10 +62,6 @@ use Text::Wrap qw( wrap );
 # TODO:
 # * get more info from the package (maybe using CPAN methods)
 
-# this is the version in 'oldstable'. No much point on depending on something
-# older
-use constant oldest_perl_version => '5.8.8-7';
-
 sub check_deprecated_overrides {
     my $self = shift;
 
