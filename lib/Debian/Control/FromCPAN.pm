@@ -259,7 +259,7 @@ sub find_debs_for_modules {
             $dep = Debian::Dependency->new( 'perl', $ver );
             $debs->add($dep)
                 if $dep->satisfies(
-                        "perl (>= " . $self->oldest_perl_version . ")"
+                        "perl (>= " . $self->oldstable_perl_version . ")"
                 );
 
             next;
