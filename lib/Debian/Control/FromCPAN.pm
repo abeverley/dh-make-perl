@@ -158,7 +158,7 @@ sub discover_dependencies {
 
     # run-time
     my ( $debs, $missing )
-        = $self->find_debs_for_modules( $deps->{requires}, $apt_contents );
+        = $self->find_debs_for_modules( $deps->{requires}, $apt_contents, $verbose );
 
     if (@$debs) {
         if ($verbose) {
@@ -177,7 +177,7 @@ sub discover_dependencies {
 
     # build-time
     my ( $b_debs, $b_missing )
-        = $self->find_debs_for_modules( $deps->{build_requires}, $apt_contents );
+        = $self->find_debs_for_modules( $deps->{build_requires}, $apt_contents, $verbose );
 
     if (@$b_debs) {
         if ($verbose) {
@@ -235,7 +235,7 @@ EOF
     }
 }
 
-=item find_debs_for_modules I<dep hash>[, APT contents]
+=item find_debs_for_modules I<dep hash>[, APT contents[, verbose ]]
 
 Scans the given hash of dependencies ( module => version ) and returns matching
 Debian package dependency specification (as an instance of
@@ -245,7 +245,7 @@ L<Debian::Dependencies> class) and a list of missing modules.
 
 sub find_debs_for_modules {
 
-    my ( $self, $dep_hash, $apt_contents ) = @_;
+    my ( $self, $dep_hash, $apt_contents, $verbose ) = @_;
 
     my @uses;
     my $debs = Debian::Dependencies->new();
@@ -254,7 +254,7 @@ sub find_debs_for_modules {
         my $dep;
         if ( my $ver = is_core_module( $module, $dep_hash->{$module} )
         ) {
-            print "= $module is a core module\n" if $self->cfg->verbose;
+            print "= $module is a core module\n" if $verbose;
 
             $dep = Debian::Dependency->new( 'perl', $ver );
             $debs->add($dep)
@@ -284,7 +284,7 @@ sub find_debs_for_modules {
 
         if ($dep) {
             print "+ $module found in " . $dep->pkg ."\n"
-                if $self->cfg->verbose;
+                if $verbose;
         }
         else {
             print "- $module not found in any package\n";
