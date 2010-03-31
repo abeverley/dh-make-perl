@@ -29,6 +29,9 @@ None of he following functions is exported by default.
 Returns CPAN::Module object that corresponds to the supplied argument. Returns
 undef if no module is found by CPAN.
 
+If CPAN module needs to be configured in some way, that should be done before
+calling this function.
+
 =cut
 
 sub find_cpan_module {

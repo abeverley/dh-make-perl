@@ -1056,6 +1056,32 @@ sub explained_dependency {
     warn sprintf( "%s needs %s\n", $reason, join( ', ', @to_add ) );
 }
 
+=item configure_cpan
+
+Configure CPAN module. It is safe to call this method more than once, it will
+do nothing if CPAN is already configured.
+
+=cut
+
+sub configure_cpan {
+    my $self = shift;
+
+    return if $CPAN::Config_loaded;
+
+    CPAN::Config->load( be_silent => not $self->cfg->verbose );
+
+    unshift( @{ $CPAN::Config->{'urllist'} }, $self->cfg->cpan_mirror )
+        if $self->cfg->cpan_mirror;
+
+    $CPAN::Config->{'build_dir'}         = $ENV{'HOME'} . "/.cpan/build";
+    $CPAN::Config->{'cpan_home'}         = $ENV{'HOME'} . "/.cpan/";
+    $CPAN::Config->{'histfile'}          = $ENV{'HOME'} . "/.cpan/history";
+    $CPAN::Config->{'keep_source_where'} = $ENV{'HOME'} . "/.cpan/source";
+    $CPAN::Config->{'tar_verbosity'}     = $self->cfg->verbose ? 'v' : '';
+    $CPAN::Config->{'load_module_verbosity'}
+        = $self->cfg->verbose ? 'verbose' : 'silent';
+}
+
 =item discover_dependencies
 
 Just a wrapper around $self->control->discover_dependencies which provides the
@@ -1072,6 +1098,9 @@ sub discover_dependencies {
             = Debian::WNPP::Query->new(
             { cache_file => catfile( $self->cfg->home_dir, 'wnpp.cache' ) } )
             if $self->cfg->network;
+
+        # control->discover_dependencies needs configured CPAN
+        $self->cofigure_cpan;
 
         $self->control->discover_dependencies(
             {   dir          => $self->main_dir,
