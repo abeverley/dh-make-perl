@@ -50,7 +50,7 @@ use CPAN ();
 use Debian::Dependencies      ();
 use Debian::Dependency        ();
 use Debian::WNPP::Query;
-use DhMakePerl::Utils qw(is_core_module);
+use DhMakePerl::Utils qw( find_cpan_module is_core_module );
 use Email::Date::Format qw(email_date);
 use File::Basename qw( basename dirname );
 use File::Copy qw( copy move );
@@ -210,40 +210,6 @@ sub configure_cpan {
         = $self->cfg->verbose ? 'verbose' : 'silent';
 }
 
-=item find_cpan_module
-
-Returns CPAN::Module object that corresponds to the supplied argument. Returns undef if no module is found by CPAN.
-
-=cut
-
-sub find_cpan_module {
-    my( $self, $name ) = @_;
-
-    my $mod;
-
-    # expand() returns a list of matching items when called in list
-    # context, so after retrieving it, we try to match exactly what
-    # the user asked for. Specially important when there are
-    # different modules which only differ in case.
-    #
-    # This Closes: #451838
-    my @mod = CPAN::Shell->expand( 'Module', '/^' . $name . '$/' );
-
-    foreach (@mod) {
-        my $file = $_->cpan_file();
-        $file =~ s#.*/##;          # remove directory
-        $file =~ s/(.*)-.*/$1/;    # remove version and extension
-        $file =~ s/-/::/g;         # convert dashes to colons
-        if ( $self->cfg->cpan and $file eq $self->cfg->cpan ) {
-            $mod = $_;
-            last;
-        }
-    }
-    $mod = shift @mod unless ($mod);
-
-    return $mod;
-}
-
 sub setup_dir {
     my ($self) = @_;
 
@@ -264,7 +230,7 @@ sub setup_dir {
 
         $self->configure_cpan;
 
-        $mod = $self->find_cpan_module( $self->cfg->cpan )
+        $mod = find_cpan_module( $self->cfg->cpan )
             or die "Can't find '" . $self->cfg->cpan . "' module on CPAN\n";
         $self->mod_cpan_version( $mod->cpan_version );
 

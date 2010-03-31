@@ -18,8 +18,9 @@ use Carp qw(croak);
 
 use base 'Debian::Control';
 
+use CPAN ();
 use Debian::Version qw(deb_ver_cmp);
-use DhMakePerl::Utils qw(is_core_module);
+use DhMakePerl::Utils qw( is_core_module find_cpan_module );
 use File::Spec qw( catfile );
 use Module::Depends ();
 
@@ -290,7 +291,7 @@ sub find_debs_for_modules {
             print "- $module not found in any package\n";
             push @missing, $module;
 
-            my $mod = $self->find_cpan_module($module);
+            my $mod = find_cpan_module($module);
             if ($mod) {
                 ( my $dist = $mod->distribution->base_id ) =~ s/-v?\d[^-]*$//;
                 my $pkg = 'lib' . lc($dist) . '-perl';

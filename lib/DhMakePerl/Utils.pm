@@ -12,7 +12,7 @@ DhMakePerl::Utils - helper routined for dh-make-perl and alike
 
 =cut
 
-our @EXPORT_OK = qw( is_core_module );
+our @EXPORT_OK = qw( find_cpan_module is_core_module );
 
 use base Exporter;
 
@@ -23,6 +23,41 @@ use Module::CoreList ();
 None of he following functions is exported by default.
 
 =over
+
+=item find_cpan_module
+
+Returns CPAN::Module object that corresponds to the supplied argument. Returns
+undef if no module is found by CPAN.
+
+=cut
+
+sub find_cpan_module {
+    my( $name ) = @_;
+
+    my $mod;
+
+    # expand() returns a list of matching items when called in list
+    # context, so after retrieving it, we try to match exactly what
+    # the user asked for. Specially important when there are
+    # different modules which only differ in case.
+    #
+    # This Closes: #451838
+    my @mod = CPAN::Shell->expand( 'Module', '/^' . $name . '$/' );
+
+    foreach (@mod) {
+        my $file = $_->cpan_file();
+        $file =~ s#.*/##;          # remove directory
+        $file =~ s/(.*)-.*/$1/;    # remove version and extension
+        $file =~ s/-/::/g;         # convert dashes to colons
+        if ( $file eq $name ) {
+            $mod = $_;
+            last;
+        }
+    }
+    $mod = shift @mod unless ($mod);
+
+    return $mod;
+}
 
 =item is_core_module I<module>, I<version>
 
