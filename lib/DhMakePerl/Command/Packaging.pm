@@ -21,6 +21,7 @@ __PACKAGE__->mk_accessors(
 
 use Array::Unique;
 use Carp qw(confess);
+use CPAN ();
 use Cwd qw( getcwd );
 use Debian::Control::FromCPAN;
 use Debian::Dependencies;
@@ -1100,7 +1101,7 @@ sub discover_dependencies {
             if $self->cfg->network;
 
         # control->discover_dependencies needs configured CPAN
-        $self->cofigure_cpan;
+        $self->configure_cpan;
 
         $self->control->discover_dependencies(
             {   dir          => $self->main_dir,
