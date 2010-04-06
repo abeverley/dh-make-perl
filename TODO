@@ -23,5 +23,8 @@
   libintl-perl, which has Locale::* modules.
   The way to solve this is perhaps to extract "package Foo::Bar" from all *.pm
   files and look them in the apt file contents. Lots of work for little gain.
+* package_already_exists(): improve the check by looking for the module name
+  (if --cpan was used). This would also find the existing package if its name
+  is different by the name of the just created package.
 * --refresh: add --only <file> option: done, but "--only control" also
   touches d/rules if quilt is used
