@@ -8,7 +8,7 @@ Debian::Control - manage Debian source package control files
     my $c = Debian::Control->new();         # construct a new
     $c->read($file);                        # parse debian/control file
     $c->write($file);                       # write to file
-    print $c->source->Package;
+    print $c->source->Source;
     print $c->source->Build_Depends;        # Debian::Dependencies object
     $c->binary->{'libfoo-perl'}->Description(
         "Foo Perl module\n" .
