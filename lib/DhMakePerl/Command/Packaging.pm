@@ -665,12 +665,7 @@ sub create_rules {
         return;
     }
 
-    # first close the currently open filehandle
-    $self->rules(undef);
-
     $self->backup_file($file);
-
-    $self->rules( Debian::Rules->new($file) );
 
     my $rulesname = 'rules.dh7.tiny';
 
@@ -680,10 +675,11 @@ sub create_rules {
     ) {
         if ( -e $source ) {
             print "Using rules: $source\n" if $self->cfg->verbose;
-            $self->rules->copy_from($source);
+            $self->rules->read($source);
             last;
         };
     }
+    $self->rules->write;
     chmod( 0755, $file ) or die "chmod($file): $!";
 }
 

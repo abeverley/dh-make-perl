@@ -19,6 +19,8 @@ Debian::Rules - handy manipulation of debian/rules
     $r->add_quilt;
     $r->drop_quilt;
 
+    $r->write;  # or undef($r);
+
 
 =head1 DESCRIPTION
 
@@ -27,11 +29,16 @@ Some times, one needs to know whether F<debian/rules> uses the L<debhelper(1)>
 provides facilities to check this, as well as adding/removing quilt
 integration.
 
+Modified contents are written to file either vie the L</write> method, or when
+the object reference goes out of scope (via DESTROY).
+
 =head1 CONSTRUCTOR
 
 C<new> is the standard L<Class::Accessor> constructor, with the exception that
 if only one, non-reference argument is provided, it is treated as a value for
 the L<filename> field.
+
+The constructor calls L</read> to read the file ccontents into memory.
 
 =head1 FIELDS
 
@@ -43,14 +50,13 @@ Contains the file name of the rules file.
 
 =item lines
 
-Reference to a tied (via <Tie::File>) array pointing to the rules file. Initialized by L</new>.
+Reference to an array pointing to the rules file. Initialized by L</new>.
 
 =back
 
 =cut
 
 use base 'Class::Accessor';
-use Tie::File;
 
 __PACKAGE__->mk_accessors(
     qw(filename lines _is_dh7tiny _is_quiltified _parsed));
@@ -68,10 +74,9 @@ sub new {
 
     $self->filename or die "'filename' is mandatory";
 
-    my @lines;
-    tie @lines, Tie::File, $self->filename;
+    $self->lines( [] );
 
-    $self->lines( \@lines );
+    $self->read;
 
     return $self;
 }
@@ -203,7 +208,7 @@ sub add_quilt {
 =item drop_quilt
 
 Removes L<quilt(1)> integration. Both debhelper 7 I<tiny> style (C<dh
---with=quilt>) and traditional (C<< $(QUILT_STAMPFN >> and C<unpatch>)
+--with=quilt>) and traditional (C<< $(QUILT_STAMPFN) >> and C<unpatch>)
 approaches are detected and removed.
 
 =cut
@@ -295,24 +300,61 @@ sub drop_quilt {
     }
 }
 
-=item copy_from I<filename>
+=item read [I<filename>]
 
-Replaces the current rules content with the content of I<filename>.
+Replaces the current rules content with the content of I<filename>. If I<filename> is not given, uses the value of the L</filename> member.
 
 =cut
 
-sub copy_from {
-    my ( $self, $filename ) = @_;
+sub read {
+    my $self = shift;
+    my $filename = shift // $self->filename;
+
+    @{ $self->lines } = ();
+    $self->_parsed(0);
+
+    return unless -e $filename;
 
     my $fh;
     open( $fh, '<', $filename ) or die "open($filename): $!";
-    @{ $self->lines } = ();
     while( defined( $_ = <$fh> ) ) {
         push @{ $self->lines }, $_;
     }
-    $self->_parsed(0);
+    close $fh;
+}
 
-    ( tied @{ $self->lines } )->flush;
+=item write [I<filename>]
+
+Writes the in-memory contents I<filename>. If not given, uses the value of the
+L</filename> member.
+
+If L</lines> points to an empty array, the file is removed.
+
+=cut
+
+sub write {
+    my $self = shift;
+    my $filename = shift // $self->filename;
+
+    if ( @{ $self->lines } ) {
+        open my $fh, '>', $filename
+            or die "Error opening '$filename': $!";
+
+        print $fh $_ for @{ $self->lines };
+
+        close $fh;
+    }
+    else {
+        unlink $filename or die "unlink($filename): $!";
+    }
+}
+
+sub DESTROY {
+    my $self = shift;
+
+    $self->write;
+
+    $self->SUPER::DESTROY;
 }
 
 =back
