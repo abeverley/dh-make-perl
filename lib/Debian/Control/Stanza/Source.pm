@@ -66,7 +66,6 @@ use constant fields => qw (
     Source Section Priority Build_Depends Build_Depends_Indep Build_Conflicts
     Build_Conflicts_Indep Maintainer Uploaders
     Standards_Version Homepage Vcs_Svn Vcs_Git Vcs_Bzr Vcs_CVS Vcs_Browser
-    Homepage
 );
 
 =head1 CONSTRUCTOR
