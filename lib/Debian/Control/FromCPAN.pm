@@ -183,7 +183,7 @@ sub discover_dependencies {
     if (@$b_debs) {
         if ($verbose) {
             print "\n";
-            print "Needs the following debian packages for during building: "
+            print "Needs the following debian packages during building: "
                 . join( ", ", @$b_debs ) . "\n";
         }
         if ( $self->is_arch_dep ) {
