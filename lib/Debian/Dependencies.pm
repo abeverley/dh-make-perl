@@ -136,9 +136,11 @@ sub _eq {
 
 =over 4
 
-=item add( I<dependency> )
+=item add( I<dependency>[, ... ] )
 
-Adds I<dependency> to the list of dependencies. If the new dependency is a subset of or overlaps some of the old dependencies, it is not duplicated.
+Adds I<dependency> (or a list of) to the list of dependencies. If the new
+dependency is a subset of or overlaps some of the old dependencies, it is not
+duplicated.
 
     my $d = Debian::Dependencies('foo, bar (<=4)');
     $d->add('foo (>= 4), bar');
@@ -151,12 +153,14 @@ instance of the L<Debian::Dependencies> class).
 =cut
 
 sub add {
-    my( $self, $dep ) = @_;
+    my $self = shift;
 
-    $dep = Debian::Dependencies->new($dep)
-        unless ref($dep);
+    while ( defined(my $dep = shift) ) {
+        $dep = Debian::Dependencies->new($dep)
+            unless ref($dep);
 
-    $self += $dep;
+        $self += $dep;
+    }
 }
 
 =item remove( I<dependency>, ... )
