@@ -476,7 +476,7 @@ For example C<5.010> (and C<5.01>) is converted to C<5.10>.
 sub nice_perl_ver {
     my( $self, $v ) = @_;
 
-    if( $v =~ /\.(\d+)$/ ) {
+    if( $v =~ /\.(\d+)$/ and $v !~ /\..+\./ ) { # do nothing for 5.9.1
         my $minor = $1;
         if( length($minor) % 3 ) {
             # right-pad with zeroes so that the number of digits after the dot

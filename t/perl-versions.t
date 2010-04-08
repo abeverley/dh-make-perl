@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 21;
+use Test::More tests => 22;
 
 BEGIN {
     use_ok('Debian::Control::FromCPAN');
@@ -35,3 +35,5 @@ check( '5.009004', '5.9.4' );
 check( '5.009005', '5.9.5' );
 check( '5.01'    , '5.10'  );
 check( '5.010000', '5.10.0');
+
+check( '5.9.1', '5.9.1' );
