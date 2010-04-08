@@ -193,7 +193,8 @@ usr/share/man/man3/MooseX::StrictConstructor.3pm.gz	    perl/libmoosex-strictcon
 usr/share/man/man3/MooseX::StrictConstructor::Role::Meta::Method::Constructor.3pm.gz perl/libmoosex-strictconstructor-perl
 usr/share/man/man3/MooseX::StrictConstructor::Role::Object.3pm.gz perl/libmoosex-strictconstructor-perl
 usr/share/man/man3/Test::Moose.3pm.gz			    perl/libmoose-perl
-usr/share/perl5/Moose.pm				    perl/libmoose-perl
+# the following line is mangled on purpose in order to test stripping
+usr/share/perl5/Moose.pm				    moose/perl/libmoose-perl
 usr/share/perl5/Moose/Cookbook.pod			    perl/libmoose-perl
 usr/share/perl5/Moose/Cookbook/Basics/Recipe1.pod	    perl/libmoose-perl
 usr/share/perl5/Moose/Cookbook/Basics/Recipe10.pod	    perl/libmoose-perl

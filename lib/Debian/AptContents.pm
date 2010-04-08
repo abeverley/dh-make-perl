@@ -384,7 +384,9 @@ sub find_file_packages {
                                                # comma-delimitted list
                                                # of packages
 
-    s{[^/]+/}{} for @packages;                 # remove section
+    s{.+/}{} for @packages;                    # remove section. Greedy on purpose
+                                               # otherwise it won't strip enough off Ubuntu's
+                                               # usr/share/perl5/Config/Any.pm  universe/perl/libconfig-any-perl
 
     return @packages;
 }
