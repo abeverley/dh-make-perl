@@ -166,6 +166,16 @@ sub execute {
     $self->discover_utility_deps( $self->control );
     $src->Standards_Version( $self->debstdversion );
     $src->Homepage( $self->upsurl );
+    if ( $self->cfg->pkg_perl and my $cpan = $self->cfg->cpan ) {
+        $self->control->source->Vcs_Svn(
+            sprintf( "svn://svn.debian.org/pkg-perl/trunk/%s/",
+                $self->pkgname )
+        );
+        $self->control->source->Vcs_Browser(
+            sprintf( "http://svn.debian.org/viewsvn/pkg-perl/trunk/%s/",
+                $self->pkgname )
+        );
+    }
     $self->control->write( $self->debian_file('control') );
 
     $self->create_compat( $self->debian_file('compat') );
