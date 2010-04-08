@@ -366,7 +366,7 @@ sub create_changelog {
     $fh->printf( "%s (%s) %s; urgency=low\n",
         $self->srcname, $self->pkgversion, $changelog_dist );
     $fh->print("\n  * Initial Release.$closes\n\n");
-    $fh->printf( " -- %s  %s\n", $self->control->source->Maintainer,
+    $fh->printf( " -- %s  %s\n", $self->get_developer,
         email_date(time) );
 
     #$fh->print("Local variables:\nmode: debian-changelog\nEnd:\n");
