@@ -34,6 +34,7 @@ use Debian::Dependency;
 use Debian::Version qw(deb_ver_cmp);
 use File::Spec::Functions qw( catfile catdir splitpath );
 use IO::Uncompress::Gunzip;
+use List::MoreUtils qw(uniq);
 use Module::CoreList ();
 use Storable;
 use AptPkg::Config;
@@ -237,7 +238,7 @@ sub get_contents_files {
         }
     }
 
-    return [ sort @res ];
+    return [ uniq sort @res ];
 }
 
 =item read_cache

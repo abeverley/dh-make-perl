@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 20;
+use Test::More tests => 21;
 
 BEGIN {
     use_ok 'Debian::AptContents';
@@ -108,5 +108,12 @@ is_deeply(
     'Moose found by find_file_packages' );
 
 is( $apt_contents->find_perl_module_package('Moose'), 'libmoose-perl', 'Moose fund by module name' );
+
+is_deeply(
+    $apt_contents->get_contents_files,
+    [   "$Bin/contents/test_debian_dists_sid_Contents",
+        "$Bin/contents/test_debian_dists_testing_Contents"
+    ]
+);
 
 ok( unlink "$Bin/Contents.cache", 'Contents.cache unlnked' );
