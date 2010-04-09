@@ -16,6 +16,7 @@ use base 'DhMakePerl::Command::Packaging';
 use Debian::Control::FromCPAN;
 use Debian::WNPP::Query ();
 use File::Spec::Functions qw(catfile);
+use Tie::File;
 
 =head1 METHODS
 
