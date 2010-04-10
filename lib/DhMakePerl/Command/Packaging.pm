@@ -268,8 +268,6 @@ sub extract_basic {
     ) if $self->cfg->verbose;
     $self->debian_dir( $self->main_file('debian') );
 
-    $self->extract_basic_copyright();
-
     find(
         sub {
             $File::Find::name !~ $self->cfg->exclude
@@ -278,6 +276,15 @@ sub extract_basic {
         },
         $self->main_dir
     ) unless $bin->short_description and $bin->long_description;
+
+    find(
+        sub {
+            $File::Find::name !~ $self->cfg->exclude
+                && /\.(pm|pod)$/
+                && $self->extract_basic_copyright($_);
+        },
+        $self->main_dir
+    ) unless $self->author and $self->copyright;
 }
 
 sub extract_name_ver {
