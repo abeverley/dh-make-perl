@@ -35,11 +35,6 @@ Strange - Perl extension for blah blah blah
 
 =head1 DESCRIPTION
 
-Stub documentation for Strange was created by C<h2xs>. It looks like the
-author of the extension was negligent enough to leave the stub
-unedited.
-
-Blah blah blah.
 
 =head1 AUTHOR
 
