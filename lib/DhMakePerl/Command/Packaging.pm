@@ -483,9 +483,9 @@ sub extract_desc {
 
     $desc and return;
 
+    return unless -f $file;
     my ( $parser, $modulename );
     $parser = new DhMakePerl::PodParser;
-    return unless -f $file;
     $parser->set_names(qw(NAME DESCRIPTION DETAILS));
     $parser->parse_from_file($file);
     if ( $desc ) {
