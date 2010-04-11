@@ -529,11 +529,12 @@ sub extract_desc {
         $long_desc = fill( "", "", $long_desc );
     }
 
-    if ( defined($long_desc) && $long_desc !~ /^$/ ) {
+    if ( defined($long_desc) ) {
         $long_desc =~ s/^[\s\n]+//s;
         $long_desc =~ s/\s+$//s;
         $long_desc =~ s/^\t/ /mg;
         $long_desc =~ s/\r//g;
+        $long_desc = '(no description was found)' if $long_desc eq '';
 
         $bin->long_description(
             "$long_desc\n\nThis description was automagically extracted from the module by dh-make-perl.\n"
