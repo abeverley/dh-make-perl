@@ -270,21 +270,17 @@ sub extract_basic {
 
     find(
         sub {
-            $File::Find::name !~ $self->cfg->exclude
-                && /\.(pm|pod)$/
-                && $self->extract_desc($_);
-        },
-        $self->main_dir
-    ) unless $bin->short_description and $bin->long_description;
+            return if $File::Find::name =~ $self->cfg->exclude;
 
-    find(
-        sub {
-            $File::Find::name !~ $self->cfg->exclude
-                && /\.(pm|pod)$/
-                && $self->extract_basic_copyright($_);
+            if (/\.(pm|pod)$/) {
+                $self->extract_desc($_)
+                    unless $bin->short_description and $bin->long_description;
+                $self->extract_basic_copyright($_)
+                    unless $self->author and $self->copyright;
+            }
         },
         $self->main_dir
-    ) unless $self->author and $self->copyright;
+    );
 }
 
 sub extract_name_ver {
