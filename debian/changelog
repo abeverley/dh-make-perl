@@ -1,11 +1,18 @@
 dh-make-perl (0.66) UNRELEASED; urgency=low
 
+  * more code reorganisation
+
   * when detecting dependencies, use Module::Depends::Intrusive only if
     --intrusive is given
   * AptContents/find_file_packages: strip the full section off the package name
     Closes RT#56100. Thanks to Nicolas Mendoza
   * AptContents: avoid scanning the same Contents file multiple times. Thanks
     to Nicolas Mendoza
+  * No longer created an invalid debian/control if the extracted long
+    description is empty. Closes: #576878
+  * reorder fields when writing debian/control
+  * Dependencies->add now takes a list
+  * don't break perl versions like '5.9.1'
 
  -- Damyan Ivanov <dmn@debian.org>  Tue, 09 Mar 2010 08:46:09 +0200
 
