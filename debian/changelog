@@ -13,6 +13,8 @@ dh-make-perl (0.66) UNRELEASED; urgency=low
   * reorder fields when writing debian/control
   * Dependencies->add now takes a list
   * don't break perl versions like '5.9.1'
+  * core module checks now return perl package versions suitable for
+    dependencies. Closes: #571642. Thanks to Josef Kutej.
 
  -- Damyan Ivanov <dmn@debian.org>  Tue, 09 Mar 2010 08:46:09 +0200
 
