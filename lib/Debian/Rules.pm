@@ -361,7 +361,7 @@ sub DESTROY {
 
     $self->write if $self->filename;
 
-    $self->SUPER::DESTROY;
+    bless $self, 'Class::Accessor'; # chain destruction
 }
 
 =back
