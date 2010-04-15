@@ -105,7 +105,7 @@ sub parse {
     $self->_is_quiltified(0);
 
     for ( my $i = 1; $i < @{ $self->lines }; $i++ ) {
-        if (    $self->lines->[$i] eq '%:'
+        if (    $self->lines->[$i] =~ /^%:/
             and $i + 1 < @{ $self->lines }
             and $self->lines->[ $i + 1 ] =~ /^\tdh .*\$\@/ )
         {
