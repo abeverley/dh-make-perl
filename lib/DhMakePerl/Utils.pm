@@ -9,10 +9,11 @@ DhMakePerl::Utils - helper routined for dh-make-perl and alike
     use DhMakePerl::Utils qw(is_core_module);
 
     my $v = is_core_module('Test::More', '1.002');
+    my $v = nice_perl_ver('5.010001');
 
 =cut
 
-our @EXPORT_OK = qw( find_cpan_module is_core_module );
+our @EXPORT_OK = qw( find_cpan_module is_core_module nice_perl_ver );
 
 use base Exporter;
 
@@ -80,6 +81,35 @@ sub is_core_module {
 
     $v = version->new($v);                              # v5.9.2
     ( $v = $v->normal ) =~ s/^v//;                      # "5.9.2"
+
+    return $v;
+}
+
+=item nice_perl_ver I<version_string>
+
+Reformats perl version to match Debian's perl package versions.
+
+For example C<5.010> (and C<5.01>) is converted to C<5.10>.
+
+=cut
+
+sub nice_perl_ver {
+    my( $v ) = @_;
+
+    if( $v =~ /\.(\d+)$/ and $v !~ /\..+\./ ) { # do nothing for 5.9.1
+        my $minor = $1;
+        if( length($minor) % 3 ) {
+            # right-pad with zeroes so that the number of digits after the dot
+            # is a multiple of 3
+            $minor .= '0' x ( 3 - length($minor) % 3 );
+        }
+
+        my $ver = 0 + substr( $minor, 0, 3 );
+        if( length($minor) > 3 ) {
+            $ver .= '.' . ( 0 + substr( $minor, 3 ) );
+        }
+        $v =~ s/\.\d+$/.$ver/;
+    }
 
     return $v;
 }

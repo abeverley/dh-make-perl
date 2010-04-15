@@ -6,13 +6,13 @@ use warnings;
 use Test::More tests => 22;
 
 BEGIN {
-    use_ok('Debian::Control::FromCPAN');
+    use_ok('DhMakePerl::Utils');
 };
 
 sub check {
     my( $src, $dst ) = @_;
 
-    is( Debian::Control::FromCPAN->nice_perl_ver($src), $dst, "perl version '$src' corresponds to Debian package version '$dst'" );
+    is( DhMakePerl::Utils::nice_perl_ver($src), $dst, "perl version '$src' corresponds to Debian package version '$dst'" );
 }
 
 check( '5.006002', '5.6.2' );
