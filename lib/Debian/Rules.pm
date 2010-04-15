@@ -305,7 +305,8 @@ sub drop_quilt {
 
 =item read [I<filename>]
 
-Replaces the current rules content with the content of I<filename>. If I<filename> is not given, uses the value of the L</filename> member.
+Replaces the current rules content with the content of I<filename>. If
+I<filename> is not given, uses the value of the L</filename> member.
 
 =cut
 
