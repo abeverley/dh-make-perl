@@ -409,14 +409,14 @@ sub find_core_perl_dependency {
 
     # see if the module is included in perl core
     my $core_ver;
-    for (@debian_perls) {
-        my $core = Module::CoreList->find_version($_);
+    for my $v (@debian_perls) {
+        my $core = Module::CoreList->find_version($v);
         next unless exists $core->{$module};    # not in that perl version
 
-        # reaching here, the module is in the core version in $_
+        # reaching here, the module is in the core version in $v
         # if we don't need a particular version, we are done
         unless ( defined($version) ) {
-            $core_ver = $_;
+            $core_ver = $v;
             last;
         }
 
@@ -427,7 +427,7 @@ sub find_core_perl_dependency {
 
         # if the core module version is sufficiently new, we're done
         if ( deb_ver_cmp( $ver, $version ) >= 0 ) {
-            $core_ver = $_;
+            $core_ver = $v;
             last;
         }
     }
