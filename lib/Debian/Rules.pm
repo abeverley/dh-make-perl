@@ -38,7 +38,10 @@ C<new> is the standard L<Class::Accessor> constructor, with the exception that
 if only one, non-reference argument is provided, it is treated as a value for
 the L<filename> field.
 
-The constructor calls L</read> to read the file ccontents into memory.
+If a file name is given, the constructor calls L</read> to read the file
+contents into memory.
+
+One of B<filename> or B<lines> is mandatory.
 
 =head1 FIELDS
 
@@ -72,11 +75,11 @@ sub new {
 
     my $self = $class->SUPER::new(@params);
 
-    $self->filename or die "'filename' is mandatory";
+    $self->filename or $self->lines or die "'filename' or 'lines' is mandatory";
 
-    $self->lines( [] );
+    $self->lines( [] ) unless $self->lines;
 
-    $self->read;
+    $self->read if $self->filename;
 
     return $self;
 }
@@ -310,6 +313,8 @@ sub read {
     my $self = shift;
     my $filename = shift // $self->filename;
 
+    defined($filename) or die "No filename given to read() nor new()";
+
     @{ $self->lines } = ();
     $self->_parsed(0);
 
@@ -336,6 +341,8 @@ sub write {
     my $self = shift;
     my $filename = shift // $self->filename;
 
+    defined($filename) or die "No filename given to write() nor new()";
+
     if ( @{ $self->lines } ) {
         open my $fh, '>', $filename
             or die "Error opening '$filename': $!";
@@ -352,7 +359,7 @@ sub write {
 sub DESTROY {
     my $self = shift;
 
-    $self->write;
+    $self->write if $self->filename;
 
     $self->SUPER::DESTROY;
 }
