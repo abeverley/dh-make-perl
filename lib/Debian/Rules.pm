@@ -299,7 +299,14 @@ sub drop_quilt {
 
     # drop --with=quilt from dh command line
     for (@$lines) {
-        s/dh (.*)--with[= ]quilt\s*/dh $1/g;
+        while ( /dh (.*)--with[= ]quilt(.*)\n/ ) {
+            my ( $before, $after ) = ( $1, $2 );
+            $after =~ s/\s+$//;                         # remove trailing spaces
+            $after =~ s/^\s+// if $before =~ /\s$/;     # collapse adjascent spaces
+            $before =~ s/\s+$// if $after eq '';        # more trailing spaces
+            $after =~ s/^\s+// if $before eq '';        # extra leading space
+            s/dh (.*)--with[= ]quilt(.*)\n/dh $before$after\n/;
+        }
     }
 }
 
