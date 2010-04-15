@@ -18,6 +18,8 @@ dh-make-perl (0.66) UNRELEASED; urgency=low
   * rewrite core module dependency discovery
     Closes: #571646 -- "Depends: perl (>= 5.11.4)" as result of
     is_core_module(); Thanks to Josef Kutej
+    Also Closes: #571642 -- nice_perl_ver() should be also used for
+    is_core_module() dependencies; Thanks to Josef Kutej
 
  -- Damyan Ivanov <dmn@debian.org>  Tue, 09 Mar 2010 08:46:09 +0200
 
