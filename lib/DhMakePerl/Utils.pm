@@ -109,6 +109,8 @@ sub nice_perl_ver {
             $ver .= '.' . ( 0 + substr( $minor, 3 ) );
         }
         $v =~ s/\.\d+$/.$ver/;
+
+        $v .= '.0' if $v =~ /^\d+\.\d+$/;   # force three-component version
     }
 
     return $v;
