@@ -428,6 +428,9 @@ sub find_perl_module_package {
         else                     { return $a cmp $b; }    # or 0?
     } @matches;
 
+    # we don't want perl, perl-base and perl-modules here
+    @matches = grep { !/^perl(?:-(?:base|modules))?$/ } @matches;
+
     my $direct_dep;
     $direct_dep = Debian::Dependency->new(
           ( @matches > 1 )
