@@ -20,6 +20,9 @@ dh-make-perl (0.66) UNRELEASED; urgency=low
     is_core_module(); Thanks to Josef Kutej
     Also Closes: #571642 -- nice_perl_ver() should be also used for
     is_core_module() dependencies; Thanks to Josef Kutej
+  * when more than one package contain a given depended-on module, create
+    alternative dependencies.
+    Closes: #548367 -- detect alternative dependencies; Thanks to Slaven Rezic
 
  -- Damyan Ivanov <dmn@debian.org>  Tue, 09 Mar 2010 08:46:09 +0200
 
