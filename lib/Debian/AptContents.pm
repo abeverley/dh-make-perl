@@ -43,6 +43,8 @@ use AptPkg::Config;
 
 $AptPkg::Config::_config->init();
 
+our $oldstable_perl = '5.8.8';
+
 =head1 CONSTRUCTOR
 
 =over
@@ -441,6 +443,16 @@ sub find_perl_module_package {
     my $running_perl = $Config::Config{version};
 
     if ($core_dep) {
+
+        # the core dependency is satosfied by oldstable?
+        if ( deb_ver_cmp( $core_dep->ver, $oldstable_perl ) <= 0 ) {
+            # drop the direct dependency and remove the version
+            undef($direct_dep);
+
+            $core_dep->ver(undef);
+            $core_dep->rel(undef);
+        }
+
         if ($direct_dep) {
             # both in core and in a package.
             if( deb_ver_cmp($running_perl, $core_dep->ver) >= 0 ) {
