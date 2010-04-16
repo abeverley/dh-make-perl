@@ -429,10 +429,11 @@ sub find_perl_module_package {
     } @matches;
 
     my $direct_dep;
-    $direct_dep
-        = Debian::Dependency->new(
-        [ map ( { pkg => $_, rel => '>=', ver => $version }, @matches ) ] )
-        if @matches;
+    $direct_dep = Debian::Dependency->new(
+          ( @matches > 1 )
+        ? [ map ( { pkg => $_, rel => '>=', ver => $version }, @matches ) ]
+        : ( $matches[0], $version )
+    ) if @matches;
 
     my $running_perl = $Config::Config{version};
 
