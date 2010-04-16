@@ -1475,3 +1475,4 @@ usr/share/ri/1.9.0/system/URI/join-c.yaml		    interpreters/ri1.9
 usr/share/ri/1.9.0/system/URI/parse-c.yaml		    interpreters/ri1.9
 usr/share/ri/1.9.0/system/URI/regexp-c.yaml		    interpreters/ri1.9
 usr/share/ri/1.9.0/system/URI/split-c.yaml		    interpreters/ri1.9
+usr/lib/perl5/GD.pm					    libgd-gd2-noxpm-perl,libgd-gd2-perl

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 21;
+use Test::More tests => 22;
 
 BEGIN {
     use_ok 'Debian::AptContents';
@@ -114,6 +114,12 @@ is_deeply(
     [   "$Bin/contents/test_debian_dists_sid_Contents",
         "$Bin/contents/test_debian_dists_testing_Contents"
     ]
+);
+
+is_deeply(
+    [ $apt_contents->find_file_packages('GD.pm') ],
+    [ 'libgd-gd2-noxpm-perl', 'libgd-gd2-perl' ],
+    "GD.pm is in libdg-gd2[-noxpm]-perl"
 );
 
 ok( unlink "$Bin/Contents.cache", 'Contents.cache unlnked' );
