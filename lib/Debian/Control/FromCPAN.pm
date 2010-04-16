@@ -284,7 +284,7 @@ sub find_debs_for_modules {
         }
 
         if ($dep) {
-            print "+ $module found in " . $dep->pkg ."\n"
+            print "+ $module found in $dep\n"
                 if $verbose;
         }
         else {
