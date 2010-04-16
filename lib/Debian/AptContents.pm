@@ -423,9 +423,9 @@ sub find_perl_module_package {
 
     # rank non -perl packages lower
     @matches = sort {
-        if    ( $a !~ /-perl: / ) { return 1; }
-        elsif ( $b !~ /-perl: / ) { return -1; }
-        else                      { return $a cmp $b; }    # or 0?
+        if    ( $a !~ /-perl$/ ) { return 1; }
+        elsif ( $b !~ /-perl$/ ) { return -1; }
+        else                     { return $a cmp $b; }    # or 0?
     } @matches;
 
     my $direct_dep;
