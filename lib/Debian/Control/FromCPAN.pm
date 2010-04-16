@@ -248,44 +248,33 @@ sub find_debs_for_modules {
 
     my ( $self, $dep_hash, $apt_contents, $verbose ) = @_;
 
-    my @uses;
     my $debs = Debian::Dependencies->new();
-
-    foreach my $module ( keys(%$dep_hash) ) {
-        my $dep;
-        if ( my $ver = is_core_module( $module, $dep_hash->{$module} )
-        ) {
-            print "= $module is a core module\n" if $verbose;
-
-            $dep = Debian::Dependency->new( 'perl', $ver );
-            $debs->add($dep)
-                if $dep->satisfies(
-                        "perl (>= " . $self->oldstable_perl_version . ")"
-                );
-
-            next;
-        }
-
-        push @uses, $module;
-    }
 
     my @missing;
 
-    foreach my $module (@uses) {
+    while ( my ( $module, $version ) = each %$dep_hash ) {
 
         my $dep;
-        if ( $module eq 'perl' ) {
-            $dep = Debian::Dependency->new( 'perl',
-                nice_perl_ver( $dep_hash->{$module} ) );
+
+        if ($apt_contents) {
+            $dep = $apt_contents->find_perl_module_package( $module, $version );
         }
-        elsif ($apt_contents) {
-            $dep = $apt_contents->find_perl_module_package( $module,
-                $dep_hash->{$module} );
+        elsif ( my $ver = is_core_module( $module, $version ) ) {
+            $dep = Debian::Dependency->new( 'perl', $ver );
         }
 
         if ($dep) {
-            print "+ $module found in $dep\n"
-                if $verbose;
+            if ($verbose) {
+                my $mod_ver = join( " ", $module, $version || () );
+                if ( $dep->pkg and $dep->pkg eq 'perl' ) {
+                    print "= $mod_ver is in core";
+                    print " since " . $dep->ver if $dep->ver;
+                    print "\n";
+                }
+                else {
+                    print "+ $mod_ver found in $dep\n";
+                }
+            }
         }
         else {
             print "- $module not found in any package\n";
