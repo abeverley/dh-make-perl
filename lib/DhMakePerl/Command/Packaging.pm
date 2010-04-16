@@ -1191,7 +1191,7 @@ sub discover_utility_deps {
     for ( @{ $self->rules->lines } ) {
         $self->explained_dependency( 'dh --with', $deps,
             'debhelper (>= 7.0.8)' )
-            if /dh \s+.*--with/;
+            if /dh\s+.*--with/;
 
         $self->explained_dependency(
             'dh --with=quilt',
