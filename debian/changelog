@@ -23,6 +23,7 @@ dh-make-perl (0.66) UNRELEASED; urgency=low
   * when more than one package contain a given depended-on module, create
     alternative dependencies.
     Closes: #548367 -- detect alternative dependencies; Thanks to Slaven Rezic
+  * refresh: keep current source format unless --source-format is given
 
  -- Damyan Ivanov <dmn@debian.org>  Tue, 09 Mar 2010 08:46:09 +0200
 

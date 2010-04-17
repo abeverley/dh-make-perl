@@ -35,6 +35,21 @@ sub execute {
     print "Engaging refresh mode in " . $self->main_dir . "\n"
         if $self->cfg->verbose;
 
+    if ( not $self->cfg->_explicitly_set->{'source-format'}
+        and -e ( my $f = catfile( $self->debian_file('source'), 'format' ) ) )
+    {
+        open( my $fh, '<', $f ) or die "open($f): $!";
+        my $present = <$fh>;
+        close $fh;
+
+        chomp($present) if $present;
+        if ($present) {
+            $self->cfg->source_format($present);
+            print "Detected source format: $present\n"
+                if $self->cfg->verbose;
+        }
+    }
+
     $self->control->read( $self->debian_file('control') );
     $self->fill_maintainer;
     $self->process_meta;
