@@ -111,7 +111,7 @@ sub discover_dependencies {
             warn '=' x 70, "\n";
             warn "Failed to detect dependencies using Module::Depends.\n";
             warn "The error given was:\n";
-            warn "$@";
+            warn "$error";
         }
 
         if ( $intrusive ) {
