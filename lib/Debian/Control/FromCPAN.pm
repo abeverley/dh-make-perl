@@ -281,7 +281,7 @@ sub find_debs_for_modules {
             push @missing, $module;
 
             my $mod = find_cpan_module($module);
-            if ($mod) {
+            if ( $mod and $mod->distribution ) {
                 ( my $dist = $mod->distribution->base_id ) =~ s/-v?\d[^-]*$//;
                 my $pkg = 'lib' . lc($dist) . '-perl';
 
