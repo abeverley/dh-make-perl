@@ -1110,6 +1110,7 @@ sub discover_dependencies {
                 apt_contents => $self->apt_contents,
                 require_deps => $self->cfg->requiredeps,
                 wnpp_query   => $wnpp_query,
+                intrusive    => $self->cfg->intrusive,
             }
         );
     }
