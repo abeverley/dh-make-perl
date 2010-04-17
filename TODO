@@ -28,6 +28,3 @@
   is different by the name of the just created package.
 * --refresh: add --only <file> option: done, but "--only control" also
   touches d/rules if quilt is used
-* Refreshing libapp-nopaste-perl 0.20 in subversion gives errors:
-  Can't call method "base_id" on an undefined value at 
-  $path/dh-make-perl/lib/Debian/Control/FromCPAN.pm line 285.
