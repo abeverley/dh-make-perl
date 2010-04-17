@@ -49,7 +49,7 @@ my $builder = My::Builder->new(
         'Test::More'        => 0,
         'File::Touch'       => 0,
     },
-    add_to_cleanup      => [ 'DhMakePerl-*' ],
+    add_to_cleanup      => [ 'DhMakePerl-*', 'Build', '_build' ],
     script_files        => [ 'dh-make-perl' ],
     install_path        => {
         share   => '/usr/share/dh-make-perl',
