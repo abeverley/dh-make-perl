@@ -25,4 +25,5 @@ realclean distclean: clean
 	[ ! -e MANIFEST ] || rm MANIFEST
 	[ ! -e META.yml ] || rm META.yml
 
+.PHONY: all build install test orig dist manifest clean realclean distclean
 # vim: noet
