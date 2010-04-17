@@ -26,7 +26,7 @@ dh-make-perl (0.66-1) UNRELEASED; urgency=low
   * refresh: keep current source format unless --source-format is given
 
   * Going non-native
-  * rules: add --build-system=perl_build to dh
+  * rules: add --buildsystem=perl_build to dh
 
  -- Damyan Ivanov <dmn@debian.org>  Tue, 09 Mar 2010 08:46:09 +0200
 

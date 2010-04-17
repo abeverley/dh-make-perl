@@ -1,14 +1,14 @@
 #!/usr/bin/make -f
 
 %:
-	dh --build-system=perl_build $@
+	dh --buildsystem=perl_build $@
 
 override_dh_auto_test:
 # leave this here for Test::DistManifest..I want it to happen on package build but not on CPAN install.
 	NO_NETWORK=1 RELEASE_TESTING=1 dh_auto_test
 
 clean:
-	dh --build-system=perl_build clean
+	dh --buildsystem=perl_build clean
 
 	# clean after test packages
 	for i in Strange-0.1 Strange-2.1; do\
