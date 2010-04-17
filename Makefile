@@ -2,10 +2,10 @@
 
 PERL ?= /usr/bin/perl
 
+all: build
+
 Build: Build.PL
 	$(PERL) $<
-
-all: build
 
 build install test manifest: Build
 	./Build $@
