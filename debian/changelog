@@ -1,4 +1,4 @@
-dh-make-perl (0.66) UNRELEASED; urgency=low
+dh-make-perl (0.66-1) UNRELEASED; urgency=low
 
   * more code reorganisation
 
@@ -24,8 +24,8 @@ dh-make-perl (0.66) UNRELEASED; urgency=low
     alternative dependencies.
     Closes: #548367 -- detect alternative dependencies; Thanks to Slaven Rezic
   * refresh: keep current source format unless --source-format is given
-  * add a Makefile to help executing common tasks like building a tarball for
-    CPAN and running the test suite
+
+  * Going non-native
 
  -- Damyan Ivanov <dmn@debian.org>  Tue, 09 Mar 2010 08:46:09 +0200
 
