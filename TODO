@@ -28,3 +28,9 @@
   is different by the name of the just created package.
 * --refresh: add --only <file> option: done, but "--only control" also
   touches d/rules if quilt is used
+* #536838: Incorrect assumptions about perl module version -> debian package
+  version. Some way of figuring out that libfoo-perl 3.42 contains Bar::Baz
+  4.23 is needed. while not common, version discrepacy is very annoying.
+* #571632: META.yml dependency numbers with > or >= breaks the control
+  This probably means making use of Perl::PrereqScanner and
+  Version::Requirements
