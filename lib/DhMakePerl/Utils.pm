@@ -172,6 +172,12 @@ our %debian_perl = (
 sub find_core_perl_dependency {
     my ( $module, $version ) = @_;
 
+    if ( $module eq 'perl' ) {
+        return Debian::Dependency->new('perl') unless $version;
+
+        return Debian::Dependency->new( 'perl', nice_perl_ver($version) );
+    }
+
     my $perl_dep;
 
     my @perl_releases = core_module_perls( $module, $version );
