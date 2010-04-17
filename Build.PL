@@ -1,8 +1,9 @@
 use strict;
 use warnings;
-use Module::Build;
+use lib qw(privinc);
+use My::Builder;
 
-my $builder = Module::Build->new(
+my $builder = My::Builder->new(
     module_name         => 'DhMakePerl',
     license             => 'gpl',
     requires            => {
