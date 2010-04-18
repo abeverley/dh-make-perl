@@ -5,3 +5,4 @@
 ^blib
 ^Build$
 MANIFEST.bak
+^DhMakePerl-.*\.tar\.gz$
