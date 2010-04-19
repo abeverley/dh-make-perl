@@ -657,6 +657,16 @@ sub extract_examples {
     );
 }
 
+sub read_rules {
+    my $self = shift;
+
+    return if $self->rules;
+
+    my $file = $self->debian_file('rules');
+
+    $self->rules( Debian::Rules->new($file) );
+}
+
 sub create_rules {
     my ( $self ) = @_;
 

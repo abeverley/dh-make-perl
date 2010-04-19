@@ -120,6 +120,8 @@ documenting quilt usage.
 sub add_quilt {
     my( $self, $control ) = @_;
 
+    $self->read_rules;
+
     $self->rules->add_quilt;
 
     # README.source
@@ -176,6 +178,8 @@ target dependency) are supported.
 
 sub drop_quilt {
     my( $self, $control ) = @_;
+
+    $self->read_rules;
 
     $self->rules->drop_quilt;
 
