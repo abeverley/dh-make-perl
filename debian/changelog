@@ -1,4 +1,4 @@
-dh-make-perl (0.66-1) UNRELEASED; urgency=low
+dh-make-perl (0.66-1) unstable; urgency=low
 
   * more code reorganisation
 
@@ -29,7 +29,7 @@ dh-make-perl (0.66-1) UNRELEASED; urgency=low
   * rules: add --buildsystem=perl_build to dh
   * add debian/watch
 
- -- Damyan Ivanov <dmn@debian.org>  Tue, 09 Mar 2010 08:46:09 +0200
+ -- Damyan Ivanov <dmn@debian.org>  Mon, 19 Apr 2010 13:12:54 +0300
 
 dh-make-perl (0.65) unstable; urgency=low
 
