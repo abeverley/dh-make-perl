@@ -27,6 +27,7 @@ dh-make-perl (0.66-1) UNRELEASED; urgency=low
 
   * Going non-native
   * rules: add --buildsystem=perl_build to dh
+  * add debian/watch
 
  -- Damyan Ivanov <dmn@debian.org>  Tue, 09 Mar 2010 08:46:09 +0200
 

@@ -1,0 +1,3 @@
+version=2
+https://alioth.debian.org/frs/?group_id=30274 \
+    .+/dh-make-perl_([\d.]+)\.orig\.tar\.gz
