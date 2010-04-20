@@ -13,12 +13,17 @@ DhMakePerl::Utils - helper routined for dh-make-perl and alike
 
 =cut
 
-our @EXPORT_OK = qw( find_cpan_module
-                     is_core_module
-                     nice_perl_ver
-                     find_core_perl_dependency );
+our @EXPORT_OK = qw(
+    find_core_perl_dependency
+    find_cpan_module
+    is_core_module
+    nice_perl_ver
+    split_version_relation
+);
 
 use base Exporter;
+
+use 5.10.0;
 
 use Module::CoreList ();
 use Debian::Dependency;
@@ -199,6 +204,41 @@ sub find_core_perl_dependency {
 
     # not a core module
     return undef;
+}
+
+=item split_version_relation I<string>
+
+Splits the string, typicaly found in dependency fields' values in CPAN META
+into relation and version. If no relation is found in the string, C<< >= >> is
+assumed.
+
+Returns a list of relation and version. The relation is suitable for using in
+debian package dependency version requirements.
+
+For example
+
+=over
+
+=item split_version_relation('0.45') returns ( '>=', '0.45' )
+
+=item split_version_relation('< 0.56') returns ( '<<', '0.56' )
+
+=back
+
+=cut
+
+sub split_version_relation {
+    my $in = shift;
+
+    $in =~ s/^\s*([<>=!])\s*//;
+
+    my $rel = $1 // '>=';
+
+    $rel = '>>' if  $rel eq '>';
+
+    $rel = '<<' if $rel eq '<';
+
+    return ( $rel, $in );
 }
 
 =back

@@ -20,7 +20,7 @@ use base 'Debian::Control';
 
 use CPAN ();
 use Debian::Version qw(deb_ver_cmp);
-use DhMakePerl::Utils qw( is_core_module find_cpan_module nice_perl_ver );
+use DhMakePerl::Utils qw( is_core_module find_cpan_module nice_perl_ver split_version_relation );
 use File::Spec qw( catfile );
 use Module::Depends ();
 
@@ -254,6 +254,10 @@ sub find_debs_for_modules {
 
     while ( my ( $module, $version ) = each %$dep_hash ) {
 
+        my $ver_rel;
+
+        ( $ver_rel, $version ) = split_version_relation($version) if $version;
+
         my $dep;
 
         if ($apt_contents) {
@@ -263,9 +267,11 @@ sub find_debs_for_modules {
             $dep = Debian::Dependency->new( 'perl', $ver );
         }
 
+        $dep->rel($ver_rel) if $dep and $ver_rel;
+
+        my $mod_ver = join( " ", $module, $ver_rel, $version || () );
         if ($dep) {
             if ($verbose) {
-                my $mod_ver = join( " ", $module, $version || () );
                 if ( $dep->pkg and $dep->pkg eq 'perl' ) {
                     print "= $mod_ver is in core";
                     print " since " . $dep->ver if $dep->ver;
@@ -277,7 +283,7 @@ sub find_debs_for_modules {
             }
         }
         else {
-            print "- $module not found in any package\n";
+            print "- $mod_ver not found in any package\n";
             push @missing, $module;
 
             my $mod = find_cpan_module($module);
@@ -288,7 +294,7 @@ sub find_debs_for_modules {
                 print "   CPAN contains it in $dist\n";
                 print "   substituting package name of $pkg\n";
 
-                $dep = Debian::Dependency->new( $pkg, $dep_hash->{$module} );
+                $dep = Debian::Dependency->new( $pkg, $ver_rel, $version );
             }
             else {
                 print "   - it seems it is not available even via CPAN\n";
