@@ -267,7 +267,7 @@ sub find_debs_for_modules {
             $dep = Debian::Dependency->new( 'perl', $ver );
         }
 
-        $dep->rel($ver_rel) if $dep and $ver_rel;
+        $dep->rel($ver_rel) if $dep and $ver_rel and $dep->ver;
 
         my $mod_ver = join( " ", $module, $ver_rel, $version || () );
         if ($dep) {
