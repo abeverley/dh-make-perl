@@ -71,3 +71,4 @@ $list = Debian::Dependencies->new('foo (>= 1.2), bar');
 $list->remove('foo, bar (>= 2.0)');
 is( "$list", 'bar' );
 
+is( "".Debian::Dependency->new("\nlibapt-pkg-perl"), "libapt-pkg-perl" );

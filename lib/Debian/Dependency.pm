@@ -278,6 +278,7 @@ sub parse {
 
     if ($str =~ m{
             ^               # start from the beginning
+            \s*             # stray space
             ([^\(\s]+)      # package name - no paren, no space
             \s*             # oprional space
             (?:             # version is optional

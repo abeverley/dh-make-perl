@@ -4,3 +4,5 @@
         integration
 
     Add support for version relations in META
+
+    Debian::Dependency now survives being given a string with leading spaces
