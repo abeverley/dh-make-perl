@@ -509,15 +509,17 @@ sub extract_desc {
         $my_desc =~ s/\n.*$//s;
         $desc = $my_desc;
     }
-    else {
-        # have a fall-back for the short description
-        $desc = '(no short description found)';
+
+    if ( defined($desc) ) {
+        # Replace linefeeds (not followed by a space) in short description with
+        # spaces
+        $desc =~ s/\n(?=\S)/ /gs;
+        $desc =~ s/^\s+//;      # strip leading spaces
     }
 
-    # Replace linefeeds (not followed by a space) in short description with
-    # spaces
-    $desc =~ s/\n(?=\S)/ /gs;
-    $desc =~ s/^\s+//;      # strip leading spaces
+    # have a fall-back for the short description
+    $desc ||= '(no short description found)';
+
     $bin->short_description($desc);
 
     my $long_desc;
