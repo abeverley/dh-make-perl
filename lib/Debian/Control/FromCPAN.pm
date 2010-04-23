@@ -70,6 +70,9 @@ depeended upon packages.
 
 =back
 
+Returns a list of module names for which no suitable Debian packages were
+found.
+
 =cut
 
 sub discover_dependencies {
@@ -234,6 +237,8 @@ EOF
         }
 
     }
+
+    return @$missing;
 }
 
 =item find_debs_for_modules I<dep hash>[, APT contents[, verbose ]]

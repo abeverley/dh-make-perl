@@ -1099,6 +1099,8 @@ sub configure_cpan {
 Just a wrapper around $self->control->discover_dependencies which provides the
 right parameters to it.
 
+Returns a list of missing modules.
+
 =cut
 
 sub discover_dependencies {
@@ -1114,7 +1116,7 @@ sub discover_dependencies {
         # control->discover_dependencies needs configured CPAN
         $self->configure_cpan;
 
-        $self->control->discover_dependencies(
+        return $self->control->discover_dependencies(
             {   dir          => $self->main_dir,
                 verbose      => $self->cfg->verbose,
                 apt_contents => $self->apt_contents,
@@ -1129,6 +1131,8 @@ sub discover_dependencies {
         warn "Please install 'apt-file' package and run 'apt-file update'\n";
         warn "as root.\n";
         warn "Dependencies not updated.\n";
+
+        return ();
     }
 }
 
