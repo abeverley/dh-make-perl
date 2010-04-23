@@ -263,6 +263,8 @@ sub find_debs_for_modules {
 
         ( $ver_rel, $version ) = split_version_relation($version) if $version;
 
+        $version =~ s/^v// if $version;
+
         my $dep;
 
         if ($apt_contents) {
