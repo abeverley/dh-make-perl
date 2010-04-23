@@ -4,16 +4,6 @@
   May be similar to #525847
 * when ITP for the package is found, try to deduce short/long description from
   the bug report
-* add new command, --trace-depends. To be used like
-
-   dh-make-perl --trace-depends --cpan Foo-Bar
-
-  it shall output a tree-like structure of missing dependencies without
-  preparing any packaging yet
-
-  Ryan52 already has a program which does this, in svn as
-   ./scripts/cpan-unpackaged-deps.pl. Steal code. or wait for Ryan52
-   to eventually do it himself.
 * versioned dependencies should add the epochs too (found in
   libpoex-role-sessioninstantiation-perl, where META.yml and Build.PL
   request 'POE 1.005' which should translate to "libpoe-perl (>= 2:1.0050)")

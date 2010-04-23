@@ -76,7 +76,7 @@ sub check_deprecated_overrides {
 }
 
 sub execute {
-    my ($self) = @_;
+    my ( $self, $already_done ) = @_;
 
     die "CPANPLUS support disabled, sorry" if $self->cfg->cpanplus;
 
@@ -123,7 +123,7 @@ sub execute {
     my $apt_contents = $self->get_apt_contents;
     my $src = $self->control->source;
 
-    $self->discover_dependencies;
+    my @missing = $self->discover_dependencies;
 
     $bin->Depends->add( $self->cfg->depends )
         if $self->cfg->depends;
@@ -190,6 +190,29 @@ sub execute {
     print "--- Done\n" if $self->cfg->verbose;
 
     $self->package_already_exists($apt_contents);
+
+    if ( $self->cfg->recursive ) {
+        $already_done //= {};
+        my $mod_name = $self->perlname;
+        $mod_name =~ s/-/::/g;
+        $already_done->{$mod_name} = 1;
+
+        for my $m (@missing) {
+            next if exists $already_done->{$m};
+
+            if ( $self->cfg->verbose ) {
+                print "\n";
+                print "==================================\n";
+                print "  recursively building $m\n";
+                print "==================================\n";
+            }
+
+            my $new_cfg
+                = DhMakePerl::Config->new( { %{ $self->cfg }, cpan => $m, } );
+            my $maker = $self->new( { cfg => $new_cfg } );
+            $maker->execute($already_done)
+        }
+    }
 
     return(0);
 }

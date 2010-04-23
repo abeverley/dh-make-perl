@@ -6,3 +6,6 @@
     Add support for version relations in META
 
     Debian::Dependency now survives being given a string with leading spaces
+
+    make: implement recursive making of missing dependencies when --recursive
+        is given. (Debian bug #342751)

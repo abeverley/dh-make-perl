@@ -31,6 +31,7 @@ use constant options => (
     'nometa',          'notest',
     'only|o=s@',
     'packagename|p=s', 'pkg-perl!',
+    'recursive!',
     'requiredeps',     'sources-list=s',
     'source-format=s',
     'verbose!',        'version=s',

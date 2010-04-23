@@ -310,6 +310,17 @@ L<http://pkg-perl.alioth.debian.org>.
 Sets C<Maintainer>, C<Uploaders>, C<Vcs-Svn> and C<Vcs-Browser> fields in
 F<debian/control> accordingly.
 
+=item B<--recursive>
+
+Valid only in L</make> mode with L</--cpan> or I<directory> arguments. Causes
+dh-make-perl to try to create packaging (and possibly build and install the
+packages if L</--build> and L</--install> options are also given) for any
+dependencies which are missiing packages.
+
+This works like this: when the 'main' package is constructed, any missing
+packages are put in a list, and then the debianisaion procedure is run in turn
+on each of them, recursively.
+
 =item B<--requiredeps>
 
 Fail if a dependency Perl package was not found (dependency tracking
