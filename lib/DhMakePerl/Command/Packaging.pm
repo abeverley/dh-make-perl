@@ -509,6 +509,10 @@ sub extract_desc {
         $my_desc =~ s/\n.*$//s;
         $desc = $my_desc;
     }
+    else {
+        # have a fall-back for the short description
+        $desc = '(no short description found)';
+    }
 
     # Replace linefeeds (not followed by a space) in short description with
     # spaces
