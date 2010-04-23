@@ -59,9 +59,6 @@ use File::Spec::Functions qw( catfile );
 use Module::Depends            ();
 use Text::Wrap qw( wrap );
 
-# TODO:
-# * get more info from the package (maybe using CPAN methods)
-
 sub check_deprecated_overrides {
     my $self = shift;
 
