@@ -11,3 +11,9 @@
         is given. (Debian bug #342751)
 
     FromCPAN: remove leading 'v' from versions
+
+    add Debian::DpkgLists - 'dpkg -S' on steroids
+
+    FromCPAN: use Debian::DpkgLists as a last resort. This allows finding
+        dependencies that are present in locally-installed packages.
+        (Debian bug #478781)
