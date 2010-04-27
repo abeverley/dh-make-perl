@@ -1,3 +1,22 @@
+dh-make-perl (0.67-1) UNRELEASED; urgency=low
+
+  [ Damyan Ivanov ]
+  * documentation: drop "--" in front of the commands
+  * refresh: init ->rules before ->rules->drop_quilt
+  * FromCPAN: handle version relation in META dependencies. Closes: #571632
+  * do not populate dependency relation if there is no version
+    requirements
+  * Debian::Dependency now survives being given a string with leading
+    spaces
+  * make: implement --recursive. Creates debian/ for missing dependencies too.
+    Closes: #342751
+  * FromCPAN: drop leading 'v' from versions
+
+  [ Salvatore Bonaccorso ]
+  * fallback to  a dummy short description if none can be extracted
+
+ -- Damyan Ivanov <dmn@debian.org>  Tue, 27 Apr 2010 08:36:20 +0300
+
 dh-make-perl (0.66-1) unstable; urgency=low
 
   * more code reorganisation
