@@ -12,7 +12,7 @@ dh-make-perl (0.67-1) UNRELEASED; urgency=low
     Closes: #342751
   * FromCPAN: drop leading 'v' from versions
   * a new module, Debian:DpkgLists is used to scan dpkg's file lists as a last
-    resort for finding dependencies in locally-installed packahes (a-la dpkg
+    resort for finding dependencies in locally-installed packages (a-la dpkg
     -S). Closes: #478781
 
   [ Salvatore Bonaccorso ]
