@@ -18,3 +18,4 @@
 * #536838: Incorrect assumptions about perl module version -> debian package
   version. Some way of figuring out that libfoo-perl 3.42 contains Bar::Baz
   4.23 is needed. while not common, version discrepacy is very annoying.
+* use Dpkg::Version for version representation/comparison
