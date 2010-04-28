@@ -461,6 +461,19 @@ sub package_already_exists {
                 . $self->perlname . "\n";
         }
     }
+    else {
+        ( my $mod_name = $self->perlname ) =~ s/-/::/g;
+        require Debian::DpkgList;
+        my @found = Debian::DpkgList->scan_perl_mod($mod_name);
+
+        if (@found) {
+            warn "**********\n";
+            warn "NOTICE: the following locally installed package(s) already\n";
+            warn "        contain $mod_name\n";
+            warn "          ", join ( ', ', @found ), "\n";
+            $found = 1;
+        }
+    }
 
     return $found ? 1 : 0;
 }
