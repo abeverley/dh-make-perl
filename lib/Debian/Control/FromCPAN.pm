@@ -19,7 +19,6 @@ use Carp qw(croak);
 use base 'Debian::Control';
 
 use CPAN ();
-use Debian::DpkgLists;
 use Debian::Version qw(deb_ver_cmp);
 use DhMakePerl::Utils qw( is_core_module find_cpan_module nice_perl_ver split_version_relation );
 use File::Spec qw( catfile );
@@ -274,12 +273,15 @@ sub find_debs_for_modules {
         elsif ( my $ver = is_core_module( $module, $version ) ) {
             $dep = Debian::Dependency->new( 'perl', $ver );
         }
-        elsif ( my @pkgs = Debian::DpkgLists->scan_perl_mod($module) ) {
-            $dep = Debian::Dependency->new(
-                  ( @pkgs > 1 )
-                ? [ map { { pkg => $_, ver => $version } } @pkgs ]
-                : ( $pkgs[0], $version )
-            );
+        else {
+            require Debian::DpkgLists;
+            if ( my @pkgs = Debian::DpkgLists->scan_perl_mod($module) ) {
+                $dep = Debian::Dependency->new(
+                      ( @pkgs > 1 )
+                    ? [ map { { pkg => $_, ver => $version } } @pkgs ]
+                    : ( $pkgs[0], $version )
+                );
+            }
         }
 
         $dep->rel($ver_rel) if $dep and $ver_rel and $dep->ver;
