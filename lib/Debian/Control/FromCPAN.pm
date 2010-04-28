@@ -19,7 +19,6 @@ use Carp qw(croak);
 use base 'Debian::Control';
 
 use CPAN ();
-use Debian::Version qw(deb_ver_cmp);
 use DhMakePerl::Utils qw( is_core_module find_cpan_module nice_perl_ver split_version_relation );
 use File::Spec qw( catfile );
 use Module::Depends ();
@@ -387,7 +386,7 @@ sub prune_simple_perl_dep {
     my $unversioned = (
         not $dep->ver
             or $dep->rel =~ />/
-            and deb_ver_cmp( $dep->ver, $self->oldstable_perl_version ) <= 0
+            and $dep->ver <= $self->oldstable_perl_version
     );
 
     # if the dependency is considered unversioned, make sure there is no

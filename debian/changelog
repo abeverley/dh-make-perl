@@ -14,6 +14,8 @@ dh-make-perl (0.67-1) UNRELEASED; urgency=low
   * a new module, Debian:DpkgLists is used to scan dpkg's file lists as a last
     resort for finding dependencies in locally-installed packages (a-la dpkg
     -S). Closes: #478781
+  * Dependency: drop Debian::Version and use Dpkg::Version instances instead
+    + add (build-)dependency on libdpkg-perl
 
   [ Salvatore Bonaccorso ]
   * fallback to  a dummy short description if none can be extracted

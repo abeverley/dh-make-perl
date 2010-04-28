@@ -32,7 +32,6 @@ __PACKAGE__->mk_accessors(
 
 use Config;
 use Debian::Dependency;
-use Debian::Version qw(deb_ver_cmp);
 use DhMakePerl::Utils qw(find_core_perl_dependency);
 use File::Spec::Functions qw( catfile catdir splitpath );
 use IO::Uncompress::Gunzip;
@@ -445,7 +444,7 @@ sub find_perl_module_package {
     if ($core_dep) {
 
         # the core dependency is satosfied by oldstable?
-        if ( deb_ver_cmp( $core_dep->ver, $oldstable_perl ) <= 0 ) {
+        if ( $core_dep->ver <= $oldstable_perl ) {
             # drop the direct dependency and remove the version
             undef($direct_dep);
 
@@ -455,7 +454,7 @@ sub find_perl_module_package {
 
         if ($direct_dep) {
             # both in core and in a package.
-            if( deb_ver_cmp($running_perl, $core_dep->ver) >= 0 ) {
+            if( $running_perl >= $core_dep->ver ) {
                 return Debian::Dependency->new("$core_dep | $direct_dep");
             }
             else {

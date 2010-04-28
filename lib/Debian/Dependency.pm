@@ -5,7 +5,7 @@ use warnings;
 
 use AptPkg::Config;
 use Carp;
-use Debian::Version qw(deb_ver_cmp);
+use Dpkg::Version ();
 use List::MoreUtils qw(mesh);
 
 =head1 NAME
@@ -220,7 +220,7 @@ sub _compare {
 
     return 0 unless $left->ver; # both have no version
 
-    $res = deb_ver_cmp( $left->ver, $right->ver );
+    $res = $left->ver <=> $right->ver;
 
     return $res if $res != 0;
 
@@ -242,6 +242,9 @@ sub set {
     if $field eq 'ver'
         and defined($value)
         and $value =~ /^0[0.]*$/;
+
+    $value = Dpkg::Version->new( $value, check => 1 )
+        if $field eq 'ver' and defined($value);
 
     $self->SUPER::set( $field, $value );
 }

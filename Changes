@@ -17,3 +17,6 @@
     FromCPAN: use Debian::DpkgLists as a last resort. This allows finding
         dependencies that are present in locally-installed packages.
         (Debian bug #478781)
+
+    Dependency: the 'ver' member is an instance of Dpkg::Version
+        Use its ability to compare and drop Debian::Version

@@ -20,8 +20,36 @@ cmp_deeply(
     bless(
         [
             bless( { pkg=>'perl' }, 'Debian::Dependency' ),
-            bless( { pkg=>'libfoo-perl', rel=>'>=', ver=>'5.7' }, 'Debian::Dependency' ),
-            bless( { pkg=>'bar', rel=>'<=', ver=>'4' }, 'Debian::Dependency' ),
+            bless(
+                {   pkg => 'libfoo-perl',
+                    rel => '>=',
+                    ver => bless(
+                        {   version     => '5.7',
+                            epoch       => 0,
+                            revision    => 0,
+                            no_epoch    => 1,
+                            no_revision => 1
+                        },
+                        'Dpkg::Version'
+                    )
+                },
+                'Debian::Dependency'
+                ),
+            bless(
+                {   pkg => 'bar',
+                    rel => '<=',
+                    ver => bless(
+                        {   version     => '4',
+                            epoch       => 0,
+                            revision    => 0,
+                            no_epoch    => 1,
+                            no_revision => 1
+                        },
+                        'Dpkg::Version'
+                    )
+                },
+                'Debian::Dependency'
+                ),
         ],
         'Debian::Dependencies',
     ),
@@ -32,10 +60,17 @@ my $sum = $list + 'libsome-perl (>= 4.4)';
 cmp_deeply(
     $sum->[3],
     bless(
-        {
-            pkg=>'libsome-perl',
-            rel=>'>=',
-            ver=>'4.4',
+        {   pkg => 'libsome-perl',
+            rel => '>=',
+            ver => bless(
+                {   version     => '4.4',
+                    epoch       => 0,
+                    revision    => 0,
+                    no_epoch    => 1,
+                    no_revision => 1
+                },
+                'Dpkg::Version'
+            ),
         },
         'Debian::Dependency',
     ),

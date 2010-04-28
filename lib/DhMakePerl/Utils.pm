@@ -27,7 +27,6 @@ use 5.10.0;
 
 use Module::CoreList ();
 use Debian::Dependency;
-use Debian::Version qw(deb_ver_cmp);
 
 =head1 FUNCTIONS
 
@@ -165,12 +164,12 @@ module is not available in any perl released by Debian, return undef.
 
 our %debian_perl = (
     '5.8'   => {
-        min => '5.8.8',
-        max => '5.8.8',
+        min => Dpkg::Version->new('5.8.8'),
+        max => Dpkg::Version->new('5.8.8'),
     },
     '5.10'  => {
-        min => '5.10.0',
-        max => '5.10.1',
+        min => Dpkg::Version->new('5.10.0'),
+        max => Dpkg::Version->new('5.10.1'),
     },
 );
 
@@ -195,8 +194,8 @@ sub find_core_perl_dependency {
 
         # we want to avoid depending on things like 5.8.9 which aren't in
         # Debian and can contain stuff newer than in 5.10.0
-        if ( $debian_perl{$major}
-            and deb_ver_cmp( $debian_perl{$major}{max}, $v ) >= 0 )
+        if (    $debian_perl{$major}
+            and $debian_perl{$major}{max} >= $v )
         {
             return Debian::Dependency->new( 'perl', $v );
         }

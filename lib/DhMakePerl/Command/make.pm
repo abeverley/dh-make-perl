@@ -373,8 +373,9 @@ sub prune_deps(@) {
             my $cur_ver = $deps{$p};
 
             $deps{$p} = $v
-                if defined($v) and not defined($cur_ver)
-                    or deb_ver_cmp( $cur_ver, $v ) < 0;
+                if defined($v)
+                    and ( not defined($cur_ver)
+                        or $cur_ver < $v );
         }
         else {
             $deps{$p} = $v;
