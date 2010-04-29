@@ -186,7 +186,8 @@ sub execute {
     $self->install_package if $self->cfg->install;
     print "--- Done\n" if $self->cfg->verbose;
 
-    $self->package_already_exists($apt_contents);
+    $self->package_already_exists($apt_contents) 
+        or $self->modules_already_packaged($apt_contents);
 
     if ( $self->cfg->recursive ) {
         $already_done //= {};
@@ -475,6 +476,75 @@ sub package_already_exists {
             $found = 1;
         }
     }
+
+    return $found ? 1 : 0;
+}
+
+sub modules_already_packaged {
+    my( $self, $apt_contents ) = @_;
+
+    my @modules;
+
+    File::Find::find(
+        sub {
+            if ( basename($File::Find::dir)
+                =~ /^(?:\.(?:git|svn|hg|)|CVS|eg|samples?|examples?)$/ )
+            {
+                $File::Find::prune = 1;
+                return;
+            }
+            if (/.+\.pm$/) {
+                open my $fh, '<', $File::Find::name
+                    or die "open($File::Find::name): $!";
+
+                while ( defined( my $l = <$fh> ) ) {
+                    if ( $l =~ /^\s*package\s+(\w[\w\d_:]+).*;/ ) {
+                        push @modules, $1;
+                        last;
+                    }
+                }
+            }
+        },
+        $self->main_dir,
+    );
+
+    my $found;
+
+    sub show_notice($$) {
+        warn $_[0] unless $_[1];
+        $_[0] = 1;
+    }
+
+    my $notice = <<EOF;
+*** Notice ***
+Some of the modules in the newly created package are already present
+in other packages.
+
+EOF
+    my $notice_shown = 0;
+
+    for my $mod (@modules) {
+        if ($apt_contents) {
+            $found = $apt_contents->find_perl_module_package($mod);
+
+            if ($found) {
+                show_notice( $notice, $notice_shown );
+                warn "  $mod is in '$found' (APT)\n";
+            }
+        }
+        if ( !$found ) {
+            require Debian::DpkgLists;
+            my @found = Debian::DpkgLists->scan_perl_mod($mod);
+
+            if (@found) {
+                show_notice( $notice, $notice_shown );
+                warn "  $mod is in " . join( ', ', @found ), " (local .deb)\n";
+                $found = 1;
+            }
+        }
+    }
+
+    warn "\n" if $notice_shown;
 
     return $found ? 1 : 0;
 }

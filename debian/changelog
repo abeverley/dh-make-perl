@@ -16,6 +16,8 @@ dh-make-perl (0.67-1) UNRELEASED; urgency=low
     -S). Closes: #478781
   * Dependency: drop Debian::Version and use Dpkg::Version instances instead
     + add (build-)dependency on libdpkg-perl
+  * make: try harder to discover already existing package by looking up
+    distribution modules in APT contents and dpkg file lists. (cf. #530675)
 
   [ Salvatore Bonaccorso ]
   * fallback to  a dummy short description if none can be extracted
