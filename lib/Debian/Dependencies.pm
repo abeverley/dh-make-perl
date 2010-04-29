@@ -12,7 +12,7 @@ use overload '""'   => \&_stringify,
 
 =head1 NAME
 
-Debian::Dependencies -- a list of Debian::Dependency objects
+Debian::Dependencies - a list of Debian::Dependency objects
 
 =head1 SYNOPSIS
 

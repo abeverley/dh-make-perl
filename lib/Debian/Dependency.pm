@@ -10,7 +10,7 @@ use List::MoreUtils qw(mesh);
 
 =head1 NAME
 
-Debian::Dependency -- dependency relationship between Debian packages
+Debian::Dependency - dependency relationship between Debian packages
 
 =head1 SYNOPSIS
 

@@ -20,3 +20,5 @@
 
     Dependency: the 'ver' member is an instance of Dpkg::Version
         Use its ability to compare and drop Debian::Version
+
+    Dependenc{y,ies}: reduce '--' to '-' in the NAME POD section
