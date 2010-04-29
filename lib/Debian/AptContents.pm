@@ -312,7 +312,7 @@ sub read_cache {
                         ^usr/
                         (?:share|lib)/
                         (?:perl\d+/             # perl5/
-                        | perl/(?:\d[\d.]+)/   # or perl.5.10/
+                        | perl/(?:\d[\d.]+)/   # or perl/5.10/
                         )
                     }{}x;
                     $cache->{apt_contents}{$file} = $packages;
