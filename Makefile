@@ -7,7 +7,7 @@ all: build
 Build: Build.PL
 	$(PERL) $<
 
-build install test manifest: Build
+build install test manifest distmeta: Build
 	./Build $@
 
 orig:
