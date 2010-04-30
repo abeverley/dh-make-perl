@@ -512,7 +512,7 @@ sub modules_already_packaged {
 
     sub show_notice($$) {
         warn $_[0] unless $_[1];
-        $_[0] = 1;
+        $_[1] = 1;
     }
 
     my $notice = <<EOF;
