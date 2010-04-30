@@ -30,3 +30,5 @@
         the former seems obsolete and only warns:
             Dispatching deprecated method 'CPAN::Config::load' to
             CPAN::HandleConfig
+
+    added README
