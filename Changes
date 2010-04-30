@@ -25,3 +25,8 @@
 
     make: try harder to discover already existing package by looking up
         distribution modules in APT contents and dpkg file lists.
+
+    replace CPAN::Config->load with CPAN:Handle::Config->load
+        the former seems obsolete and only warns:
+            Dispatching deprecated method 'CPAN::Config::load' to
+            CPAN::HandleConfig
