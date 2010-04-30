@@ -1,4 +1,4 @@
-dh-make-perl (0.67-1) UNRELEASED; urgency=low
+dh-make-perl (0.67-1) unstable; urgency=low
 
   [ Damyan Ivanov ]
   * documentation: drop "--" in front of the commands
@@ -23,7 +23,7 @@ dh-make-perl (0.67-1) UNRELEASED; urgency=low
   [ Salvatore Bonaccorso ]
   * fallback to  a dummy short description if none can be extracted
 
- -- Damyan Ivanov <dmn@debian.org>  Tue, 27 Apr 2010 08:36:20 +0300
+ -- Damyan Ivanov <dmn@debian.org>  Fri, 30 Apr 2010 23:54:33 +0300
 
 dh-make-perl (0.66-1) unstable; urgency=low
 
