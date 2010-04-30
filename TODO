@@ -12,3 +12,7 @@
 * #536838: Incorrect assumptions about perl module version -> debian package
   version. Some way of figuring out that libfoo-perl 3.42 contains Bar::Baz
   4.23 is needed. while not common, version discrepacy is very annoying.
+  TODO: investigate usage of UDD. (1) can the info "package version module
+  module-version" be imported and (2) would it be possible to query that from
+  the web somehow. A separate question is how useful it would be for
+  dh-make-perl to query the web about this info.
