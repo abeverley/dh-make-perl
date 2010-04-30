@@ -32,3 +32,5 @@
             CPAN::HandleConfig
 
     added README
+
+    added xt/pod-spelling.t to help test POD spelling
