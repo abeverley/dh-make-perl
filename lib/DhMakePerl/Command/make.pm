@@ -57,6 +57,7 @@ use File::Copy qw( copy move );
 use File::Path ();
 use File::Spec::Functions qw( catfile );
 use Module::Depends            ();
+use Module::Build::ModuleInfo;
 use Text::Wrap qw( wrap );
 
 sub check_deprecated_overrides {
@@ -494,15 +495,9 @@ sub modules_already_packaged {
                 return;
             }
             if (/.+\.pm$/) {
-                open my $fh, '<', $File::Find::name
-                    or die "open($File::Find::name): $!";
-
-                while ( defined( my $l = <$fh> ) ) {
-                    if ( $l =~ /^\s*package\s+(\w[\w\d_:]+).*;/ ) {
-                        push @modules, $1;
-                        last;
-                    }
-                }
+                my $mi = Module::Build::ModuleInfo->new_from_file(
+                    $File::Find::name);
+                push @modules, $mi->packages_inside;
             }
         },
         $self->main_dir,
