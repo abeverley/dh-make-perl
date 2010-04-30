@@ -65,3 +65,7 @@ Description: helper for creating Debian packages from perl modules
  and is also useful for getting started with packaging perl modules.
  Given a perl package name, it can also automatically download it from
  CPAN.
+ .
+ dh-make-perl can also help keeping the debian/ content current when upstream
+ dependencies or Debian practices change. It can also help improve existing
+ Perl module packages.

@@ -18,6 +18,7 @@ dh-make-perl (0.67-1) UNRELEASED; urgency=low
     + add (build-)dependency on libdpkg-perl
   * make: try harder to discover already existing package by looking up
     distribution modules in APT contents and dpkg file lists. (cf. #530675)
+  * extend the long description a bit
 
   [ Salvatore Bonaccorso ]
   * fallback to  a dummy short description if none can be extracted
