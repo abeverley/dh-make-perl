@@ -1,6 +1,13 @@
 0.67.01
 
+    CPAN fix-up release. no code changes
+
     Build.PL: add no_index as an attempt to avoid PAUSE indexing private stuff
+
+    My::Builder: 'orig' target now creates identical (hard-linked)
+        DhMakePerl-VERSION.tar.gz and dh-make-perl_VERSION.orig.tar.gz files
+
+    My::Builder: streamline messages in the 'dist' and 'orig' actions
 
 0.67
     POD: drop "--" in front of the commands.
