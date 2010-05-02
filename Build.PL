@@ -51,6 +51,7 @@ my $builder = My::Builder->new(
         'Test::More'        => 0,
         'File::Touch'       => 0,
     },
+    no_index => { directory => [qw(privinc t xt share)] },
     add_to_cleanup      => [ 'DhMakePerl-*', 'Build', '_build' ],
     script_files        => [ 'dh-make-perl' ],
     install_path        => {
