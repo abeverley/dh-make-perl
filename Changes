@@ -1,6 +1,4 @@
-0.67.01
-
-    CPAN fix-up release. no code changes
+0.68 (UNRELEASED)
 
     Build.PL: add no_index as an attempt to avoid PAUSE indexing private stuff
 
