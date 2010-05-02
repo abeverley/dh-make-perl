@@ -13,13 +13,14 @@ sub ACTION_orig {
     my $pkg_name = 'dh-make-perl';
     my $orig = "$pkg_name\_$ver.orig.tar.gz";
     my $dist = "$dn-$ver.tar.gz";
-    rename $dist, "../$orig" or die "rename( $dist, ../$orig ): $!";
-    print "../$orig ready.\n";
-    if ( -e "../$dist" ) {
-        unlink("../$dist") or die "unlink(../$dist): $!";
+    print "Moving $dist to ../\n";
+    rename $dist, "../$dist" or die "rename( $dist, ../$dist ): $!";
+    if ( -e "../$orig" ) {
+            print "Deleting ../$orig\n";
+        unlink("../$orig") or die "unlink(../$orig): $!";
     }
-    link "../$orig", "../$dist" or die "link( ../$orig, ../$dist ): $!";
-    print "../$dist (hardlinked with $orig) ready.\n";
+    print "Linking ../$orig to ../$dist\n";
+    link "../$dist", "../$orig" or die "link( ../$dist, ../$orig ): $!";
     $self->ACTION_distclean;
     unlink 'MANIFEST', 'MANIFEST.bak', 'META.yml';
 }
