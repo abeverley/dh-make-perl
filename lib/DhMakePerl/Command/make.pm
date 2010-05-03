@@ -466,8 +466,8 @@ sub package_already_exists {
     }
     else {
         ( my $mod_name = $self->perlname ) =~ s/-/::/g;
-        require Debian::DpkgList;
-        my @found = Debian::DpkgList->scan_perl_mod($mod_name);
+        require Debian::DpkgLists;
+        my @found = Debian::DpkgLists->scan_perl_mod($mod_name);
 
         if (@found) {
             warn "**********\n";
