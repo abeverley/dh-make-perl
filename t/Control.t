@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 21;
+use Test::More tests => 22;
 use Test::Exception;
 use Test::Differences;
 
@@ -89,3 +89,17 @@ $c->prune_perl_deps;
 is( $c->source->Build_Depends_Indep . '',
     'libtest-pod-coverage-perl, libtest-pod-perl, libuniversal-require-perl, perl'
 );
+
+# Test wrapping
+$b = Debian::Control::Stanza::Binary->new(
+    {
+        Package => "foo",
+        Depends => "libfoo-perl (>= 0.44839848), libbar-perl, libbaz-perl (>= 4.59454345345485), libtreshchotka-moo (>= 5.6), libmoo-more-java (>= 9.6544)",
+    },
+);
+is( "$b", <<EOF );
+Package: foo
+Depends: libfoo-perl (>= 0.44839848), libbar-perl,
+ libbaz-perl (>= 4.59454345345485), libtreshchotka-moo (>= 5.6),
+ libmoo-more-java (>= 9.6544)
+EOF
