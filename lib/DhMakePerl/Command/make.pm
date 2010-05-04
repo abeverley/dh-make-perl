@@ -20,7 +20,7 @@ __PACKAGE__->mk_accessors(
 
 =head1 NAME
 
-DhMakePerl - create Debian source package from CPAN dist
+DhMakePerl::Command::make - implementation of 'dh-make-perl make'
 
 =cut
 
