@@ -488,8 +488,15 @@ sub modules_already_packaged {
 
     File::Find::find(
         sub {
-            if ( basename($File::Find::dir)
-                =~ /^(?:\.(?:git|svn|hg|)|CVS|eg|samples?|examples?|t)$/ )
+            if (basename($File::Find::dir)
+                =~ /^(?:
+                    \.(?:git|svn|hg|)
+                    |CVS
+                    |eg|samples?|examples?
+                    |t|xt
+                    |inc|privinc
+                    )$/x
+                )
             {
                 $File::Find::prune = 1;
                 return;
