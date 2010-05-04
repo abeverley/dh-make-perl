@@ -1,6 +1,7 @@
 dh-make-perl (0.68-1) UNRELEASED; urgency=low
 
   * make: fix a typo (DpkgList -> DpkgLists). Thanks to Dominic Hargreaves
+    Closes: #580101
 
  -- Damyan Ivanov <dmn@debian.org>  Mon, 03 May 2010 23:43:15 +0300
 
