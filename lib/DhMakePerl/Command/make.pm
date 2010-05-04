@@ -22,13 +22,7 @@ __PACKAGE__->mk_accessors(
 
 DhMakePerl - create Debian source package from CPAN dist
 
-=head1 VERSION
-
-Version 0.65
-
 =cut
-
-our $VERSION = '0.65';
 
 =head1 SYNOPSIS
 
