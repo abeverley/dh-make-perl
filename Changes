@@ -12,6 +12,8 @@
     make: fix a typo (DpkgList -> DpkgLists). Thanks to Dominic Hargreaves
         Debian bug #580101
 
+    modules_already_packaged: fix ModuleInfo instantiation
+
 0.67
     POD: drop "--" in front of the commands.
     refresh: ensure ->rules is there before attempting to fiddle quilt

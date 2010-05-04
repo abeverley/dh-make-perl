@@ -502,8 +502,7 @@ sub modules_already_packaged {
                 return;
             }
             if (/.+\.pm$/) {
-                my $mi = Module::Build::ModuleInfo->new_from_file(
-                    $File::Find::name);
+                my $mi = Module::Build::ModuleInfo->new_from_file($_);
                 push @modules, $mi->packages_inside;
             }
         },
