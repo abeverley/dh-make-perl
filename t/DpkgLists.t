@@ -14,11 +14,11 @@ my $m = 'Debian::DpkgLists';
 is_deeply( [ $m->scan_full_path('/usr/bin/perl') ],
     ['perl-base'], '/usr/bin/perl is in perl-base' );
 
-is_deeply( [ $m->scan_partial_path('/bin/perl') ],
-    ['perl-base'], 'partial /bin/perl is in perl-base' );
+my @found = $m->scan_partial_path('/bin/perl');
+ok( grep( 'perl-base', @found ), 'partial /bin/perl is in perl-base' );
 
-is_deeply( [ $m->scan_pattern(qr{/bin/perl$}) ],
-    ['perl-base'], 'qr{/bin/perl$} is in perl-base' );
+@found = $m->scan_pattern(qr{/bin/perl$});
+ok( grep( 'perl-base', @found ), 'qr{/bin/perl$} is in perl-base' );
 
 is_deeply( [ $m->scan_perl_mod('Errno') ],
     ['perl-base'], 'Errno is in perl-base' );
