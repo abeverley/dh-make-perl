@@ -94,11 +94,11 @@ sub new {
                 : ()
             ),
             cpan2deb    => $cpan2deb,
-            @_,
+            %$values,
         },
     );
 
-    $self->_explicitly_set( {} );
+    $self->_explicitly_set( {} ) unless $self->_explicitly_set;
 
     return $self;
 }
