@@ -1,4 +1,4 @@
-0.68 (UNRELEASED)
+0.68 (2010-05-04)
 
     Build.PL: add no_index as an attempt to avoid PAUSE indexing private stuff
 

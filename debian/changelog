@@ -1,4 +1,4 @@
-dh-make-perl (0.68-1) UNRELEASED; urgency=low
+dh-make-perl (0.68-1) unstable; urgency=low
 
   * make: fix a typo (DpkgList -> DpkgLists). Thanks to Dominic Hargreaves
     Closes: #580101
@@ -7,7 +7,7 @@ dh-make-perl (0.68-1) UNRELEASED; urgency=low
     only in perl-base. Instead, ensure that 'perl-base' is present in the
     returned list. Closes: #580025 -- FTBFS with perl-debug installed
 
- -- Damyan Ivanov <dmn@debian.org>  Mon, 03 May 2010 23:43:15 +0300
+ -- Damyan Ivanov <dmn@debian.org>  Tue, 04 May 2010 09:43:18 +0300
 
 dh-make-perl (0.67-1) unstable; urgency=low
 
