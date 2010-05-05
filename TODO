@@ -1,10 +1,11 @@
 * when ITP for the package is found, try to deduce short/long description from
   the bug report
+* --refresh: add --only <file> option: done, but "--only control" also
+  touches d/rules if quilt is used
 * versioned dependencies should add the epochs too (found in
   libpoex-role-sessioninstantiation-perl, where META.yml and Build.PL
   request 'POE 1.005' which should translate to "libpoe-perl (>= 2:1.0050)")
-* --refresh: add --only <file> option: done, but "--only control" also
-  touches d/rules if quilt is used
+  Can be solved if the next item is solved:
 * #536838: Incorrect assumptions about perl module version -> debian package
   version. Some way of figuring out that libfoo-perl 3.42 contains Bar::Baz
   4.23 is needed. while not common, version discrepacy is very annoying.
