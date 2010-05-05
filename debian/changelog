@@ -1,3 +1,10 @@
+dh-make-perl (0.69-1) UNRELEASED; urgency=low
+
+  * die early if unable to determine distribution name or version.
+    Probably Closes: #525847 (already closed due to missing test case)
+
+ -- Damyan Ivanov <dmn@debian.org>  Wed, 05 May 2010 08:40:51 +0300
+
 dh-make-perl (0.68-1) unstable; urgency=low
 
   * make: fix a typo (DpkgList -> DpkgLists). Thanks to Dominic Hargreaves

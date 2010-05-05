@@ -308,6 +308,14 @@ sub extract_name_ver {
 
     $name =~ s/::/-/g;
 
+    $name
+        or $ver
+        or die
+        "Unable to determine distribution name and version. Aborting.\n";
+
+    $name or die "Unable to determine distribution name. Aborting.\n";
+    $ver  or die "Unable to determine distribution version. Aborting.\n";
+
     $self->perlname($name);
     $self->version($ver);
 
