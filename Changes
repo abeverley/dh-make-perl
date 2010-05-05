@@ -3,6 +3,8 @@
     die early if unable to determine distribution name or version.
         Debian bug #525847
 
+    add MANIFEST.SKIP to MANIFEST.SKIP as suggested by bricas
+
 0.68 (2010-05-04)
 
     Build.PL: add no_index as an attempt to avoid PAUSE indexing private stuff
