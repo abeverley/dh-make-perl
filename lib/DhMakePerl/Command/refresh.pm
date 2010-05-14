@@ -206,7 +206,7 @@ sub drop_quilt {
         }
 
         if( defined($start) and defined($end) ) {
-            print "Removing refences to quilt from README.source\n"
+            print "Removing references to quilt from README.source\n"
                 if $self->cfg->verbose;
 
             splice @readme, $start, $end-$start+1;

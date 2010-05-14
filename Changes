@@ -5,6 +5,8 @@
 
     add MANIFEST.SKIP to MANIFEST.SKIP as suggested by bricas
 
+    spelling fixes in POD and comments
+
 0.68 (2010-05-04)
 
     Build.PL: add no_index as an attempt to avoid PAUSE indexing private stuff

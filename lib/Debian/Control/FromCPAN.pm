@@ -31,7 +31,7 @@ use constant oldstable_perl_version => '5.8.8';
 
 =item discover_dependencies( [ { options hash } ] )
 
-Discovers module dependencies and fills the debendency fields in
+Discovers module dependencies and fills the dependency fields in
 F<debian/control> accordingly.
 
 Options:

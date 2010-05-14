@@ -417,7 +417,7 @@ sub extract_name_ver_from_makefile {
             (['"]?)                         # Optional quotes
             ([\d_.]+)                       # The actual version.
             \1                              # Optional close-quotes
-            \s*\)?                          # Optional close-parens.
+            \s*\)?                          # Optional close-parenthesis.
         }sx 
     ) {
 
@@ -519,7 +519,7 @@ sub extract_desc {
     }
 
     if ( defined($desc) ) {
-        # Replace linefeeds (not followed by a space) in short description with
+        # Replace linefeed (not followed by a space) in short description with
         # spaces
         $desc =~ s/\n(?=\S)/ /gs;
         $desc =~ s/^\s+//;      # strip leading spaces
@@ -947,7 +947,7 @@ sub create_copyright {
     }
 
     # debian/* files information - We default to the module being
-    # licensed as the superset of the module and Perl itself.
+    # licensed as the super-set of the module and Perl itself.
     $licenses{'Artistic'} = $licenses{'GPL-1+'} = 1;
     $year = (localtime)[5] + 1900;
     push( @res, "", "Files: debian/*" );
@@ -1177,7 +1177,7 @@ C<dh --with=bash-completion> needs debhelper 7.0.8 and bash-completion 1:1.0-3.
 If F</usr/share/quilt/quilt.make> is included in F<debian/rules>, a
 build-dependency on C<quilt> is added.
 
-=item dhebhelper override targets
+=item debhelper override targets
 
 Targets named C<override_dh_...> are supported by debhelper since 7.0.50
 
