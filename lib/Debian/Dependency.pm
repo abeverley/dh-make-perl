@@ -133,7 +133,11 @@ sub new {
         delete $self->{ver};
     };
 
-    $self->rel($rel) if $rel;
+    if ($rel) {
+        $rel = '<=' if $rel eq '<';
+        $rel = '>=' if $rel eq '>';
+        $self->rel($rel);
+    }
 
     croak "pkg is mandatory" unless $pkg or $self->alternatives;
 
@@ -283,15 +287,17 @@ sub parse {
             ^               # start from the beginning
             \s*             # stray space
             ([^\(\s]+)      # package name - no paren, no space
-            \s*             # oprional space
+            \s*             # optional space
             (?:             # version is optional
                 \(          # opening paren
                     (       # various relations 
                         <<
+                      | <
                       | <=
                       | =
                       | >=
                       | >>
+                      | >
                     )
                     \s*     # optional space
                     (.+)    # version

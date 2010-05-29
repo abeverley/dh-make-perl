@@ -6,6 +6,7 @@ dh-make-perl (0.69-1) UNRELEASED; urgency=low
 
   [ Ansgar Burchardt ]
   * Do not require --cpan in addition to --pkg-perl when adding Vcs-* fields.
+  * Debian::Dependency: Recognize deprecated '<' and '>' relations.
 
  -- Damyan Ivanov <dmn@debian.org>  Wed, 05 May 2010 08:40:51 +0300
 
