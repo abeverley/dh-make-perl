@@ -1,7 +1,11 @@
 dh-make-perl (0.69-1) UNRELEASED; urgency=low
 
+  [ Damyan Ivanov ]
   * die early if unable to determine distribution name or version.
     Probably Closes: #525847 (already closed due to missing test case)
+
+  [ Ansgar Burchardt ]
+  * Do not require --cpan in addition to --pkg-perl when adding Vcs-* fields.
 
  -- Damyan Ivanov <dmn@debian.org>  Wed, 05 May 2010 08:40:51 +0300
 

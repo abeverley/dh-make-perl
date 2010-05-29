@@ -158,7 +158,7 @@ sub execute {
     $self->discover_utility_deps( $self->control );
     $src->Standards_Version( $self->debstdversion );
     $src->Homepage( $self->upsurl );
-    if ( $self->cfg->pkg_perl and my $cpan = $self->cfg->cpan ) {
+    if ( $self->cfg->pkg_perl ) {
         $self->control->source->Vcs_Svn(
             sprintf( "svn://svn.debian.org/pkg-perl/trunk/%s/",
                 $self->pkgname )
