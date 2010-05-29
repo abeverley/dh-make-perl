@@ -303,6 +303,16 @@ sub parse {
                     (.+)    # version
                 \)          # closing paren
             )?
+            \s*             # optional space
+            (?:             # architecture is optional
+                \[
+                    (?:
+                        !?             # negation is optional
+                        [^\s\]]+       # architecture name
+                        (?:\s+|(?=\])) # whitespace or end
+                    )+
+                \]
+            )?
             $}x    # done
         )
     {
