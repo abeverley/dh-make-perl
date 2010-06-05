@@ -195,9 +195,15 @@ sub process_meta {
 sub set_package_name {
     my $self = shift;
 
-    my $pkgname = lc $self->perlname;
-    $pkgname = 'lib' . $pkgname unless $pkgname =~ /^lib/;
-    $pkgname .= '-perl';
+    my $pkgname;
+    if (defined $self->cfg->packagename) {
+      $pkgname = $self->cfg->packagename;
+    }
+    else {
+      $pkgname = lc $self->perlname;
+      $pkgname = 'lib' . $pkgname unless $pkgname =~ /^lib/;
+      $pkgname .= '-perl';
+    }
 
     # ensure policy compliant names and versions (from Joeyh)...
     $pkgname =~ s/[^-.+a-zA-Z0-9]+/-/g;

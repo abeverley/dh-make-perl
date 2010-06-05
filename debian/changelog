@@ -9,6 +9,8 @@ dh-make-perl (0.69-1) UNRELEASED; urgency=low
   * Debian::Dependency: Recognize deprecated '<' and '>' relations.
   * Debian::Dependency: Allow architecture restrictions in dependencies.
     For now this information is just ignored.
+  * DhMakePerl::Command::Packaging (set_package_name): Use package name
+    specified by --packagename option. (Closes: #584619)
 
   [ Salvatore Bonaccorso ]
   * Add support of Breaks field for binary package stanzas in debian/control
