@@ -12,6 +12,7 @@ dh-make-perl (0.69-1) UNRELEASED; urgency=low
   * DhMakePerl::Command::Packaging (set_package_name): Use package name
     specified by --packagename option. (Closes: #584619)
   * dh-make-perl: Fix spelling error ("intercepring" → "intercepting").
+  * Debian::WNPP::Query: Fix bugs_for_package method.
 
   [ Salvatore Bonaccorso ]
   * Add support of Breaks field for binary package stanzas in debian/control

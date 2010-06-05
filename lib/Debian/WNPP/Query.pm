@@ -175,14 +175,10 @@ contain only one bug, but there are no guarantees.
 sub bugs_for_package {
     my ( $self, $package ) = @_;
 
-    my @result;
-    for ( keys %list_url ) {
-        if ( my $bug = $self->_cache->{$_}{$package} ) {
-            push @result, $bug;
-        }
+    if (exists $self->_cache->{ $package }) {
+        return @{ $self->_cache->{ $package } };
     }
-
-    return @result;
+    return ();
 }
 
 =back
