@@ -292,11 +292,11 @@ sub parse {
                 \(          # opening paren
                     (       # various relations 
                         <<
-                      | <
                       | <=
                       | =
                       | >=
                       | >>
+                      | <
                       | >
                     )
                     \s*     # optional space
