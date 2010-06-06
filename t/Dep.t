@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 163;
+use Test::More tests => 167;
 
 BEGIN {
     use_ok('Debian::Dependency');
@@ -32,6 +32,18 @@ is( "$ver", 'libfoo (>= 5.6)', 'Versioned Dep stringified' );
 my $loe = eval { Debian::Dependency->new('libbar (<= 1.2)') };
 ok( !$@, '<= dependency parsed' );
 is( $loe->rel, '<=', '<= dependency detected' );
+
+{
+    my $d = eval { Debian::Dependency->new('libbar (< 1.2)') };
+    ok(!$@, '< dependency parsed');
+    is($d->rel, '<=', '< dependency detected as <=');
+}
+
+{
+    my $d = eval { Debian::Dependency->new('libbar (> 1.2)') };
+    ok(!$@, '> dependency parsed');
+    is($d->rel, '>=', '> dependency detected as >=');
+}
 
 my $se = eval { Debian::Dependency->new('libfoo-perl (=1.2)') };
 ok( !$@, '= dependency parsed' );
