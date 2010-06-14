@@ -18,6 +18,10 @@ dh-make-perl (0.69-1) UNRELEASED; urgency=low
   * Add support of Breaks field for binary package stanzas in debian/control
     to Debian::Control::Stanza::Binary.
 
+  [ Chris Butler ]
+  * Fixed DhMakePerl::Utils to cope with modules in Module::CoreList where the
+    version is unspecified. (Closes: #585755)
+
  -- Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>  Wed, 02 Jun 2010 12:42:21 +0200
 
 dh-make-perl (0.68-1) unstable; urgency=low

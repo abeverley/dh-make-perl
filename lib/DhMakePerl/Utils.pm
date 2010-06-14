@@ -143,12 +143,16 @@ sub core_module_perls {
     for my $v(
         sort keys %Module::CoreList::version ){
 
+        # Module::CoreList::version includes families (i.e. "5") as well as
+        # full versions, skip the families.
+        next unless ($v =~ /^\d+\.\d+(?:\.|$)/);
+
         next unless exists $Module::CoreList::version{$v}{$module};
 
         my $found = $Module::CoreList::version{$v}{$module};
 
         push @ret, $v
-            if not defined($version)
+            if not $version
                 or $found and version->new($found) >= $version;
     }
 
