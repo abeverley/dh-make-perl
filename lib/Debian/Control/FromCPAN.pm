@@ -149,14 +149,12 @@ sub discover_dependencies {
             }
         }
         else {
-            warn
-                "If you understand the security implications, try --intrusive.\n"
-                if $verbose;
+            if ($verbose) {
+                warn "If you understand the security implications, try --intrusive.\n";
+                warn '=' x 70, "\n";
+            }
+            return;
         }
-        warn '=' x 70, "\n"
-            if $verbose;
-
-        return;
     }
 
     # run-time

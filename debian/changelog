@@ -13,6 +13,8 @@ dh-make-perl (0.69-1) UNRELEASED; urgency=low
     specified by --packagename option. (Closes: #584619)
   * dh-make-perl: Fix spelling error ("intercepring" → "intercepting").
   * Debian::WNPP::Query: Fix bugs_for_package method.
+  * Debian::Control::FromCPAN (discover_dependencies): Do not ignore results
+    from Module::Depends::Intrusive. (Closes: #587276)
 
   [ Salvatore Bonaccorso ]
   * Add support of Breaks field for binary package stanzas in debian/control
