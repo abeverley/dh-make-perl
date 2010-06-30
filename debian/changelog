@@ -20,13 +20,15 @@ dh-make-perl (0.69-1) UNRELEASED; urgency=low
   * Add support of Breaks field for binary package stanzas in debian/control
     to Debian::Control::Stanza::Binary.
   * Create packages with Standards-Version: 3.9.0.
-  * Standards-Version: 3.9.0 (no changes needed)
+  * Standards-Version: 3.9.0 (no changes needed).
+  * Fix sentences in texts for License stanzas of debian/copyright: Add full
+    stop mark after sentences.
  
   [ Chris Butler ]
   * Fixed DhMakePerl::Utils to cope with modules in Module::CoreList where the
     version is unspecified. (Closes: #585755)
 
- -- Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>  Mon, 28 Jun 2010 07:32:39 +0200
+ -- Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>  Wed, 30 Jun 2010 08:02:17 +0200
 
 dh-make-perl (0.68-1) unstable; urgency=low
 

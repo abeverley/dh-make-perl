@@ -826,7 +826,7 @@ sub create_copyright {
             . " it under the terms of the Artistic License, which comes with Perl.\n"
             . " .\n"
             . " On Debian GNU/Linux systems, the complete text of the Artistic License\n"
-            . " can be found in `/usr/share/common-licenses/Artistic'",
+            . " can be found in `/usr/share/common-licenses/Artistic'.",
         'GPL-1+' =>
             " This program is free software; you can redistribute it and/or modify\n"
             . " it under the terms of the GNU General Public License as published by\n"
@@ -834,14 +834,14 @@ sub create_copyright {
             . " any later version.\n"
             . " .\n"
             . " On Debian GNU/Linux systems, the complete text of the GNU General\n"
-            . " Public License can be found in `/usr/share/common-licenses/GPL'",
+            . " Public License can be found in `/usr/share/common-licenses/GPL'.",
         'GPL-2' =>
             " This program is free software; you can redistribute it and/or modify\n"
             . " it under the terms of the GNU General Public License as published by\n"
             . " the Free Software Foundation; version 2 dated June, 1991.\n"
             . " .\n"
             . " On Debian GNU/Linux systems, the complete text of version 2 of the GNU\n"
-            . " General Public License can be found in `/usr/share/common-licenses/GPL-2'",
+            . " General Public License can be found in `/usr/share/common-licenses/GPL-2'.",
         'GPL-2+' =>
             " This program is free software; you can redistribute it and/or modify\n"
             . " it under the terms of the GNU General Public License as published by\n"
@@ -849,22 +849,22 @@ sub create_copyright {
             . " option) any later version.\n"
             . " .\n"
             . " On Debian GNU/Linux systems, the complete text of version 2 of the GNU\n"
-            . " General Public License can be found in `/usr/share/common-licenses/GPL-2'",
+            . " General Public License can be found in `/usr/share/common-licenses/GPL-2'.",
         'GPL-3' =>
             " This program is free software; you can redistribute it and/or modify\n"
             . " it under the terms of the GNU General Public License as published by\n"
             . " the Free Software Foundation; version 3 dated June, 2007.\n"
             . " .\n"
             . " On Debian GNU/Linux systems, the complete text of version 3 of the GNU\n"
-            . " General Public License can be found in `/usr/share/common-licenses/GPL-3'",
+            . " General Public License can be found in `/usr/share/common-licenses/GPL-3'.",
         'GPL-3+' =>
             " This program is free software; you can redistribute it and/or modify\n"
             . " it under the terms of the GNU General Public License as published by\n"
             . " the Free Software Foundation; version 3 dated June, 2007, or (at your\n"
-            . " option) any later version\n"
+            . " option) any later version.\n"
             . " .\n"
             . " On Debian GNU/Linux systems, the complete text of version 3 of the GNU\n"
-            . " General Public License can be found in `/usr/share/common-licenses/GPL-3'",
+            . " General Public License can be found in `/usr/share/common-licenses/GPL-3'.",
         'Apache-2.0' =>
             " Licensed under the Apache License, Version 2.0 (the \"License\");\n"
             . " you may not use this file except in compliance with the License.\n"
@@ -877,7 +877,7 @@ sub create_copyright {
             . " limitations under the License.\n"
             . " .\n"
             . " On Debian GNU/Linux systems, the complete text of the Apache License,\n"
-            . " Version 2.0 can be found in `/usr/share/common-licenses/Apache-2.0'",
+            . " Version 2.0 can be found in `/usr/share/common-licenses/Apache-2.0'.",
         'unparsable' =>
             " No known license could be automatically determined for this module.\n"
             . " If this module conforms to a commonly used license, please report this\n"
