@@ -833,8 +833,8 @@ sub create_copyright {
             . " the Free Software Foundation; either version 1, or (at your option)\n"
             . " any later version.\n"
             . " .\n"
-            . " On Debian GNU/Linux systems, the complete text of the GNU General\n"
-            . " Public License can be found in `/usr/share/common-licenses/GPL'.",
+            . " On Debian GNU/Linux systems, the complete text of version 1 of the\n"
+            . " General Public License can be found in `/usr/share/common-licenses/GPL-1'.",
         'GPL-2' =>
             " This program is free software; you can redistribute it and/or modify\n"
             . " it under the terms of the GNU General Public License as published by\n"
