@@ -25,12 +25,13 @@ dh-make-perl (0.69-1) UNRELEASED; urgency=low
     stop mark after sentences.
   * Add explicit Link to versioned `/usr/share/common-licenses/GPL-1' as this 
     was added by base-files 5.8 (See #436105).
+  * Add support for perl_dbi addon for dh.
 
   [ Chris Butler ]
   * Fixed DhMakePerl::Utils to cope with modules in Module::CoreList where the
     version is unspecified. (Closes: #585755)
 
- -- Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>  Mon, 05 Jul 2010 19:41:36 +0200
+ -- Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>  Mon, 19 Jul 2010 08:12:27 +0200
 
 dh-make-perl (0.68-1) unstable; urgency=low
 

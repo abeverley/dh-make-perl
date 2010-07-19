@@ -1178,6 +1178,10 @@ C<dh --with=quilt> needs debhelper 7.0.8 and quilt 0.46-7.
 
 C<dh --with=bash-completion> needs debhelper 7.0.8 and bash-completion 1:1.0-3.
 
+=item dh --with=perl_dbi
+
+C<dh --with=perl_dbi> needs debhelper 7.0.8 and libdbi-perl 1.612.
+
 =item quilt.make
 
 If F</usr/share/quilt/quilt.make> is included in F<debian/rules>, a
@@ -1239,6 +1243,12 @@ sub discover_utility_deps {
             $deps,
             'bash-completion (>= 1:1.0-3)'
         ) if (/dh\s+.*--with[= ]bash[-_]completion/);
+
+        $self->explained_dependency(
+            'dh -with=perl_dbi',
+            $deps,
+            'libdbi-perl (>= 1.612)'
+        ) if (/dh\s+.*--with[= ]perl[-_]dbi/);
 
         $self->explained_dependency( 'override_dh_* target',
             $deps, 'debhelper (>= 7.0.50)' )
