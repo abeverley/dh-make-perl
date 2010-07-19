@@ -1239,13 +1239,13 @@ sub discover_utility_deps {
         ) if /dh\s+.*--with[= ]quilt/;
 
         $self->explained_dependency(
-            'dh -with=bash-completion',
+            'dh --with=bash-completion',
             $deps,
             'bash-completion (>= 1:1.0-3)'
         ) if (/dh\s+.*--with[= ]bash[-_]completion/);
 
         $self->explained_dependency(
-            'dh -with=perl_dbi',
+            'dh --with=perl_dbi',
             $deps,
             'libdbi-perl (>= 1.612)'
         ) if (/dh\s+.*--with[= ]perl[-_]dbi/);
