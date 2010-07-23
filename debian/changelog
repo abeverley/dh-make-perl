@@ -28,12 +28,16 @@ dh-make-perl (0.69-1) UNRELEASED; urgency=low
   * Fix debian/copyright text templates in t/dist/Strange-0.1 and
     t/dist/Strange-2.1.
   * Add support for perl_dbi addon for dh.
+  * Build-Depends only on perl when Build.PL and Module::Build is used,
+    instead of an alternate Build-Depends on perl (>= 5.10) |
+    libmodule-build-perl. This is as support for Etch is now discontinued and
+    Lenny already contains perl (>= 5.10) (Closes: #590114).
 
   [ Chris Butler ]
   * Fixed DhMakePerl::Utils to cope with modules in Module::CoreList where the
     version is unspecified. (Closes: #585755)
 
- -- Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>  Thu, 22 Jul 2010 15:23:42 +0200
+ -- Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>  Fri, 23 Jul 2010 22:11:45 +0200
 
 dh-make-perl (0.68-1) unstable; urgency=low
 

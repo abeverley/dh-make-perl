@@ -1200,7 +1200,10 @@ L<http://bugs.debian.org/496157>) =back
 
 The proper build-dependency in this case is
 
-    perl (>= 5.10 ) | libmodule-build-perl
+    perl
+
+The unversioned dependency on perl is set as Lenny has already 5.10 which
+includes first Module::Build.
 
 =back
 
@@ -1269,16 +1272,20 @@ sub discover_utility_deps {
             'Compatibility Makefile.PL',
             $deps,
             'debhelper (>= 7.0.17)',
-            'perl (>= 5.10) | libmodule-build-perl'
+            'perl'
         ) if $self->makefile_pl_is_MBC;
     }
 
     # there are old packages that still build-depend on libmodule-build-perl
+    # or perl (>= 5.10) | libmodule-build-perl.
     # Since M::B is part of perl 5.10, the build-dependency needs correction
+    # and we replace this Build-Depends with simply perl, as lenny has the 
+    # required version.
     if ( $self->module_build eq 'Module-Build' ) {
+        $deps->remove('perl (>= 5.10) | libmodule-build-perl');
         $deps->remove('libmodule-build-perl');
         $self->explained_dependency( 'Module::Build', $deps,
-            'perl (>= 5.10) | libmodule-build-perl' );
+            'perl' );
     }
 
     # some mandatory dependencies
