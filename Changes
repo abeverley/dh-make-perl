@@ -3,8 +3,6 @@
     die early if unable to determine distribution name or version.
         Debian bug #525847
 
-    add MANIFEST.SKIP to MANIFEST.SKIP as suggested by bricas
-
     spelling fixes in POD and comments
 
 0.68 (2010-05-04)

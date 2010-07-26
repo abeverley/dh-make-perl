@@ -5,6 +5,5 @@
 ^blib
 ^Build$
 MANIFEST.bak
-^MANIFEST\.SKIP$
 ^DhMakePerl-.*\.tar\.gz$
 ^MYMETA.yml$
