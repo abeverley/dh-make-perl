@@ -1,9 +1,54 @@
-0.69 (NOT RELEASES YET)
+0.69 (2010-07-26)
 
+    [ Damyan Ivanov ]
     die early if unable to determine distribution name or version.
         Debian bug #525847
 
     spelling fixes in POD and comments
+
+    [ Ansgar Burchardt ]
+    Do not require --cpan in addition to --pkg-perl when adding Vcs-* fields.
+
+    Debian::Dependency: Recognize deprecated '<' and '>' relations.
+
+    Debian::Dependency: Allow architecture restrictions in dependencies.
+    For now this information is just ignored.
+
+    DhMakePerl::Command::Packaging (set_package_name): Use package name
+    specified by --packagename option. (Debian bug #584619)
+
+    dh-make-perl: Fix spelling error ("intercepring" → "intercepting").
+
+    Debian::WNPP::Query: Fix bugs_for_package method.
+
+    Debian::Control::FromCPAN (discover_dependencies): Do not ignore results
+    from Module::Depends::Intrusive. (Debian bug #587276)
+
+    [ Salvatore Bonaccorso ]
+    Add support of Breaks field for binary package stanzas in debian/control
+    to Debian::Control::Stanza::Binary.
+
+    Create packages with Standards-Version: 3.9.1.
+
+    Fix sentences in texts for License stanzas of debian/copyright: Add full
+    stop mark after sentences.
+
+    Add explicit Link to versioned `/usr/share/common-licenses/GPL-1' as this 
+    was added by base-files 5.8 (See debian bug #436105).
+
+    Fix debian/copyright text templates in t/dist/Strange-0.1 and
+    t/dist/Strange-2.1.
+
+    Add support for perl_dbi addon for dh.
+
+    Build-Depends only on perl when Build.PL and Module::Build is used,
+    instead of an alternate Build-Depends on perl (>= 5.10) |
+    libmodule-build-perl. This is as support for Etch is now discontinued and
+    Lenny already contains perl (>= 5.10) (Debian bug #590114).
+
+    [ Chris Butler ]
+    Fixed DhMakePerl::Utils to cope with modules in Module::CoreList where the
+    version is unspecified. (Debian bug #585755)
 
 0.68 (2010-05-04)
 
