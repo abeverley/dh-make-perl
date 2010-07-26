@@ -1,4 +1,4 @@
-dh-make-perl (0.69-1) UNRELEASED; urgency=low
+dh-make-perl (0.69-1) unstable; urgency=low
 
   [ Damyan Ivanov ]
   * die early if unable to determine distribution name or version.
@@ -37,7 +37,7 @@ dh-make-perl (0.69-1) UNRELEASED; urgency=low
   * Fixed DhMakePerl::Utils to cope with modules in Module::CoreList where the
     version is unspecified. (Closes: #585755)
 
- -- Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>  Mon, 26 Jul 2010 07:52:30 +0200
+ -- Damyan Ivanov <dmn@debian.org>  Mon, 26 Jul 2010 18:34:25 +0300
 
 dh-make-perl (0.68-1) unstable; urgency=low
 
