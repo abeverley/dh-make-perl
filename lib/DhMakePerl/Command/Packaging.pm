@@ -1128,7 +1128,8 @@ sub discover_dependencies {
 
     if ( my $apt_contents = $self->get_apt_contents ) {
 
-        my $wnpp_query
+        my $wnpp_query;
+        $wnpp_query
             = Debian::WNPP::Query->new(
             { cache_file => catfile( $self->cfg->home_dir, 'wnpp.cache' ) } )
             if $self->cfg->network;
