@@ -1,8 +1,7 @@
-dh-make-perl (0.70-1) UNRELEASED; urgency=low
+dh-make-perl (0.70-1) unstable; urgency=low
 
   * dh --buildsystem=buildsystem needs at least debhelper (>= 7.3.7), add this
     rule to DhMakePerl::Command::Packaging. 
-  * Bump dh-make-perl version to 0.70.
   * Bump versioned Build-Depends on debhelper to (>= 7.3.7) as needed
     for --buildsystem.
   * In v8 mode, dh expects the sequence to run is always its first
@@ -14,7 +13,7 @@ dh-make-perl (0.70-1) UNRELEASED; urgency=low
   [ Damyan Ivanov ]
   * Packaging.pm: fix a lexical declaration within a conditional statement
 
- -- Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>  Wed, 28 Jul 2010 11:00:56 +0200
+ -- Damyan Ivanov <dmn@debian.org>  Wed, 28 Jul 2010 23:54:18 +0300
 
 dh-make-perl (0.69-1) unstable; urgency=low
 
