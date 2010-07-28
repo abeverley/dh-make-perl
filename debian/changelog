@@ -4,7 +4,7 @@ dh-make-perl (0.70-1) UNRELEASED; urgency=low
     rule to DhMakePerl::Command::Packaging. 
   * Bump dh-make-perl version to 0.70.
   * Bump versioned Build-Depends on debhelper to (>= 7.3.7) as needed
-    for --buildystem.
+    for --buildsystem.
   * In v8 mode, dh expects the sequence to run is always its first
     parameter. To be prepared for this, change order of passed arguments
     to the dh commands in debian/rules.
