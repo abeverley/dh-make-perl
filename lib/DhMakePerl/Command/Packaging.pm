@@ -1184,7 +1184,7 @@ C<dh --with=perl_dbi> needs debhelper 7.0.8 and libdbi-perl 1.612.
 
 =item dh --buildsystem=buildsystem
 
-C<dh --buildsystem=buildsystem needs debhelper 7.3.7.
+C<dh --buildsystem=buildsystem> needs debhelper 7.3.7.
 
 =item quilt.make
 

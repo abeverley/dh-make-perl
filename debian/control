@@ -1,7 +1,7 @@
 Source: dh-make-perl
 Section: perl
 Priority: optional
-Build-Depends: debhelper (>= 7.0.50),
+Build-Depends: debhelper (>= 7.3.7),
  perl (>= 5.10)
 Build-Depends-Indep: 
  libapt-pkg-perl,
@@ -37,7 +37,7 @@ Uploaders: Gunnar Wolf <gwolf@debian.org>, Wolfgang Schemmel <debian@37.org>,
  Ryan Niebur <ryan@debian.org>, Nathan Handler <nhandler@ubuntu.com>,
  Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>,
  Maximilian Gass <mxey@cloudconnected.org>
-Standards-Version: 3.9.0
+Standards-Version: 3.9.1
 Vcs-Svn: svn://svn.debian.org/pkg-perl/trunk/dh-make-perl/
 Vcs-Browser: http://svn.debian.org/viewsvn/pkg-perl/trunk/dh-make-perl/
 
