@@ -1182,6 +1182,10 @@ C<dh --with=bash-completion> needs debhelper 7.0.8 and bash-completion 1:1.0-3.
 
 C<dh --with=perl_dbi> needs debhelper 7.0.8 and libdbi-perl 1.612.
 
+=item dh --buildsystem=buildsystem
+
+C<dh --buildsystem=buildsystem needs debhelper 7.3.7.
+
 =item quilt.make
 
 If F</usr/share/quilt/quilt.make> is included in F<debian/rules>, a
@@ -1263,6 +1267,11 @@ sub discover_utility_deps {
         $self->explained_dependency( 'dh* --max-parallel',
             $deps, 'debhelper (>= 7.4.4)' )
             if /dh.* --max-parallel/;
+
+        # Modular --buildsystem support for debhelper needs 7.3.7.
+        $self->explained_dependency( 'dh* --buildsystem',
+            $deps, 'debhelper (>= 7.3.7)' )
+            if /dh.* --buildsystem/;
     }
 
     if (    -e $self->main_file('Makefile.PL')
