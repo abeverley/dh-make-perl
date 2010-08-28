@@ -1,3 +1,10 @@
+dh-make-perl (0.70-2) UNRELEASED; urgency=low
+
+  * DhMakePerl::Command::Packaging: Refer to "Debian systems" instead of
+    "Debian GNU/Linux systems" in generated debian/copyright.
+
+ -- Ansgar Burchardt <ansgar@43-1.org>  Sat, 28 Aug 2010 15:26:16 +0900
+
 dh-make-perl (0.70-1) unstable; urgency=low
 
   * dh --buildsystem=buildsystem needs at least debhelper (>= 7.3.7), add this
