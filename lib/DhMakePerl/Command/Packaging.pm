@@ -825,8 +825,8 @@ sub create_copyright {
             " This program is free software; you can redistribute it and/or modify\n"
             . " it under the terms of the Artistic License, which comes with Perl.\n"
             . " .\n"
-            . " On Debian systems, the complete text of the Artistic License\n"
-            . " can be found in `/usr/share/common-licenses/Artistic'.",
+            . " On Debian systems, the complete text of the Artistic License can be\n"
+            . " found in `/usr/share/common-licenses/Artistic'.",
         'GPL-1+' =>
             " This program is free software; you can redistribute it and/or modify\n"
             . " it under the terms of the GNU General Public License as published by\n"
