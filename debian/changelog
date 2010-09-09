@@ -1,9 +1,15 @@
 dh-make-perl (0.71-1) UNRELEASED; urgency=low
 
+  [ Ansgar Burchardt ]
   * DhMakePerl::Command::Packaging: Refer to "Debian systems" instead of
     "Debian GNU/Linux systems" in generated debian/copyright.
 
- -- Ansgar Burchardt <ansgar@43-1.org>  Sat, 28 Aug 2010 15:26:16 +0900
+  [ Salvatore Bonaccorso ]
+  * Improve regular expression to not match fields in Makefile.PL as
+    MIN_PERL_VERSION to determine the version of the package. Thanks to
+    Andrew Ruthven for reporting. (Closes: #596025)
+
+ -- Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>  Wed, 08 Sep 2010 22:25:30 +0200
 
 dh-make-perl (0.70-1) unstable; urgency=low
 

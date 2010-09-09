@@ -398,7 +398,7 @@ sub extract_name_ver_from_makefile {
         $ver = $self->cfg->version;
 
     }
-    elsif ( $file =~ /([\'\"]?)VERSION\1\s*(=>|,)\s*([\'\"]?)(\S+)\3/s ) {
+    elsif ( $file =~ /([\'\"]?)\bVERSION\1\s*(=>|,)\s*([\'\"]?)(\S+)\3/s ) {
 
         # Regular MakeMaker
         $ver = $4;
