@@ -8,9 +8,8 @@ dh-make-perl (0.71-1) UNRELEASED; urgency=low
   * Improve regular expression to not match fields in Makefile.PL as
     MIN_PERL_VERSION to determine the version of the package. Thanks to
     Andrew Ruthven for reporting. (Closes: #596025)
-  * Update carnil's email address
 
- -- Salvatore Bonaccorso <carnil@debian.org>  Sun, 10 Oct 2010 14:27:33 +0200
+ -- Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>  Wed, 08 Sep 2010 22:25:30 +0200
 
 dh-make-perl (0.70-1) unstable; urgency=low
 
