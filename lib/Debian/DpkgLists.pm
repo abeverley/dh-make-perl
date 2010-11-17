@@ -19,7 +19,7 @@ Debian::DpkgLists - scan /var/lib/dpkg/info/*.list for files/patterns
 
 B<Debian::DpkgLists> is a module for easy searching of L<dpkg(1)>'s package
 file lists. These are located in F</var/lib/dpkg/info/*.list> and contain a
-simple list of full fiile names (including the leading slash).
+simple list of full file names (including the leading slash).
 
 There are a couple of different class methods for searching by full or partial
 path, a regular expression or a Perl module name.
