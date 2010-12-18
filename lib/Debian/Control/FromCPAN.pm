@@ -177,8 +177,14 @@ sub discover_dependencies {
     }
 
     # build-time
-    my ( $b_debs, $b_missing )
-        = $self->find_debs_for_modules( $deps->{build_requires}, $apt_contents, $verbose );
+    my ( $b_debs, $b_missing ) = $self->find_debs_for_modules(
+        {   %{ $deps->{build_requires}     || {} },
+            %{ $deps->{test_requires}      || {} },
+            %{ $deps->{configure_requires} || {} }
+        },
+        $apt_contents,
+        $verbose
+    );
 
     if (@$b_debs) {
         if ($verbose) {
