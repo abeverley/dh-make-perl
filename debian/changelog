@@ -15,7 +15,10 @@ dh-make-perl (0.71-1) UNRELEASED; urgency=low
     finding build dependencies; bump (build) dependency on
     libmodule-depends-perl; closes: #601787.
 
- -- Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>  Wed, 08 Sep 2010 22:25:30 +0200
+  [ Peter Pentchev ]
+  * My::Builder: fix a typo (raname -> rename).
+
+ -- Peter Pentchev <roam@ringlet.net>  Sun, 19 Dec 2010 20:43:10 +0200
 
 dh-make-perl (0.70-1) unstable; urgency=low
 

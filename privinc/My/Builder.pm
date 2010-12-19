@@ -32,7 +32,7 @@ The 'dist' action is usualy used to create a tar.gz to upload to CPAN.
 The primary distribution point of dh-make-perl is the Debian archive. If you
 need a tar.gz for CPAN, download the source tarball from Debian. `apt-get
 source --tar-only dh-make-perl' can be used for that. Since the CPAN
-distribution is named 'DhMakePerl', you probably want to raname the tarball
+distribution is named 'DhMakePerl', you probably want to rename the tarball
 to 'DhMakePerl-VERSION.tar.gz' before uploading.
 
 If you don't happen to run Debian (!), see
