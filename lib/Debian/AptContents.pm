@@ -215,6 +215,10 @@ sub get_contents_files {
     my @res;
 
     for my $s ( @{ $self->sources } ) {
+        # by default ->sources contains a list of files that APT would look
+        # at. Some of them may not exist, so do not fail if this is the case
+        next unless -e $s;
+
         my $src = IO::File->new( $s, 'r' )
             or die "Unable to open '$s': $!\n";
 

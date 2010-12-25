@@ -20,6 +20,7 @@ dh-make-perl (0.71-1) UNRELEASED; urgency=low
 
   [ Damyan Ivanov ]
   * when looking for XS code, skip win32/ directories
+  * Skip non-existing APT source files. (Closes: #557961 for real)
 
  -- Peter Pentchev <roam@ringlet.net>  Sun, 19 Dec 2010 20:43:10 +0200
 
