@@ -18,6 +18,9 @@ dh-make-perl (0.71-1) UNRELEASED; urgency=low
   [ Peter Pentchev ]
   * My::Builder: fix a typo (raname -> rename).
 
+  [ Damyan Ivanov ]
+  * when looking for XS code, skip win32/ directories
+
  -- Peter Pentchev <roam@ringlet.net>  Sun, 19 Dec 2010 20:43:10 +0200
 
 dh-make-perl (0.70-1) unstable; urgency=low
