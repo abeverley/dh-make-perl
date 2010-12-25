@@ -40,10 +40,10 @@ a debian source package out of a Perl module.
 This works for most simple packages and is also useful
 for getting started with packaging Perl modules.
 
-You can specify a module name with the L<--cpan|/cpan_dist> switch
+You can specify a module name with the L<--cpan|/cpan_module> switch
 and B<dh-make-perl> will download the module for you from
 a CPAN mirror, or you can specify the directory with the
-already unpacked sources. If neither L<--cpan|/cpan_dist> nor a directory
+already unpacked sources. If neither L<--cpan|/cpan_module> nor a directory
 is given as argument, B<dh-make-perl> tries to create a
 Perl package from the data in the current directory.
 
@@ -52,11 +52,11 @@ and L</--install> command line switches.
 
 If B<dh-make-perl> is called as
 
-    cpan2deb <options...> Foo-Bar
+    cpan2deb <options...> Foo::Bar
 
 it behaves like
 
-    dh-make-perl make <options...> --build --cpan Foo-Bar
+    dh-make-perl make <options...> --build --cpan Foo::Bar
 
 Using this program is no excuse for not reading the
 debian developer documentation, including the Debian policy,
@@ -206,9 +206,9 @@ Note that, although it is not probable, this might break unrelated items in
 your system - if a newer version of a core module breaks the API, all kinds
 of daemons might get upset ;-)
 
-=item B<--cpan> I<DIST>
+=item B<--cpan> I<MODULE>
 
-Instructs B<dh-make-perl> to fetch and extract the given CPAN distribution.
+Instructs B<dh-make-perl> to fetch and extract the given CPAN module.
 
 =item B<--cpan-mirror> I<MIRROR>
 

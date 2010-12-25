@@ -24,6 +24,8 @@ dh-make-perl (0.71-1) UNRELEASED; urgency=low
   * Detect usage of 'Artistic License 2.0' and include the license text in
     debian/copyright; (build-)depend on libsoftware-license-perl.
     (Closes: #589816)
+  * Clarify documentation about --cpan argument being module name
+    (Closes: 602059)
 
  -- Peter Pentchev <roam@ringlet.net>  Sun, 19 Dec 2010 20:43:10 +0200
 
