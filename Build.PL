@@ -34,6 +34,7 @@ my $builder = My::Builder->new(
         'Module::Depends::Intrusive'=> 0,
         'Parse::DebianChangelog'    => 0,
         'Parse::DebControl'         => 0,
+        'Software::License::Artistic_2_0' => 0,
         'Storable'                  => 0,
         'Text::Diff'                => 0,
         'Text::Wrap'                => 0,

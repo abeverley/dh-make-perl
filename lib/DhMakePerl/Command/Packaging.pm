@@ -827,6 +827,16 @@ sub create_copyright {
             . " .\n"
             . " On Debian systems, the complete text of the Artistic License can be\n"
             . " found in `/usr/share/common-licenses/Artistic'.",
+        'Artistic-2.0' => do {
+            require Software::License::Artistic_2_0;
+            my $artistic2 = Software::License::Artistic_2_0->new(
+                { holder => 'noname', } );
+            my $text = $artistic2->license;
+            $text =~ s/\n$//s;
+            $text =~ s/^\n/.\n/mg;
+            $text =~ s/^/ /mg;
+            $text;
+            },
         'GPL-1+' =>
             " This program is free software; you can redistribute it and/or modify\n"
             . " it under the terms of the GNU General Public License as published by\n"
@@ -926,7 +936,10 @@ sub create_copyright {
                 }
             }
 
-            if ( $mangle_cprt =~ /Artistic\s*License/is ) {
+            if ( $mangle_cprt =~ /Artistic\s*License\s*2\.0/is ) {
+                $licenses{'Artistic-2.0'} = 1;
+            }
+            elsif ( $mangle_cprt =~ /Artistic\s*License/is ) {
                 $licenses{'Artistic'} = 1;
             }
 
