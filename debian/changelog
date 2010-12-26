@@ -17,6 +17,7 @@ dh-make-perl (0.71-1) UNRELEASED; urgency=low
 
   [ Peter Pentchev ]
   * My::Builder: fix a typo (raname -> rename).
+  * t/AptContents.t: fix a typo (fund -> found).
 
   [ Damyan Ivanov ]
   * when looking for XS code, skip win32/ directories

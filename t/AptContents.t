@@ -108,7 +108,7 @@ is_deeply(
     'Moose found by find_file_packages' );
 
 is( $apt_contents->find_perl_module_package('Moose') . '',
-    'libmoose-perl', 'Moose fund by module name' );
+    'libmoose-perl', 'Moose found by module name' );
 
 is_deeply(
     $apt_contents->get_contents_files,
