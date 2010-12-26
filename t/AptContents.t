@@ -107,7 +107,8 @@ is_deeply(
     [ 'libmoose-perl' ],
     'Moose found by find_file_packages' );
 
-is( $apt_contents->find_perl_module_package('Moose'), 'libmoose-perl', 'Moose fund by module name' );
+is( $apt_contents->find_perl_module_package('Moose') . '',
+    'libmoose-perl', 'Moose fund by module name' );
 
 is_deeply(
     $apt_contents->get_contents_files,
@@ -122,7 +123,7 @@ is_deeply(
     "GD.pm is in libdg-gd2[-noxpm]-perl"
 );
 
-is( $apt_contents->find_perl_module_package('GD'),
+is( $apt_contents->find_perl_module_package('GD') . '',
     'libgd-gd2-noxpm-perl | libgd-gd2-perl',
     'Alternative dependency for module found in multiple packages'
 );

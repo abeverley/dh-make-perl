@@ -7,15 +7,21 @@ use Test::More tests => 7;
 
 use DhMakePerl::Utils qw(find_core_perl_dependency);
 
-is( find_core_perl_dependency('Module::CoreList'), 'perl (>= 5.10.0)',
-    'Module::CoreList is in 5.10' );
+is( find_core_perl_dependency('Module::CoreList') . '',
+    'perl (>= 5.10.0)',
+    'Module::CoreList is in 5.10'
+);
 
-is( find_core_perl_dependency( 'Module::CoreList', '2.12' ), 'perl (>= 5.10.0)',
-    'Module::CoreList 2.12 is in 5.10' );
+is( find_core_perl_dependency( 'Module::CoreList', '2.12' ) . '',
+    'perl (>= 5.10.0)',
+    'Module::CoreList 2.12 is in 5.10'
+);
 
 # 2.17 is in 5.10.1, which is not in Debian
-is( find_core_perl_dependency( 'Module::CoreList', '2.17' ), 'perl (>= 5.10.1)',
-    'Module::CoreList 2.17 is in 5.10.1' );
+is( find_core_perl_dependency( 'Module::CoreList', '2.17' ) . '',
+    'perl (>= 5.10.1)',
+    'Module::CoreList 2.17 is in 5.10.1'
+);
 
 # try with an impossibly high version that should never exist
 is( find_core_perl_dependency( 'Module::CoreList', '999999.9' ), undef,
