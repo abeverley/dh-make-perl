@@ -44,7 +44,9 @@ use CPAN ();
 use Debian::Dependencies      ();
 use Debian::Dependency        ();
 use Debian::WNPP::Query;
-use DhMakePerl::Utils qw( find_cpan_module is_core_module );
+use DhMakePerl::Utils qw(
+    find_cpan_module find_cpan_distribution
+    is_core_module );
 use Email::Date::Format qw(email_date);
 use File::Basename qw( basename dirname );
 use File::Copy qw( copy move );
@@ -213,9 +215,9 @@ sub execute {
 sub setup_dir {
     my ($self) = @_;
 
-    my ( $dist, $mod, $tarball );
+    my ( $tarball );
     if ( $self->cfg->cpan ) {
-        my ($new_maindir, $orig_pwd);
+        my ( $new_maindir, $orig_pwd, $mod, $dist );
 
         # CPAN::Distribution::get() sets $ENV{'PWD'} to $CPAN::Config->{build_dir}
         # so we have to save it here
@@ -230,16 +232,32 @@ sub setup_dir {
 
         $self->configure_cpan;
 
-        $mod = find_cpan_module( $self->cfg->cpan )
-            or die "Can't find '" . $self->cfg->cpan . "' module on CPAN\n";
-        $self->mod_cpan_version( $mod->cpan_version );
+        if ( $mod = find_cpan_module( $self->cfg->cpan ) ) {
+            $self->mod_cpan_version( $mod->cpan_version );
+
+            $dist = $CPAN::META->instance( 'CPAN::Distribution',
+                $mod->cpan_file );
+        }
+        elsif ( $dist = find_cpan_distribution( $self->cfg->cpan ) ) {
+            my $ver;
+            if ( $dist->base_id =~ /-(\d[\d._]*)\./ ) {
+                $self->mod_cpan_version($1);
+            }
+            else {
+                die "Unable to determine the version of "
+                    . $dist->base_id . "\n";
+            }
+        }
+        else {
+            die "Can't find '"
+                . $self->cfg->cpan
+                . "' module or distribution on CPAN\n";
+        }
 
         $tarball = $CPAN::Config->{'keep_source_where'} . "/authors/id/";
 
-        $dist = $CPAN::META->instance( 'CPAN::Distribution',
-            $mod->cpan_file );
-        $dist->get || die "Cannot get ", $mod->cpan_file, "\n"; # <- here $ENV{'PWD'} gets set to $HOME/.cpan/build
-        $tarball .= $mod->cpan_file;
+        $dist->get || die "Cannot get ", $dist->pretty_id, "\n"; # <- here $ENV{'PWD'} gets set to $HOME/.cpan/build
+        $tarball .= $dist->pretty_id;
         $self->main_dir( $dist->dir );
 
         copy( $tarball, $orig_pwd );

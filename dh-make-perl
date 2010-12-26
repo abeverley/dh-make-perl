@@ -17,7 +17,7 @@ dh-make-perl - Create debian source packages from Perl modules
 
 =over
 
-=item dh-make-perl [make] {I<SOURCE_DIR> | --cpan I<MODULE>} I<options...>
+=item dh-make-perl [make] {I<SOURCE_DIR> | --cpan I<MODULE>|I<DIST>} I<options...>
 
 =item dh-make-perl refresh {I<--only ...>} [directory]
 
@@ -29,23 +29,22 @@ dh-make-perl - Create debian source packages from Perl modules
 
 =item dh-make-perl help
 
-=item cpan2deb I<DIST> I<options...>
+=item cpan2deb I<MODULE>|I<DIST> I<options...>
 
 =back
 
 =head1 DESCRIPTION
 
 B<dh-make-perl> will create the files required to build
-a debian source package out of a Perl module.
+a debian source package out of a Perl module or CPAN distribution.
 This works for most simple packages and is also useful
 for getting started with packaging Perl modules.
 
-You can specify a module name with the L<--cpan|/cpan_module> switch
-and B<dh-make-perl> will download the module for you from
-a CPAN mirror, or you can specify the directory with the
-already unpacked sources. If neither L<--cpan|/cpan_module> nor a directory
-is given as argument, B<dh-make-perl> tries to create a
-Perl package from the data in the current directory.
+You can specify a module or distribution name with the L<--cpan|/cpan_module>
+switch and B<dh-make-perl> will download it for you from a CPAN mirror, or you
+can specify the directory with the already unpacked sources. If neither
+L<--cpan|/cpan_module> nor a directory is given as argument, B<dh-make-perl>
+tries to create a Perl package from the data in the current directory.
 
 You can build and install the debian package using the L</--build>
 and L</--install> command line switches.
@@ -206,9 +205,10 @@ Note that, although it is not probable, this might break unrelated items in
 your system - if a newer version of a core module breaks the API, all kinds
 of daemons might get upset ;-)
 
-=item B<--cpan> I<MODULE>
+=item B<--cpan> I<MODULE>|I<DIST>
 
-Instructs B<dh-make-perl> to fetch and extract the given CPAN module.
+Instructs B<dh-make-perl> to fetch and extract the given CPAN module or
+distribution. Works both with C<Foo::Bar> and C<Foo-Bar>.
 
 =item B<--cpan-mirror> I<MIRROR>
 
@@ -231,7 +231,7 @@ Perl code depends on non-Perl binaries or libraries. Usually, B<dh-make-perl>
 will figure out the dependencies by itself. If you need to pass B<dh-make-perl>
 dependency information, you must do it using the debian package format. i.e.
 
-    dh-make-perl --depends libtest-more-perl 
+    dh-make-perl --depends libtest-more-perl
 
 =item B<--desc> I<SHORT DESCRIPTION>
 

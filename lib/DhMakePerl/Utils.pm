@@ -15,7 +15,7 @@ DhMakePerl::Utils - helper routined for dh-make-perl and alike
 
 our @EXPORT_OK = qw(
     find_core_perl_dependency
-    find_cpan_module
+    find_cpan_module find_cpan_distribution
     is_core_module
     nice_perl_ver
     split_version_relation
@@ -39,8 +39,8 @@ None of he following functions is exported by default.
 Returns CPAN::Module object that corresponds to the supplied argument. Returns
 undef if no module is found by CPAN.
 
-If CPAN module needs to be configured in some way, that should be done before
-calling this function.
+If the CPAN module needs to be configured in some way, that should be done
+before calling this function.
 
 =cut
 
@@ -70,6 +70,25 @@ sub find_cpan_module {
     $mod = shift @mod unless ($mod);
 
     return $mod;
+}
+
+=item find_cpan_distribution
+
+Returns CPAN::Distribution object that corresponds to the supplied argument.
+Returns undef if no distribution is found by CPAN.
+
+If the CPAN module needs to be configured in some way, that should be done
+before calling this function.
+
+=cut
+
+sub find_cpan_distribution {
+    my( $name ) = @_;
+
+    $name =~ s/::/-/g;
+
+    return CPAN::Shell->expand( 'Distribution',
+        "/\\/$name-[^\\/]+\\.(tar|zip)/" );
 }
 
 =item is_core_module I<module>, I<version>

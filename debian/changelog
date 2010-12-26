@@ -26,6 +26,7 @@ dh-make-perl (0.71-1) UNRELEASED; urgency=low
     (Closes: #589816)
   * Clarify documentation about --cpan argument being module name
     (Closes: 602059)
+  * Support distribution names as arguments to --cpan (Closes: #607998)
 
  -- Peter Pentchev <roam@ringlet.net>  Sun, 19 Dec 2010 20:43:10 +0200
 
