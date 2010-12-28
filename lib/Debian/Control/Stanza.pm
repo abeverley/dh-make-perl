@@ -229,21 +229,22 @@ sub set {
     return $self->STORE( $field,  $value );
 }
 
-=item as_string($width)
+=item as_string([$width])
 
 Returns a string representation of the object. Ready to be printed into a
 real F<debian/control> file. Used as a stringification operator.
 
-If non-zero I<$width> is given, the text is wrapped at that position. If no
-I<$width> is given the text is wrapped at position 80. To disable wrapping,
-supply a value of 0.
+Fields that are comma-separated use one line per item, except if they are like
+C<${some:Field}>, in which case they are wrapped at I<$width>th column.
+I<$width> defaults to 80.
 
 =cut
 
+use Text::Wrap ();
+
 sub as_string
 {
-    my( $self, $width ) = @_;
-
+    my ( $self, $width ) = @_;
     $width //= 80;
 
     my @lines;
@@ -252,30 +253,52 @@ sub as_string
 
     for my $k ( $self->Keys ) {
         # We don't' want the internal fields showing in the output
-        next if $k =~ /^-/;     # _ in fielld names is replaced with dashes
+        next if $k =~ /^-/;     # _ in field names is replaced with dashes
         my $v = $self->FETCH($k);
         next unless defined($v);
         next if $self->is_dependency_list($k) and "$v" eq "";
         next if $self->is_comma_separated($k) and "$v" eq "";
 
-        my $line = "$k: $v";
+        my $line;
 
-        if( $self->is_comma_separated($k) ) {
-            while( length($line) > $width and $line =~ /,/s ) {
-                my $rest;
-                while( length($line) > $width and $line =~ /,/s ) {
-                    # chop-off the last entry
-                    $line =~ /^(.+)\s*,\s*([^,]*)$/s;
-                    $line = $1;
-                    $rest = join( ', ', $2, $rest||() );
+        if ( $self->is_comma_separated($k) ) {
+            # FIXME: this relies on $v being sorted
+            my ( @pre_dollar, @dollar, @post_dollar );
+            for ( @$v ) {
+                if ( /^\${.+}$/ ) {
+                    push @dollar, $_;
                 }
-
-                # at this point $line is under $width long (or can't be
-                # shortened further)
-                push @lines, $line . ( $rest ? ',' : '' );
-                $line = " $rest" if $rest;
+                elsif (@dollar) {
+                    push @post_dollar, $_;
+                }
+                else {
+                    push @pre_dollar, $_;
+                }
             }
+
+            if ( @pre_dollar ) {
+                $line = "$k: " . join( ",\n ", @pre_dollar );
+                local $Text::Warp::break = qr/, /;
+                local $Text::Warp::columns = $width;
+                local $Text::Wrap::separator = ",\n";
+                local $Text::Wrap::huge = 'overflow';
+                $line .= Text::Wrap::wrap( ' ', ' ', join( ', ', @dollar ) );
+            }
+            else {
+                local $Text::Warp::break = qr/, /;
+                local $Text::Warp::columns = $width;
+                local $Text::Wrap::separator = ",\n";
+                local $Text::Wrap::huge = 'overflow';
+                $line
+                    = Text::Wrap::wrap( "$k: ", ' ', join( ', ', @dollar ) );
+            }
+
+            $line = join( ",\n ", $line, @post_dollar );
         }
+        else {
+            $line = "$k: $v";
+        }
+
         push @lines, $line if $line;
     }
 

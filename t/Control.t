@@ -31,11 +31,16 @@ my $control = <<'EOF';
 Source: libtest-compile-perl
 Section: perl
 Priority: optional
-Build-Depends: debhelper (>= 7), libmodule-build-perl, libtest-simple-perl
-Build-Depends-Indep: libtest-pod-coverage-perl, libtest-pod-perl,
- libuniversal-require-perl, perl
+Build-Depends: debhelper (>= 7),
+ libmodule-build-perl,
+ libtest-simple-perl
+Build-Depends-Indep: libtest-pod-coverage-perl,
+ libtest-pod-perl,
+ libuniversal-require-perl,
+ perl
 Maintainer: Debian Perl Group <pkg-perl-maintainers@lists.alioth.debian.org>
-Uploaders: Damyan Ivanov <dmn@debian.org>, Gregor Herrmann <gregoa@debian.org>,
+Uploaders: Damyan Ivanov <dmn@debian.org>,
+ Gregor Herrmann <gregoa@debian.org>,
  Gunnar Wolf <gwolf@debian.org>
 Standards-Version: 3.8.3
 Homepage: http://search.cpan.org/dist/Test-Compile/
@@ -44,7 +49,8 @@ Vcs-Browser: http://svn.debian.org/viewsvn/pkg-perl/trunk/libtest-compile-perl/
 
 Package: libtest-compile-perl
 Architecture: all
-Depends: ${misc:Depends}, ${perl:Depends}, libuniversal-require-perl
+Depends: ${misc:Depends}, ${perl:Depends},
+ libuniversal-require-perl
 Description: check whether Perl module files compile correctly
  Test::Compile can be used in module test suites to verify that everything
  compiles correctly. This description is artifitially prolonged, in order to be
@@ -99,7 +105,9 @@ $b = Debian::Control::Stanza::Binary->new(
 );
 is( "$b", <<EOF );
 Package: foo
-Depends: libfoo-perl (>= 0.44839848), libbar-perl,
- libbaz-perl (>= 4.59454345345485), libtreshchotka-moo (>= 5.6),
+Depends: libfoo-perl (>= 0.44839848),
+ libbar-perl,
+ libbaz-perl (>= 4.59454345345485),
+ libtreshchotka-moo (>= 5.6),
  libmoo-more-java (>= 9.6544)
 EOF
