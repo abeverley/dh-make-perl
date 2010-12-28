@@ -1,3 +1,60 @@
+0.71 (UNRELEASED)
+
+  [ Ansgar Burchardt ]
+  DhMakePerl::Command::Packaging: Refer to "Debian systems" instead of
+  "Debian GNU/Linux systems" in generated debian/copyright.
+
+  [ Salvatore Bonaccorso ]
+  Improve regular expression to not match fields in Makefile.PL as
+  MIN_PERL_VERSION to determine the version of the package. Thanks to
+  Andrew Ruthven for reporting.
+      Debian bug #596025
+
+  Update my email address.
+
+  [ gregor herrmann ]
+  Debian::Control::FromCPAN: also check test_requires and build_requires for
+  finding build dependencies
+      Debian bug #601787
+
+  [ Peter Pentchev ]
+  My::Builder: fix a typo (raname -> rename).
+
+  t/AptContents.t: fix a typo (fund -> found).
+
+  [ Damyan Ivanov ]
+  when looking for XS code, skip win32/ directories
+
+  Skip non-existing APT source files
+      Debian bug #557961
+
+  Detect usage of 'Artistic License 2.0' and include the license text in
+  debian/copyright; require Software::License
+    (Closes: #589816)
+
+  Clarify documentation about --cpan argument being module name
+      Debian bug #602059
+
+  Support distribution names as arguments to --cpan
+      Debian bug #607998
+
+  Fix tests to stringify when comparing overloaded objects with strings
+
+  Control::Stanza: split dependency lists one package per line in order to
+  make changes more VCS-friendly
+
+0.70 (2010-07-28)
+
+  [ Salvatore Bonaccorso ]
+  dh --buildsystem=buildsystem needs at least debhelper (>= 7.3.7), add this
+  rule to DhMakePerl::Command::Packaging.
+
+  Bump versioned Build-Depends on debhelper to (>= 7.3.7) as needed
+  for --buildsystem.
+
+  [ Damyan Ivanov ]
+  Packaging.pm: fix a lexical declaration within a conditional statement
+
 0.69 (2010-07-26)
 
     [ Damyan Ivanov ]
