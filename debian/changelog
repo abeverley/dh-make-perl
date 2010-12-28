@@ -31,6 +31,7 @@ dh-make-perl (0.71-1) UNRELEASED; urgency=low
   * Fix tests to stringify when comparing overloaded objects with strings
   * Control::Stanza: split dependency lists one package per line in order to
     make changes more VCS-friendly
+  * bump debhelper compatibility level to 8 and drop --buildsystem from dh calls
 
  -- Peter Pentchev <roam@ringlet.net>  Sun, 19 Dec 2010 20:43:10 +0200
 

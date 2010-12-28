@@ -1,7 +1,7 @@
 Source: dh-make-perl
 Section: perl
 Priority: optional
-Build-Depends: debhelper (>= 7.3.7),
+Build-Depends: debhelper (>= 8),
  perl (>= 5.10)
 Build-Depends-Indep: 
  libapt-pkg-perl,
