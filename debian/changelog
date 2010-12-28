@@ -1,4 +1,4 @@
-dh-make-perl (0.71-1) UNRELEASED; urgency=low
+dh-make-perl (0.71-1) unstable; urgency=low
 
   [ Ansgar Burchardt ]
   * DhMakePerl::Command::Packaging: Refer to "Debian systems" instead of
@@ -33,7 +33,7 @@ dh-make-perl (0.71-1) UNRELEASED; urgency=low
     make changes more VCS-friendly
   * bump debhelper compatibility level to 8 and drop --buildsystem from dh calls
 
- -- Peter Pentchev <roam@ringlet.net>  Sun, 19 Dec 2010 20:43:10 +0200
+ -- Damyan Ivanov <dmn@debian.org>  Tue, 28 Dec 2010 22:15:13 +0200
 
 dh-make-perl (0.70-1) unstable; urgency=low
 
