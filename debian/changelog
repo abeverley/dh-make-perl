@@ -1,3 +1,10 @@
+dh-make-perl (0.71-2) UNRELEASED; urgency=low
+
+  * Fix "Tries to mkdir directory in home of building user": set HOME to a
+    writable directory in debian/rules (closes: #609469).
+
+ -- gregor herrmann <gregoa@debian.org>  Mon, 10 Jan 2011 19:27:04 +0100
+
 dh-make-perl (0.71-1) unstable; urgency=low
 
   [ Ansgar Burchardt ]
