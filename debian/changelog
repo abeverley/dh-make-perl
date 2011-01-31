@@ -1,8 +1,10 @@
 dh-make-perl (0.72-1) UNRELEASED; urgency=low
 
   TODO:
-  - man page change is not correct
+  - man page change is not correct (should be fixed now)
   - Agreed with Gregor that the email regex is too retsrictive.
+
+  - before release: finish Changes
 
   [ gregor herrmann ]
   * Fix "Tries to mkdir directory in home of building user": set HOME to a

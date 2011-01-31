@@ -1,3 +1,10 @@
+0.72 ()
+
+  [ Nicholas Bamber ]
+  Added logic to parse special email change directives in the changelog
+  so that the refresh command respects email changes.
+      Debian bug #609409
+
 0.71 (2010-12-28)
 
   [ Ansgar Burchardt ]
