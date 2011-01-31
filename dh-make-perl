@@ -93,8 +93,8 @@ of the form
 
       * Email change: Debbie Devlin -> devlin@debian.org
 
-So now C<Debbie Devlin <devlin@debian.org> > will be used in the copyright
-instead of C<Debbie Devlin <debbie@devlin.org> >.
+So now C<Debbie Devlin E<lt>devlin@debian.orgE<gt>> will be used in the copyright
+instead of C<Debbie Devlin E<lt>debbie@devlin.orgE<gt>>.
 
 =item B<--only> | B<-o> I<control|copyright|docs|examples|rules>
 
