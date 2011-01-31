@@ -24,3 +24,5 @@
 * Add full support for debhelper compat version 8 (check if something is
   missing to support).
 * Add a test case for finding (build) dependencies with META.yml.
+* different rules files: do we still need share/rules.*?
+  and: is the POD still correct about rules.MakeMaker and rules.Module-Build?
