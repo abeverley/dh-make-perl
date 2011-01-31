@@ -1,4 +1,4 @@
-dh-make-perl (0.71-2) UNRELEASED; urgency=low
+dh-make-perl (0.72-1) UNRELEASED; urgency=low
 
   TODO:
   - man page change is not correct
