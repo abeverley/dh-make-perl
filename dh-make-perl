@@ -85,6 +85,17 @@ C<refresh> also tries to update dependency lists in F<debian/control> from
 F<META.yml>. It hooks L<quilt(1)> into F<debian/rules> and creates
 F<debian/README.source>
 
+When updating F<debian/copyright> dh-make-perl tries to be clever about
+remembering email addresses. It gets the list of copyright holders and their
+emails for F<debian/*> from the sign off lines in F<debian/changelog>.
+However to allow for email addresses changing, it looks for change lines
+of the form
+
+      * Email change: Debbie Devlin -> devlin@debian.org
+
+So now C<Debbie Devlin <devlin@debian.org> > will be used in the copyright
+instead of C<Debbie Devlin <debbie@devlin.org> >.
+
 =item B<--only> | B<-o> I<control|copyright|docs|examples|rules>
 
 This option allows to update only one or more file(s) in the debian/

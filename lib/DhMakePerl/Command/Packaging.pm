@@ -996,17 +996,50 @@ sub upsurl {
     return sprintf( "http://search.cpan.org/dist/%s/", $self->perlname );
 }
 
+
+my $ACTUAL_NAME_RE = '\pL[\s\pL\-\'\.]*\pL';
+my $EMAIL_RE = '[\w\.\-\+]+\@[\w\.\-]+';
+
+my $EMAIL_CHANGES_RE = qr{
+    ^                           # beginining of line
+    \s+\*\s                     # item marker
+    Email\schange:\s            # email change token
+    ($ACTUAL_NAME_RE)           # actual name
+    \s+->\s+                    # gap between name and email
+    ($EMAIL_RE)                 # email address
+    $                           # end of line
+}xms;
+
+my $PERSON_PARSE_RE = qr{
+    \A                          # beginining of string
+    ($ACTUAL_NAME_RE)           # actual name
+    \s                          # gap
+    \<$EMAIL_RE\>               # logged email
+    \z                          # end of string
+}xms;
+
+# This is what needs fixing.
 sub copyright_from_changelog {
     my ( $self, $firstmaint, $firstyear ) = @_;
     my %maintainers = ();
     @{ $maintainers{$firstmaint} } = ($firstyear);
     my $chglog = Parse::DebianChangelog->init(
         { infile => $self->debian_file('changelog') } );
+    my %email_changes = ();
     foreach ( $chglog->data() ) {
         my $person      = $_->Maintainer;
         my $date        = $_->Date;
         my @date_pieces = split( " ", $date );
         my $year        = $date_pieces[3];
+        if (my %changes = ($_->Changes =~ m/$EMAIL_CHANGES_RE/xmsg)) {
+            # This way round since we are going backward in time thru changelog
+            %email_changes = (%changes, %email_changes);
+        }
+        if (my ($name) = ($person =~ $PERSON_PARSE_RE)) {
+            if (exists $email_changes{$name}) {
+                $person = "$name <$email_changes{$name}>";
+            }
+        }
         if ( defined( $maintainers{$person} ) ) {
             push @{ $maintainers{$person} }, $year;
             @{ $maintainers{$person} } = sort( @{ $maintainers{$person} } );

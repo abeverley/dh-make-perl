@@ -1,7 +1,16 @@
 dh-make-perl (0.71-2) UNRELEASED; urgency=low
 
+  TODO:
+  - man page change is not correct
+  - Agreed with Gregor that the email regex is too retsrictive.
+
+  [ gregor herrmann ]
   * Fix "Tries to mkdir directory in home of building user": set HOME to a
     writable directory in debian/rules (closes: #609469).
+
+  [ Nicholas Bamber ]
+  * Added logic to parse special email change directives in the changelog
+    so that the refresh command respects email changes (Closes: #609409)
 
  -- gregor herrmann <gregoa@debian.org>  Mon, 10 Jan 2011 19:27:04 +0100
 
