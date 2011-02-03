@@ -2,7 +2,7 @@ dh-make-perl (0.72-1) UNRELEASED; urgency=low
 
   TODO:
   - man page change is not correct (should be fixed now)
-  - Agreed with Gregor that the email regex is too retsrictive.
+  - Agreed with Gregor that the email regex is too restrictive.
 
   - before release: finish Changes
 
@@ -13,6 +13,9 @@ dh-make-perl (0.72-1) UNRELEASED; urgency=low
   [ Nicholas Bamber ]
   * Added logic to parse special email change directives in the changelog
     so that the refresh command respects email changes (Closes: #609409)
+
+  [ Salvatore Bonaccorso ]
+  * Email change: Salvatore Bonaccorso -> carnil@debian.org
 
  -- gregor herrmann <gregoa@debian.org>  Mon, 10 Jan 2011 19:27:04 +0100
 

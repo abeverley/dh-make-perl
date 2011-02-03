@@ -632,7 +632,7 @@ L<http://bugs.debian.org/dh-make-perl>
 
 =item Copyright (C) 2008, Roberto C. Sanchez <roberto@connexer.com>
 
-=item Copyright (C) 2009-2010, Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+=item Copyright (C) 2009-2010, Salvatore Bonaccorso <carnil@debian.org>
 
 =back
 
