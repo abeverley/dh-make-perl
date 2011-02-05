@@ -998,7 +998,11 @@ sub upsurl {
 
 
 my $ACTUAL_NAME_RE = '\pL[\s\pL\-\'\.]*\pL';
-my $EMAIL_RE = '[\w\.\-\+]+\@[\w\.\-]+';
+
+# See http://www.faqs.org/rfcs/rfc2822.html
+# Section 3.4.1
+use Email::Address;
+my $EMAIL_RE = $Email::Address::addr_spec;
 
 my $EMAIL_CHANGES_RE = qr{
     ^                           # beginining of line

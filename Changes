@@ -1,9 +1,10 @@
-0.72 ()
+0.72 (2011-02-05)
 
   [ Nicholas Bamber ]
   Added logic to parse special email change directives in the changelog
   so that the refresh command respects email changes.
       Debian bug #609409
+  Changed regular expression in t/dists.t to allow .svn not ending in /
 
 0.71 (2010-12-28)
 

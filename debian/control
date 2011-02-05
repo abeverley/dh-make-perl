@@ -29,7 +29,8 @@ Build-Depends-Indep:
  libtext-diff-perl,
  libtie-ixhash-perl,
  libwww-mechanize-perl,
- libyaml-perl
+ libyaml-perl,
+ libemail-address-perl
 Maintainer: Debian Perl Group <pkg-perl-maintainers@lists.alioth.debian.org>
 Uploaders: Gunnar Wolf <gwolf@debian.org>, Wolfgang Schemmel <debian@37.org>,
  Christopher Sacca <csacca@thecsl.org>,
@@ -60,7 +61,8 @@ Depends: debhelper (>= 7), ${perl:Depends}, ${misc:Depends},
  libsoftware-license-perl,
  libtie-ixhash-perl,
  libwww-mechanize-perl,
- libyaml-perl
+ libyaml-perl,
+ libemail-address-perl
 Recommends: apt-file (>= 2.1.0)
 Description: helper for creating Debian packages from perl modules
  dh-make-perl will create the files required to build a Debian source
