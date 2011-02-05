@@ -22,8 +22,8 @@ sub compare_tree {
         sub {
             my ( $a, $b ) = @_;
             return
-                if $a and $a =~ m{/\.(?:svn|gh|git|CVS)/}
-                    or $b and $b =~ m{/\.(?:svn|gh|git|CVS)/};
+                if $a and $a =~ m{/\.(?:svn|gh|git|CVS)(?:/|\z)}
+                    or $b and $b =~ m{/\.(?:svn|gh|git|CVS)(?:/|\z)};
             return
                 if $a and $a =~ /\.bak$/
                     or $b and $b =~ /\.bak$/;

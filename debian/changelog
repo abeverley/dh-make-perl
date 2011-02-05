@@ -14,6 +14,7 @@ dh-make-perl (0.72-1) UNRELEASED; urgency=low
   * Added logic to parse special email change directives in the changelog
     so that the refresh command respects email changes (Closes: #609409)
   * Added myself to Uploaders
+  * Added fix for .svn at the end of a filename rather than the middle
 
   [ Salvatore Bonaccorso ]
   * Email change: Salvatore Bonaccorso -> carnil@debian.org
