@@ -1,0 +1,16 @@
+Source: libstrange-perl
+Section: perl
+Priority: optional
+Build-Depends: debhelper (>= 7)
+Build-Depends-Indep: perl
+Maintainer: Florian Geekwurt <florian@geekwurt.org>
+Standards-Version: 3.9.1
+Homepage: http://search.cpan.org/dist/Strange/
+
+Package: libstrange-perl
+Architecture: all
+Depends: ${misc:Depends}, ${perl:Depends}
+Description: Perl extension for blah blah blah
+ (no description was found)
+ .
+ This description was automagically extracted from the module by dh-make-perl.
