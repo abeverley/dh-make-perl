@@ -1,8 +1,5 @@
 dh-make-perl (0.72-1) UNRELEASED; urgency=low
 
-  TODO: problem with extra new line,
-  - Really need a test for new functionality
-
   [ gregor herrmann ]
   * Fix "Tries to mkdir directory in home of building user": set HOME to a
     writable directory in debian/rules (closes: #609469).
@@ -11,7 +8,10 @@ dh-make-perl (0.72-1) UNRELEASED; urgency=low
   * Added logic to parse special email change directives in the changelog
     so that the refresh command respects email changes (Closes: #609409)
   * Added myself to Uploaders
-  * Added fix for .svn at the end of a filename rather than the middle
+  * Various fixes for t/dists.t:
+    - Added fix for .svn at the end of a filename rather than the middle
+    - Second /dev/null check was attempting to diff an undefined value
+    - Setting PERL5LIB (unsatisfactory work around for system(dh-make-perl) )
 
   [ Salvatore Bonaccorso ]
   * Email change: Salvatore Bonaccorso -> carnil@debian.org

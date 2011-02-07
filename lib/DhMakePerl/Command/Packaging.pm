@@ -1037,7 +1037,13 @@ sub copyright_from_changelog {
         my $year        = $date_pieces[3];
         if (my %changes = ($_->Changes =~ m/$EMAIL_CHANGES_RE/xmsg)) {
             # This way round since we are going backward in time thru changelog
-            %email_changes = (%changes, %email_changes);
+            foreach my $p (keys %changes) {
+                $changes{$p} =~ s{[\s\n]+$}{}xms;
+            }
+            %email_changes = (
+                %changes,
+                %email_changes
+            );
         }
         if (my ($name) = ($person =~ $PERSON_PARSE_RE)) {
             if (exists $email_changes{$name}) {
