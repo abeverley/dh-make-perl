@@ -98,7 +98,7 @@ sub dist_ok($) {
 
     is( $?, 0, "$dist_dir: system returned 0" );
 
-    compare_tree( "$dist/debian", "$dist/wanted-debian", 'initital' );
+    compare_tree( "$dist/debian", "$dist/wanted-debian", 'initial' );
 
     system( "$Bin/../dh-make-perl", "--no-verbose",
             "--home-dir", "$Bin/contents",
