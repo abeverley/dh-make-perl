@@ -2,7 +2,7 @@ Source: dh-make-perl
 Section: perl
 Priority: optional
 Build-Depends: debhelper (>= 8),
- perl (>= 5.10)
+ perl
 Build-Depends-Indep: 
  libapt-pkg-perl,
  libarray-unique-perl,
@@ -47,7 +47,7 @@ Vcs-Browser: http://svn.debian.org/viewsvn/pkg-perl/trunk/dh-make-perl/
 Package: dh-make-perl
 Architecture: all
 Depends: debhelper (>= 7), ${perl:Depends}, ${misc:Depends},
- make, dpkg-dev, fakeroot, perl (>= 5.10),
+ make, dpkg-dev, fakeroot,
  libapt-pkg-perl,
  libarray-unique-perl,
  libclass-accessor-perl,

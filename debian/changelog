@@ -3,6 +3,8 @@ dh-make-perl (0.72-1) UNRELEASED; urgency=low
   [ gregor herrmann ]
   * Fix "Tries to mkdir directory in home of building user": set HOME to a
     writable directory in debian/rules (closes: #609469).
+  * debian/control: remove version from perl (build) dependency, lenny has
+    already 5.10.
 
   [ Nicholas Bamber ]
   * Added logic to parse special email change directives in the changelog
