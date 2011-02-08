@@ -26,6 +26,7 @@
 * Add a test case for finding (build) dependencies with META.yml.
 * different rules files: do we still need share/rules.*?
   and: is the POD still correct about rules.MakeMaker and rules.Module-Build?
+  we depend on debhelper >= 7
 * The build is not 100% lintian clean to the same standard that would be
   expected from packages. This essentially seems to be confusion over whether
   it is a native package or not. Could we come down on the side of native
