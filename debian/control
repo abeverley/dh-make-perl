@@ -1,19 +1,18 @@
 Source: dh-make-perl
 Section: perl
 Priority: optional
-Build-Depends: debhelper (>= 8),
- perl
+Build-Depends: debhelper (>= 8), perl
 Build-Depends-Indep: 
  libapt-pkg-perl,
  libarray-unique-perl,
  libclass-accessor-perl,
  libdpkg-perl,
+ libemail-address-perl,
  libemail-date-format-perl,
  libfile-dircompare-perl,
  libfile-find-rule-perl,
  libfile-touch-perl,
  liblist-moreutils-perl,
- perl (>= 5.10.1) | libmodule-corelist-perl (>= 2.14),
  libmodule-depends-perl (>= 0.15),
  libparse-debcontrol-perl,
  libparse-debianchangelog-perl,
@@ -25,12 +24,12 @@ Build-Depends-Indep:
  libtest-exception-perl,
  libtest-pod-coverage-perl,
  libtest-pod-perl,
- perl (>= 5.10.1) | libtest-simple-perl (>= 0.82),
  libtext-diff-perl,
  libtie-ixhash-perl,
  libwww-mechanize-perl,
  libyaml-perl,
- libemail-address-perl
+ perl (>= 5.10.1) | libmodule-corelist-perl (>= 2.14),
+ perl (>= 5.10.1) | libtest-simple-perl (>= 0.82)
 Maintainer: Debian Perl Group <pkg-perl-maintainers@lists.alioth.debian.org>
 Uploaders: Gunnar Wolf <gwolf@debian.org>, Wolfgang Schemmel <debian@37.org>,
  Christopher Sacca <csacca@thecsl.org>,
@@ -52,9 +51,9 @@ Depends: debhelper (>= 7), ${perl:Depends}, ${misc:Depends},
  libarray-unique-perl,
  libclass-accessor-perl,
  libdpkg-perl,
+ libemail-address-perl,
  libemail-date-format-perl,
  liblist-moreutils-perl,
- perl (>= 5.10.1) | libmodule-corelist-perl (>= 2.14),
  libmodule-depends-perl (>= 0.15),
  libparse-debcontrol-perl,
  libparse-debianchangelog-perl,
@@ -62,8 +61,8 @@ Depends: debhelper (>= 7), ${perl:Depends}, ${misc:Depends},
  libtie-ixhash-perl,
  libwww-mechanize-perl,
  libyaml-perl,
- libemail-address-perl
-Recommends: apt-file (>= 2.1.0)
+ perl (>= 5.10.1) | libmodule-corelist-perl (>= 2.14)
+Recommends: apt-file
 Description: helper for creating Debian packages from perl modules
  dh-make-perl will create the files required to build a Debian source
  package out of a perl package.  This works for most simple packages
