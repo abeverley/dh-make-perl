@@ -18,7 +18,10 @@ dh-make-perl (0.72-1) UNRELEASED; urgency=low
   [ Salvatore Bonaccorso ]
   * Email change: Salvatore Bonaccorso -> carnil@debian.org
 
- -- gregor herrmann <gregoa@debian.org>  Mon, 10 Jan 2011 19:27:04 +0100
+  [ Gunnar Wolf ]
+  * Removed myself from Uploaders, acknowledging reality
+
+ -- Gunnar Wolf <gwolf@debian.org>  Thu, 10 Feb 2011 10:15:27 -0600
 
 dh-make-perl (0.71-1) unstable; urgency=low
 
