@@ -4,7 +4,14 @@
   Added logic to parse special email change directives in the changelog
   so that the refresh command respects email changes.
       Debian bug #609409
+
   Changed regular expression in t/dists.t to allow .svn not ending in /
+
+  Various fixes for t/dists.t:
+    - Added fix for .svn at the end of a filename rather than the middle
+    - Second /dev/null check was attempting to diff an undefined value
+    - Setting PERL5LIB (unsatisfactory work around for system(dh-make-perl) )
+
 
 0.71 (2010-12-28)
 
