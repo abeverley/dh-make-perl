@@ -1,4 +1,4 @@
-dh-make-perl (0.72-1) UNRELEASED; urgency=low
+dh-make-perl (0.72-1) unstable; urgency=low
 
   [ gregor herrmann ]
   * Fix "Tries to mkdir directory in home of building user": set HOME to a
@@ -21,7 +21,7 @@ dh-make-perl (0.72-1) UNRELEASED; urgency=low
   [ Gunnar Wolf ]
   * Removed myself from Uploaders, acknowledging reality
 
- -- Gunnar Wolf <gwolf@debian.org>  Thu, 10 Feb 2011 10:15:27 -0600
+ -- Damyan Ivanov <dmn@debian.org>  Sat, 12 Feb 2011 17:23:06 +0200
 
 dh-make-perl (0.71-1) unstable; urgency=low
 
