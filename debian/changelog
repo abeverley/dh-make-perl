@@ -1,3 +1,9 @@
+dh-make-perl (0.73-1) UNRELEASED; urgency=low
+
+  * [upstream] Build.PL: add missing modules.
+
+ -- gregor herrmann <gregoa@debian.org>  Mon, 14 Feb 2011 17:27:28 +0100
+
 dh-make-perl (0.72-1) unstable; urgency=low
 
   [ gregor herrmann ]
