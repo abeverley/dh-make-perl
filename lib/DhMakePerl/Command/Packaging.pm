@@ -1443,13 +1443,15 @@ sub _file_w {
 
 =item Copyright (C) 2006 Frank Lichtenheld <djpig@debian.org>
 
-=item Copyright (C) 2007-2010 Gregor Herrmann <gregoa@debian.org>
+=item Copyright (C) 2007-2011 Gregor Herrmann <gregoa@debian.org>
 
 =item Copyright (C) 2007-2010 Damyan Ivanov <dmn@debian.org>
 
 =item Copyright (C) 2008, Roberto C. Sanchez <roberto@connexer.com>
 
-=item Copyright (C) 2009-2010, Salvatore Bonaccorso <carnil@debian.org>
+=item Copyright (C) 2009-2011, Salvatore Bonaccorso <carnil@debian.org>
+
+=item Copyright (C) 2011, Nicholas Bamber <nicholas@periapt.co.uk>
 
 =back
 
