@@ -38,3 +38,5 @@
   API should be used directly. ~periapt
 * Really minor issue. The AptContents.t test can be thrown off if the contents
   directory has stuff lying around from a failed run. ~periapt
+* Add a switch for "app" (foo-bar) vs. "lib" (libfoo-bar-perl) packages?
+* Support dh8 (optional or default) - no need for finding debhelper versions etc.
