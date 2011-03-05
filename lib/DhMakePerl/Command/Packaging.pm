@@ -1127,7 +1127,7 @@ sub module_build {
 Adds the list of dependencies to I<$dependencies> and shows I<$reason> if in
 verbose mode.
 
-Used to both bump a dependency ant tell the user why.
+Used to both bump a dependency and tell the user why.
 
 I<$dependencies> is an instance of L<Debian::Dependencies> class, and
 I<@dependencies> is a list of L<Debian::Dependency> instances or strings.
