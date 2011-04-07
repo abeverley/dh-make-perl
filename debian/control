@@ -39,7 +39,7 @@ Uploaders: Wolfgang Schemmel <debian@37.org>,
  Salvatore Bonaccorso <carnil@debian.org>,
  Maximilian Gass <mxey@cloudconnected.org>,
  Nicholas Bamber <nicholas@periapt.co.uk>
-Standards-Version: 3.9.1
+Standards-Version: 3.9.2
 Vcs-Svn: svn://svn.debian.org/pkg-perl/trunk/dh-make-perl/
 Vcs-Browser: http://svn.debian.org/viewsvn/pkg-perl/trunk/dh-make-perl/
 

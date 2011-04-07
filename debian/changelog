@@ -1,7 +1,12 @@
 dh-make-perl (0.73-1) UNRELEASED; urgency=low
 
+  [ gregor herrmann ]
   * [upstream] Build.PL: add missing modules.
   * Update copyright notices.
+
+  [ Salvatore Bonaccorso ]
+  * create packages with Standards-Version 3.9.2.
+  * Bump Standards-Version to 3.9.2. 
 
  -- gregor herrmann <gregoa@debian.org>  Mon, 14 Feb 2011 17:27:28 +0100
 
