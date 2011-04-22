@@ -7,8 +7,10 @@ dh-make-perl (0.73-1) UNRELEASED; urgency=low
   [ Salvatore Bonaccorso ]
   * create packages with Standards-Version 3.9.2.
   * Bump Standards-Version to 3.9.2. 
+  * Debian::Control::Stanza::Source: Add DM-Upload-Allowed field to
+    supported fields for source stanza in debian/control.
 
- -- gregor herrmann <gregoa@debian.org>  Mon, 14 Feb 2011 17:27:28 +0100
+ -- Salvatore Bonaccorso <carnil@debian.org>  Fri, 22 Apr 2011 17:09:27 +0200
 
 dh-make-perl (0.72-1) unstable; urgency=low
 
@@ -1039,7 +1041,7 @@ dh-make-perl (0.27) unstable; urgency=low
     (recommended but not depended upon) is not present (Closes: #428415)
   * Added some modules should be part of @stdmodules; the list is hand-
     crafted and incomplete - we need a better solution!
-	
+        
  -- Gunnar Wolf <gwolf@debian.org>  Tue, 07 Aug 2007 10:50:45 -0500
 
 dh-make-perl (0.26) unstable; urgency=low

@@ -33,6 +33,8 @@ replaced with underscores.
 
 =item Uploaders
 
+=item DM_Upload_Allowed
+
 =item Section
 
 =item Priority
@@ -64,7 +66,7 @@ use base qw(Debian::Control::Stanza);
 
 use constant fields => qw (
     Source Section Priority Build_Depends Build_Depends_Indep Build_Conflicts
-    Build_Conflicts_Indep Maintainer Uploaders
+    Build_Conflicts_Indep Maintainer Uploaders DM_Upload_Allowed
     Standards_Version Homepage Vcs_Svn Vcs_Git Vcs_Bzr Vcs_CVS Vcs_Browser
 );
 
