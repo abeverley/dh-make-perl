@@ -1,8 +1,16 @@
-0.73 (2011-02-17)
+0.73 (2011-05-09)
 
   [ gregor herrmann ]
   Add missing modules to Build.PL.
   Update copyright notices.
+  Debian::Control::Stanza::Source: add XS-Autobuild field; mention all
+    fields in POD, and sort list.
+
+  [ Salvatore Bonaccorso ]
+  create packages with Standards-Version 3.9.2.
+  Bump Standards-Version to 3.9.2. 
+  Debian::Control::Stanza::Source: Add DM-Upload-Allowed field to
+    supported fields for source stanza in debian/control.
 
 
 0.72 (2011-02-05)

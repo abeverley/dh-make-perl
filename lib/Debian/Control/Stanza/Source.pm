@@ -27,29 +27,41 @@ replaced with underscores.
 
 =over
 
-=item Source
+=item Build_Conflicts
 
-=item Maintainer
-
-=item Uploaders
-
-=item DM_Upload_Allowed
-
-=item Section
-
-=item Priority
+=item Build_Conflicts_Indep
 
 =item Build_Depends
 
 =item Build_Depends_Indep
 
-=item Build_Conflicts
+=item DM_Upload_Allowed
 
-=item Build_Conflicts_Indep
+=item Homepage
+
+=item Maintainer
+
+=item Priority
+
+=item Section
 
 =item Standards_Version
 
-=item Homepage
+=item Uploaders
+
+=item Vcs_Browser
+
+=item Vcs_Bzr
+
+=item Vcs_CVS
+
+=item Vcs_Git
+
+=item Vcs_Svn
+
+=item Source
+
+=item XS_Autobuild
 
 =back
 
@@ -65,9 +77,10 @@ use strict;
 use base qw(Debian::Control::Stanza);
 
 use constant fields => qw (
-    Source Section Priority Build_Depends Build_Depends_Indep Build_Conflicts
-    Build_Conflicts_Indep Maintainer Uploaders DM_Upload_Allowed
-    Standards_Version Homepage Vcs_Svn Vcs_Git Vcs_Bzr Vcs_CVS Vcs_Browser
+    Build_Conflicts Build_Conflicts_Indep Build_Depends Build_Depends_Indep
+    DM_Upload_Allowed Homepage Maintainer Priority Section Standards_Version
+    Uploaders Vcs_Browser Vcs_Bzr Vcs_CVS Vcs_Git Vcs_Svn Source
+    XS_Autobuild
 );
 
 =head1 CONSTRUCTOR

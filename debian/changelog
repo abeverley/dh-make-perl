@@ -1,8 +1,10 @@
 dh-make-perl (0.73-1) UNRELEASED; urgency=low
 
   [ gregor herrmann ]
-  * [upstream] Build.PL: add missing modules.
+  * Build.PL: add missing modules.
   * Update copyright notices.
+  * Debian::Control::Stanza::Source: add XS-Autobuild field; mention all
+    fields in POD, and sort list.
 
   [ Salvatore Bonaccorso ]
   * create packages with Standards-Version 3.9.2.
