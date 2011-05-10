@@ -12,6 +12,9 @@ dh-make-perl (0.73-1) UNRELEASED; urgency=low
   * Debian::Control::Stanza::Source: Add DM-Upload-Allowed field to
     supported fields for source stanza in debian/control.
 
+  [ Nicholas Bamber ]
+  * Updated authorship notice
+
  -- Salvatore Bonaccorso <carnil@debian.org>  Fri, 22 Apr 2011 17:09:27 +0200
 
 dh-make-perl (0.72-1) unstable; urgency=low
