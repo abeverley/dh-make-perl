@@ -11,11 +11,13 @@ dh-make-perl (0.73-1) UNRELEASED; urgency=low
   * Bump Standards-Version to 3.9.2. 
   * Debian::Control::Stanza::Source: Add DM-Upload-Allowed field to
     supported fields for source stanza in debian/control.
+  * Debian::Control::Stanza::Source: Order fields similar to dh_make generated
+    templates.
 
   [ Nicholas Bamber ]
   * Updated authorship notice
 
- -- Salvatore Bonaccorso <carnil@debian.org>  Fri, 22 Apr 2011 17:09:27 +0200
+ -- Salvatore Bonaccorso <carnil@debian.org>  Wed, 25 May 2011 16:04:40 +0200
 
 dh-make-perl (0.72-1) unstable; urgency=low
 
