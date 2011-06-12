@@ -1,9 +1,9 @@
 Source: libstrange-perl
 Section: perl
 Priority: optional
+Maintainer: Joe Maintainer <joemaint@test.local>
 Build-Depends: debhelper (>= 7)
 Build-Depends-Indep: perl
-Maintainer: Joe Maintainer <joemaint@test.local>
 Standards-Version: 3.9.2
 Homepage: http://search.cpan.org/dist/Strange/
 

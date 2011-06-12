@@ -31,6 +31,10 @@ my $control = <<'EOF';
 Source: libtest-compile-perl
 Section: perl
 Priority: optional
+Maintainer: Debian Perl Group <pkg-perl-maintainers@lists.alioth.debian.org>
+Uploaders: Damyan Ivanov <dmn@debian.org>,
+ Gregor Herrmann <gregoa@debian.org>,
+ Gunnar Wolf <gwolf@debian.org>
 Build-Depends: debhelper (>= 7),
  libmodule-build-perl,
  libtest-simple-perl
@@ -38,14 +42,10 @@ Build-Depends-Indep: libtest-pod-coverage-perl,
  libtest-pod-perl,
  libuniversal-require-perl,
  perl
-Maintainer: Debian Perl Group <pkg-perl-maintainers@lists.alioth.debian.org>
-Uploaders: Damyan Ivanov <dmn@debian.org>,
- Gregor Herrmann <gregoa@debian.org>,
- Gunnar Wolf <gwolf@debian.org>
 Standards-Version: 3.8.3
-Homepage: http://search.cpan.org/dist/Test-Compile/
-Vcs-Svn: svn://svn.debian.org/pkg-perl/trunk/libtest-compile-perl/
 Vcs-Browser: http://svn.debian.org/viewsvn/pkg-perl/trunk/libtest-compile-perl/
+Vcs-Svn: svn://svn.debian.org/pkg-perl/trunk/libtest-compile-perl/
+Homepage: http://search.cpan.org/dist/Test-Compile/
 
 Package: libtest-compile-perl
 Architecture: all
