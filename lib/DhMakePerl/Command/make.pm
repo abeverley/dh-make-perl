@@ -269,9 +269,12 @@ sub setup_dir {
                 . "' module or distribution on CPAN\n";
         }
 
-        $tarball = $CPAN::Config->{'keep_source_where'} . "/authors/id/";
-
         $dist->get || die "Cannot get ", $dist->pretty_id, "\n"; # <- here $ENV{'PWD'} gets set to $HOME/.cpan/build
+        $dist->pretty_id =~ /^(.)(.)/;
+        $tarball = $CPAN::Config->{'keep_source_where'} . "/authors/id/$1/$1$2/";
+        # the file is under authors/id/A/AU/AUTHOR directory
+        # how silly there is no $dist->filename method
+
         $tarball .= $dist->pretty_id;
         $self->main_dir( $dist->dir );
 
