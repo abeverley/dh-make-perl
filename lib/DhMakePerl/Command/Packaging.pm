@@ -1161,10 +1161,6 @@ sub configure_cpan {
     unshift( @{ $CPAN::Config->{'urllist'} }, $self->cfg->cpan_mirror )
         if $self->cfg->cpan_mirror;
 
-    $CPAN::Config->{'build_dir'}         = $ENV{'HOME'} . "/.cpan/build";
-    $CPAN::Config->{'cpan_home'}         = $ENV{'HOME'} . "/.cpan/";
-    $CPAN::Config->{'histfile'}          = $ENV{'HOME'} . "/.cpan/history";
-    $CPAN::Config->{'keep_source_where'} = $ENV{'HOME'} . "/.cpan/source";
     $CPAN::Config->{'tar_verbosity'}     = $self->cfg->verbose ? 'v' : '';
     $CPAN::Config->{'load_module_verbosity'}
         = $self->cfg->verbose ? 'verbose' : 'silent';
