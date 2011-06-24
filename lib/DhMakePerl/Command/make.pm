@@ -95,13 +95,12 @@ sub execute {
     $bin->short_description( $self->cfg->desc )
         if $self->cfg->desc;
 
-    move(
-        $tarball,
-        sprintf(
-            "%s/%s_%s.orig.tar.gz",
-            dirname($tarball), $self->pkgname, $self->version
-        )
-    ) if ( $tarball && $tarball =~ /(?:\.tar\.gz|\.tgz)$/ );
+    if ( $tarball and $tarball =~ /(?:\.tar\.gz|\.tgz)$/ ) {
+        my $dest = sprintf( "%s/%s_%s.orig.tar.gz",
+            dirname($tarball), $self->pkgname, $self->version );
+
+        move( $tarball, $dest ) or die "move($tarball, $dest): $!";
+    }
 
     if ( -d $self->debian_dir ) {
         $self->warning( $self->debian_dir . ' already exists' );
@@ -276,7 +275,7 @@ sub setup_dir {
         $tarball .= $dist->pretty_id;
         $self->main_dir( $dist->dir );
 
-        copy( $tarball, $orig_pwd );
+        copy( $tarball, $orig_pwd ) or die "copy($tarball, $orig_pwd): $!";
         $tarball = $orig_pwd . "/" . basename($tarball);
 
         # build_dir contains a random part since 1.88_59
