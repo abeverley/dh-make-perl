@@ -643,7 +643,7 @@ L<http://bugs.debian.org/dh-make-perl>
 
 =item Copyright (C) 2007-2010 Gregor Herrmann <gregoa@debian.org>
 
-=item Copyright (C) 2007-2010 Damyan Ivanov <dmn@debian.org>
+=item Copyright (C) 2007,2008,2009,2010,2011 Damyan Ivanov <dmn@debian.org>
 
 =item Copyright (C) 2008, Roberto C. Sanchez <roberto@connexer.com>
 
