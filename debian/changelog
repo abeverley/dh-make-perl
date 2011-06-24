@@ -17,6 +17,9 @@ dh-make-perl (0.73-1) UNRELEASED; urgency=low
   [ Nicholas Bamber ]
   * Updated authorship notice
 
+  [ Damyan Ivanov ]
+  * Add --vcs option, guiding VCS-* headers' creation in --pkg-perl mode
+
  -- Salvatore Bonaccorso <carnil@debian.org>  Wed, 25 May 2011 16:04:40 +0200
 
 dh-make-perl (0.72-1) unstable; urgency=low

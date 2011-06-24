@@ -161,14 +161,30 @@ sub execute {
     $src->Standards_Version( $self->debstdversion );
     $src->Homepage( $self->upsurl );
     if ( $self->cfg->pkg_perl ) {
-        $self->control->source->Vcs_Svn(
-            sprintf( "svn://svn.debian.org/pkg-perl/trunk/%s/",
-                $self->pkgname )
-        );
-        $self->control->source->Vcs_Browser(
-            sprintf( "http://svn.debian.org/viewsvn/pkg-perl/trunk/%s/",
-                $self->pkgname )
-        );
+        my $vcs = lc( $self->cfg->vcs );
+        if ( $vcs eq 'svn' ) {
+            $self->control->source->Vcs_Svn(
+                sprintf( "svn://svn.debian.org/pkg-perl/trunk/%s/",
+                    $self->pkgname )
+            );
+            $self->control->source->Vcs_Browser(
+                sprintf( "http://svn.debian.org/viewsvn/pkg-perl/trunk/%s/",
+                    $self->pkgname )
+            );
+        }
+        elsif ( $vcs eq 'git' ) {
+            $self->control->source->Vcs_Git(
+                sprintf( "git://git.debian.org/git/pkg-perl/packages/%s.git",
+                    $self->pkgname )
+            );
+            $self->control->source->Vcs_Browser(
+                sprintf( "http://git.debian.org/git/pkg-perl/packages/%s.git",
+                    $self->pkgname )
+            );
+        }
+        else {
+            warn "Version control system '$vcs' not known. Please submit a patch :)\n";
+        }
     }
     $self->control->write( $self->debian_file('control') );
 

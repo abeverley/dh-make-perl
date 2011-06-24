@@ -33,7 +33,7 @@ use constant options => (
     'packagename|p=s', 'pkg-perl!',
     'recursive!',
     'requiredeps',     'sources-list=s',
-    'source-format=s',
+    'source-format=s', 'vcs=s',
     'verbose!',        'version=s',
 );
 
@@ -72,6 +72,7 @@ use constant DEFAULTS => {
     network       => 1,
     only          => [ 'control', 'copyright', 'docs', 'examples', 'rules' ],
     source_format => '1.0',
+    vcs           => 'svn',
     verbose       => 1,
 };
 

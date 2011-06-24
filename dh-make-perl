@@ -351,6 +351,11 @@ mirrors you no longer use.
 
 Default: apt's default.
 
+=item B<--vcs> I<VCS>
+
+In B<--pkg-perl> mode, use the specified version control system in the
+generated I<Vcs-*> fields. The default is C<svn> (still).
+
 =item B<--verbose> | B<--no-verbose>
 
 Print additional information while processing.
