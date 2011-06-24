@@ -3,6 +3,7 @@ Section: perl
 Priority: optional
 Build-Depends: debhelper (>= 8), perl
 Build-Depends-Indep: 
+ git,
  libapt-pkg-perl,
  libarray-unique-perl,
  libclass-accessor-perl,
@@ -62,7 +63,8 @@ Depends: debhelper (>= 7), ${perl:Depends}, ${misc:Depends},
  libwww-mechanize-perl,
  libyaml-perl,
  perl (>= 5.10.1) | libmodule-corelist-perl (>= 2.14)
-Recommends: apt-file
+Recommends: apt-file,
+ git
 Description: helper for creating Debian packages from perl modules
  dh-make-perl will create the files required to build a Debian source
  package out of a perl package.  This works for most simple packages

@@ -356,6 +356,28 @@ Default: apt's default.
 In B<--pkg-perl> mode, use the specified version control system in the
 generated I<Vcs-*> fields. The default is C<svn> (still).
 
+If I<VCS> is C<git>, C<dh-make-perl> will setup a Git repository with three
+branches:
+
+=over
+
+=item upstream
+
+The initial branch containing upstream sources
+
+=item master
+
+The branch where packaging is done, forked off C<upstream> and with the
+contents of the C<debian/> directory added.
+
+=item pristine-tar
+
+A pranch to keep L<pristine-tar(1)> data.
+
+=back
+
+Also, an C<origin> remote is added pointing to the repository on I<git.debian.org>.
+
 =item B<--verbose> | B<--no-verbose>
 
 Print additional information while processing.

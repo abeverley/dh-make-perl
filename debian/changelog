@@ -18,7 +18,8 @@ dh-make-perl (0.73-1) UNRELEASED; urgency=low
   * Updated authorship notice
 
   [ Damyan Ivanov ]
-  * Add --vcs option, guiding VCS-* headers' creation in --pkg-perl mode
+  * Add --vcs option, guiding VCS-* headers' creation in --pkg-perl mode. It
+    also helps with the initial repository creation for Git
 
  -- Salvatore Bonaccorso <carnil@debian.org>  Wed, 25 May 2011 16:04:40 +0200
 

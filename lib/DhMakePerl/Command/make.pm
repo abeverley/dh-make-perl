@@ -198,6 +198,10 @@ sub execute {
     $self->install_package if $self->cfg->install;
     print "--- Done\n" if $self->cfg->verbose;
 
+    $self->setup_git_repository()
+        if $self->cfg->{pkg_perl}
+            and $self->cfg->{vcs} eq 'git';
+
     $self->package_already_exists($apt_contents) 
         or $self->modules_already_packaged($apt_contents);
 
@@ -578,6 +582,35 @@ EOF
     warn "\n" if $notice_shown;
 
     return $found ? 1 : 0;
+}
+
+sub setup_git_repository {
+    my $self = shift;
+
+    use Git;
+    use IO::Dir;
+
+    Git::command( 'init', $self->main_dir );
+
+    my $git = Git->repository( $self->main_dir );
+    $git->command( qw(symbolic-ref HEAD refs/heads/upstream) );
+    my @upstream_files;
+    my $dh = IO::Dir->new( $self->main_dir );
+    while ( defined( my $f = $dh->read ) ) {
+        next if $f eq '.' or $f eq '..';
+        next if $f eq 'debian';
+        push @upstream_files, $f;
+    }
+    $git->command( 'add', @upstream_files );
+    $git->command( 'commit', '-m', "Import original source of ".$self->perlname.' '.$self->version );
+    $git->command( qw( checkout -b master upstream ) );
+    $git->command( 'add', 'debian' );
+    $git->command( 'commit', '-m', 'Initial packaging by dh-make-perl' );
+    $git->command(
+        qw( remote add origin ),
+        sprintf( "ssh://git.debian.org/git/pkg-perl/packages/%s.git",
+            $self->pkgname ),
+    );
 }
 
 =item warning I<string> ...
