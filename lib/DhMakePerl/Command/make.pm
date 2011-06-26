@@ -608,6 +608,7 @@ sub setup_git_repository {
               "Import original source of "
             . $self->perlname . ' '
             . $self->version );
+    $git->command( 'tag', "upstream/".$self->version, 'upstream' );
     $git->command( qw( checkout -b master upstream ) );
     $git->command( 'add', 'debian' );
     $git->command( 'commit', '-m', 'Initial packaging by dh-make-perl' );
