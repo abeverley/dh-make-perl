@@ -100,6 +100,8 @@ sub execute {
             dirname($tarball), $self->pkgname, $self->version );
 
         move( $tarball, $dest ) or die "move($tarball, $dest): $!";
+
+        $tarball = $dest;
     }
 
     if ( -d $self->debian_dir ) {
@@ -198,7 +200,7 @@ sub execute {
     $self->install_package if $self->cfg->install;
     print "--- Done\n" if $self->cfg->verbose;
 
-    $self->setup_git_repository()
+    $self->setup_git_repository($tarball)
         if $self->cfg->{pkg_perl}
             and $self->cfg->{vcs} eq 'git';
 
@@ -585,7 +587,7 @@ EOF
 }
 
 sub setup_git_repository {
-    my $self = shift;
+    my ( $self, $tarball ) = @_;
 
     use Git;
     use IO::Dir;
@@ -602,7 +604,10 @@ sub setup_git_repository {
         push @upstream_files, $f;
     }
     $git->command( 'add', @upstream_files );
-    $git->command( 'commit', '-m', "Import original source of ".$self->perlname.' '.$self->version );
+    $git->command( 'commit', '-m',
+              "Import original source of "
+            . $self->perlname . ' '
+            . $self->version );
     $git->command( qw( checkout -b master upstream ) );
     $git->command( 'add', 'debian' );
     $git->command( 'commit', '-m', 'Initial packaging by dh-make-perl' );
@@ -611,6 +616,10 @@ sub setup_git_repository {
         sprintf( "ssh://git.debian.org/git/pkg-perl/packages/%s.git",
             $self->pkgname ),
     );
+
+    $ENV{GIT_DIR} = File::Spec->catdir( $self->main_dir, '.git' );
+    system( 'pristine-tar', 'commit', $tarball ) >= 0
+        or warn "error running pristine-tar: $!\n";
 }
 
 =item warning I<string> ...

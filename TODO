@@ -42,4 +42,3 @@
 * Support dh8 (optional or default) - no need for finding debhelper versions etc.
 * process_meta in lib/DhMakePerl/Command/Packaging.pm only checks for META.yml, and not
   META.json. And there are more moderm modules to deal with both in the meantime (CPAN::Meta*).
-* in --vcs git mode, create the Git repository with proper usptream/pristine-tar branches
