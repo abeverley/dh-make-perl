@@ -14,6 +14,7 @@ my $builder = My::Builder->new(
         'Array::Unique'             => 0,
         'Carp'                      => 0,
         'CPAN'                      => 0,
+        'CPAN::Meta'                => 0,
         'Cwd'                       => 0,
         'Dpkg'                      => 0,
         'Dpkg::Source::Package'     => 0,

@@ -28,6 +28,3 @@
 * Really minor issue. The AptContents.t test can be thrown off if the contents
   directory has stuff lying around from a failed run. ~periapt
 * Add a switch for "app" (foo-bar) vs. "lib" (libfoo-bar-perl) packages?
-* process_meta in lib/DhMakePerl/Command/Packaging.pm only checks for META.yml, and not
-  META.json. And there are more moderm modules to deal with both in the meantime (CPAN::Meta*)
-  See also #589946.

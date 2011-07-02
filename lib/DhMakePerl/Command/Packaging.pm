@@ -22,6 +22,7 @@ __PACKAGE__->mk_accessors(
 use Array::Unique;
 use Carp qw(confess);
 use CPAN ();
+use CPAN::Meta;
 use Cwd qw( getcwd );
 use Debian::Control::FromCPAN;
 use Debian::Dependencies;
@@ -158,38 +159,30 @@ sub fill_maintainer {
 sub process_meta {
     my ($self) = @_;
 
-    my $file = $self->main_file('META.yml');
-
-    # META.yml non-existent?
-    unless ( -f $file ) {
-        $self->meta({});
-        return;
-    }
+    $self->meta({});
 
     # Command line option nometa causes this function not to be run
     if( $self->cfg->nometa ) {
-        $self->meta({});
         return;
     }
 
-    my $yaml;
-
-    # YAML::LoadFile dies when it cannot properly parse a file - catch it in
-    # an eval, and if it dies, return -again- just an empty hashref.
-    eval { $yaml = YAML::LoadFile($file); };
-    if ($@) {
-        print "Error parsing $file - Ignoring it.\n";
-        print "Please notify module upstream maintainer.\n";
-        $yaml = {};
+    my $meta = $self->main_file('META.json');
+    if ( -e $meta ) {
+        print "Using META.json\n" if $self->cfg->verbose;
+    }
+    else {
+        $meta = $self->main_file('META.yml');
+        if ( -e $meta ) {
+            print "Using META.yml\n" if $self->cfg->verbose;
+        }
+        else {
+            print "WARNING: Neither META.json nor META.yml was found\n";
+            return;
+        }
     }
 
-    if (ref $yaml ne 'HASH') {
-        print "$file does not contain a hash - Ignoring it\n";
-        $yaml = {};
-    }
-
-    # Returns a simple hashref with all the keys/values defined in META.yml
-    $self->meta($yaml);
+    $meta = CPAN::Meta->load_file($meta);
+    $self->meta( $meta->as_struct );
 }
 
 sub set_package_name {
