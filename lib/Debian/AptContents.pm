@@ -366,7 +366,7 @@ sub store_cache {
             or die "Error creating directory '$dir': $!\n";
     }
 
-    Storable::store( $self->cache, $self->cache_file . '-new' );
+    Storable::nstore( $self->cache, $self->cache_file . '-new' );
     rename( $self->cache_file . '-new', $self->cache_file );
 }
 

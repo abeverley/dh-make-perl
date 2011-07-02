@@ -84,7 +84,8 @@ sub _read_cache {
 
     return unless $self->cache_file and -e $self->cache_file;
 
-    $self->_cache( Storable::retrieve( $self->cache_file ) );
+    $self->_cache( eval { Storable::retrieve( $self->cache_file ) }
+            || undef );
 }
 
 sub _write_cache {
@@ -96,7 +97,7 @@ sub _write_cache {
 
     $self->_cache->{timestamp} = scalar(time);
 
-    Storable::store( $self->_cache, $self->cache_file );
+    Storable::nstore( $self->_cache, $self->cache_file );
 }
 
 sub _fetch {
