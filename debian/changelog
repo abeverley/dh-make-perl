@@ -30,6 +30,8 @@ dh-make-perl (0.73-1) UNRELEASED; urgency=low
     alternative dependencies when a given module is found in more than one
     package. Closes: #622852
   * Use CPAN::Meta for processing META.* files, adding support for META.json.
+  * When no META file is available, try parsing name and version from Build.PL
+    before Makefile.PL. Closes: #589946
 
  -- Salvatore Bonaccorso <carnil@debian.org>  Wed, 25 May 2011 16:04:40 +0200
 

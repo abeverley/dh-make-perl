@@ -99,6 +99,12 @@ sub debian_file {
     catfile( $self->main_file('debian'), $file );
 }
 
+sub build_pl {
+    my ($self) = @_;
+
+    return $self->main_file('Build.PL');
+}
+
 sub makefile_pl {
     my ($self) = @_;
 
@@ -296,7 +302,31 @@ sub extract_name_ver {
         }
     }
     else {
-        $self->extract_name_ver_from_makefile( $self->makefile_pl );
+        if ( -e $self->build_pl ) {
+            print "Extracting name and version from Build.PL\n";
+            $self->extract_name_ver_from_build( $self->build_pl );
+        }
+        elsif ( -e $self->makefile_pl ) {
+            print "Extracting name and version from Makefile.PL\n";
+            $self->extract_name_ver_from_makefile( $self->makefile_pl );
+        }
+        else {
+            if ( $self->cfg->cpan ) {
+                my $name = $self->cfg->cpan;
+                $name =~ s/::/-/g;
+                $self->perlname($name);
+            }
+            else {
+                die "Unable to determine dist name, no Build.PL, no Makefile.PL\nPlease use --cpan.\n";
+            }
+
+            if ( $self->cfg->version ) {
+                $self->version( $self->cfg->version );
+            }
+            else {
+                die "Unable to determine dist version, no Build.PL, no Makefile.PL\nPlease use --version.\n";
+            }
+        }
         $name = $self->perlname;
         $ver  = $self->version;
     }
@@ -319,6 +349,135 @@ sub extract_name_ver {
     $self->version($ver);
 
     $self->set_package_name;
+}
+
+sub extract_name_ver_from_build {
+    my ( $self, $build ) = @_;
+    my ( $file, $name, $ver, $vfrom, $dir );
+
+    {
+        local $/ = undef;
+        my $fh = $self->_file_r($build);
+        $file = $fh->getline;
+    }
+
+    # Replace q[quotes] by "quotes"
+    $file =~ s/q\[(.+)]/'$1'/g;
+
+    # Get the name
+    if ($file =~ /([\'\"]?)
+	    dist_name\1\s*
+	    (=>|,)
+	    \s*
+	    ([\'\"]?)
+	    (\S+)\3/xs
+        )
+    {
+        $name = $4;
+    }
+    elsif (
+        $file =~ /([\'\"]?)
+		 module_name\1\s*
+		 (=>|,)
+		 \s*
+		 ([\'\"]?)
+		 (\S+)\3/xs
+        )
+    {
+        $name = $4;
+        $name =~ s/::/-/g;
+
+        # just in case we need it later
+        $vfrom = $name;
+        $vfrom =~ s/-/::/g;
+        $vfrom =~s{::}{/}g;
+        $vfrom = "lib/$vfrom.pm";
+    }
+    $name =~ s/,.*$//;
+
+    # band aid: need to find a solution also for build in directories
+    # warn "name is $name (cpan name: $self->cfg->cpan)\n";
+    $name = $self->cfg->cpan     if ( $name eq '__PACKAGE__' && $self->cfg->cpan );
+    $name = $self->cfg->cpanplus if ( $name eq '__PACKAGE__' && $self->cfg->cpanplus );
+
+    # Get the version
+    if ( defined $self->cfg->version ) {
+
+        # Explicitly specified
+        $ver = $self->cfg->version;
+
+    }
+    elsif ( $file =~ /([\'\"]?)\sdist_version\1\s*(=>|,)\s*([\'\"]?)(\S+)\3/s ) {
+        $ver = $4;
+
+        # Where is the version taken from?
+        $vfrom = $4
+            if $file
+                =~ /([\'\"]?)dist_version_from\1\s*(=>|,)\s*([\'\"]?)(\S+)\3/s;
+
+    }
+    elsif ( $file =~ /([\'\"]?)dist_version_from\1\s*(=>|,)\s*([\'\"]?)(\S+)\3/s )
+    {
+        $vfrom = $4;
+
+    }
+
+    $dir = dirname($build) || './';
+
+    for ( ( $name, $ver ) ) {
+        next unless defined;
+        next unless /^\$/;
+
+        # decode simple vars
+        s/(\$\w+).*/$1/;
+        if ( $file =~ /\Q$_\E\s*=\s*([\'\"]?)(\S+)\1\s*;/ ) {
+            $_ = $2;
+        }
+    }
+
+    unless ( defined $ver ) {
+        local $/ = "\n";
+
+        # apply the method used by makemaker
+        if (    defined $dir
+            and defined $vfrom
+            and -f "$dir/$vfrom"
+            and -r "$dir/$vfrom" )
+        {
+            my $fh = $self->_file_r("$dir/$vfrom");
+            while ( my $lin = $fh->getline ) {
+                if ( $lin =~ /([\$*])(([\w\:\']*)\bVERSION)\b.*\=/ ) {
+                    no strict;
+
+                    #warn "ver: $lin";
+                    $ver = ( eval $lin )[0];
+                    last;
+                }
+            }
+            $fh->close;
+        }
+        else {
+            if ( $self->mod_cpan_version ) {
+                $ver = $self->mod_cpan_version;
+                warn "Cannot use internal module data to gather the "
+                    . "version; using cpan_version\n";
+            }
+            else {
+                die "Cannot use internal module data to gather the "
+                    . "version; use --cpan or --version\n";
+            }
+        }
+    }
+
+    $self->perlname($name);
+    $self->version($ver);
+
+    $self->set_package_name;
+
+    if ( defined($vfrom) ) {
+        $self->extract_desc("$dir/$vfrom");
+        $self->extract_basic_copyright("$dir/$vfrom");
+    }
 }
 
 sub extract_name_ver_from_makefile {
