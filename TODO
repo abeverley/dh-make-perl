@@ -21,8 +21,6 @@
       differently to debian package versions, the result can still be wrong.
       The same question holds with core packages, but perhaps they behave beter
       wrt (not) changing versioning scheme.
-* Add full support for debhelper compat version 8 (check if something is
-  missing to support).
 * Add a test case for finding (build) dependencies with META.yml.
 * different rules files: do we still need share/rules.*?
   and: is the POD still correct about rules.MakeMaker and rules.Module-Build?
