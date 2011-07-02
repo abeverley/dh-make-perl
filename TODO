@@ -27,10 +27,6 @@
 * different rules files: do we still need share/rules.*?
   and: is the POD still correct about rules.MakeMaker and rules.Module-Build?
   we depend on debhelper >= 7
-* The build is not 100% lintian clean to the same standard that would be
-  expected from packages. This essentially seems to be confusion over whether
-  it is a native package or not. Could we come down on the side of native
-  even if the reverse upstream is maintained. ~periapt
 * I noticed a problem with the dists.t test script. It essentially does
   a system("dh-make-perl"). This causes two problems. Firstly it is a pain to
   debug if something goes wrong. More seriously there is a tendency to pick
