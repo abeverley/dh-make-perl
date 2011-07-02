@@ -26,6 +26,9 @@ dh-make-perl (0.73-1) UNRELEASED; urgency=low
     invalidate cache or use platform-netural Storable format
   * bump default debhelper compatibility level to 8
   * note oldstable has perl 5.10.0, not 5.8.8
+  * apply a patch from Manfred Stock fixing AptContents not to miss
+    alternative dependencies when a given module is found in more than one
+    package. Closes: #622852
 
  -- Salvatore Bonaccorso <carnil@debian.org>  Wed, 25 May 2011 16:04:40 +0200
 

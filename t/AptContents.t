@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 23;
+use Test::More tests => 25;
 
 BEGIN {
     use_ok 'Debian::AptContents';
@@ -126,6 +126,17 @@ is_deeply(
 is( $apt_contents->find_perl_module_package('GD') . '',
     'libgd-gd2-noxpm-perl | libgd-gd2-perl',
     'Alternative dependency for module found in multiple packages'
+);
+
+is_deeply(
+    [ $apt_contents->find_file_packages('Image/Magick.pm') ],
+    [ 'perlmagick', 'graphicsmagick-libmagick-dev-compat' ],
+    "Image/Magick.pm in perlmagick and graphicsmagick-libmagick-dev-compat, but different paths"
+);
+
+is( $apt_contents->find_perl_module_package('Image::Magick') . '',
+    'graphicsmagick-libmagick-dev-compat | perlmagick',
+    'Alternative dependency for Image::Magick module found in multiple packages'
 );
 
 ok( unlink "$Bin/Contents.cache", 'Contents.cache unlnked' );

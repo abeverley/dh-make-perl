@@ -1148,3 +1148,6 @@ usr/share/request-tracker3.6/lib/RT/URI/base.pm		    misc/request-tracker3.6
 usr/share/request-tracker3.6/lib/RT/URI/fsck_com_rt.pm	    misc/request-tracker3.6
 usr/share/request-tracker3.6/lib/RT/URI/fsck_com_rtfm.pm    misc/rt3.6-rtfm
 usr/share/request-tracker3.6/lib/RT/URI/t.pm		    misc/request-tracker3.6
+usr/lib/perl5/Image/Magick.pm							perl/perlmagick
+usr/share/perl5/GD/SecurityImage/Magick.pm				perl/libgd-securityimage-perl
+usr/share/perl5/Image/Magick.pm							graphics/graphicsmagick-libmagick-dev-compat
