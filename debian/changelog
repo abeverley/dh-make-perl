@@ -25,6 +25,7 @@ dh-make-perl (0.73-1) UNRELEASED; urgency=low
     Closes: #626987 - dh-make-perl: Debian::WNPP::Query does not correctly
     invalidate cache or use platform-netural Storable format
   * bump default debhelper compatibility level to 8
+  * note oldstable has perl 5.10.0, not 5.8.8
 
  -- Salvatore Bonaccorso <carnil@debian.org>  Wed, 25 May 2011 16:04:40 +0200
 

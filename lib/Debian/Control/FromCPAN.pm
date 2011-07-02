@@ -23,7 +23,7 @@ use DhMakePerl::Utils qw( is_core_module find_cpan_module nice_perl_ver split_ve
 use File::Spec qw( catfile );
 use Module::Depends ();
 
-use constant oldstable_perl_version => '5.8.8';
+use constant oldstable_perl_version => '5.10.0';
 
 =head1 METHODS
 

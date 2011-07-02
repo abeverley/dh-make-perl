@@ -42,7 +42,7 @@ use AptPkg::Config;
 
 $AptPkg::Config::_config->init();
 
-our $oldstable_perl = '5.8.8';
+our $oldstable_perl = '5.10.0';
 
 =head1 CONSTRUCTOR
 
