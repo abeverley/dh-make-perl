@@ -27,11 +27,6 @@
 * different rules files: do we still need share/rules.*?
   and: is the POD still correct about rules.MakeMaker and rules.Module-Build?
   we depend on debhelper >= 7
-* I noticed a problem with the dists.t test script. It essentially does
-  a system("dh-make-perl"). This causes two problems. Firstly it is a pain to
-  debug if something goes wrong. More seriously there is a tendency to pick
-  up the wrong DhMakePerl library invalidating the tests. Really the DhMakePerl
-  API should be used directly. ~periapt
 * Really minor issue. The AptContents.t test can be thrown off if the contents
   directory has stuff lying around from a failed run. ~periapt
 * Add a switch for "app" (foo-bar) vs. "lib" (libfoo-bar-perl) packages?
