@@ -589,8 +589,8 @@ EOF
 sub setup_git_repository {
     my ( $self, $tarball ) = @_;
 
-    use Git;
-    use IO::Dir;
+    require Git;
+    require IO::Dir;
 
     Git::command( 'init', $self->main_dir );
 
