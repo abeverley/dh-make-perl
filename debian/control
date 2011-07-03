@@ -3,7 +3,6 @@ Section: perl
 Priority: optional
 Build-Depends: debhelper (>= 8), perl
 Build-Depends-Indep: 
- git,
  libapt-pkg-perl,
  libarray-unique-perl,
  libclass-accessor-perl,

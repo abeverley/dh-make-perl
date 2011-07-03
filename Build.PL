@@ -6,6 +6,10 @@ use My::Builder;
 my $builder = My::Builder->new(
     module_name         => 'DhMakePerl',
     license             => 'gpl',
+    recommends          => {
+        'Git'     => 0,
+        'IO::Dir' => 0,
+    },
     requires            => {
         perl    => '5.010',
 
