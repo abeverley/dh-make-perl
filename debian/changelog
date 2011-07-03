@@ -1,4 +1,4 @@
-dh-make-perl (0.73-1) UNRELEASED; urgency=low
+dh-make-perl (0.73-1) unstable; urgency=low
 
   [ gregor herrmann ]
   * Build.PL: add missing modules.
@@ -36,7 +36,7 @@ dh-make-perl (0.73-1) UNRELEASED; urgency=low
     fixing lookups for ./LICENSE, etc on refresh. Closes: #613606 -- Fails to
     correctly identify GPLv2 in RT::Authen::ExternalAuth v0.08 on refresh
 
- -- Salvatore Bonaccorso <carnil@debian.org>  Wed, 25 May 2011 16:04:40 +0200
+ -- Damyan Ivanov <dmn@debian.org>  Sun, 03 Jul 2011 14:51:54 +0300
 
 dh-make-perl (0.72-1) unstable; urgency=low
 
