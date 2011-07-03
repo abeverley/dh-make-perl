@@ -1,4 +1,4 @@
-0.73 (2011-05-09)
+0.73 (2011-07-03)
 
   [ gregor herrmann ]
   Add missing modules to Build.PL.
@@ -12,6 +12,30 @@
   Debian::Control::Stanza::Source: Add DM-Upload-Allowed field to
     supported fields for source stanza in debian/control.
 
+  * Debian::Control::Stanza::Source: Order fields similar to dh_make generated
+    templates.
+
+  [ Nicholas Bamber ]
+  * Updated authorship notice
+
+  [ Damyan Ivanov ]
+  * Add --vcs option, guiding VCS-* headers' creation in --pkg-perl mode. It
+    also helps with the initial repository creation for Git
+  * Do not die when the WNPP cache cannot be read, for example due to binary
+    format change in Storable. Also, use platform-independent storage.
+    Closes: #626987 - dh-make-perl: Debian::WNPP::Query does not correctly
+    invalidate cache or use platform-netural Storable format
+  * bump default debhelper compatibility level to 8
+  * note oldstable has perl 5.10.0, not 5.8.8
+  * apply a patch from Manfred Stock fixing AptContents not to miss
+    alternative dependencies when a given module is found in more than one
+    package. Closes: #622852
+  * Use CPAN::Meta for processing META.* files, adding support for META.json.
+  * When no META file is available, try parsing name and version from Build.PL
+    before Makefile.PL. Closes: #589946
+  * fix calls to extract_basic_copyright from File::Find::find to not chdir,
+    fixing lookups for ./LICENSE, etc on refresh. Closes: #613606 -- Fails to
+    correctly identify GPLv2 in RT::Authen::ExternalAuth v0.08 on refresh
 
 0.72 (2011-02-05)
 
