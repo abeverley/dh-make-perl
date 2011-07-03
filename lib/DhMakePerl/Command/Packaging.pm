@@ -274,15 +274,18 @@ sub extract_basic {
     $self->debian_dir( $self->main_file('debian') );
 
     find(
-        sub {
-            return if $File::Find::name =~ $self->cfg->exclude;
+        {   no_chdir => 1,
+            wanted   => sub {
+                return if $File::Find::name =~ $self->cfg->exclude;
 
-            if (/\.(pm|pod)$/) {
-                $self->extract_desc($_)
-                    unless $bin->short_description and $bin->long_description;
-                $self->extract_basic_copyright($_)
-                    unless $self->author and $self->copyright;
-            }
+                if (/\.(pm|pod)$/) {
+                    $self->extract_desc($_)
+                        unless $bin->short_description
+                            and $bin->long_description;
+                    $self->extract_basic_copyright($_)
+                        unless $self->author and $self->copyright;
+                }
+            },
         },
         $self->main_dir
     );
