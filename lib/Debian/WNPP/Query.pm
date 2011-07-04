@@ -85,7 +85,7 @@ sub _read_cache {
     return unless $self->cache_file and -e $self->cache_file;
 
     $self->_cache( eval { Storable::retrieve( $self->cache_file ) }
-            || undef );
+            || {} );
 }
 
 sub _write_cache {
