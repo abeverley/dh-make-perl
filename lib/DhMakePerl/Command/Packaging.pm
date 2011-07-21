@@ -725,7 +725,7 @@ sub check_for_xs {
     # we need the relative path here. Otherwise the check will give bogus
     # results if the working dir matches the pattern
     my $rel_path = substr( $File::Find::name, length( $self->main_dir ) );
-    ( $rel_path !~ m{/(?:examples?|samples|eg|t|docs|win32?)/} )
+    ( $rel_path !~ m{/(?:examples?|samples|eg|t|docs|win32?|demos?)/} )
             and
     ( !$self->cfg->exclude or $rel_path !~ $self->cfg->exclude )
         && /\.(xs|c|cpp|cxx)$/i

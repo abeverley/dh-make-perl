@@ -1,10 +1,15 @@
 dh-make-perl (0.74-1) UNRELEASED; urgency=low
 
+  [ Tim Retout ]
   * t/cache.t: New test for handling unreadable cache files.
   * Debian::WNPP::Query: return an empty hashref rather than undef after
     failing to read cache file.
 
- -- Tim Retout <diocles@debian.org>  Mon, 04 Jul 2011 17:12:39 +0100
+  [ Damyan Ivanov ]
+  * Packaging.pm: extend the examples regular expression to match demo/demos.
+    Thanks to Kevin Ryde. Closes: #634932
+
+ -- Damyan Ivanov <dmn@debian.org>  Thu, 21 Jul 2011 20:58:01 +0200
 
 dh-make-perl (0.73-1) unstable; urgency=low
 
