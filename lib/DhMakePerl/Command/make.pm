@@ -169,7 +169,7 @@ sub execute {
                     $self->pkgname )
             );
             $self->control->source->Vcs_Browser(
-                sprintf( "http://svn.debian.org/viewsvn/pkg-perl/trunk/%s/",
+                sprintf( "http://anonscm.debian.org/viewvc/pkg-perl/trunk/%s/",
                     $self->pkgname )
             );
         }
@@ -179,7 +179,7 @@ sub execute {
                     $self->pkgname )
             );
             $self->control->source->Vcs_Browser(
-                sprintf( "http://git.debian.org/git/pkg-perl/packages/%s.git",
+                sprintf( "http://anonscm.debian.org/gitweb/?p=pkg-perl/packages/%s.git",
                     $self->pkgname )
             );
         }

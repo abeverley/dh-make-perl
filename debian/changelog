@@ -9,6 +9,9 @@ dh-make-perl (0.74-1) UNRELEASED; urgency=low
   * Packaging.pm: extend the examples regular expression to match demo/demos.
     Thanks to Kevin Ryde. Closes: #634932
 
+  [ gregor herrmann ]
+  * Update created Vcs-Browser URLs for Debian Perl Group repositories.
+
  -- Damyan Ivanov <dmn@debian.org>  Thu, 21 Jul 2011 20:58:01 +0200
 
 dh-make-perl (0.73-1) unstable; urgency=low
