@@ -41,8 +41,8 @@ Uploaders: Wolfgang Schemmel <debian@37.org>,
  Maximilian Gass <mxey@cloudconnected.org>,
  Nicholas Bamber <nicholas@periapt.co.uk>
 Standards-Version: 3.9.2
-Vcs-Svn: svn://svn.debian.org/pkg-perl/trunk/dh-make-perl/
-Vcs-Browser: http://svn.debian.org/viewsvn/pkg-perl/trunk/dh-make-perl/
+Vcs-Git: git://git.debian.org/pkg-perl/packages/dh-make-perl.git
+Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-perl/packages/dh-make-perl.git
 
 Package: dh-make-perl
 Architecture: all
