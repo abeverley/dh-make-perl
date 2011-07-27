@@ -72,7 +72,7 @@ use constant DEFAULTS => {
     network       => 1,
     only          => [ 'control', 'copyright', 'docs', 'examples', 'rules' ],
     source_format => '1.0',
-    vcs           => 'svn',
+    vcs           => 'git',
     verbose       => 1,
 };
 

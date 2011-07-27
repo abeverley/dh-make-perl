@@ -14,6 +14,7 @@ dh-make-perl (0.74-1) UNRELEASED; urgency=low
 
   [ Ansgar Burchardt ]
   * debian/control: Convert Vcs-* fields to Git.
+  * DhMakePerl::Config: Change default VCS to Git.
 
  -- Damyan Ivanov <dmn@debian.org>  Thu, 21 Jul 2011 20:58:01 +0200
 
