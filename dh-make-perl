@@ -340,7 +340,7 @@ requires the apt-file package installed and updated)
 =item B<--source-format> I<format>
 
 When creating or refreshing packaging, use the specified source format.
-Defaults to C<1.0>.
+Defaults to C<3.0 (quilt)>.
 
 =item B<--sources-list> I<FILE>
 

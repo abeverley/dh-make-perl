@@ -4,6 +4,8 @@ dh-make-perl (0.74-1) UNRELEASED; urgency=low
   * t/cache.t: New test for handling unreadable cache files.
   * Debian::WNPP::Query: return an empty hashref rather than undef after
     failing to read cache file.
+  * DhMakePerl::Config: Change default source format to 3.0 (quilt).
+  * dh-make-perl: Update documentation of default source format.
 
   [ Damyan Ivanov ]
   * Packaging.pm: extend the examples regular expression to match demo/demos.
