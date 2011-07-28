@@ -1,0 +1,30 @@
+* when ITP for the package is found, try to deduce short/long description from
+  the bug report
+* --refresh: add --only <file> option: done, but "--only control" also
+  touches d/rules if quilt is used
+* versioned dependencies should add the epochs too (found in
+  libpoex-role-sessioninstantiation-perl, where META.yml and Build.PL
+  request 'POE 1.005' which should translate to "libpoe-perl (>= 2:1.0050)")
+  Can be solved if the next item is solved:
+* #536838: Incorrect assumptions about perl module version -> debian package
+  version. Some way of figuring out that libfoo-perl 3.42 contains Bar::Baz
+  4.23 is needed. while not common, version discrepacy is very annoying.
+  TODO: investigate usage of UDD. (1) can the info "package version module
+  module-version" be imported and (2) would it be possible to query that from
+  the web somehow, i.e. "which package+version contain at least
+  module+module-version?".
+  Two problems:
+  (a) dh-make-perl querying the web about each dependency seems not quite
+      right. Requests should be batched. One request per dh-make-perl run
+      is better. Is it good enough?
+  (b) will all this be enough? Given that perl module versions compare
+      differently to debian package versions, the result can still be wrong.
+      The same question holds with core packages, but perhaps they behave beter
+      wrt (not) changing versioning scheme.
+* Add a test case for finding (build) dependencies with META.yml.
+* different rules files: do we still need share/rules.*?
+  and: is the POD still correct about rules.MakeMaker and rules.Module-Build?
+  we depend on debhelper >= 7
+* Really minor issue. The AptContents.t test can be thrown off if the contents
+  directory has stuff lying around from a failed run. ~periapt
+* Add a switch for "app" (foo-bar) vs. "lib" (libfoo-bar-perl) packages?
