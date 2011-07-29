@@ -18,6 +18,11 @@ dh-make-perl (0.74-1) UNRELEASED; urgency=low
   * debian/control: Convert Vcs-* fields to Git.
   * DhMakePerl::Config: Change default VCS to Git.
 
+  [ Salvatore Bonaccorso ]
+  * DhMakePerl::Command::make: Fix bug in creation of .gitignore file in
+    setup_git_repository, causing that the process stopped and no pristine-tar
+    branch got created.
+
  -- Damyan Ivanov <dmn@debian.org>  Thu, 21 Jul 2011 20:58:01 +0200
 
 dh-make-perl (0.73-1) unstable; urgency=low

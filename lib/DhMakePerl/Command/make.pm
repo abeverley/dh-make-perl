@@ -613,9 +613,9 @@ sub setup_git_repository {
     $git->command( 'add', 'debian' );
     $git->command( 'commit', '-m', 'Initial packaging by dh-make-perl' );
     open my $gitignore, '>',
-        File::Spec->catfile( $self->maindir, 'gitignore' )
+        File::Spec->catfile( $self->main_dir, '.gitignore' )
         or die "Unable to open .gitignore: $!";
-    print $gitignore, "/.pc/\n";
+    print $gitignore "/.pc/\n";
     close $gitignore;
     $git->command( add => '.gitignore' );
     $git->command( commit => -m => 'add default .gitignore' );
