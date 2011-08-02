@@ -626,7 +626,7 @@ sub setup_git_repository {
     );
 
     $ENV{GIT_DIR} = File::Spec->catdir( $self->main_dir, '.git' );
-    system( 'pristine-tar', 'commit', $tarball ) >= 0
+    system( 'pristine-tar', 'commit', $tarball, "upstream/".$self->version ) >= 0
         or warn "error running pristine-tar: $!\n";
 }
 
