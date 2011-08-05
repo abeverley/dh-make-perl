@@ -1,4 +1,4 @@
-Format-Specification: http://svn.debian.org/wsvn/dep/web/deps/dep5.mdwn?op=file&rev=135
+Format-Specification: http://anonscm.debian.org/viewvc/dep/web/deps/dep5.mdwn?view=markup&pathrev=135
 Maintainer: Debian Perl Group <debian-perl@lists.debian.org>
 Source: svn://svn.debian.org/pkg-perl/trunk/dh-make-perl/
 Name: dh-make-perl
