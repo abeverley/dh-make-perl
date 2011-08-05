@@ -98,7 +98,7 @@ instead of C<Debbie Devlin E<lt>debbie@devlin.orgE<gt>>.
 
 =item B<--only> | B<-o> I<control|copyright|docs|examples|rules>
 
-This option allows to update only one or more file(s) in the debian/
+This option allows one to update only one or more file(s) in the debian/
 directory when B<dh-make-perl> is run in L</refresh> mode. Filenames are
 separated by a comma. The option can be given multiple times, accumulating
 arguments.
