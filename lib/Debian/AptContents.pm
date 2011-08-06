@@ -154,7 +154,7 @@ sub warning {
 =item repo_source_to_contents_paths
 
 Given a line with Deban package repository path (typically taken from
-F<sources.list>), converts it to the correspondinf F<Contents> file names.
+F<sources.list>), converts it to the corresponding F<Contents> file names.
 
 =cut
 
