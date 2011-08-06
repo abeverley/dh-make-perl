@@ -151,17 +151,17 @@ sub warning {
     warn "$msg\n" if $self->verbose >= $level;
 }
 
-=item repo_source_to_contents_path
+=item repo_source_to_contents_paths
 
 Given a line with Deban package repository path (typically taken from
-F<sources.list>), converts it to the correspondinf F<Contents> file name.
+F<sources.list>), converts it to the correspondinf F<Contents> file names.
 
 =cut
 
-sub repo_source_to_contents_path {
+sub repo_source_to_contents_paths {
     my ( $self, $source ) = @_;
 
-    my ( $schema, $uri, $dist, @extra ) = split /\s+/, $source;
+    my ( $schema, $uri, $dist, @components ) = split /\s+/, $source;
     my ( $proto, $host, $port, $dir ) = $uri =~ m{
 	^
         (?:([^:/?\#]+):)?                      # proto
@@ -195,13 +195,15 @@ sub repo_source_to_contents_path {
     s{^/}{}  for ( $host, $dir, $dist );    # remove initial /
     s{/}{_}g for ( $host, $dir, $dist );    # replace remaining /
 
-    return ( $host . "_" . join( "_", $dir || (), "dists", $dist ) );
+    return map
+        { $host . "_" . join( "_", $dir || (), "dists", $dist, $_ ) }
+        @components;
 }
 
 =item get_contents_files
 
 Reads F<sources.list>, gives the repository paths to
-C<repo_source_to_contents_path> and returns an arrayref of file names of
+C<repo_source_to_contents_paths> and returns an arrayref of file names of
 Contents files.
 
 =cut
@@ -229,17 +231,15 @@ sub get_contents_files {
             s/\s+$//;
             next unless $_;
 
-            my $path = $self->repo_source_to_contents_path($_);
-
-            next unless $path;
-
-            # try all of with/out architecture and
-            # un/compressed
-            for my $a ( '', "-$archspec" ) {
-                for my $c ( '', '.gz' ) {
-                    my $f = catfile( $self->contents_dir,
-                        "${path}_Contents$a$c", );
-                    push @res, $f if -e $f;
+            for my $path ( $self->repo_source_to_contents_paths($_) ) {
+                # try all of with/out architecture and
+                # un/compressed
+                for my $a ( '', "-$archspec" ) {
+                    for my $c ( '', '.gz' ) {
+                        my $f = catfile( $self->contents_dir,
+                            "${path}_Contents$a$c", );
+                        push @res, $f if -e $f;
+                    }
                 }
             }
         }

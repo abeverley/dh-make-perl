@@ -25,6 +25,9 @@ dh-make-perl (0.74-1) UNRELEASED; urgency=low
     setup_git_repository, causing that the process stopped and no pristine-tar
     branch got created.
 
+  [ Maximilian Gass ]
+  * Fix Debian::AptContents for file name changes in apt-file 2.5.0
+
  -- Damyan Ivanov <dmn@debian.org>  Thu, 21 Jul 2011 20:58:01 +0200
 
 dh-make-perl (0.73-1) unstable; urgency=low
