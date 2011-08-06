@@ -37,45 +37,54 @@ is( $apt_contents->cache, undef, 'but should contain no cache' );
 
 is( $apt_contents->cache, undef, 'should have no cache when no dists found' );
 
-is(
-    $apt_contents->repo_source_to_contents_path(
-        'deb     http://debian.cihar.com/ unstable main contrib non-free'),
-    'debian.cihar.com_dists_unstable',
+is_deeply(
+    [ $apt_contents->repo_source_to_contents_paths(
+        'deb     http://debian.cihar.com/ unstable main contrib non-free') ],
+    [ 'debian.cihar.com_dists_unstable_main',
+      'debian.cihar.com_dists_unstable_contrib',
+      'debian.cihar.com_dists_unstable_non-free' ],
     'source line conversion 1',
 );
 
-is(
-    $apt_contents->repo_source_to_contents_path(
-        'deb     http://kernel-archive.buildserver.net/debian-kernel trunk main'),
-    'kernel-archive.buildserver.net_debian-kernel_dists_trunk',
+is_deeply(
+    [ $apt_contents->repo_source_to_contents_paths(
+        'deb     http://kernel-archive.buildserver.net/debian-kernel trunk main') ],
+    [ 'kernel-archive.buildserver.net_debian-kernel_dists_trunk_main' ],
     'source line conversion 2',
 );
 
-is(
-    $apt_contents->repo_source_to_contents_path(
-        'deb     http://www.debian-multimedia.org stable main'),
-    'www.debian-multimedia.org_dists_stable',
+is_deeply(
+    [ $apt_contents->repo_source_to_contents_paths(
+        'deb     http://www.debian-multimedia.org stable main') ],
+    [ 'www.debian-multimedia.org_dists_stable_main' ],
     'source line conversion 3',
 );
 
-is(
-    $apt_contents->repo_source_to_contents_path(
-        'deb     http://ftp.debian-unofficial.org/debian testing main contrib non-free restricted'),
-    'ftp.debian-unofficial.org_debian_dists_testing',
+is_deeply(
+    [ $apt_contents->repo_source_to_contents_paths(
+        'deb     http://ftp.debian-unofficial.org/debian testing main contrib non-free restricted') ],
+    [ 'ftp.debian-unofficial.org_debian_dists_testing_main',
+      'ftp.debian-unofficial.org_debian_dists_testing_contrib',
+      'ftp.debian-unofficial.org_debian_dists_testing_non-free',
+      'ftp.debian-unofficial.org_debian_dists_testing_restricted' ],
     'source line conversion 4',
 );
 
-is(
-    $apt_contents->repo_source_to_contents_path(
-        'deb     http://ftp.de.debian.org/debian/ unstable main contrib non-free'),
-    'ftp.de.debian.org_debian_dists_unstable',
+is_deeply(
+    [ $apt_contents->repo_source_to_contents_paths(
+        'deb     http://ftp.de.debian.org/debian/ unstable main contrib non-free') ],
+    [ 'ftp.de.debian.org_debian_dists_unstable_main',
+      'ftp.de.debian.org_debian_dists_unstable_contrib',
+      'ftp.de.debian.org_debian_dists_unstable_non-free' ],
     'source line conversion 5',
 );
 
-is(
-    $apt_contents->repo_source_to_contents_path(
-        'deb file:/home/jason/debian stable main contrib non-free'),
-    '_home_jason_debian_dists_stable',
+is_deeply(
+    [ $apt_contents->repo_source_to_contents_paths(
+        'deb file:/home/jason/debian stable main contrib non-free') ],
+    [ '_home_jason_debian_dists_stable_main',
+      '_home_jason_debian_dists_stable_contrib',
+      '_home_jason_debian_dists_stable_non-free' ],
     'source line conversion 6',
 );
 
@@ -112,8 +121,8 @@ is( $apt_contents->find_perl_module_package('Moose') . '',
 
 is_deeply(
     $apt_contents->get_contents_files,
-    [   "$Bin/contents/test_debian_dists_sid_Contents",
-        "$Bin/contents/test_debian_dists_testing_Contents"
+    [   "$Bin/contents/test_debian_dists_sid_main_Contents",
+        "$Bin/contents/test_debian_dists_testing_main_Contents"
     ]
 );
 
