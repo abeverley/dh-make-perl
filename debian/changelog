@@ -24,6 +24,7 @@ dh-make-perl (0.74-1) UNRELEASED; urgency=low
   * DhMakePerl::Command::make: Fix bug in creation of .gitignore file in
     setup_git_repository, causing that the process stopped and no pristine-tar
     branch got created.
+  * Debian::AptContents: Fix typo in POD.
 
   [ Maximilian Gass ]
   * Fix Debian::AptContents for file name changes in apt-file 2.5.0
