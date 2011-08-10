@@ -612,13 +612,6 @@ sub setup_git_repository {
     $git->command( qw( checkout -b master upstream ) );
     $git->command( 'add', 'debian' );
     $git->command( 'commit', '-m', 'Initial packaging by dh-make-perl' );
-    open my $gitignore, '>',
-        File::Spec->catfile( $self->main_dir, '.gitignore' )
-        or die "Unable to open .gitignore: $!";
-    print $gitignore "/.pc/\n";
-    close $gitignore;
-    $git->command( add => '.gitignore' );
-    $git->command( commit => -m => 'add default .gitignore' );
     $git->command(
         qw( remote add origin ),
         sprintf( "ssh://git.debian.org/git/pkg-perl/packages/%s.git",
