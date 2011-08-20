@@ -11,6 +11,9 @@ dh-make-perl (0.74-1) UNRELEASED; urgency=low
   * Packaging.pm: extend the examples regular expression to match demo/demos.
     Thanks to Kevin Ryde. Closes: #634932
   * add pristine-tar to Recommends. Thanks to Tim.
+  * fix t/debian-version.t to not plan twice in case debian/changelog does not
+    exist (e.g. when testing the CPAN distribution, which lacks debian/ stuff)
+    RT#66214
 
   [ gregor herrmann ]
   * Update created Vcs-Browser URLs for Debian Perl Group repositories.

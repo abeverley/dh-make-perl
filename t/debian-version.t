@@ -1,6 +1,6 @@
 #!perl -T
 
-use Test::More tests => 1;
+use Test::More;
 
 use DhMakePerl;
 
@@ -9,6 +9,8 @@ use Parse::DebianChangelog;
 
 plan skip_all => "'no 'debian/changelog' found"
     unless -f "$Bin/../debian/changelog";
+
+plan tests => 1;
 
 my $cl = Parse::DebianChangelog->init->parse( { infile => "$Bin/../debian/changelog" } );
 
