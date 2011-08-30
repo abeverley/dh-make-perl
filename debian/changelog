@@ -14,6 +14,7 @@ dh-make-perl (0.74-1) UNRELEASED; urgency=low
   * fix t/debian-version.t to not plan twice in case debian/changelog does not
     exist (e.g. when testing the CPAN distribution, which lacks debian/ stuff)
     RT#66214
+  * setup_git_repository: streamline import of upstream sources
 
   [ gregor herrmann ]
   * Update created Vcs-Browser URLs for Debian Perl Group repositories.

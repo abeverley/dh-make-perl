@@ -596,14 +596,8 @@ sub setup_git_repository {
 
     my $git = Git->repository( $self->main_dir );
     $git->command( qw(symbolic-ref HEAD refs/heads/upstream) );
-    my @upstream_files;
-    my $dh = IO::Dir->new( $self->main_dir );
-    while ( defined( my $f = $dh->read ) ) {
-        next if $f eq '.' or $f eq '..';
-        next if $f eq 'debian';
-        push @upstream_files, $f;
-    }
-    $git->command( 'add', @upstream_files );
+    $git->command( 'add', $self->main_dir );
+    $git->command( 'rm', '--cached', '-r', $self->debian_dir );
     $git->command( 'commit', '-m',
               "Import original source of "
             . $self->perlname . ' '
