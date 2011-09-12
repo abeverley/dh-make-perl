@@ -4,7 +4,7 @@
       "unknown"
    ],
    "dynamic_config" : 1,
-   "generated_by" : "Module::Build version 0.38, CPAN::Meta::Converter version 2.110930",
+   "generated_by" : "Module::Build version 0.38, CPAN::Meta::Converter version 2.112150",
    "license" : [
       "open_source"
    ],
@@ -140,7 +140,7 @@
       },
       "DhMakePerl" : {
          "file" : "lib/DhMakePerl.pm",
-         "version" : "0.73"
+         "version" : "0.74"
       },
       "DhMakePerl::Command::Packaging" : {
          "file" : "lib/DhMakePerl/Command/Packaging.pm",
@@ -189,5 +189,5 @@
          "http://www.gnu.org/licenses/old-licenses/gpl-1.0.txt"
       ]
    },
-   "version" : "0.73"
+   "version" : "0.74"
 }
