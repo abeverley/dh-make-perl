@@ -1,4 +1,4 @@
-dh-make-perl (0.74-1) UNRELEASED; urgency=low
+dh-make-perl (0.74-1) unstable; urgency=low
 
   [ Tim Retout ]
   * t/cache.t: New test for handling unreadable cache files.
@@ -35,7 +35,7 @@ dh-make-perl (0.74-1) UNRELEASED; urgency=low
   * debian/control: Change Recommends on apt-file to versioned Recommends on 
     apt-file (>= 2.5.0).
 
- -- Damyan Ivanov <dmn@debian.org>  Thu, 21 Jul 2011 20:58:01 +0200
+ -- Damyan Ivanov <dmn@debian.org>  Mon, 12 Sep 2011 23:17:59 +0300
 
 dh-make-perl (0.73-1) unstable; urgency=low
 
