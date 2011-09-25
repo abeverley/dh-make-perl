@@ -354,7 +354,7 @@ Default: apt's default.
 =item B<--vcs> I<VCS>
 
 In B<--pkg-perl> mode, use the specified version control system in the
-generated I<Vcs-*> fields. The default is C<svn> (still).
+generated I<Vcs-*> fields. The default is C<git>.
 
 If I<VCS> is C<git>, C<dh-make-perl> will setup a Git repository with three
 branches:
