@@ -29,6 +29,7 @@ sub dist_ok($) {
             "--apt-contents-dir", "$Bin/contents",
             "--data-dir", "$Bin/../share",
             $ENV{NO_NETWORK} ? '--no-network' : (),
+            "--vcs", "none",
             "--sources-list",
             "$Bin/contents/sources.list", "--email", "joemaint\@test.local",
             $dist );
