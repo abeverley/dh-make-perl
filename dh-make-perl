@@ -319,7 +319,8 @@ Useful when preparing a package for the Debian Perl Group
 L<http://pkg-perl.alioth.debian.org>.
 
 Sets C<Maintainer>, C<Uploaders>, C<Vcs-Svn> and C<Vcs-Browser> fields in
-F<debian/control> accordingly.
+F<debian/control> accordingly. Also, when C<--vcs git> is used (the default),
+sets up a Git remote pointing to the right place on I<git.debian.org>.
 
 =item B<--recursive>
 
@@ -376,7 +377,8 @@ A branch to keep L<pristine-tar(1)> data.
 
 =back
 
-Also, an C<origin> remote is added pointing to the repository on I<git.debian.org>.
+If B<--pkg-perl> is also given, an C<origin> remote is added pointing to the
+repository on I<git.debian.org>.
 
 =item B<--verbose> | B<--no-verbose>
 

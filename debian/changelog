@@ -7,6 +7,8 @@ dh-make-perl (0.74-2) UNRELEASED; urgency=low
   * use '--vcs none' in tests
   * fix typo in --pristine-tar description
   * document the change of the default value of --vcs from 'svn' to 'git'
+  * dociment that in --vcs=git mode the 'origin' remote is added only if
+    --pkg-perl is also given
 
  -- Damyan Ivanov <dmn@debian.org>  Sun, 25 Sep 2011 16:23:22 +0300
 
