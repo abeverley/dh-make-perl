@@ -372,7 +372,7 @@ contents of the C<debian/> directory added.
 
 =item pristine-tar
 
-A pranch to keep L<pristine-tar(1)> data.
+A branch to keep L<pristine-tar(1)> data.
 
 =back
 
