@@ -201,8 +201,7 @@ sub execute {
     print "--- Done\n" if $self->cfg->verbose;
 
     $self->setup_git_repository($tarball)
-        if $self->cfg->{pkg_perl}
-            and $self->cfg->{vcs} eq 'git';
+        if $self->cfg->{vcs} eq 'git';
 
     $self->package_already_exists($apt_contents) 
         or $self->modules_already_packaged($apt_contents);
