@@ -29,6 +29,7 @@ my $builder = My::Builder->new(
         'File::Find::Rule'          => 0,
         'File::Spec'                => 0,
         'File::Spec::Functions'     => 0,
+        'File::Which'               => 0,
         'FindBin'                   => 0,
         'Getopt::Long'              => 0,
         'IO::File'                  => 0,
