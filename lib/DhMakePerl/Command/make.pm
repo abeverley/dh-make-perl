@@ -590,6 +590,7 @@ sub setup_git_repository {
 
     require Git;
     require IO::Dir;
+    require File::Which;
 
     Git::command( 'init', $self->main_dir );
 
@@ -611,9 +612,18 @@ sub setup_git_repository {
             $self->pkgname ),
     ) if $self->cfg->pkg_perl;
 
-    $ENV{GIT_DIR} = File::Spec->catdir( $self->main_dir, '.git' );
-    system( 'pristine-tar', 'commit', $tarball, "upstream/".$self->version ) >= 0
-        or warn "error running pristine-tar: $!\n";
+    if ( File::Which::which('pristine-tar') ) {
+        $ENV{GIT_DIR} = File::Spec->catdir( $self->main_dir, '.git' );
+        system( 'pristine-tar', 'commit', $tarball, "upstream/".$self->version ) >= 0
+            or warn "error running pristine-tar: $!\n";
+    }
+    else {
+        warn "W: pristine-tar not available. Please run\n";
+        warn "W:     apt-get install pristine-tar\n";
+        warn "W:  followed by\n";
+        warn "W:     pristine-tar commit $tarball upstream/"
+            . $self->version . "\n";
+    }
 }
 
 =item warning I<string> ...
