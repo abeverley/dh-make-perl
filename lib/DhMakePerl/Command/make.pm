@@ -609,7 +609,7 @@ sub setup_git_repository {
         qw( remote add origin ),
         sprintf( "ssh://git.debian.org/git/pkg-perl/packages/%s.git",
             $self->pkgname ),
-    );
+    ) if $self->cfg->pkg_perl;
 
     $ENV{GIT_DIR} = File::Spec->catdir( $self->main_dir, '.git' );
     system( 'pristine-tar', 'commit', $tarball, "upstream/".$self->version ) >= 0

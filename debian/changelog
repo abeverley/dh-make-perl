@@ -1,6 +1,7 @@
 dh-make-perl (0.74-2) UNRELEASED; urgency=low
 
   * setup Git repository in --vcs=git even without --pkg-perl
+  * when setting up Git repository, add remote only in --pkg-perl mode
 
  -- Damyan Ivanov <dmn@debian.org>  Sun, 25 Sep 2011 16:23:22 +0300
 
