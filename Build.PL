@@ -10,6 +10,7 @@ my $builder = My::Builder->new(
         'Git'     => 0,
         'IO::Dir' => 0,
     },
+    configure_requires => { 'Module::Build' => 0.38 },
     requires            => {
         perl    => '5.010',
 
