@@ -69,6 +69,11 @@ my $builder = My::Builder->new(
         share   => '/usr/share/dh-make-perl',
     },
     share_files         => { map( ( $_ => $_ ), glob 'share/*' ) },
+    meta_merge => {
+        resources => {
+            repository => 'http://anonscm.debian.org/gitweb/?p=pkg-perl/packages/dh-make-perl.git',
+        },
+    },
 );
 
 $builder->add_build_element('share');
