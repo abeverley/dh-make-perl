@@ -5,6 +5,11 @@
    ],
    "dynamic_config" : 1,
    "generated_by" : "Module::Build version 0.38, CPAN::Meta::Converter version 2.112580",
+   "keywords" : [
+      "debian",
+      "package",
+      "helper"
+   ],
    "license" : [
       "open_source"
    ],

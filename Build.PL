@@ -73,6 +73,7 @@ my $builder = My::Builder->new(
         resources => {
             repository => 'http://anonscm.debian.org/gitweb/?p=pkg-perl/packages/dh-make-perl.git',
         },
+        keywords => [ qw(debian package helper) ],
     },
 );
 
