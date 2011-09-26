@@ -3,7 +3,7 @@ use ExtUtils::MakeMaker;
 # the contents of the Makefile that is written.
 WriteMakefile(
     'NAME'	=> 'Strange',
-    'VERSION_FROM' => 'Strange.pm', # finds $VERSION
+    'VERSION'   => 2.1,
     'LIBS'	=> [''],   # e.g., '-lm' 
     'DEFINE'	=> '',     # e.g., '-DHAVE_SOMETHING' 
     'INC'	=> '',     # e.g., '-I/usr/include/other' 
