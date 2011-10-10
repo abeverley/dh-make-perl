@@ -246,9 +246,10 @@ EOF
 
 =item find_debs_for_modules I<dep hash>[, APT contents[, verbose ]]
 
-Scans the given hash of dependencies ( module => version ) and returns matching
-Debian package dependency specification (as an instance of
-L<Debian::Dependencies> class) and a list of missing modules.
+Scans the given hash of dependencies ( module => version ) and returns
+matching Debian package dependency specification (as an instance of
+L<Debian::Dependencies> class) and a list of missing modules. Installed
+packages are searched first, then the APT contents, then the perl core.
 
 =cut
 
@@ -270,22 +271,21 @@ sub find_debs_for_modules {
 
         my $dep;
 
-        if ($apt_contents) {
+        require Debian::DpkgLists;
+        if ( my @pkgs = Debian::DpkgLists->scan_perl_mod($module) ) {
+            $dep = Debian::Dependency->new(
+                  ( @pkgs > 1 )
+                ? [ map { { pkg => $_, ver => $version } } @pkgs ]
+                : ( $pkgs[0], $version )
+            );
+        }
+        elsif ($apt_contents) {
             $dep = $apt_contents->find_perl_module_package( $module, $version );
         }
         elsif ( my $ver = is_core_module( $module, $version ) ) {
             $dep = Debian::Dependency->new( 'perl', $ver );
         }
-        else {
-            require Debian::DpkgLists;
-            if ( my @pkgs = Debian::DpkgLists->scan_perl_mod($module) ) {
-                $dep = Debian::Dependency->new(
-                      ( @pkgs > 1 )
-                    ? [ map { { pkg => $_, ver => $version } } @pkgs ]
-                    : ( $pkgs[0], $version )
-                );
-            }
-        }
+
 
         $dep->rel($ver_rel) if $dep and $ver_rel and $dep->ver;
 
