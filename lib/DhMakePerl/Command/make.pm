@@ -195,16 +195,8 @@ sub execute {
     #create_readme("$debiandir/README.Debian");
     $self->create_copyright( $self->debian_file('copyright') );
     $self->update_file_list( docs => $self->docs, examples => $self->examples );
-    $self->build_package
-        if $self->cfg->build or $self->cfg->install;
-    $self->install_package if $self->cfg->install;
-    print "--- Done\n" if $self->cfg->verbose;
 
-    $self->setup_git_repository($tarball)
-        if $self->cfg->{vcs} eq 'git';
 
-    $self->package_already_exists($apt_contents) 
-        or $self->modules_already_packaged($apt_contents);
 
     if ( $self->cfg->recursive ) {
         $already_done //= {};
@@ -228,6 +220,17 @@ sub execute {
             $maker->execute($already_done)
         }
     }
+
+    $self->build_package
+        if $self->cfg->build or $self->cfg->install;
+    $self->install_package if $self->cfg->install;
+    print "--- Done\n" if $self->cfg->verbose;
+
+    $self->setup_git_repository($tarball)
+        if $self->cfg->{vcs} eq 'git';
+
+    $self->package_already_exists($apt_contents) 
+        or $self->modules_already_packaged($apt_contents);
 
     return(0);
 }
