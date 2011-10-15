@@ -348,12 +348,14 @@ sub install_package {
 
     my ( $archspec, $debname );
 
-    if ( $self->arch eq 'any' ) {
+    my $arch = $self->control->binary->Values(0)->Architecture;
+
+    if ( !defined $arch || $arch eq 'any' ) {
         $archspec = `dpkg --print-architecture`;
         chomp($archspec);
     }
     else {
-        $archspec = $self->arch;
+        $archspec = $arch;
     }
 
     $debname = sprintf( "%s_%s-1_%s.deb", $self->pkgname, $self->version,
