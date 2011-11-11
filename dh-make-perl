@@ -40,10 +40,10 @@ a debian source package out of a Perl module or CPAN distribution.
 This works for most simple packages and is also useful
 for getting started with packaging Perl modules.
 
-You can specify a module or distribution name with the L<--cpan|/cpan_module>
+You can specify a module or distribution name with the L<--cpan>
 switch and B<dh-make-perl> will download it for you from a CPAN mirror, or you
 can specify the directory with the already unpacked sources. If neither
-L<--cpan|/cpan_module> nor a directory is given as argument, B<dh-make-perl>
+L<--cpan> nor a directory is given as argument, B<dh-make-perl>
 tries to create a Perl package from the data in the current directory.
 
 You can build and install the debian package using the L</--build>
