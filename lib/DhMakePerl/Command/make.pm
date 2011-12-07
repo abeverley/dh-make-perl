@@ -278,6 +278,7 @@ sub setup_dir {
         }
 
         $dist->get || die "Cannot get ", $dist->pretty_id, "\n"; # <- here $ENV{'PWD'} gets set to $HOME/.cpan/build
+        chdir $orig_pwd;                                         # so set it back
         $dist->pretty_id =~ /^(.)(.)/;
         $tarball = $CPAN::Config->{'keep_source_where'} . "/authors/id/$1/$1$2/";
         # the file is under authors/id/A/AU/AUTHOR directory
