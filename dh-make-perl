@@ -318,7 +318,7 @@ name.
 Useful when preparing a package for the Debian Perl Group
 L<http://pkg-perl.alioth.debian.org>.
 
-Sets C<Maintainer>, C<Uploaders>, C<Vcs-Svn> and C<Vcs-Browser> fields in
+Sets C<Maintainer>, C<Uploaders>, C<Vcs-Git> and C<Vcs-Browser> fields in
 F<debian/control> accordingly. Also, when C<--vcs git> is used (the default),
 sets up a Git remote pointing to the right place on I<git.debian.org>.
 
