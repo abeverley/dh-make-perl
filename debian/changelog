@@ -1,5 +1,6 @@
 dh-make-perl (0.75-1) UNRELEASED; urgency=low
 
+  [ Damyan Ivanov ]
   * setup Git repository in --vcs=git even without --pkg-perl
   * when setting up Git repository, add 'origin' remote only in --pkg-perl
     mode
@@ -13,6 +14,25 @@ dh-make-perl (0.75-1) UNRELEASED; urgency=low
     + add explicit configure_requires on Module::Build
     + add repository URL
     + add keywords
+  * remove t/contents/wnpp.cache (added by mistake)
+  * really test the missing version quotes fix
+
+  [ gregor herrmann ]
+  * Swap order of alternative (build) dependencies after the perl 5.14
+    transition.
+  * DhMakePerl/Command/make.pm: setup_dir(): change back to original
+    directory after CPAN.pm changes it; thanks to Dima Kogan
+    (cf. RT#71708).
+  * Fix POD: --pkg-perl sets Vcs-Git, of course.
+
+  [ Dima Kogan ]
+  * Updated Dima Kogan's email address
+  * When making recursively, I build/install this package only AFTER I
+    built/installed its dependencies
+  * find_debs_for_modules() no longer reports installed-but-not-in-aptfile
+    packages as missing
+  * when installing a package, $arch now comes from the control file
+  (Closes: #651343)
 
  -- Damyan Ivanov <dmn@debian.org>  Sun, 25 Sep 2011 16:23:22 +0300
 
