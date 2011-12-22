@@ -16,6 +16,7 @@ dh-make-perl (0.75-1) UNRELEASED; urgency=low
     + add keywords
   * remove t/contents/wnpp.cache (added by mistake)
   * really test the missing version quotes fix
+  * when warning about missing apt-file, state the minimum required version
 
   [ gregor herrmann ]
   * Swap order of alternative (build) dependencies after the perl 5.14
