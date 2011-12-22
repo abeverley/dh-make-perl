@@ -1,3 +1,46 @@
+0.75 (2012-01-15)
+
+  [ Damyan Ivanov ]
+  * setup Git repository in --vcs=git even without --pkg-perl
+  * when setting up Git repository, add 'origin' remote only in --pkg-perl
+    mode
+  * fail gracefuly if pristine-tar is not available
+  * add libfile-which-perl to (build-)dependencies
+  * fix typo in --pristine-tar description
+  * Apply patch from Dima Kogan, avoiding confusion when the version string is
+    not quoted (RT#71224)
+  * META:
+    + add explicit configure_requires on Module::Build
+    + add repository URL
+    + add keywords
+  * when warning about missing apt-file, state the minimum required version
+
+  [ gregor herrmann ]
+  * Swap order of alternative (build) dependencies after the perl 5.14
+    transition.
+  * DhMakePerl/Command/make.pm: setup_dir(): change back to original
+    directory after CPAN.pm changes it; thanks to Dima Kogan
+    (cf. RT#71708).
+  * Fix POD: --pkg-perl sets Vcs-Git, of course.
+  * Treat META.json like META.yml (i.e. rm/unlink/ignore it).
+  * DhMakePerl::Command::Packaging: don't initialize CPAN if --no-network
+    is set. Otherwise t/cache.t fails because CPAN tries to update its
+    config and goes out hunting for CPAN mirrors.
+  * t/dists.t: allow multiple years in Copyright line.
+    "refresh" adds the current year to the years of copyright.
+    In other words: This was a "New Year's Bug".
+  * t/dists: fix the regexp for matching the email address of our maintainer.
+  * DhMakePerl::Command::Packaging: don't initialize CPAN if --no-network is set.
+  * Treat META.json like META.yml (i.e. rm/unlink/ignore it).
+
+  [ Dima Kogan ]
+  * When making recursively, build/install this package only AFTER its
+    dependencies have been built/installed
+  * find_debs_for_modules() no longer reports installed-but-not-in-aptfile
+    packages as missing
+  * when installing a package, $arch now comes from the control file
+    (Closes Debian bug #651343)
+
 0.74 (2011-09-12)
 
   [ Tim Retout ]
