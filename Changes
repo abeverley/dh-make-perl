@@ -1,3 +1,37 @@
+0.74 (2011-09-12)
+
+  [ Tim Retout ]
+  * t/cache.t: New test for handling unreadable cache files.
+  * Debian::WNPP::Query: return an empty hashref rather than undef after
+    failing to read cache file.
+  * DhMakePerl::Config: Change default source format to 3.0 (quilt).
+
+  [ Damyan Ivanov ]
+  * Packaging.pm: extend the examples regular expression to match demo/demos.
+    Thanks to Kevin Ryde. Closes Debian bug #634932
+  * add pristine-tar to Recommends. Thanks to Tim.
+  * fix t/debian-version.t to not plan twice in case debian/changelog does not
+    exist (e.g. when testing the CPAN distribution, which lacks debian/ stuff)
+    RT#66214
+  * setup_git_repository: streamline import of upstream sources
+
+  [ gregor herrmann ]
+  * Update created Vcs-Browser URLs for Debian Perl Group repositories.
+  * Change URLs for DEP5 Format-Specification to point to
+    http://anonscm.debian.org.
+  * Update list of contributors/copyright holders in dh-make-perl and
+    debian/copyright.
+
+  [ Ansgar Burchardt ]
+  * debian/control: Convert Vcs-* fields to Git.
+  * DhMakePerl::Config: Change default VCS to Git.
+
+  [ Salvatore Bonaccorso ]
+  * Debian::AptContents: Fix typo in POD.
+
+  [ Maximilian Gass ]
+  * Fix Debian::AptContents for file name changes in apt-file 2.5.0
+
 0.73 (2011-07-03)
 
   [ gregor herrmann ]
