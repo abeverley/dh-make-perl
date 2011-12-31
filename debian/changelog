@@ -35,6 +35,12 @@ dh-make-perl (0.75-1) UNRELEASED; urgency=low
   * when installing a package, $arch now comes from the control file
   (Closes: #651343)
 
+  [ gregor herrmann ]
+  * Treat META.json like META.yml (i.e. rm/unlink/ignore it).
+  * DhMakePerl::Command::Packaging: don't initialize CPAN if --no-network
+    is set. Otherwise t/cache.t fails because CPAN tries to update its
+    config and goes out hunting for CPAN mirrors.
+
  -- Damyan Ivanov <dmn@debian.org>  Sun, 25 Sep 2011 16:23:22 +0300
 
 dh-make-perl (0.74-1) unstable; urgency=low
