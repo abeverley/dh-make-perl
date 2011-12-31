@@ -1311,7 +1311,8 @@ sub configure_cpan {
 
     return if $CPAN::Config_loaded;
 
-    CPAN::HandleConfig->load( be_silent => not $self->cfg->verbose );
+    CPAN::HandleConfig->load( be_silent => not $self->cfg->verbose )
+        if $self->cfg->network;
 
     unshift( @{ $CPAN::Config->{'urllist'} }, $self->cfg->cpan_mirror )
         if $self->cfg->cpan_mirror;
