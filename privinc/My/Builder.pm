@@ -22,7 +22,7 @@ sub ACTION_orig {
     print "Linking ../$orig to ../$dist\n";
     link "../$dist", "../$orig" or die "link( ../$dist, ../$orig ): $!";
     $self->ACTION_distclean;
-    unlink 'MANIFEST', 'MANIFEST.bak', 'META.yml';
+    unlink 'MANIFEST', 'MANIFEST.bak', 'META.yml', 'META.json';
 }
 
 sub ACTION_dist {
