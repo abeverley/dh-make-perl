@@ -46,12 +46,13 @@ sub compare_tree {
 
                         # different copyright years are normal
                         # (test written in 2002 and run in 2020
+                        # after refreshing there can also be several years
                         if ($hint eq 'email') {
                             return 0
                              if $a
-                                 =~ /^Copyright: \d+, Florian Geekwurt <florian\@geekwurt\.org>$/
+                                 =~ /^Copyright: (\d+, )+Florian Geekwurt <florian\@geekwurt\.org>$/
                                  and $b
-                                 =~ /^Copyright: \d+, Florian Geekwurt <florian\@geekwurt\.org>$/;
+                                 =~ /^Copyright: (\d+, )+Florian Geekwurt <florian\@geekwurt\.org>$/;
                             return 0
                              if $a
                                  =~ /^ \d+, Joe Maintainer <joe\@debian\.org>$/
