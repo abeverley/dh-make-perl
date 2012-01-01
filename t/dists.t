@@ -49,9 +49,9 @@ sub compare_tree {
                         if ($hint eq 'email') {
                             return 0
                              if $a
-                                 =~ /^Copyright: \d+, Florian Geekwurt <florian\@\.geekwort\.org>$/
+                                 =~ /^Copyright: \d+, Florian Geekwurt <florian\@geekwurt\.org>$/
                                  and $b
-                                 =~ /^Copyright: \d+, Florian Geekwurt <florian\@\.geekwort\.org>$/;
+                                 =~ /^Copyright: \d+, Florian Geekwurt <florian\@geekwurt\.org>$/;
                             return 0
                              if $a
                                  =~ /^ \d+, Joe Maintainer <joe\@debian\.org>$/
