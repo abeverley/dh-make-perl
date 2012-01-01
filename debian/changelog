@@ -40,6 +40,9 @@ dh-make-perl (0.75-1) UNRELEASED; urgency=low
   * DhMakePerl::Command::Packaging: don't initialize CPAN if --no-network
     is set. Otherwise t/cache.t fails because CPAN tries to update its
     config and goes out hunting for CPAN mirrors.
+  * t/dists.t: allow multiple years in Copyright line. "refresh" adds the
+    current year to the years of copyright. In other words: This was a
+    "New Year's Bug".
 
  -- Damyan Ivanov <dmn@debian.org>  Sun, 25 Sep 2011 16:23:22 +0300
 
