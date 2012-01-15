@@ -1,4 +1,4 @@
-dh-make-perl (0.75-1) UNRELEASED; urgency=low
+dh-make-perl (0.75-1) unstable; urgency=low
 
   [ Damyan Ivanov ]
   * setup Git repository in --vcs=git even without --pkg-perl
@@ -44,7 +44,7 @@ dh-make-perl (0.75-1) UNRELEASED; urgency=low
     current year to the years of copyright. In other words: This was a
     "New Year's Bug". Closes: #655805
 
- -- Damyan Ivanov <dmn@debian.org>  Sun, 25 Sep 2011 16:23:22 +0300
+ -- Damyan Ivanov <dmn@debian.org>  Sun, 15 Jan 2012 19:44:27 +0200
 
 dh-make-perl (0.74-1) unstable; urgency=low
 
