@@ -1,3 +1,10 @@
+dh-make-perl (0.76-1) UNRELEASED; urgency=low
+
+  * create_watch: allow single-digit-only versions.
+    Thanks to Kevin Ryde for the report and the proposed fix (Closes: #657249)
+
+ -- Damyan Ivanov <dmn@debian.org>  Wed, 25 Jan 2012 15:31:15 +0200
+
 dh-make-perl (0.75-1) unstable; urgency=low
 
   [ Damyan Ivanov ]
