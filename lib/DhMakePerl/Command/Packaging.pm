@@ -933,13 +933,13 @@ sub create_copyright {
     $cprt_author =~ s/\n/\n    /gs;
     $cprt_author =~ s/^\s*$/    ./gm;
 
-    push @res, "Format-Specification: http://anonscm.debian.org/viewvc/dep/web/deps/dep5.mdwn?view=markup&pathrev=135";
+    push @res, 'Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/';
 
     # Header section
     %fields = (
-        Name       => $self->perlname,
-        Maintainer => $cprt_author,
-        Source     => $self->upsurl
+        'Upstream-Name'    => $self->perlname,
+        'Upstream-Contact' => $cprt_author,
+        'Source'           => $self->upsurl
     );
     for my $key ( keys %fields ) {
         my $full = "$key";
