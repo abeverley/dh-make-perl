@@ -1,7 +1,7 @@
-Format-Specification: http://anonscm.debian.org/viewvc/dep/web/deps/dep5.mdwn?view=markup&pathrev=135
-Maintainer: A. U. Thor, a.u.thor@a.galaxy.far.far.away
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Contact: A. U. Thor, a.u.thor@a.galaxy.far.far.away
 Source: http://search.cpan.org/dist/Strange/
-Name: Strange
+Upstream-Name: Strange
 DISCLAIMER: This copyright info was automatically extracted 
  from the perl module. It may not be accurate, so you better 
  check the module sources in order to ensure the module for its 
