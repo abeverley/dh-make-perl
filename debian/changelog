@@ -10,8 +10,15 @@ dh-make-perl (0.76-1) UNRELEASED; urgency=low
     3.9.3.
     Adjust Source location for dh-make-perl to point to the git repository.
     Update copyright years for debian/* packaging.
+  * Create debian/copyright with copyright-format 1.0
+    debian/copyright files are created following the copyright-format 1.0
+    released with Standards-Version 3.9.3.
+  * Adjust test files to copyright-format 1.0
+  * Bump Standards-Version to 3.9.3
+  * Create packages with Standards-Version 3.9.3.
+    Adjust control files in t/dists test-files.
 
- -- Salvatore Bonaccorso <carnil@debian.org>  Thu, 23 Feb 2012 10:57:18 +0100
+ -- Salvatore Bonaccorso <carnil@debian.org>  Thu, 23 Feb 2012 13:46:21 +0100
 
 dh-make-perl (0.75-1) unstable; urgency=low
 
