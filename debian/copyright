@@ -1,23 +1,22 @@
-Format-Specification: http://anonscm.debian.org/viewvc/dep/web/deps/dep5.mdwn?view=markup&pathrev=135
-Maintainer: Debian Perl Group <debian-perl@lists.debian.org>
-Source: svn://svn.debian.org/pkg-perl/trunk/dh-make-perl/
-Name: dh-make-perl
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: dh-make-perl
+Upstream-Contact: Debian Perl Group <debian-perl@lists.debian.org>
+Source: git://git.debian.org/pkg-perl/packages/dh-make-perl.git
 
 Files: *
-Copyright:
- 2000, 2001, Paolo Molaro <lupus@debian.org>
- 2002, 2003, 2008, Ivan Kohler <ivan-debian@420.am>
- 2003, 2004, Marc 'HE' Brockschmidt <he@debian.org>
- 2005-2007, Gunnar Wolf <gwolf@debian.org>
- 2006, Frank Lichtenheld <djpig@debian.org>
- 2007-2011, gregor herrmann <gregoa@debian.org>
- 2007-2011, Damyan Ivanov <dmn@debian.org>
- 2008, Roberto C. Sanchez <roberto@connexer.com>
- 2009-2011, Salvatore Bonaccorso <carnil@debian.org>
- 2011, Nicholas Bamber <nicholas@periapt.co.uk>
- 2011, Tim Retout <diocles@debian.org>
- 2011, Ansgar Burchardt <ansgar@debian.org>
- 2011, Maximilian Gass <mxey@cloudconnected.org>
+Copyright: 2000, 2001, Paolo Molaro <lupus@debian.org>
+           2002, 2003, 2008, Ivan Kohler <ivan-debian@420.am>
+           2003, 2004, Marc 'HE' Brockschmidt <he@debian.org>
+           2005-2007, Gunnar Wolf <gwolf@debian.org>
+           2006, Frank Lichtenheld <djpig@debian.org>
+           2007-2011, gregor herrmann <gregoa@debian.org>
+           2007-2011, Damyan Ivanov <dmn@debian.org>
+           2008, Roberto C. Sanchez <roberto@connexer.com>
+           2009-2012, Salvatore Bonaccorso <carnil@debian.org>
+           2011, Nicholas Bamber <nicholas@periapt.co.uk>
+           2011, Tim Retout <diocles@debian.org>
+           2011, Ansgar Burchardt <ansgar@debian.org>
+           2011, Maximilian Gass <mxey@cloudconnected.org>
 License: GPL-2
 
 License: GPL-2
