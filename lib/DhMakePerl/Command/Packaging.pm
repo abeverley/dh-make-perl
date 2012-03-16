@@ -1064,27 +1064,27 @@ sub create_copyright {
         # templates (i.e. you must add the author name and some
         # information within the licensing text as such).
         if ( $self->meta->{license} ) {
-	    foreach ( @{ $self->meta->{license} }) {
-	        given ($_) {
-		    when (/apache_2_0/) { $licenses{'Apache-2.0'} = 1; }
-		    when (/artistic_1/) { $licenses{'Artistic'} = 1; }
-		    when (/artistic_2/) { $licenses{'Artistic-2.0'} = 1; }
-		    # EU::MM and M::B converts the unversioned 'gpl' to gpl_1.
-		    # As a unversioned GPL means *any* GPL,I think it's safe to use GPL-1+ here
-		    when (/gpl_1/) { $licenses{'GPL-1+'} = 1; }
+            foreach ( @{ $self->meta->{license} }) {
+                given ($_) {
+                    when (/apache_2_0/) { $licenses{'Apache-2.0'} = 1; }
+                    when (/artistic_1/) { $licenses{'Artistic'} = 1; }
+                    when (/artistic_2/) { $licenses{'Artistic-2.0'} = 1; }
+                    # EU::MM and M::B converts the unversioned 'gpl' to gpl_1.
+                    # As a unversioned GPL means *any* GPL,I think it's safe to use GPL-1+ here
+                    when (/gpl_1/) { $licenses{'GPL-1+'} = 1; }
 
-		    when (/perl_5/) {
-		       $licenses{'GPL-1+'}   = 1;
+                    when (/perl_5/) {
+                       $licenses{'GPL-1+'}   = 1;
                        $licenses{'Artistic'} = 1;
-		    }
-		}
-	  }
-	}
+                    }
+                }
+          }
+        }
         else {
-	    if ( $mangle_cprt =~ /terms\s*as\s*Perl\s*itself/is ) {
+            if ( $mangle_cprt =~ /terms\s*as\s*Perl\s*itself/is ) {
               $licenses{'GPL-1+'}   = 1;
               $licenses{'Artistic'} = 1;
-	    }
+            }
 
             if ( $mangle_cprt =~ /[^L]GPL/ ) {
                 if ( $mangle_cprt =~ /GPL.*version\s*1.*later\s+version/is ) {
