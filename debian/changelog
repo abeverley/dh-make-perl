@@ -21,6 +21,12 @@ dh-make-perl (0.76-1) UNRELEASED; urgency=low
   [ Per Carlson ]
   * License attribute from META file is array. (Closes: #664150)
 
+  [ gregor herrmann ]
+  * DhMakePerl::Config: mark cpan option as explicitly set when called as
+    cpan2deb. Avoids overriding by having a cpan key in ~/.dh-make-perl
+    /.dh-make-perl.conf. Thanks to Brendan Byrd for the bug report.
+    (Closes: #668084)
+
  -- Salvatore Bonaccorso <carnil@debian.org>  Thu, 23 Feb 2012 13:46:21 +0100
 
 dh-make-perl (0.75-1) unstable; urgency=low
