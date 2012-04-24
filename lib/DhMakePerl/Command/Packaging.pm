@@ -300,7 +300,9 @@ sub sanitize_version {
 
     $ver =~ s/^v//;
     $ver =~ s/\.(\d\d\d)(\d\d\d)/.$1.$2/;    # 2.003004 -> 2.003.004
-    $ver =~ s/\.0+/./g;                      # 2.003.004 -> 2.3.4
+    $ver =~ s/\.0+(?=\d)/./g;                # 2.003.004 -> 2.3.4
+                                             # but avoid 2.0 -> 2.
+                                             #  or 2.0test -> 2.test
     $ver =~ s/[^-.+a-zA-Z0-9]+/-/g;
     $ver = "0$ver" unless $ver =~ /^\d/;
 
