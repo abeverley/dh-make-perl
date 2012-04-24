@@ -336,17 +336,16 @@ sub extract_name_ver {
             else {
                 die "Unable to determine dist name, no Build.PL, no Makefile.PL\nPlease use --cpan.\n";
             }
-
-            if ( $self->cfg->version ) {
-                $self->version( $self->cfg->version );
-            }
-            else {
-                die "Unable to determine dist version, no Build.PL, no Makefile.PL\nPlease use --version.\n";
-            }
         }
         $name = $self->perlname;
         $ver  = $self->version;
     }
+
+    $ver = $self->cfg->version
+        if $self->cfg->version;
+
+    defined($ver) and $ver ne ''
+        or die "Unable to determine dist version\. Please use --version.\n";
 
     # final sanitazing of name and version
     $name =~ s/::/-/g;
