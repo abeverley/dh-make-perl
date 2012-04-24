@@ -292,6 +292,21 @@ sub extract_basic {
     );
 }
 
+sub sanitize_version {
+    my $self = shift;
+    my ($ver) = @_;
+
+    return undef unless defined($ver);
+
+    $ver =~ s/^v//;
+    $ver =~ s/\.(\d\d\d)(\d\d\d)/.$1.$2/;    # 2.003004 -> 2.003.004
+    $ver =~ s/\.0+/./g;                      # 2.003.004 -> 2.3.4
+    $ver =~ s/[^-.+a-zA-Z0-9]+/-/g;
+    $ver = "0$ver" unless $ver =~ /^\d/;
+
+    return $ver;
+}
+
 sub extract_name_ver {
     my ($self) = @_;
 
@@ -300,10 +315,6 @@ sub extract_name_ver {
     if ( defined $self->meta->{name} and defined $self->meta->{version} ) {
         $name = $self->meta->{name};
         $ver  = $self->meta->{version};
-        if ( $ver =~ s/^v// ) {    # v4.43.43?
-            $ver =~ s/\.(\d\d\d)(\d\d\d)/.$1.$2/;    # 2.003004 -> 2.003.004
-            $ver =~ s/\.0+/./g;                      # 2.003.004 -> 2.3.4
-        }
     }
     else {
         if ( -e $self->build_pl ) {
@@ -336,10 +347,8 @@ sub extract_name_ver {
     }
 
     # final sanitazing of name and version
-    $ver =~ s/[^-.+a-zA-Z0-9]+/-/g;
-    $ver = "0$ver" unless $ver =~ /^\d/;
-
     $name =~ s/::/-/g;
+    $ver = $self->sanitize_version($ver);
 
     $name
         or $ver
