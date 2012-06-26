@@ -166,6 +166,7 @@ sub repo_source_to_contents_paths {
 	^
         (?:([^:/?\#]+):)?                      # proto
         (?://
+                (?:[^:]+:[^@]+@)?              # username:password@
                 ([^:/?\#]*)                    # host
                 (?::(\d+))?                    # port
         )?
