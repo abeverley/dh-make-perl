@@ -1,74 +1,79 @@
 Source: dh-make-perl
-Section: perl
-Priority: optional
-Build-Depends: debhelper (>= 8), perl
-Build-Depends-Indep: 
- libapt-pkg-perl,
- libarray-unique-perl,
- libclass-accessor-perl,
- perl (>= 5.14) | libcpan-meta-perl,
- libdpkg-perl,
- libemail-address-perl,
- libemail-date-format-perl,
- libfile-dircompare-perl,
- libfile-find-rule-perl,
- libfile-touch-perl,
- libfile-which-perl,
- liblist-moreutils-perl,
- libmodule-depends-perl (>= 0.15),
- libparse-debcontrol-perl,
- libparse-debianchangelog-perl,
- libsoftware-license-perl,
- libtest-compile-perl,
- libtest-deep-perl,
- libtest-differences-perl,
- libtest-distmanifest-perl,
- libtest-exception-perl,
- libtest-pod-coverage-perl,
- libtest-pod-perl,
- libtext-diff-perl,
- libtie-ixhash-perl,
- libwww-mechanize-perl,
- libyaml-perl,
- perl (>= 5.10.1) | libmodule-corelist-perl (>= 2.14),
- perl (>= 5.10.1) | libtest-simple-perl (>= 0.82)
 Maintainer: Debian Perl Group <pkg-perl-maintainers@lists.alioth.debian.org>
 Uploaders: Wolfgang Schemmel <debian@37.org>,
- Christopher Sacca <csacca@thecsl.org>,
- Damyan Ivanov <dmn@debian.org>, gregor herrmann <gregoa@debian.org>,
- Oliver Gorwits <oliver.gorwits@oucs.ox.ac.uk>,
- Ryan Niebur <ryan@debian.org>, Nathan Handler <nhandler@ubuntu.com>,
- Salvatore Bonaccorso <carnil@debian.org>,
- Maximilian Gass <mxey@cloudconnected.org>,
- Nicholas Bamber <nicholas@periapt.co.uk>
+           Christopher Sacca <csacca@thecsl.org>,
+           Damyan Ivanov <dmn@debian.org>,
+           gregor herrmann <gregoa@debian.org>,
+           Oliver Gorwits <oliver.gorwits@oucs.ox.ac.uk>,
+           Ryan Niebur <ryan@debian.org>,
+           Nathan Handler <nhandler@ubuntu.com>,
+           Salvatore Bonaccorso <carnil@debian.org>,
+           Maximilian Gass <mxey@cloudconnected.org>,
+           Nicholas Bamber <nicholas@periapt.co.uk>
+Section: perl
+Priority: optional
+Build-Depends: debhelper (>= 8),
+               perl
+Build-Depends-Indep: libapt-pkg-perl,
+                     libarray-unique-perl,
+                     libclass-accessor-perl,
+                     perl (>= 5.13.10) | libcpan-meta-perl,
+                     libdpkg-perl,
+                     libemail-address-perl,
+                     libemail-date-format-perl,
+                     libfile-dircompare-perl,
+                     libfile-find-rule-perl,
+                     libfile-touch-perl,
+                     libfile-which-perl,
+                     liblist-moreutils-perl,
+                     libmodule-depends-perl (>= 0.15),
+                     libparse-debcontrol-perl,
+                     libparse-debianchangelog-perl,
+                     libsoftware-license-perl,
+                     libtest-compile-perl,
+                     libtest-deep-perl,
+                     libtest-differences-perl,
+                     libtest-distmanifest-perl,
+                     libtest-exception-perl,
+                     libtest-pod-coverage-perl,
+                     libtest-pod-perl,
+                     libtext-diff-perl,
+                     libtie-ixhash-perl,
+                     libwww-mechanize-perl,
+                     libyaml-perl,
+                     perl
 Standards-Version: 3.9.3
-Vcs-Git: git://git.debian.org/pkg-perl/packages/dh-make-perl.git
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-perl/packages/dh-make-perl.git
+Vcs-Git: git://git.debian.org/pkg-perl/packages/dh-make-perl.git
 
 Package: dh-make-perl
 Architecture: all
-Depends: debhelper (>= 7), ${perl:Depends}, ${misc:Depends},
- make, dpkg-dev, fakeroot,
- libapt-pkg-perl,
- libarray-unique-perl,
- libclass-accessor-perl,
- perl (>= 5.14) | libcpan-meta-perl,
- libdpkg-perl,
- libemail-address-perl,
- libemail-date-format-perl,
- libfile-which-perl,
- liblist-moreutils-perl,
- libmodule-depends-perl (>= 0.15),
- libparse-debcontrol-perl,
- libparse-debianchangelog-perl,
- libsoftware-license-perl,
- libtie-ixhash-perl,
- libwww-mechanize-perl,
- libyaml-perl,
- perl (>= 5.10.1) | libmodule-corelist-perl (>= 2.14)
+Depends: debhelper (>= 8),
+         ${perl:Depends},
+         ${misc:Depends},
+         make,
+         dpkg-dev,
+         fakeroot,
+         libapt-pkg-perl,
+         libarray-unique-perl,
+         libclass-accessor-perl,
+         perl (>= 5.13.10) | libcpan-meta-perl,
+         libdpkg-perl,
+         libemail-address-perl,
+         libemail-date-format-perl,
+         libfile-which-perl,
+         liblist-moreutils-perl,
+         libmodule-depends-perl (>= 0.15),
+         libparse-debcontrol-perl,
+         libparse-debianchangelog-perl,
+         libsoftware-license-perl,
+         libtie-ixhash-perl,
+         libwww-mechanize-perl,
+         libyaml-perl,
+         perl
 Recommends: apt-file (>= 2.5.0),
- git,
- pristine-tar
+            git,
+            pristine-tar
 Description: helper for creating Debian packages from perl modules
  dh-make-perl will create the files required to build a Debian source
  package out of a perl package.  This works for most simple packages
@@ -79,3 +84,4 @@ Description: helper for creating Debian packages from perl modules
  dh-make-perl can also help keeping the debian/ content current when upstream
  dependencies or Debian practices change. It can also help improve existing
  Perl module packages.
+
