@@ -26,6 +26,7 @@ dh-make-perl (0.76-1) UNRELEASED; urgency=low
     cpan2deb. Avoids overriding by having a cpan key in ~/.dh-make-perl
     /.dh-make-perl.conf. Thanks to Brendan Byrd for the bug report.
     (Closes: #668084)
+  * debian/control: update {versioned,alternative} (build) dependencies.
 
  -- Salvatore Bonaccorso <carnil@debian.org>  Thu, 23 Feb 2012 13:46:21 +0100
 
