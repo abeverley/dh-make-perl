@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 11;
+use Test::More tests => 12;
 use Test::Exception;
 
 BEGIN {
@@ -46,4 +46,10 @@ is( $ctl->prune_perl_dep( $dep->new('perl (>= 5.10.0)') ),
 is( $ctl->prune_perl_dep( $dep->new('perl (= 5.10.0)') ) . '',
     'perl (= 5.10.0)',
     'perl =5.10.0 is left intact'
+);
+
+is( ( $ctl->find_debs_for_modules( { 'ExtUtils::ParseXS' => '2.21' } ) )[0]
+        . '',
+    'perl (>= 5.11.1)',
+    'ExtUtils::ParseXS 2.21 is in perl 5.11.1'
 );

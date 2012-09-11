@@ -248,8 +248,9 @@ EOF
 
 Scans the given hash of dependencies ( module => version ) and returns
 matching Debian package dependency specification (as an instance of
-L<Debian::Dependencies> class) and a list of missing modules. Installed
-packages are searched first, then the APT contents, then the perl core.
+L<Debian::Dependencies> class) and a list of missing modules.
+
+Perl core is searched first, then installed packages, then the APT contents.
 
 =cut
 
@@ -272,7 +273,10 @@ sub find_debs_for_modules {
         my $dep;
 
         require Debian::DpkgLists;
-        if ( my @pkgs = Debian::DpkgLists->scan_perl_mod($module) ) {
+        if ( my $ver = is_core_module( $module, $version ) ) {
+            $dep = Debian::Dependency->new( 'perl', $ver );
+        }
+        elsif ( my @pkgs = Debian::DpkgLists->scan_perl_mod($module) ) {
             $dep = Debian::Dependency->new(
                   ( @pkgs > 1 )
                 ? [ map { { pkg => $_, ver => $version } } @pkgs ]
@@ -281,9 +285,6 @@ sub find_debs_for_modules {
         }
         elsif ($apt_contents) {
             $dep = $apt_contents->find_perl_module_package( $module, $version );
-        }
-        elsif ( my $ver = is_core_module( $module, $version ) ) {
-            $dep = Debian::Dependency->new( 'perl', $ver );
         }
 
 
