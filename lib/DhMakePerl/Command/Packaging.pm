@@ -264,8 +264,14 @@ sub extract_basic {
     $src->Section('perl') unless defined $src->Section;
     $src->Priority('optional') unless defined $src->Priority;
 
-    $bin->Architecture('all');
-    find( sub { $self->check_for_xs }, $self->main_dir );
+    if ( $self->cfg->arch ) {
+        printf "Forcing architecture to '%s'\n", $self->cfg->arch;
+        $bin->Architecture( $self->cfg->arch );
+    }
+    else {
+        $bin->Architecture('all');
+        find( sub { $self->check_for_xs }, $self->main_dir );
+    }
 
     printf(
         "Found: %s %s (%s arch=%s)\n",
