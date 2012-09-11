@@ -277,8 +277,8 @@ sub setup_dir {
                 . "' module or distribution on CPAN\n";
         }
 
-        $dist->get || die "Cannot get ", $dist->pretty_id, "\n"; # <- here $ENV{'PWD'} gets set to $HOME/.cpan/build
-        chdir $orig_pwd;                                         # so set it back
+        $dist->get;     # <- here $ENV{'PWD'} gets set to $HOME/.cpan/build
+        chdir $orig_pwd;   # so set it back
         $dist->pretty_id =~ /^(.)(.)/;
         $tarball = $CPAN::Config->{'keep_source_where'} . "/authors/id/$1/$1$2/";
         # the file is under authors/id/A/AU/AUTHOR directory
@@ -698,7 +698,7 @@ L<http://bugs.debian.org/dh-make-perl>
 
 =item Copyright (C) 2007-2010 Gregor Herrmann <gregoa@debian.org>
 
-=item Copyright (C) 2007,2008,2009,2010,2011 Damyan Ivanov <dmn@debian.org>
+=item Copyright (C) 2007,2008,2009,2010,2011,2012 Damyan Ivanov <dmn@debian.org>
 
 =item Copyright (C) 2008, Roberto C. Sanchez <roberto@connexer.com>
 
