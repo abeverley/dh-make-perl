@@ -1347,6 +1347,9 @@ sub configure_cpan {
     $CPAN::Config->{'tar_verbosity'}     = $self->cfg->verbose ? 'v' : '';
     $CPAN::Config->{'load_module_verbosity'}
         = $self->cfg->verbose ? 'verbose' : 'silent';
+
+    $CPAN::Config->{build_requires_install_policy} = 'no';
+    $CPAN::Config->{prerequisites_policy} = 'ignore';
 }
 
 =item discover_dependencies
@@ -1624,7 +1627,7 @@ sub _file_w {
 
 =item Copyright (C) 2007-2011 Gregor Herrmann <gregoa@debian.org>
 
-=item Copyright (C) 2007-2010 Damyan Ivanov <dmn@debian.org>
+=item Copyright (C) 2007,2008,2009,2010,2012 Damyan Ivanov <dmn@debian.org>
 
 =item Copyright (C) 2008, Roberto C. Sanchez <roberto@connexer.com>
 
