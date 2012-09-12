@@ -1,3 +1,44 @@
+0.76 (2012-09-12)
+
+  [ Salvatore Bonaccorso ]
+  * Update debian/copyright file.
+    Update format to the copyright-format 1.0 released with Debian policy
+    3.9.3.
+    Adjust Source location for dh-make-perl to point to the git repository.
+    Update copyright years for debian/* packaging.
+  * Create debian/copyright with copyright-format 1.0
+    debian/copyright files are created following the copyright-format 1.0
+    released with Standards-Version 3.9.3.
+  * Adjust test files to copyright-format 1.0
+  * Bump Standards-Version to 3.9.3
+  * Create packages with Standards-Version 3.9.3.
+    Adjust control files in t/dists test-files.
+
+  [ Per Carlson ]
+  * License attribute from META file is array. (Closes: #664150)
+
+  [ gregor herrmann ]
+  * DhMakePerl::Config: mark cpan option as explicitly set when called as
+    cpan2deb. Avoids overriding by having a cpan key in ~/.dh-make-perl
+    /.dh-make-perl.conf. Thanks to Brendan Byrd for the bug report.
+    (Closes: #668084)
+  * debian/control: update {versioned,alternative} (build) dependencies.
+
+  [ Damyan Ivanov ]
+  * create_watch: allow single-digit-only versions.
+    Thanks to Kevin Ryde for the report and the proposed fix (Closes: #657249)
+  * D:C:FromCPAN/find_debs_for_modules: search core first
+    otherwise we get 'perl-modules (>= 2.21)' when requiring
+    ExtUtils::ParseXS 2.21
+  * bump copyright years
+  * configure_cpan: ignore prerequisites to avoid unnecessary prompts
+  * setup_dir: ignore $dist->get return value.
+    POD says nothing about it, so false doesn't indicate failure.
+    false is sometimes returned when some prerequisites aren't
+    satisfied, which is not important for us. (Closes: #686739)
+  * honour --arch option.
+    Use it if given and skip automatic scan for XS code. (Closes: #668642)
+
 0.75 (2012-01-15)
 
   [ Damyan Ivanov ]

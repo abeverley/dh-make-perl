@@ -28,6 +28,19 @@ dh-make-perl (0.76-1) UNRELEASED; urgency=low
     (Closes: #668084)
   * debian/control: update {versioned,alternative} (build) dependencies.
 
+  [ Damyan Ivanov ]
+  * D:C:FromCPAN/find_debs_for_modules: search core first
+    otherwise we get 'perl-modules (>= 2.21)' when requiring
+    ExtUtils::ParseXS 2.21
+  * bump copyright years
+  * configure_cpan: ignore prerequisites to avoid unnecessary prompts
+  * setup_dir: ignore $dist->get return value.
+    POD says nothing about it, so false doesn't indicate failure.
+    false is sometimes returned when some prerequisites aren't
+    satisfied, which is not important for us. (Closes: #686739)
+  * honour --arch option.
+    Use it if given and skip automatic scan for XS code. (Closes: #668642)
+
  -- Salvatore Bonaccorso <carnil@debian.org>  Thu, 23 Feb 2012 13:46:21 +0100
 
 dh-make-perl (0.75-1) unstable; urgency=low
