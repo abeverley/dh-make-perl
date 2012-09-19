@@ -1,3 +1,14 @@
+dh-make-perl (0.77-1) UNRELEASED; urgency=low
+
+  * Bump version for DhMakePerl to 0.77
+  * Bump Standards-Version to 3.9.4
+  * Create packages with Standards-Version 3.9.4.
+    Adjust default Standards-Versions in DhMakePerl::Command::Packaging to
+    3.9.4.
+    Bump Standards-Version in debian/control for tests to 3.9.4.
+
+ -- Salvatore Bonaccorso <carnil@debian.org>  Wed, 19 Sep 2012 15:11:17 +0200
+
 dh-make-perl (0.76-1) unstable; urgency=low
 
   [ Damyan Ivanov ]
