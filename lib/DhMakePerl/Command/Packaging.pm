@@ -37,7 +37,7 @@ use Parse::DebianChangelog;
 use Text::Wrap qw(fill);
 use User::pwent;
 
-use constant debstdversion => '3.9.3';
+use constant debstdversion => '3.9.4';
 
 our %DEFAULTS = (
     start_dir => getcwd(),

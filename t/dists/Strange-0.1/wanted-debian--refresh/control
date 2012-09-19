@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Joe Maintainer <joemaint@test.local>
 Build-Depends: debhelper (>= 8)
 Build-Depends-Indep: perl
-Standards-Version: 3.9.3
+Standards-Version: 3.9.4
 Homepage: http://search.cpan.org/dist/Strange/
 
 Package: libstrange-perl
