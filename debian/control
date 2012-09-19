@@ -42,7 +42,7 @@ Build-Depends-Indep: libapt-pkg-perl,
                      libwww-mechanize-perl,
                      libyaml-perl,
                      perl
-Standards-Version: 3.9.3
+Standards-Version: 3.9.4
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-perl/packages/dh-make-perl.git
 Vcs-Git: git://git.debian.org/pkg-perl/packages/dh-make-perl.git
 
