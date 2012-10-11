@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 25;
+use Test::More tests => 26;
 
 BEGIN {
     use_ok 'Debian::AptContents';
@@ -77,6 +77,18 @@ is_deeply(
       'ftp.de.debian.org_debian_dists_unstable_contrib',
       'ftp.de.debian.org_debian_dists_unstable_non-free' ],
     'source line conversion 5',
+);
+
+is_deeply(
+    [   $apt_contents->repo_source_to_contents_paths(
+            'deb http://user:pass@ftp2.de.debian.org/debian/ squeeze main contrib non-free'
+        )
+    ],
+    [   'ftp2.de.debian.org_debian_dists_squeeze_main',
+        'ftp2.de.debian.org_debian_dists_squeeze_contrib',
+        'ftp2.de.debian.org_debian_dists_squeeze_non-free',
+    ],
+    'source lines with user:pass@',
 );
 
 is_deeply(
