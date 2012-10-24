@@ -324,6 +324,10 @@ sub extract_name_ver {
         $name = $self->meta->{name};
         $ver  = $self->meta->{version};
     }
+    elsif ( defined $self->cfg->packagename and defined $self->cfg->version ) {
+        $name = $self->cfg->packagename;
+        $ver  = $self->cfg->version;
+    }
     else {
         if ( -e $self->build_pl ) {
             print "Extracting name and version from Build.PL\n";
