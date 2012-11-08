@@ -45,7 +45,7 @@ Build-Depends-Indep: libtest-pod-coverage-perl,
 Standards-Version: 3.8.3
 Vcs-Browser: http://svn.debian.org/viewsvn/pkg-perl/trunk/libtest-compile-perl/
 Vcs-Svn: svn://svn.debian.org/pkg-perl/trunk/libtest-compile-perl/
-Homepage: http://search.cpan.org/dist/Test-Compile/
+Homepage: https://metacpan.org/release/Test-Compile/
 
 Package: libtest-compile-perl
 Architecture: all

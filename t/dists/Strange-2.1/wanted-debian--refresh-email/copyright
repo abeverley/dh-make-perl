@@ -1,6 +1,6 @@
 Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: Strange
-Source: http://search.cpan.org/dist/Strange/
+Source: https://metacpan.org/release/Strange/
 Upstream-Contact: A. U. Thor, a.u.thor@a.galaxy.far.far.away
 DISCLAIMER: This copyright info was automatically extracted 
  from the perl module. It may not be accurate, so you better 
