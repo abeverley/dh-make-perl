@@ -595,7 +595,6 @@ sub setup_git_repository {
     my ( $self, $tarball ) = @_;
 
     require Git;
-    require IO::Dir;
     require File::Which;
 
     Git::command( 'init', $self->main_dir );
