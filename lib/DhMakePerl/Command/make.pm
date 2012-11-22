@@ -104,6 +104,15 @@ sub execute {
         $tarball = $dest;
     }
 
+    # Here I init the git repo. If the upstream has a debian/ directory, this is
+    # removed in a separate git commit
+    $self->git_import_upstream__init_debian
+        if $self->cfg->{vcs} eq 'git';
+
+    # if the upstream has a debian/ directory, rename it to debian.bak so that
+    # dh-make-perl can create its own debian/ directory. If we're creating a git
+    # repo, the original debian/ directory was already dealt with by
+    # git_import_upstream__init_debian()
     if ( -d $self->debian_dir ) {
         $self->warning( $self->debian_dir . ' already exists' );
         my $bak = $self->debian_dir . '.bak';
@@ -226,7 +235,7 @@ sub execute {
     $self->install_package if $self->cfg->install;
     print "--- Done\n" if $self->cfg->verbose;
 
-    $self->setup_git_repository($tarball)
+    $self->git_add_debian($tarball)
         if $self->cfg->{vcs} eq 'git';
 
     $self->package_already_exists($apt_contents) 
@@ -591,24 +600,42 @@ EOF
     return $found ? 1 : 0;
 }
 
-sub setup_git_repository {
-    my ( $self, $tarball ) = @_;
+sub git_import_upstream__init_debian {
+    my ( $self ) = @_;
 
     require Git;
-    require File::Which;
 
     Git::command( 'init', $self->main_dir );
 
     my $git = Git->repository( $self->main_dir );
     $git->command( qw(symbolic-ref HEAD refs/heads/upstream) );
     $git->command( 'add', $self->main_dir );
-    $git->command( 'rm', '--cached', '-r', $self->debian_dir );
     $git->command( 'commit', '-m',
               "Import original source of "
             . $self->perlname . ' '
             . $self->version );
     $git->command( 'tag', "upstream/".$self->version, 'upstream' );
+
     $git->command( qw( checkout -b master upstream ) );
+    if ( -d $self->debian_dir ) {
+      # remove debian/ directory if the upstream ships it. This goes into the
+      # 'master' branch, so the 'upstream' branch contains the original debian/
+      # directory, and thus matches the pristine-tar. Here I also remove the
+      # debian/ directory from the working tree; git has the history, so I don't
+      # need the debian.bak
+      $git->command( 'rm', '-r', $self->debian_dir );
+      $git->command( 'commit', '-m',
+                     'Removed debian directory embedded in upstream source' );
+    }
+}
+
+sub git_add_debian {
+    my ( $self, $tarball ) = @_;
+
+    require Git;
+    require File::Which;
+
+    my $git = Git->repository( $self->main_dir );
     $git->command( 'add', 'debian' );
     $git->command( 'commit', '-m', 'Initial packaging by dh-make-perl' );
     $git->command(
