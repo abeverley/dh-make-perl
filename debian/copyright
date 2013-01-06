@@ -1,7 +1,7 @@
 Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: dh-make-perl
 Upstream-Contact: Debian Perl Group <debian-perl@lists.debian.org>
-Source: git://git.debian.org/pkg-perl/packages/dh-make-perl.git
+Source: git://anonscm.debian.org/pkg-perl/packages/dh-make-perl.git
 
 Files: *
 Copyright: 2000, 2001, Paolo Molaro <lupus@debian.org>
