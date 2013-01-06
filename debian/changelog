@@ -11,6 +11,9 @@ dh-make-perl (0.77-1) UNRELEASED; urgency=low
     Use https://metacpan.org instead of http://search.cpan.org in
     debian/watch, debian/copyright and debian/control files.
     Adjust the test files using https://metacpan.org.
+  * Change Vcs-Git to canonical URI (git://anonscm.debian.org)
+  * Use anonscm.debian.org for source location in debian/copyright
+  * Create Vcs-Git with canonical URI (git://anonscm.debian.org)
 
   [ Damyan Ivanov ]
   * add test about handling user:pass@ in sources.list URLs
@@ -21,6 +24,13 @@ dh-make-perl (0.77-1) UNRELEASED; urgency=low
 
   [ Nathan Handler ]
   * Email change: nhandler -> nhandler@debian.org
+
+  [ Dima Kogan ]
+  * Not importing IO::Dir since I'm not using it
+  * better handling of upstream-supplied debian/ directories.
+    If we are making a git repo I now remove debian/ directory if the upstream ships
+    it. This goes into the 'master' branch, so the 'upstream' branch contains the
+    original debian/ directory, and thus matches the pristine-tar
 
  -- Salvatore Bonaccorso <carnil@debian.org>  Wed, 19 Sep 2012 15:11:17 +0200
 
