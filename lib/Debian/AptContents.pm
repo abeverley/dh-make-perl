@@ -196,8 +196,13 @@ sub repo_source_to_contents_paths {
     s{^/}{}  for ( $host, $dir, $dist );    # remove initial /
     s{/}{_}g for ( $host, $dir, $dist );    # replace remaining /
 
+    # Make sure to generate paths both with and without components to
+    # be compatible with both old and new apt-file versions. See:
+    # https://bugs.launchpad.net/ubuntu/+source/dh-make-perl/+bug/1034881
+    push(@components, '');
+
     return map
-        { $host . "_" . join( "_", $dir || (), "dists", $dist, $_ ) }
+        { $host . "_" . join( "_", grep( { defined and length } $dir, "dists", $dist, $_ ) ) }
         @components;
 }
 
