@@ -14,6 +14,7 @@ dh-make-perl (0.77-1) UNRELEASED; urgency=low
   * Change Vcs-Git to canonical URI (git://anonscm.debian.org)
   * Use anonscm.debian.org for source location in debian/copyright
   * Create Vcs-Git with canonical URI (git://anonscm.debian.org)
+    (Closes: #697876)
 
   [ Damyan Ivanov ]
   * add test about handling user:pass@ in sources.list URLs
