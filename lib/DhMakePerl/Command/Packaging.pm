@@ -359,7 +359,7 @@ sub extract_name_ver {
 
     # final sanitazing of name and version
     $name =~ s/::/-/g;
-    $ver = $self->sanitize_version($ver);
+    $ver = $self->sanitize_version($ver) unless $self->cfg->version;
 
     $name
         or $ver
