@@ -1635,7 +1635,7 @@ sub _file_w {
 
 =item Copyright (C) 2006 Frank Lichtenheld <djpig@debian.org>
 
-=item Copyright (C) 2007-2011 Gregor Herrmann <gregoa@debian.org>
+=item Copyright (C) 2007-2013 Gregor Herrmann <gregoa@debian.org>
 
 =item Copyright (C) 2007,2008,2009,2010,2012 Damyan Ivanov <dmn@debian.org>
 
