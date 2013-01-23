@@ -336,6 +336,9 @@ sub setup_dir {
         my $maindir = shift(@ARGV) || '.';
         $maindir =~ s/\/$//;
         $self->main_dir($maindir);
+        my $guessed_tarball = catfile( $self->start_dir, "..",
+            basename( $self->start_dir ) . ".tar.gz" );
+        $tarball = $guessed_tarball if -f $guessed_tarball;
     }
     return $tarball;
 }
