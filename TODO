@@ -32,3 +32,8 @@
 * Really minor issue. The AptContents.t test can be thrown off if the contents
   directory has stuff lying around from a failed run. ~periapt
 * Add a switch for "app" (foo-bar) vs. "lib" (libfoo-bar-perl) packages?
+* debhelper:
+  (1) remove all the special casing for debhelper 7.x
+      we require >= 8 anyway and die on <=7
+  (2) add debhelper 9.20120312 (and d/compat 9) for arch:any packages
+      to get all hardening flags
