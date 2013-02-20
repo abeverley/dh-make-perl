@@ -39,6 +39,8 @@ dh-make-perl (0.77-1) UNRELEASED; urgency=low
   * DhMakePerl::Command::Packaging: Don't sanitize version if given on the
     command line.
   * Update years of copyright.
+  * DhMakePerl::Command::Packaging: replace "This library" with the module
+    name in the long description, like we already did with "This module".
 
  -- Salvatore Bonaccorso <carnil@debian.org>  Wed, 19 Sep 2012 15:11:17 +0200
 
