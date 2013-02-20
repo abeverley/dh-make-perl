@@ -720,6 +720,7 @@ sub extract_desc {
             || '';
         ( $modulename = $self->perlname ) =~ s/-/::/g;
         $long_desc =~ s/This module/$modulename/;
+        $long_desc =~ s/This library/$modulename/;
 
         local ($Text::Wrap::columns) = 78;
         $long_desc = fill( "", "", $long_desc );
