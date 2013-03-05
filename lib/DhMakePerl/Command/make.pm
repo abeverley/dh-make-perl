@@ -230,13 +230,13 @@ sub execute {
         }
     }
 
+    $self->git_add_debian($tarball)
+        if $self->cfg->{vcs} eq 'git';
+
     $self->build_package
         if $self->cfg->build or $self->cfg->install;
     $self->install_package if $self->cfg->install;
     print "--- Done\n" if $self->cfg->verbose;
-
-    $self->git_add_debian($tarball)
-        if $self->cfg->{vcs} eq 'git';
 
     $self->package_already_exists($apt_contents) 
         or $self->modules_already_packaged($apt_contents);
