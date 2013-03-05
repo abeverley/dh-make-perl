@@ -28,10 +28,11 @@ dh-make-perl (0.77-1) UNRELEASED; urgency=low
 
   [ Dima Kogan ]
   * Not importing IO::Dir since I'm not using it
-  * better handling of upstream-supplied debian/ directories.
-    If we are making a git repo I now remove debian/ directory if the upstream ships
-    it. This goes into the 'master' branch, so the 'upstream' branch contains the
-    original debian/ directory, and thus matches the pristine-tar
+  * better handling of upstream-supplied debian/ directories.  If we are
+    making a git repo I now remove debian/ directory if the upstream ships
+    it. This goes into the 'master' branch, so the 'upstream' branch
+    contains the original debian/ directory, and thus matches the
+    pristine-tar
 
   [ gregor herrmann ]
   * DhMakePerl::Command::make: Try to guess tarball name when run from an
