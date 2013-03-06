@@ -31,6 +31,8 @@ dh-make-perl - Create debian source packages from Perl modules
 
 =item cpan2deb I<MODULE>|I<DIST> I<options...>
 
+=item cpan2dsc I<MODULE>|I<DIST> I<options...>
+
 =back
 
 =head1 DESCRIPTION
@@ -56,6 +58,14 @@ If B<dh-make-perl> is called as
 it behaves like
 
     dh-make-perl make <options...> --build --cpan Foo::Bar
+
+If B<dh-make-perl> is called as
+
+    cpan2dsc <options...> Foo::Bar
+
+it behaves like
+
+    dh-make-perl make <options...> --build-source --cpan Foo::Bar
 
 Using this program is no excuse for not reading the
 debian developer documentation, including the Debian policy,

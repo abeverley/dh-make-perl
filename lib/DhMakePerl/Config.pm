@@ -52,6 +52,7 @@ __PACKAGE__->mk_accessors(
     },
     'command',
     'cpan2deb',
+    'cpan2dsc',
     '_explicitly_set',
 );
 
@@ -83,11 +84,18 @@ use constant cpan2deb_DEFAULTS => {
     #recursive   => 1,
 };
 
+use constant cpan2dsc_DEFAULTS => {
+    build_source => 1,
+
+    #recursive   => 1,
+};
+
 sub new {
     my $class = shift;
     my $values = shift || {};
 
     my $cpan2deb = basename($0) eq 'cpan2deb';
+    my $cpan2dsc = basename($0) eq 'cpan2dsc';
 
     my $self = $class->SUPER::new(
         {   %{ $class->DEFAULTS },
@@ -95,7 +103,12 @@ sub new {
                 ? %{ $class->cpan2deb_DEFAULTS }
                 : ()
             ),
+            (   $cpan2dsc
+                ? %{ $class->cpan2dsc_DEFAULTS }
+                : ()
+            ),
             cpan2deb    => $cpan2deb,
+            cpan2dsc    => $cpan2dsc,
             %$values,
         },
     );
@@ -194,6 +207,15 @@ sub parse_command_line_options {
         $self->cpan( shift @ARGV );
         $self->_explicitly_set->{cpan} = 1;
         $self->build(1);
+        $self->command('make');
+    }
+
+    if ($self->cpan2dsc) {
+        @ARGV == 1 or die "cpan2dsc requires exactly one non-option argument";
+
+        $self->cpan( shift @ARGV );
+        $self->_explicitly_set->{cpan} = 1;
+        $self->build_source(1);
         $self->command('make');
     }
 
