@@ -47,6 +47,8 @@ dh-make-perl (0.77-1) UNRELEASED; urgency=low
   * DhMakePerl::Command::make: Call git_add_debian before build_package
     and install_package to not add files generated during the package
     build process to the git repository.
+  * Add patch by Matthew Gabeler-Lee to understand packages named
+    "-vX.Y.Z". (Closes: #701140)
 
  -- Salvatore Bonaccorso <carnil@debian.org>  Wed, 19 Sep 2012 15:11:17 +0200
 
