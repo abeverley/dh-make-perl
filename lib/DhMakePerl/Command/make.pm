@@ -272,7 +272,7 @@ sub setup_dir {
         }
         elsif ( $dist = find_cpan_distribution( $self->cfg->cpan ) ) {
             my $ver;
-            if ( $dist->base_id =~ /-(\d[\d._]*)\./ ) {
+            if ( $dist->base_id =~ /-v?(\d[\d._]*)\./ ) {
                 $self->mod_cpan_version($1);
             }
             else {
