@@ -37,3 +37,5 @@
       we require >= 8 anyway and die on <=7
   (2) add debhelper 9.20120312 (and d/compat 9) for arch:any packages
       to get all hardening flags
+  (3) use debhelper 9 to get rid of the "dh_pysupport: This program is
+      deprecated" warning. ~abe
