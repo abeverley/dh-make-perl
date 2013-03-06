@@ -49,6 +49,7 @@ dh-make-perl (0.77-1) UNRELEASED; urgency=low
     build process to the git repository.
   * Add patch by Matthew Gabeler-Lee to understand packages named
     "-vX.Y.Z". (Closes: #701140)
+  * Fix "fatal: pathspec '…' did not match any files" error of "git add".
 
  -- Salvatore Bonaccorso <carnil@debian.org>  Wed, 19 Sep 2012 15:11:17 +0200
 

@@ -612,7 +612,7 @@ sub git_import_upstream__init_debian {
 
     my $git = Git->repository( $self->main_dir );
     $git->command( qw(symbolic-ref HEAD refs/heads/upstream) );
-    $git->command( 'add', $self->main_dir );
+    $git->command( 'add', '.' );
     $git->command( 'commit', '-m',
               "Import original source of "
             . $self->perlname . ' '
