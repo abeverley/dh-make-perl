@@ -238,7 +238,7 @@ sub execute {
     $self->install_package if $self->cfg->install;
     print "--- Done\n" if $self->cfg->verbose;
 
-    $self->package_already_exists($apt_contents) 
+    $self->package_already_exists($apt_contents)
         or $self->modules_already_packaged($apt_contents);
 
     return(0);
@@ -256,8 +256,8 @@ sub setup_dir {
         $orig_pwd = $ENV{'PWD'};
 
         # Is the module a core module?
-        if ( is_core_module( $self->cfg->cpan ) ) {
-            die $self->cfg->cpan 
+       if ( is_core_module( $self->cfg->cpan ) ) {
+            die $self->cfg->cpan
             . " is a standard module. Will not build without --core-ok.\n"
                 unless $self->cfg->core_ok;
         }
@@ -320,7 +320,7 @@ sub setup_dir {
     elsif ( $self->cfg->cpanplus ) {
         die "CPANPLUS support is b0rken at the moment.";
 
-        #  	        my ($cb, $href, $file);
+# 		my ($cb, $href, $file);
 
 # 		eval "use CPANPLUS 0.045;";
 # 		$cb = CPANPLUS::Backend->new(conf => {debug => 1, verbose => 1});
@@ -350,7 +350,7 @@ sub build_package {
     # uhmf! dpkg-genchanges doesn't cope with the deb being in another dir..
     #system("dpkg-buildpackage -b -us -uc " . $self->cfg->dbflags) == 0
     system("fakeroot make -C $main_dir -f debian/rules clean");
-    system("make -C $main_dir -f debian/rules build") == 0 
+    system("make -C $main_dir -f debian/rules build") == 0
         || die "Cannot create deb package: 'debian/rules build' failed.\n";
     system("fakeroot make -C $main_dir -f debian/rules binary") == 0
         || die "Cannot create deb package: 'fakeroot debian/rules binary' failed.\n";

@@ -184,7 +184,7 @@ as for --depends applies here - use only when needed.
 =item B<--bdependsi> I<BUILD-DEPENDS-INDEP>
 
 Manually specify the string to be used for the module's build-dependencies
-for architecture-independent builds. Same notes as those for the --depends 
+for architecture-independent builds. Same notes as those for the --depends
 and --bdepends options apply here.
 
 Note that for --depends, --bdepends and --bdependsi you can also specify that
@@ -202,8 +202,8 @@ Debian archive.
 
 =item B<--closes> I<ITPBUG>
 
-Manually specify the ITP bug number that this package closes. If not 
-given, B<dh-make-perl> will try to connect to bugs.debian.org to fetch the 
+Manually specify the ITP bug number that this package closes. If not
+given, B<dh-make-perl> will try to connect to bugs.debian.org to fetch the
 appropriate bug number, using WWW::Mechanize.
 
 =item B<--core-ok>
@@ -212,7 +212,7 @@ Allows building core Perl modules. By default, B<dh-make-perl> will not allow
 building a module that is shipped as part of the standard Perl library; by
 specifying this option, B<dh-make-perl> will build them anyway.
 
-Note that, although it is not probable, this might break unrelated items in 
+Note that, although it is not probable, this might break unrelated items in
 your system - if a newer version of a core module breaks the API, all kinds
 of daemons might get upset ;-)
 
@@ -235,7 +235,7 @@ Contents cache file. If both are given, B<--home-dir> takes precedence.
 
 =item B<--depends> I<DEPENDS>
 
-Manually specify the string to be used for the module's dependencies. This 
+Manually specify the string to be used for the module's dependencies. This
 should be used when building modules where B<dh-make-perl> cannot guess the Perl
 dependencies (such as modules built using L<Module::Install>), or when the
 Perl code depends on non-Perl binaries or libraries. Usually, B<dh-make-perl>
@@ -422,7 +422,7 @@ C/XS code.
 
 =item * rules.Module-Build.noxs
 
-A debian/rules makefile for modules that use Module::Build, but don't have 
+A debian/rules makefile for modules that use Module::Build, but don't have
 C/XS code.
 
 =item * rules.Module-Build.xs

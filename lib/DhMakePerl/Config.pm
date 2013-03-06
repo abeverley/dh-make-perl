@@ -129,7 +129,7 @@ sub parse_command_line_options {
     $opts{cpan} =~ s![/-]!::!g if $opts{cpan};
 
     # "If no argument is given (but the switch is specified - not specifying
-    # the switch will include everything), it defaults to dpkg-source's 
+    # the switch will include everything), it defaults to dpkg-source's
     # default values."
     $opts{exclude} = '^$' if ! defined $opts{exclude};                 # switch not specified
                                                                        # take everything

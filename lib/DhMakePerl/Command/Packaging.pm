@@ -592,7 +592,7 @@ sub extract_name_ver_from_makefile {
         $vfrom = $4;
 
     }
-    elsif ( 
+    elsif (
         $file =~ m{
             \bversion\b\s*                  # The word version
             \(?\s*                          # Optional open-parens
@@ -600,7 +600,7 @@ sub extract_name_ver_from_makefile {
             ([\d_.]+)                       # The actual version.
             \1                              # Optional close-quotes
             \s*\)?                          # Optional close-parenthesis.
-        }sx 
+        }sx
     ) {
 
         # Module::Install
@@ -1538,7 +1538,7 @@ sub discover_utility_deps {
     # there are old packages that still build-depend on libmodule-build-perl
     # or perl (>= 5.10) | libmodule-build-perl.
     # Since M::B is part of perl 5.10, the build-dependency needs correction
-    # and we replace this Build-Depends with simply perl, as lenny has the 
+    # and we replace this Build-Depends with simply perl, as lenny has the
     # required version.
     # Remove perl from Build-Depends-Indep as then perl will be already in
     # Build-Depends.
