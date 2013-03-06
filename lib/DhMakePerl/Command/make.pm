@@ -233,6 +233,8 @@ sub execute {
     $self->git_add_debian($tarball)
         if $self->cfg->{vcs} eq 'git';
 
+    $self->build_source_package
+        if $self->cfg->build_source;
     $self->build_package
         if $self->cfg->build or $self->cfg->install;
     $self->install_package if $self->cfg->install;
@@ -354,6 +356,17 @@ sub build_package {
         || die "Cannot create deb package: 'debian/rules build' failed.\n";
     system("fakeroot make -C $main_dir -f debian/rules binary") == 0
         || die "Cannot create deb package: 'fakeroot debian/rules binary' failed.\n";
+}
+
+sub build_source_package {
+    my ( $self ) = @_;
+
+    my $main_dir = $self->main_dir;
+    # uhmf! dpkg-genchanges doesn't cope with the deb being in another dir..
+    #system("dpkg-buildpackage -S -us -uc " . $self->cfg->dbflags) == 0
+    system("fakeroot make -C $main_dir -f debian/rules clean");
+    system("dpkg-source -b $main_dir") == 0
+        || die "Cannot create source package: 'dpkg-source -b' failed.\n";
 }
 
 sub install_package {
@@ -732,6 +745,8 @@ L<http://bugs.debian.org/dh-make-perl>
 =item Copyright (C) 2008, Roberto C. Sanchez <roberto@connexer.com>
 
 =item Copyright (C) 2009-2010, Salvatore Bonaccorso <carnil@debian.org>
+
+=item Copyright (C) 2013, Axel Beckert <abe@debian.org>
 
 =back
 

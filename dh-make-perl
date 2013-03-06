@@ -46,8 +46,8 @@ can specify the directory with the already unpacked sources. If neither
 L<--cpan> nor a directory is given as argument, B<dh-make-perl>
 tries to create a Perl package from the data in the current directory.
 
-You can build and install the debian package using the L</--build>
-and L</--install> command line switches.
+You can build and install the debian binary package using the
+L</--build> and L</--install> command line switches.
 
 If B<dh-make-perl> is called as
 
@@ -193,12 +193,23 @@ the field should not appear in debian/rules (if you really mean it, of course
 
 =item B<--build>
 
-Builds the package after setting it up.
+Builds the binary package (i.e. the .deb file) after setting the
+package directory up.
 
 NB: This builds only a binary package (by calling "fakeroot debian/rules
 binary") and does not sign the package. It is meant for a quick local
 install of a package, not for creating a package ready for submission to the
 Debian archive.
+
+=item B<--build-source>
+
+Builds the source package (i.e. the .dsc and .debian.tar.gz files)
+after setting the package directory up.
+
+NB: This builds only a source package (by calling "dpkg-source -b")
+and does not sign the package. It is meant for a quick local install
+of a source package to be thrown into e.g. a pbuilder, not for
+creating a source package ready for submission to the Debian archive.
 
 =item B<--closes> I<ITPBUG>
 

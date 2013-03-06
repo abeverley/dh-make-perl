@@ -17,6 +17,7 @@ use constant options => (
     'arch=s',          'backups!',
     'basepkgs=s',
     'bdepends=s',      'bdependsi=s',
+    'build-source!',
     'build!',          'closes=i',
     'config-file=s',   'core-ok',
     'cpan-mirror=s',   'cpan=s',
