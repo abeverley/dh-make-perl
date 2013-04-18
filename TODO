@@ -39,3 +39,5 @@
       to get all hardening flags
   (3) use debhelper 9 to get rid of the "dh_pysupport: This program is
       deprecated" warning. ~abe
+* .docs: maybe stop including READMEs automatically. most of the time we
+  remove them later again ... ~gregoa
