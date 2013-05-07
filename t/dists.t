@@ -69,9 +69,9 @@ sub compare_tree {
                         # likewise, it is normal that the timestamp in the changelog differs
                         return 0
                             if $a
-                                =~ /^ -- Joe Maintainer <joemaint\@test\.local>  \w+, \d+ \w+ \d+ \d+:\d+:\d+ \+\d+$/
+                                =~ /^ -- Joe Maintainer <joemaint\@test\.local>  \w+, \d+ \w+ \d+ \d+:\d+:\d+ (\+|-)\d+$/
                                 and $b
-                                =~ /^ -- Joe Maintainer <joemaint\@test\.local>  \w+, \d+ \w+ \d+ \d+:\d+:\d+ \+\d+$/;
+                                =~ /^ -- Joe Maintainer <joemaint\@test\.local>  \w+, \d+ \w+ \d+ \d+:\d+:\d+ (\+|-)\d+$/;
 
                         return $a ne $b;
                     }
