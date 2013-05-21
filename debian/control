@@ -13,8 +13,7 @@ Uploaders: Wolfgang Schemmel <debian@37.org>,
            Axel Beckert <abe@debian.org>
 Section: perl
 Priority: optional
-Build-Depends: debhelper (>= 8),
-               perl
+Build-Depends: debhelper (>= 8)
 Build-Depends-Indep: libapt-pkg-perl,
                      libarray-unique-perl,
                      libclass-accessor-perl,
