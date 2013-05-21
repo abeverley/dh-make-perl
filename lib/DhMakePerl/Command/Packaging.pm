@@ -820,7 +820,8 @@ sub extract_docs {
                     substr( $File::Find::name, length($dir) )
                     )
                     if (
-                        /^\b(README|TODO|BUGS|NEWS|ANNOUNCE)\b/i
+                        $File::Find::name ne $self->main_dir . '/README'
+                    and /^\b(README|TODO|BUGS|NEWS|ANNOUNCE)\b/i
                     and !/\.(pod|pm)$/
                     and ( !$self->cfg->exclude
                         or $File::Find::name !~ $self->cfg->exclude )
