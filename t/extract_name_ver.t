@@ -15,7 +15,7 @@ eval { $maker->extract_name_ver; };
 is($@, "", "Calling extract_name_ver should not die");
 
 is($maker->perlname, "Foo-Bar", "Dist name should be Foo-Bar");
-is($maker->version,  "1.2.3",   "Dist version should be 1.2.3");
+is($maker->version,  "1.002003",   "Dist version should be 1.002003");
 
 $maker->meta( { name => 'Foo::Bar', version => '1.02.00' } );
 
@@ -23,4 +23,4 @@ eval { $maker->extract_name_ver; };
 
 is($@, "", "Calling extract_name_ver should not die");
 
-is($maker->version,  "1.2.0",   "1.02.00 is cleaned to 1.2.0");
+is($maker->version,  "1.02.00",   "1.02.00 stays as 1.02.00");
