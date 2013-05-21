@@ -85,4 +85,5 @@ Description: helper for creating Debian packages from perl modules
  dh-make-perl can also help keeping the debian/ content current when upstream
  dependencies or Debian practices change. It can also help improve existing
  Perl module packages.
-
+ .
+ Includes the cpan2deb and cpan2dsc flavours.

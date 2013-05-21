@@ -54,6 +54,7 @@ dh-make-perl (0.77-1) UNRELEASED; urgency=low
   * Add option --build-source to build .dsc file (c.f. #645011). Also add
     a cpan2dsc 'flavour' of dh-make-perl. If it is called by that name,
     the behaviour changes for easy .dsc creation.
+  * Mention cpan2deb and cpan2dsc in the long description.
   * Add myself to Uploaders.
 
   [ Oleg Gashev ]
