@@ -92,7 +92,7 @@ sub new {
 
     if( ref($_[0]) and ref($_[0]) eq 'HASH' ) {
         $pkg = delete $_[0]->{pkg};
-        $rel = delete $_[0]->{rel};
+        $rel = delete $_[0]->{rel} // '>=';
         $ver = delete $_[0]->{ver};
         # pass-through the rest
         while( my($k,$v) = each %{$_[0]} ) {
