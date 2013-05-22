@@ -271,12 +271,14 @@ Uses the argument to --desc as short description for the package.
 
 =item B<--dh> I<VERSION>
 
-Set desired debhelper version. If C<ver> is >=7, generated debian/rules is
-minimalistic, using the auto-mode of debhelper. Also, any additional
-documentation and examples are listed in additional files under debian/,
-instead of being listed in debian/rules.
+Set desired debhelper compatibility level. The default is 8 for
+architecture-independent packages, and 9 for architecture-dependent packages
+(XS).
 
-Since version 0.60, B<dh-make-perl> only supports debhelper compatibility levels B<>=7>.
+Since version 0.77, B<dh-make-perl> only supports debhelper compatibility
+levels B<< >=8 >>.
+
+See L<debhelper(1)>.
 
 =item B<--dist> I<DISTRIBUTION>
 
@@ -430,25 +432,6 @@ as documented in L</OPTIONS> (without leading I<-->).
 
 See the output of C<dh-make-perl --dump-config>, which can also be used for
 population of F<dh-make-perl.conf>.
-
-=item * rules.MakeMaker.noxs
-
-A debian/rules makefile for modules that use ExtUtils::MakeMaker, but don't
-have C/XS code.
-
-=item * rules.MakeMaker.xs
-
-A debian/rules makefile for modules that use ExtUtils::MakerMaker and
-C/XS code.
-
-=item * rules.Module-Build.noxs
-
-A debian/rules makefile for modules that use Module::Build, but don't have
-C/XS code.
-
-=item * rules.Module-Build.xs
-
-A debian/rules makefile for modules that use Module::Build and C/XS code.
 
 =back
 
