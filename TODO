@@ -33,7 +33,5 @@
   directory has stuff lying around from a failed run. ~periapt
 * Add a switch for "app" (foo-bar) vs. "lib" (libfoo-bar-perl) packages?
 * debhelper:
-  (1) remove all the special casing for debhelper 7.x
-      we require >= 8 anyway and die on <=7
   (3) use debhelper 9 to get rid of the "dh_pysupport: This program is
       deprecated" warning. ~abe

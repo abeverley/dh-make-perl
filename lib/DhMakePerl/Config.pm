@@ -305,8 +305,8 @@ sub check_obsolete_entries {
     warn "--notest ignored. if you don't want to run the tests when building the package, add 'nocheck' to DEB_BUILD_OPTIONS\n"
         if $self->notest;
 
-    if ( $self->dh < 7 ) {
-        warn "debhelper compatibility levels before 7 are not supported.\n";
+    if ( $self->dh < 8 ) {
+        warn "debhelper compatibility levels before 8 are not supported.\n";
         exit(1);
     }
 }

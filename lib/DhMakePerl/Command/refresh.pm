@@ -64,9 +64,7 @@ sub execute {
 
     if ( 'rules' ~~ $self->cfg->only ) {
         $self->create_rules;
-        if ( !-f $self->debian_file('compat') or $self->cfg->dh == 7 ) {
-            $self->create_compat( $self->debian_file('compat') );
-        }
+        $self->create_compat( $self->debian_file('compat') );
     }
 
     if ( 'examples' ~~ $self->cfg->only ) {
