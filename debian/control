@@ -13,7 +13,7 @@ Uploaders: Wolfgang Schemmel <debian@37.org>,
            Axel Beckert <abe@debian.org>
 Section: perl
 Priority: optional
-Build-Depends: debhelper (>= 8)
+Build-Depends: debhelper (>= 8), perl
 Build-Depends-Indep: libapt-pkg-perl,
                      libarray-unique-perl,
                      libclass-accessor-perl,
@@ -40,8 +40,7 @@ Build-Depends-Indep: libapt-pkg-perl,
                      libtext-diff-perl,
                      libtie-ixhash-perl,
                      libwww-mechanize-perl,
-                     libyaml-perl,
-                     perl
+                     libyaml-perl
 Standards-Version: 3.9.4
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-perl/packages/dh-make-perl.git
 Vcs-Git: git://anonscm.debian.org/pkg-perl/packages/dh-make-perl.git
