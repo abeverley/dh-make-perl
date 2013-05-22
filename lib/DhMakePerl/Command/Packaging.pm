@@ -273,6 +273,10 @@ sub extract_basic {
         find( sub { $self->check_for_xs }, $self->main_dir );
     }
 
+    $self->cfg->dh('9')
+        if $bin->Architecture eq 'any'
+        and not $self->cfg->_explicitly_set->{dh};
+
     printf(
         "Found: %s %s (%s arch=%s)\n",
         $self->perlname, $self->version,
@@ -1469,7 +1473,9 @@ sub discover_utility_deps {
     $deps->remove( 'quilt', 'debhelper' );
 
     # start with the minimum
-    $deps->add( Debian::Dependency->new( 'debhelper', $self->cfg->dh ) );
+    my $debhelper_version = $self->cfg->dh;
+    $debhelper_version = '9.20120312' if $debhelper_version eq '9';
+    $deps->add( Debian::Dependency->new( 'debhelper', $debhelper_version ) );
 
     if ( $control->binary->Values(0)->Architecture eq 'all' ) {
         $control->source->Build_Depends_Indep->add('perl');
@@ -1635,7 +1641,7 @@ sub _file_w {
 
 =item Copyright (C) 2007-2013 Gregor Herrmann <gregoa@debian.org>
 
-=item Copyright (C) 2007,2008,2009,2010,2012 Damyan Ivanov <dmn@debian.org>
+=item Copyright (C) 2007,2008,2009,2010,2012,2013 Damyan Ivanov <dmn@debian.org>
 
 =item Copyright (C) 2008, Roberto C. Sanchez <roberto@connexer.com>
 
