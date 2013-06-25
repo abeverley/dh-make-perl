@@ -82,6 +82,18 @@ dh-make-perl (0.77-1) UNRELEASED; urgency=low
   * Fix tests for version mangling.
   * debian/control: one 'perl' is enough. Thanks to lintian.
 
+  [ Damyan Ivanov ]
+  * use dh 9 for arch:any packages to get hardening flags
+  * drop support for debhelper compatibility levels before 8
+  * drop documentation and support of rules files for dh7
+
+  [ Lasse Makholm ]
+  * Debian::AptContents: Fix repo_source_to_contents_paths() to also work on
+    Ubuntu.
+    Make sure to generate paths both with and without components to be
+    compatible with both old and new apt-file versions.
+    (LP: #1034881)
+
  -- Salvatore Bonaccorso <carnil@debian.org>  Wed, 19 Sep 2012 15:11:17 +0200
 
 dh-make-perl (0.76-1) unstable; urgency=low
