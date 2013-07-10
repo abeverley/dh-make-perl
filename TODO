@@ -34,4 +34,7 @@
       deprecated" warning. ~abe
   (4) packages build-depending on libmodule-build-tiny-perl need debhelper
       >= 9.20130630
-
+  (5) there's still quite some special casing of debhelper versions 7.*
+      in lib/DhMakePerl/Command/Packaging.pm (code + POD), like
+      Module::AutoInstall, dh --with foo, etc.
+      which can all be dropped with dh >= 8
