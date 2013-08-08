@@ -14,9 +14,6 @@ override_dh_clean:
 	dh_clean
 	rm -rf $(BUILDHOME)
 
-clean:
-	dh clean
-
 	# clean after test packages
 	for i in Strange-0.1 Strange-2.1; do\
 		if test -d "t/dists/$$i/debian"; then \
