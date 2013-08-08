@@ -347,7 +347,7 @@ sub find_debs_for_modules {
             my $mod = find_cpan_module($module);
             if ( $mod and $mod->distribution ) {
                 ( my $dist = $mod->distribution->base_id ) =~ s/-v?\d[^-]*$//;
-                my $pkg = 'lib' . lc($dist) . '-perl';
+                my $pkg = $self->module_name_to_pkg_name($dist);
 
                 print "   CPAN contains it in $dist\n";
                 print "   substituting package name of $pkg\n";
