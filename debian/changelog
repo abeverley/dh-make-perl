@@ -1,4 +1,4 @@
-dh-make-perl (0.77-1) UNRELEASED; urgency=low
+dh-make-perl (0.77-1) unstable; urgency=low
 
   [ Salvatore Bonaccorso ]
   * Bump version for DhMakePerl to 0.77
@@ -95,7 +95,28 @@ dh-make-perl (0.77-1) UNRELEASED; urgency=low
     compatible with both old and new apt-file versions.
     (LP: #1034881)
 
- -- Salvatore Bonaccorso <carnil@debian.org>  Wed, 19 Sep 2012 15:11:17 +0200
+  [ Damyan Ivanov ]
+  * use Text::Balanced's extract_quotelike for parsing quoted strings
+    (Closes: #717025)
+  * do not fail AptContents.t with left over Contents.cache present
+  * Control: revert ->binary to plain hashref and provide the Tie::IxHash tie
+    via ->binary_tie (Closes: #712432)
+  * configure_cpan: save/restore the CWD
+  * make: when neither --cpan or a tarball is given, also try to use
+    debian-named .orig.tar.gz
+  * make: skip pristine-tar if there is no known tarball (Closes: #689476)
+  * FromCPAN: catch in-core dependencies that require too new perl and provide
+    an out-of-core alternative (Closes: #691534)
+  * move mod_cpan_version from ::make to ::Packaging (Closes: #691859)
+  * make: warn if pkg-perl already has a packaging repository for the package
+    (Closes: #702456)
+  * switch default debhelper to 9
+  * packages build-depending on Module::Build::Tiny get debhelper 9.20130630
+  * bump oldstable perl version from 5.10.0 to 5.10.1
+  * make: prune dependencies after discovering additional dependencies
+  * do not fail when $wnpp_query is not supplied due to --no-network
+
+ -- Damyan Ivanov <dmn@debian.org>  Thu, 08 Aug 2013 23:10:24 +0200
 
 dh-make-perl (0.76-1) unstable; urgency=low
 
