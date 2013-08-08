@@ -10,6 +10,7 @@
   relevant for other systems (e.g. Windows, Mac...). Running Makefile.PL (or 
   equivalent) will create a MYMETA.yml which contains more accurate information. 
   (e.g. will not list dependencies valid only for windows)
+  See #668638
 * #536838: Incorrect assumptions about perl module version -> debian package
   version. Some way of figuring out that libfoo-perl 3.42 contains Bar::Baz
   4.23 is needed. while not common, version discrepacy is very annoying.
