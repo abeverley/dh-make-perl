@@ -18,13 +18,8 @@ orig:
 dist: manifest
 	./Build $@
 
-clean:
+clean realclean distclean:
 	[ ! -e Build ] || ./Build $@
-
-realclean distclean: clean
-	[ ! -e MANIFEST ]  || rm MANIFEST
-	[ ! -e META.yml ]  || rm META.yml
-	[ ! -e META.json ] || rm META.json
 
 .PHONY: all build install test orig dist manifest clean realclean distclean
 # vim: noet
