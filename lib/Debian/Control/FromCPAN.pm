@@ -302,6 +302,43 @@ sub find_debs_for_modules {
                     print "+ $mod_ver found in $dep\n";
                 }
             }
+
+            my $target_perl_version = $^V;
+            $target_perl_version =~ s/^v//;
+            $target_perl_version = Dpkg::Version->new($target_perl_version);
+
+            if (    $dep->pkg
+                and $dep->pkg eq 'perl'
+                and $dep->ver
+                and $dep->ver > $target_perl_version )
+            {
+                print "  ! $dep is too new. Adding alternative dependency\n"
+                    if $verbose;
+
+                my $alt_dep;
+
+                if ( my @pkgs = Debian::DpkgLists->scan_perl_mod($module) ) {
+                    @pkgs = grep { $_ ne 'perl-modules' } @pkgs;
+
+                    $alt_dep = Debian::Dependency->new(
+                          ( @pkgs > 1 )
+                        ? [ map { { pkg => $_, ver => $version } } @pkgs ]
+                        : ( $pkgs[0], $version )
+                    );
+                }
+                elsif ($apt_contents) {
+                    $alt_dep
+                        = $apt_contents->find_perl_module_package( $module,
+                        $version );
+                }
+
+                $alt_dep
+                    //= Debian::Dependency->new(
+                    $self->module_name_to_pkg_name($module),
+                    '>=', $version );
+
+                $dep = Debian::Dependency->new("$alt_dep | $dep");
+            }
         }
         else {
             print "- $mod_ver not found in any package\n";
