@@ -4,9 +4,9 @@ Debian::Control::Stanza::Binary - binary stanza of Debian source package control
 
 =head1 SYNOPSIS
 
-    my $src = Debian::Control::Stanza::Binary->new(\%data);
-    print $src;                         # auto-stringification
-    print $src->Depends;                # Debian::Dependencies object
+    my $bin = Debian::Control::Stanza::Binary->new(\%data);
+    print $bin;                         # auto-stringification
+    print $bin->Depends;                # Debian::Dependencies object
 
 =head1 DESCRIPTION
 
