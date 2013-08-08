@@ -34,6 +34,7 @@ use File::Find qw(find);
 use File::Path ();
 use File::Spec::Functions qw(catfile catpath splitpath);
 use Parse::DebianChangelog;
+use Text::Balanced qw(extract_quotelike);
 use Text::Wrap qw(fill);
 use User::pwent;
 
@@ -404,11 +405,10 @@ sub extract_name_ver_from_build {
 		 module_name\1\s*
 		 (=>|,)
 		 \s*
-		 ([\'\"]?)
-		 (\S+)\3/xs
+		 (\S+)/xs
         )
     {
-        $name = $4;
+        $name = $self->unquote($2);
         $name =~ s/::/-/g;
 
         # just in case we need it later
@@ -514,51 +514,42 @@ sub extract_name_ver_from_makefile {
         $file = $fh->getline;
     }
 
-    # Replace q[quotes] by "quotes"
-    $file =~ s/q\[(.+)]/'$1'/g;
-
     # Get the name
     if ($file =~ /([\'\"]?)
 	    DISTNAME\1\s*
 	    (=>|,)
 	    \s*
-	    ([\'\"]?)
-	    (\S+)\3/xs
+	    (\S+)/xs
         )
     {
 
         # Regular MakeMaker
-        $name = $4;
+        $name = $self->unquote($3);
     }
     elsif (
         $file =~ /([\'\"]?)
 		 NAME\1\s*
 		 (=>|,)
 		 \s*
-		 ([\'\"]?)
-		 (\S+)\3/xs
+		 (\S+)\s*,?/xs
         )
     {
 
         # Regular MakeMaker
-        $name = $4;
+        $name = $self->unquote($3);
     }
     elsif (
         $file =~ m{
                         name
                          \s*
-                         \(?                    # Optional open paren
-                             ([\'\"]?)          # Optional open quote
                                  (\S+)          # Quoted name
-                             \1                 # Optional close quote
-                         \)?                    # Optional close paren
                          \s*;
                  }xs
         )
     {
 
         # Module::Install syntax
-        $name = $2;
+        $name = $self->unquote($1);
     }
     $name =~ s/,.*$//;
 
@@ -1603,6 +1594,24 @@ sub backup_file {
             if -e "$file.bak" and $self->cfg->verbose;
         rename( $file, "$file.bak" );
     }
+}
+
+=item unquote(I<string>)
+
+Runs its argument through L<Text::Balanced>'s C<extract_quotelike> method and
+returns the extracted content with quotes removed. Dies if C<extract_quotelike>
+can't find quoted string.
+
+=cut
+
+sub unquote {
+    my ( $self, $input ) = @_;
+
+    my $unquoted = (extract_quotelike($input))[5];
+
+    die "Unable to find quoted string in [$input]" unless defined $unquoted;
+
+    return $unquoted;
 }
 
 =back
