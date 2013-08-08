@@ -76,16 +76,16 @@ eq_or_diff( $written, $control, 'Control writes what it have read' );
 
 use_ok('Debian::Control::FromCPAN');
 bless $c, 'Debian::Control::FromCPAN';
-$c->binary->FETCH('libtest-compile-perl')->Depends->add('perl-modules');
+$c->binary->{'libtest-compile-perl'}->Depends->add('perl-modules');
 $c->prune_perl_deps;
-is( $c->binary->FETCH('libtest-compile-perl')->Depends . '',
+is( $c->binary->{'libtest-compile-perl'}->Depends . '',
     '${misc:Depends}, ${perl:Depends}, libuniversal-require-perl'
 );
 
 # test pruning dependency on perl version found in oldstable
-$c->binary->FETCH('libtest-compile-perl')->Depends->add('perl (>= 5.8.8)');
+$c->binary->{'libtest-compile-perl'}->Depends->add('perl (>= 5.8.8)');
 $c->prune_perl_deps;
-is( $c->binary->FETCH('libtest-compile-perl')->Depends . '',
+is( $c->binary->{'libtest-compile-perl'}->Depends . '',
     '${misc:Depends}, ${perl:Depends}, libuniversal-require-perl'
 );
 

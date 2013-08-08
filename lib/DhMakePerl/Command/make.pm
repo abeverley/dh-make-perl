@@ -91,7 +91,7 @@ sub execute {
 
     $self->fill_maintainer;
 
-    my $bin = $self->control->binary->Values(0);
+    my $bin = $self->control->binary_tie->Values(0);
     $bin->short_description( $self->cfg->desc )
         if $self->cfg->desc;
 
@@ -374,7 +374,7 @@ sub install_package {
 
     my ( $archspec, $debname );
 
-    my $arch = $self->control->binary->Values(0)->Architecture;
+    my $arch = $self->control->binary_tie->Values(0)->Architecture;
 
     if ( !defined $arch || $arch eq 'any' ) {
         $archspec = `dpkg --print-architecture`;

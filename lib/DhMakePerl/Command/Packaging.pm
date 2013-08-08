@@ -212,9 +212,9 @@ sub set_package_name {
     $self->control->source->Source($pkgname)
         unless $self->control->source->Source;
 
-    $self->control->binary->Push( $pkgname =>
+    $self->control->binary_tie->Push( $pkgname =>
             Debian::Control::Stanza::Binary->new( { Package => $pkgname } ) )
-        unless $self->control->binary->FETCH($pkgname);
+        unless $self->control->binary->{$pkgname};
 }
 
 sub pkgname {
@@ -222,7 +222,7 @@ sub pkgname {
 
     my $self = shift;
 
-    my $pkg = $self->control->binary->Values(0)->Package;
+    my $pkg = $self->control->binary_tie->Values(0)->Package;
 
     defined($pkg) and $pkg ne ''
         or confess "called before set_package_name()";
@@ -260,7 +260,7 @@ sub extract_basic {
     $self->extract_name_ver();
 
     my $src = $self->control->source;
-    my $bin = $self->control->binary->Values(0);
+    my $bin = $self->control->binary_tie->Values(0);
 
     $src->Section('perl') unless defined $src->Section;
     $src->Priority('optional') unless defined $src->Priority;
@@ -659,7 +659,7 @@ sub extract_name_ver_from_makefile {
 sub extract_desc {
     my ( $self, $file ) = @_;
 
-    my $bin = $self->control->binary->Values(0);
+    my $bin = $self->control->binary_tie->Values(0);
     my $desc = $bin->short_description;
 
     $desc and return;
@@ -743,7 +743,7 @@ sub check_for_xs {
     ( !$self->cfg->exclude or $rel_path !~ $self->cfg->exclude )
         && /\.(xs|c|cpp|cxx)$/i
         && do {
-        $self->control->binary->Values(0)->Architecture('any');
+        $self->control->binary_tie->Values(0)->Architecture('any');
         };
 }
 
@@ -1468,7 +1468,7 @@ sub discover_utility_deps {
     $debhelper_version = '9.20120312' if $debhelper_version eq '9';
     $deps->add( Debian::Dependency->new( 'debhelper', $debhelper_version ) );
 
-    if ( $control->binary->Values(0)->Architecture eq 'all' ) {
+    if ( $control->binary_tie->Values(0)->Architecture eq 'all' ) {
         $control->source->Build_Depends_Indep->add('perl');
     }
     else {
@@ -1545,9 +1545,9 @@ sub discover_utility_deps {
     }
 
     # some mandatory dependencies
-    my $bin_deps = $control->binary->Values(0)->Depends;
+    my $bin_deps = $control->binary_tie->Values(0)->Depends;
     $bin_deps += '${shlibs:Depends}'
-        if $self->control->binary->Values(0)->Architecture eq 'any';
+        if $self->control->binary_tie->Values(0)->Architecture eq 'any';
     $bin_deps += '${misc:Depends}, ${perl:Depends}';
 }
 

@@ -33,10 +33,14 @@ stanza of the Debian source package control file.
 
 =item binary
 
-A hash reference (actually L<Tie::IxHash> instance) with keys being binary
+A hash reference with keys being binary
 package names and values instances of L<Debian::Control::Stanza::Binary> class.
 Contains the information of the binary package stanzas of Debian source package
 control file.
+
+=item binary_tie
+
+A L<Tie::IxHash> object tied to the B<binary> hash.
 
 =back
 
@@ -47,7 +51,7 @@ package Debian::Control;
 use base 'Class::Accessor';
 use strict;
 
-__PACKAGE__->mk_accessors(qw( source binary _parser ));
+__PACKAGE__->mk_accessors(qw( source binary binary_tie _parser ));
 
 use Parse::DebControl;
 use Debian::Control::Stanza::Source;
@@ -76,7 +80,9 @@ sub new {
 
     $self->_parser( Parse::DebControl->new );
 
-    $self->binary( Tie::IxHash->new );
+    my %b;
+    $self->binary_tie( tie %b, 'Tie::IxHash' );
+    $self->binary( \%b );
     $self->source( Debian::Control::Stanza::Source->new );
 
     return $self;
@@ -113,7 +119,7 @@ sub read {
             $self->source( Debian::Control::Stanza::Source->new($_) );
         }
         elsif ( $_->{Package} ) {
-            $self->binary->Push(
+            $self->binary_tie->Push(
                 $_->{Package} => Debian::Control::Stanza::Binary->new($_) );
         }
         else {
@@ -137,23 +143,23 @@ All dependency lists are sorted before writing.
 sub write {
     my ( $self, $file ) = @_;
 
-    for my $s ( $self->source, $self->binary->Values ) {
+    for my $s ( $self->source, $self->binary_tie->Values ) {
         for ( $s->fields ) {
             $s->$_->sort if $s->is_dependency_list($_);
         }
     }
 
     if ( ref($file) and ref($file) eq 'SCALAR' ) {
-        $$file = join( "\n", $self->source, $self->binary->Values );
+        $$file = join( "\n", $self->source, $self->binary_tie->Values );
     }
     elsif ( ref($file) and ref($file) eq 'GLOB' ) {
-        $file->print( join( "\n", $self->source, $self->binary->Values ) );
+        $file->print( join( "\n", $self->source, $self->binary_tie->Values ) );
     }
     else {
         my $fh;
         open $fh, '>', $file or die "Unable to open '$file' for writing: $!";
 
-        print $fh join( "\n", $self->source, $self->binary->Values );
+        print $fh join( "\n", $self->source, $self->binary_tie->Values );
     }
 }
 
@@ -173,7 +179,7 @@ package stanzas present or the first has no C<Archiitecture> field.
 sub is_arch_dep {
     my $self = shift;
 
-    my $bin = $self->binary->Values(0);
+    my $bin = $self->binary_tie->Values(0);
 
     return undef unless $bin;
 

@@ -91,7 +91,7 @@ sub discover_dependencies {
         if %$opts;
 
     my $src = $self->source;
-    my $bin = $self->binary->Values(0);
+    my $bin = $self->binary_tie->Values(0);
 
     local @INC = ( $dir, @INC );
 
@@ -468,7 +468,7 @@ sub prune_perl_deps {
 
     # remove depending on ancient perl versions
     for my $perl ( qw( perl perl-base perl-modules ) ) {
-        for my $pkg ( $self->binary->Values ) {
+        for my $pkg ( $self->binary_tie->Values ) {
             for my $rel ( qw(Depends Recommends Suggests) ) {
                 my @ess = $pkg->$rel->remove($perl);
                 for my $dep (@ess) {
