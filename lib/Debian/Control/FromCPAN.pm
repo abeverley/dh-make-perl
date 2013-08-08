@@ -483,6 +483,35 @@ sub prune_perl_deps {
 
 =back
 
+=head1 CLASS METHODS
+
+=over
+
+=item module_name_to_pkg_name
+
+Receives a perl module name like C<Foo::Bar> and returns a suitable Debian
+package name for it, like C<libfoo-bar-perl>.
+
+=cut
+
+sub module_name_to_pkg_name {
+    my ( $self, $module ) = @_;
+
+    my $pkg = lc $module;
+
+    # ensure policy compliant names and versions (from Joeyh)...
+    $pkg =~ s/[^-.+a-zA-Z0-9]+/-/g;
+
+    $pkg =~ s/--+/-/g;
+
+    $pkg = 'lib' . $pkg unless $pkg =~ /^lib/;
+    $pkg .= '-perl';
+
+    return $pkg;
+}
+
+=back
+
 =head1 COPYRIGHT & LICENSE
 
 Copyright (C) 2009, 2010, 2012 Damyan Ivanov L<dmn@debian.org>

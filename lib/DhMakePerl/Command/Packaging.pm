@@ -201,13 +201,8 @@ sub set_package_name {
       $pkgname = $self->cfg->packagename;
     }
     else {
-      $pkgname = lc $self->perlname;
-      $pkgname = 'lib' . $pkgname unless $pkgname =~ /^lib/;
-      $pkgname .= '-perl';
+        $pkgname = Debian::Control::FromCPAN->module_name_to_pkg_name( $self->perlname );
     }
-
-    # ensure policy compliant names and versions (from Joeyh)...
-    $pkgname =~ s/[^-.+a-zA-Z0-9]+/-/g;
 
     $self->control->source->Source($pkgname)
         unless $self->control->source->Source;
