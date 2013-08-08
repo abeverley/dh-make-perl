@@ -113,7 +113,7 @@ $apt_contents = instance();
 
 is_deeply(
     $apt_contents->contents_files,
-    [ sort glob "$Bin/contents/*Contents*" ],
+    [ sort grep { !/Contents.cache/} glob "$Bin/contents/*Contents*" ],
     'contents in a dir'
 );
 
