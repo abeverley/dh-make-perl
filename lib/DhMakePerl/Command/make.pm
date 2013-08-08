@@ -524,6 +524,35 @@ sub create_watch {
     $fh->close;
 }
 
+sub search_pkg_perl {
+    my $self = shift;
+
+    return undef unless $self->cfg->network;
+
+    my $pkg = $self->pkgname;
+
+    require LWP::UserAgent;
+    require LWP::ConnCache;
+
+    my ( $ua, $resp );
+
+    $ua = LWP::UserAgent->new;
+    $ua->env_proxy;
+    $ua->conn_cache( LWP::ConnCache->new );
+
+    $resp = $ua->get(
+        "http://anonscm.debian.org/gitweb/?p=pkg-perl/packages/$pkg.git");
+    return { url => $resp->request->uri }
+        if $resp->is_success;
+
+    $resp = $ua->get(
+        "http://anonscm.debian.org/gitweb/?p=pkg-perl/attic/$pkg.git");
+    return { url => $resp->request->uri }
+        if $resp->is_success;
+
+    return undef;
+}
+
 sub package_already_exists {
     my( $self, $apt_contents ) = @_;
 
@@ -547,8 +576,7 @@ sub package_already_exists {
         warn "Description: $short_desc\n";
     }
     elsif ($apt_contents) {
-        my $found
-            = $apt_contents->find_perl_module_package( $self->perlname );
+        $found = $apt_contents->find_perl_module_package( $self->perlname );
 
         if ($found) {
             ( my $mod_name = $self->perlname ) =~ s/-/::/g;
@@ -556,6 +584,14 @@ sub package_already_exists {
             warn "NOTICE: the package '$found', available in APT repositories\n";
             warn "        already contains a module named "
                 . $self->perlname . "\n";
+        }
+        elsif ( $found = $self->search_pkg_perl ) {
+            warn "********************\n";
+            warn sprintf(
+                "The Debian Perl Group has a repository for the %s package\n  at %s\n",
+                $self->pkgname, $found->{url} );
+            warn "You may want to contact them to avoid duplication of effort.\n";
+            warn "More information is available at https://wiki.debian.org/Teams/DebianPerlGroup\n";
         }
     }
     else {
