@@ -66,7 +66,7 @@ use constant DEFAULTS => {
     backups       => 1,
     data_dir      => '/usr/share/dh-make-perl',
     dbflags       => ( $> == 0 ? "" : "-rfakeroot" ),
-    dh            => 8,
+    dh            => 9,
     dist          => '',
     email         => '',
     exclude       => qr/$Dpkg::Source::Package::diff_ignore_default_regexp/,
