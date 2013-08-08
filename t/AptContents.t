@@ -38,25 +38,30 @@ is( $apt_contents->cache, undef, 'but should contain no cache' );
 is( $apt_contents->cache, undef, 'should have no cache when no dists found' );
 
 is_deeply(
-    [ $apt_contents->repo_source_to_contents_paths(
-        'deb     http://debian.cihar.com/ unstable main contrib non-free') ],
-    [ 'debian.cihar.com_dists_unstable_main',
-      'debian.cihar.com_dists_unstable_contrib',
-      'debian.cihar.com_dists_unstable_non-free' ],
+    [   $apt_contents->repo_source_to_contents_paths(
+            'deb     http://debian.cihar.com/ unstable main contrib non-free')
+    ],
+    [   'debian.cihar.com_dists_unstable_main',
+        'debian.cihar.com_dists_unstable_contrib',
+        'debian.cihar.com_dists_unstable_non-free',
+        'debian.cihar.com_dists_unstable'
+    ],
     'source line conversion 1',
 );
 
 is_deeply(
     [ $apt_contents->repo_source_to_contents_paths(
         'deb     http://kernel-archive.buildserver.net/debian-kernel trunk main') ],
-    [ 'kernel-archive.buildserver.net_debian-kernel_dists_trunk_main' ],
+    [ 'kernel-archive.buildserver.net_debian-kernel_dists_trunk_main',
+     'kernel-archive.buildserver.net_debian-kernel_dists_trunk' ],
     'source line conversion 2',
 );
 
 is_deeply(
     [ $apt_contents->repo_source_to_contents_paths(
         'deb     http://www.debian-multimedia.org stable main') ],
-    [ 'www.debian-multimedia.org_dists_stable_main' ],
+    [ 'www.debian-multimedia.org_dists_stable_main',
+      'www.debian-multimedia.org_dists_stable' ],
     'source line conversion 3',
 );
 
@@ -66,7 +71,8 @@ is_deeply(
     [ 'ftp.debian-unofficial.org_debian_dists_testing_main',
       'ftp.debian-unofficial.org_debian_dists_testing_contrib',
       'ftp.debian-unofficial.org_debian_dists_testing_non-free',
-      'ftp.debian-unofficial.org_debian_dists_testing_restricted' ],
+      'ftp.debian-unofficial.org_debian_dists_testing_restricted',
+      'ftp.debian-unofficial.org_debian_dists_testing' ],
     'source line conversion 4',
 );
 
@@ -75,7 +81,8 @@ is_deeply(
         'deb     http://ftp.de.debian.org/debian/ unstable main contrib non-free') ],
     [ 'ftp.de.debian.org_debian_dists_unstable_main',
       'ftp.de.debian.org_debian_dists_unstable_contrib',
-      'ftp.de.debian.org_debian_dists_unstable_non-free' ],
+      'ftp.de.debian.org_debian_dists_unstable_non-free',
+      'ftp.de.debian.org_debian_dists_unstable' ],
     'source line conversion 5',
 );
 
@@ -87,6 +94,7 @@ is_deeply(
     [   'ftp2.de.debian.org_debian_dists_squeeze_main',
         'ftp2.de.debian.org_debian_dists_squeeze_contrib',
         'ftp2.de.debian.org_debian_dists_squeeze_non-free',
+        'ftp2.de.debian.org_debian_dists_squeeze',
     ],
     'source lines with user:pass@',
 );
@@ -96,7 +104,8 @@ is_deeply(
         'deb file:/home/jason/debian stable main contrib non-free') ],
     [ '_home_jason_debian_dists_stable_main',
       '_home_jason_debian_dists_stable_contrib',
-      '_home_jason_debian_dists_stable_non-free' ],
+      '_home_jason_debian_dists_stable_non-free',
+      '_home_jason_debian_dists_stable' ],
     'source line conversion 6',
 );
 
