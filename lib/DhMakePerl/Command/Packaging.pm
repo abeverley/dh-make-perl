@@ -14,6 +14,7 @@ use base 'DhMakePerl';
 
 __PACKAGE__->mk_accessors(
     qw( start_dir main_dir debian_dir
+        mod_cpan_version
         meta perlname author
         version rules docs examples copyright
         control

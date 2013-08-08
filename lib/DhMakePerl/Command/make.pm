@@ -13,7 +13,6 @@ __PACKAGE__->mk_accessors(
         perlname version pkgversion
         copyright author
         extrasfields  extrapfields
-        mod_cpan_version
         docs examples
         )
 );
