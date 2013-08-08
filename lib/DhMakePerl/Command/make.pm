@@ -169,6 +169,8 @@ sub execute {
 
     # now that rules are there, see if we need some dependency for them
     $self->discover_utility_deps( $self->control );
+    $self->control->prune_perl_deps;
+    $self->prune_deps;
     $src->Standards_Version( $self->debstdversion );
     $src->Homepage( $self->upsurl );
     if ( $self->cfg->pkg_perl ) {
