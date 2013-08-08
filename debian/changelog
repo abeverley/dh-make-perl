@@ -115,6 +115,8 @@ dh-make-perl (0.77-1) unstable; urgency=low
   * bump oldstable perl version from 5.10.0 to 5.10.1
   * make: prune dependencies after discovering additional dependencies
   * do not fail when $wnpp_query is not supplied due to --no-network
+  * rules: merge clean: into override_dh_clean:
+  * Makefile: defer {real,dist}clean to ./Build too
 
  -- Damyan Ivanov <dmn@debian.org>  Thu, 08 Aug 2013 23:10:24 +0200
 
