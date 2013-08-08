@@ -1341,6 +1341,8 @@ sub configure_cpan {
 
     return if $CPAN::Config_loaded;
 
+    my $save_cwd = getcwd();
+
     CPAN::HandleConfig->load( be_silent => not $self->cfg->verbose )
         if $self->cfg->network;
 
@@ -1353,6 +1355,8 @@ sub configure_cpan {
 
     $CPAN::Config->{build_requires_install_policy} = 'no';
     $CPAN::Config->{prerequisites_policy} = 'ignore';
+
+    chdir $save_cwd;
 }
 
 =item discover_dependencies
