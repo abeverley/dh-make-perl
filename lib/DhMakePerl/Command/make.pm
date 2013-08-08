@@ -82,6 +82,8 @@ sub execute {
 
     $self->extract_basic();
 
+    $tarball //= $self->guess_tarball;
+
     unless ( defined $self->cfg->version ) {
         $self->pkgversion( $self->version . '-1' );
     }
@@ -246,6 +248,25 @@ sub execute {
     return(0);
 }
 
+sub guess_tarball {
+    my $self = shift;
+
+    my $try = catfile( $self->main_dir, '..',
+              $self->control->source->Source . '_'
+            . $self->version
+            . '.orig.tar.gz' );
+
+    print "Trying $try...";
+    if ( -f $try ) {
+        print " found!\n";
+        return $try;
+    }
+    else {
+        print " not found.\n";
+        return undef;
+    }
+}
+
 sub setup_dir {
     my ($self) = @_;
 
@@ -340,7 +361,15 @@ sub setup_dir {
         $self->main_dir($maindir);
         my $guessed_tarball = catfile( $self->start_dir, "..",
             basename( $self->start_dir ) . ".tar.gz" );
-        $tarball = $guessed_tarball if -f $guessed_tarball;
+
+        print "Trying $guessed_tarball...";
+        if ( -f $guessed_tarball ) {
+            $tarball = $guessed_tarball;
+            print " found.\n";
+        }
+        else {
+            print " not found.\n";
+        }
     }
     return $tarball;
 }
