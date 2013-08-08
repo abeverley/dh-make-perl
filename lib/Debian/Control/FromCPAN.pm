@@ -208,7 +208,10 @@ sub discover_dependencies {
             $missing_debs_str
                 = "Needs the following modules for which there are no debian packages available:\n";
             for (@$missing) {
-                my $bug = ( $wnpp_query->bugs_for_package($_) )[0];
+                my $bug
+                    = $wnpp_query
+                    ? ( $wnpp_query->bugs_for_package($_) )[0]
+                    : undef;
                 $missing_debs_str .= " - $_";
                 $missing_debs_str .= " (" . $bug->type_and_number . ')'
                     if $bug;
@@ -218,7 +221,10 @@ sub discover_dependencies {
         else {
             $missing_debs_str = "The following Perl modules are required and not installed in your system:\n";
             for (@$missing) {
-                my $bug = ( $wnpp_query->bugs_for_package($_) )[0];
+                my $bug
+                    = $wnpp_query
+                    ? ( $wnpp_query->bugs_for_package($_) )[0]
+                    : undef;
                 $missing_debs_str .= " - $_";
                 $missing_debs_str .= " (" . $bug->type_and_number . ')'
                     if $bug;
