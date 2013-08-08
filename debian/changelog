@@ -18,6 +18,7 @@ dh-make-perl (0.77-1) UNRELEASED; urgency=low
 
   [ Damyan Ivanov ]
   * add test about handling user:pass@ in sources.list URLs
+  * add debian/source/{format,local-options}. shut up, lintian :)
 
   [ gregor herrmann ]
   * DhMakePerl::Command::Packaging: honour command line options
