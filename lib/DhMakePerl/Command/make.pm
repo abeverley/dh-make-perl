@@ -689,7 +689,7 @@ sub git_add_debian {
             $self->pkgname ),
     ) if $self->cfg->pkg_perl;
 
-    if ( File::Which::which('pristine-tar') ) {
+    if ( File::Which::which('pristine-tar') and $tarball ) {
         $ENV{GIT_DIR} = File::Spec->catdir( $self->main_dir, '.git' );
         system( 'pristine-tar', 'commit', $tarball, "upstream/".$self->version ) >= 0
             or warn "error running pristine-tar: $!\n";
