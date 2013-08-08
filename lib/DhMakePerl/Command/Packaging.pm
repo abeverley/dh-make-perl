@@ -1412,6 +1412,11 @@ The following special cases are detected:
 If L<Module::AutoInstall> is discovered in L<inc/>, debhelper dependency is
 raised to 7.2.13.
 
+=item Module::Build::Tiny
+
+if L<Module::Build::Tiny> is present in the build-dependencies, debhelper
+dependency is raised to 9.20130630.
+
 =item dh --with=quilt
 
 C<dh --with=quilt> needs debhelper 7.0.8 and quilt 0.46-7.
@@ -1478,6 +1483,9 @@ sub discover_utility_deps {
     $self->explained_dependency( 'Module::AutoInstall', $deps,
         'debhelper (>= 7.2.13)' )
         if -e catfile( $self->main_dir, qw( inc Module AutoInstall.pm ) );
+    $self->explained_dependency( 'Module::Build::Tiny', $deps,
+        'debhelper (>= 9.20130630)' )
+        if $deps->has('libmodule-build-tiny-perl');
 
     for ( @{ $self->rules->lines } ) {
         $self->explained_dependency( 'dh --with', $deps,

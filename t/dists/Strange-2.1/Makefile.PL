@@ -7,4 +7,7 @@ WriteMakefile(
     'LIBS'	=> [''],   # e.g., '-lm' 
     'DEFINE'	=> '',     # e.g., '-DHAVE_SOMETHING' 
     'INC'	=> '',     # e.g., '-I/usr/include/other' 
+    'BUILD_REQUIRES'  => {
+        'Module::Build::Tiny' => 0,
+    },
 );

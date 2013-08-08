@@ -2,7 +2,8 @@ Source: libstrange-perl
 Section: perl
 Priority: optional
 Maintainer: Florian Geekwurt <florian@geekwurt.org>
-Build-Depends: debhelper (>= 9.20120312),
+Build-Depends: debhelper (>= 9.20130630),
+ libmodule-build-tiny-perl,
  perl
 Standards-Version: 3.9.4
 Homepage: https://metacpan.org/release/Strange/
