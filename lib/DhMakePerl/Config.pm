@@ -296,7 +296,7 @@ sub dump_config {
 
 =item check_obsolete_entries
 
-Checks for presense of deprecated/obsolete entries and warns/dies if any is
+Checks for presence of deprecated/obsolete entries and warns/dies if any is
 found.
 
 =cut

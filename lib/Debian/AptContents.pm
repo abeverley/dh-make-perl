@@ -155,7 +155,7 @@ sub warning {
 
 =item repo_source_to_contents_paths
 
-Given a line with Deban package repository path (typically taken from
+Given a line with Debian package repository path (typically taken from
 F<sources.list>), converts it to the corresponding F<Contents> file names.
 
 =cut
@@ -360,8 +360,8 @@ sub read_cache {
 
 Writes the contents of the parsed C<cache> to the C<cache_file>.
 
-Storable is used to stream the data. Along woth the information from
-F<Contents> files, a timestamp is stored.
+Storable is used to stream the data. Along with the information from
+F<Contents> files, a time stamp is stored.
 
 =cut
 
@@ -399,7 +399,7 @@ sub find_file_packages {
     return () unless $packages;
 
     my @packages = split( /,/, $packages );    # Contents contains a
-                                               # comma-delimitted list
+                                               # comma-delimited list
                                                # of packages
 
     s{.+/}{} for @packages;                    # remove section. Greedy on purpose

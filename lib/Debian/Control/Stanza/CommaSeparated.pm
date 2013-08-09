@@ -16,7 +16,7 @@ use Text::ParseWords qw(quotewords);
 
 use overload '""' => \&as_string;
 
-=head1 SYNOPSYS
+=head1 SYNOPSIS
 
     my $f = Debian::Control::Stanza::CommaSeparated->new(
         'Joe M <joem@there.not>');
@@ -91,7 +91,7 @@ sub _parse {
 
 =item add I<@items>
 
-Adds the ginen items to the list. Items that are already present are not added,
+Adds the given items to the list. Items that are already present are not added,
 keeping the list unique.
 
 =cut

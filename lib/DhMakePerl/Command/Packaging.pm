@@ -94,7 +94,7 @@ sub main_file {
 
 =item debian_file(file_name)
 
-Constructs a file name relative to the debian/ subdurectory of the main source
+Constructs a file name relative to the debian/ sub-directory of the main source
 directory.
 
 =cut
@@ -1081,8 +1081,8 @@ sub create_copyright {
                     when (/apache_2_0/) { $licenses{'Apache-2.0'} = 1; }
                     when (/artistic_1/) { $licenses{'Artistic'} = 1; }
                     when (/artistic_2/) { $licenses{'Artistic-2.0'} = 1; }
-                    # EU::MM and M::B converts the unversioned 'gpl' to gpl_1.
-                    # As a unversioned GPL means *any* GPL,I think it's safe to use GPL-1+ here
+                    # EU::MM and M::B converts the 'gpl' without a version to gpl_1.
+                    # As GPL without a version means *any* GPL, I think it's safe to use GPL-1+ here
                     when (/gpl_1/) { $licenses{'GPL-1+'} = 1; }
 
                     when (/perl_5/) {
@@ -1456,7 +1456,7 @@ The proper build-dependency in this case is
 
     perl
 
-The unversioned dependency on perl is set as Lenny has already 5.10 which
+The on perl without a version is set as Lenny has already 5.10 which
 includes first Module::Build.
 
 =back

@@ -98,7 +98,7 @@ sub new {
 Parses the rules file and stores its findings for later use. Called
 automatically by L<is_dh7tiny> and L<is_quiltified>. The result of the parsing
 is cached and subsequent calls to C<is_XXX> use the cache. To force cache
-refresh (for eample if the contents of the file have been changed), call
+refresh (for example if the contents of the file have been changed), call
 C<parse> again.
 
 =cut
@@ -129,8 +129,8 @@ sub parse {
 =item is_dh7tiny
 
 Returns true if the contents of the rules file seem to use the so called
-I<tiny> variant offerred by debhelper 7. Tiny rules are detected by the
-presense of the following two lines:
+I<tiny> variant offered by debhelper 7. Tiny rules are detected by the
+presence of the following two lines:
 
     %:
             dh $@
@@ -174,7 +174,7 @@ sub is_quiltified {
 
 Integrates L<quilt(1)> into the rules. For debhelper 7 I<tiny> rules (as
 determined by L</is_dh7tiny>) C<--with=quilt> is added to every C<dh>
-invocation. For the more traditional variant, quilt is integrated vua
+invocation. For the more traditional variant, quilt is integrated via
 F<quilt.make> and its C<< $(QUILT_STAMPFN) >> and C<unpatch> targets.
 
 =cut
@@ -315,7 +315,7 @@ sub drop_quilt {
     }
 }
 
-=item read [I<filename>]
+=item read [I<file name>]
 
 Replaces the current rules content with the content of I<filename>. If
 I<filename> is not given, uses the value of the L</filename> member.

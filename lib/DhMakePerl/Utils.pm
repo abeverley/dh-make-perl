@@ -7,7 +7,7 @@ our $VERSION = '0.71';
 
 =head1 NAME
 
-DhMakePerl::Utils - helper routined for dh-make-perl and alike
+DhMakePerl::Utils - helper routines for dh-make-perl and alike
 
 =head1 SYNOPSIS
 
@@ -120,7 +120,7 @@ sub is_core_module {
 
 =item nice_perl_ver I<version_string>
 
-Reformats perl version to match Debian's perl package versions.
+Re-formats perl version to match Debian's perl package versions.
 
 For example C<5.010> (and C<5.01>) is converted to C<5.10>.
 
@@ -235,12 +235,12 @@ sub find_core_perl_dependency {
 
 =item split_version_relation I<string>
 
-Splits the string, typicaly found in dependency fields' values in CPAN META
+Splits the string, typically found in dependency fields' values in CPAN META
 into relation and version. If no relation is found in the string, C<< >= >> is
 assumed.
 
 Returns a list of relation and version. The relation is suitable for using in
-debian package dependency version requirements.
+Debian package dependency version requirements.
 
 For example
 

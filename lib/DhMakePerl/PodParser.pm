@@ -14,7 +14,7 @@ DhMakePerl::PodParser - internal helper module for DhMakePerl
 =head1 SYNOPSIS
 
 DhMakePerl::PodParser is used by DhMakePerl to extract some
-information from the module-to-be-packaged. It subclasses from
+information from the module-to-be-packaged. It sub-classes from
 L<Pod::Parser> - Please refer to it for further documentation.
 
 =head1 METHODS
@@ -87,7 +87,7 @@ sub command {
 
 =item add_text
 
-Hands back the text it received as it ocurred in the input stream (see the
+Hands back the text it received as it occurred in the input stream (see the
 L<Pod::Parser>'s documentation for L<verbatim|Pod::Parser/verbatim>,
 L<textblock|Pod::Parser/textblock> and
 L<interior_sequence|Pod::Parser/interior_sequence>).
@@ -128,7 +128,7 @@ sub textblock { shift->add_text(@_) }
 =item interior_sequence
 
 L<interior_sequence()|Pod::Parser/interior_sequence()> is called by
-L<Pod::Parser> when, eh, an interiorsquence occureds in the text. Interior
+L<Pod::Parser> when, eh, an interior sequence occurs in the text. Interior
 sequences are things like IE<lt>...E<gt>.
 
 This implementation decodes C<gt>, C<lt>, C<sol>, C<verbar> and numeric

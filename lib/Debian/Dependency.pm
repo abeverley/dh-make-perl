@@ -55,7 +55,7 @@ use overload '""' => \&_stringify,
 
 =item new()
 
-Construnct a new instance.
+Construct a new instance.
 
 =item new( { pkg => 'package', rel => '>=', ver => '1.9' } )
 

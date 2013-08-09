@@ -67,7 +67,7 @@ sub new {
         { map( ( $_ => 1 ), @{ $self->bug_types || [ keys %list_url ] } ), }
     );
 
-    # default ttl
+    # default TTL
     $self->ttl( 24 * 3600 )
         unless defined $self->ttl;
 
