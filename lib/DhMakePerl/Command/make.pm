@@ -81,7 +81,7 @@ sub execute {
 
     $self->extract_basic();
 
-    $tarball //= $self->guess_tarball;
+    $tarball //= $self->guess_tarball if $self->cfg->{vcs} eq 'git';
 
     unless ( defined $self->cfg->version ) {
         $self->pkgversion( $self->version . '-1' );
