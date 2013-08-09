@@ -117,8 +117,11 @@ dh-make-perl (0.77-1) unstable; urgency=low
   * do not fail when $wnpp_query is not supplied due to --no-network
   * rules: merge clean: into override_dh_clean:
   * Makefile: defer {real,dist}clean to ./Build too
+  * add .pc and Contents.cache to MANIFEST.SKIP
+  * rework dists.t using IPC::Run
+  * supply data about libmodule-build-tiny-perl in test Contents
 
- -- Damyan Ivanov <dmn@debian.org>  Thu, 08 Aug 2013 23:10:24 +0200
+ -- Damyan Ivanov <dmn@debian.org>  Thu, 08 Aug 2013 23:52:14 +0200
 
 dh-make-perl (0.76-1) unstable; urgency=low
 

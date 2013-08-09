@@ -114,6 +114,10 @@
   * bump oldstable perl version from 5.10.0 to 5.10.1
   * make: prune dependencies after discovering additional dependencies
   * do not fail when $wnpp_query is not supplied due to --no-network
+  * Makefile: defer {real,dist}clean to ./Build
+  * add .pc and Contents.cache to MANIFEST.SKIP
+  * rework dists.t using IPC::Run
+  * supply data about libmodule-build-tiny-perl in test Contents
 
 0.76 (2012-09-12)
 
