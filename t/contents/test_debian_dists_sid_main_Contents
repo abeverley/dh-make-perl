@@ -1476,3 +1476,9 @@ usr/share/ri/1.9.0/system/URI/parse-c.yaml		    interpreters/ri1.9
 usr/share/ri/1.9.0/system/URI/regexp-c.yaml		    interpreters/ri1.9
 usr/share/ri/1.9.0/system/URI/split-c.yaml		    interpreters/ri1.9
 usr/lib/perl5/GD.pm					    libgd-gd2-noxpm-perl,libgd-gd2-perl
+usr/share/doc/libmodule-build-tiny-perl/Todo		    perl/libmodule-build-tiny-perl
+usr/share/doc/libmodule-build-tiny-perl/changelog.Debian.gz perl/libmodule-build-tiny-perl
+usr/share/doc/libmodule-build-tiny-perl/changelog.gz	    perl/libmodule-build-tiny-perl
+usr/share/doc/libmodule-build-tiny-perl/copyright	    perl/libmodule-build-tiny-perl
+usr/share/man/man3/Module::Build::Tiny.3pm.gz		    perl/libmodule-build-tiny-perl
+usr/share/perl5/Module/Build/Tiny.pm			    perl/libmodule-build-tiny-perl
