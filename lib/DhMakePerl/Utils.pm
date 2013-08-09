@@ -1,5 +1,7 @@
 package DhMakePerl::Utils;
 
+use strict;
+use warnings;
 
 our $VERSION = '0.71';
 
@@ -24,7 +26,7 @@ our @EXPORT_OK = qw(
     split_version_relation
 );
 
-use base Exporter;
+use base 'Exporter';
 
 use 5.10.0;
 

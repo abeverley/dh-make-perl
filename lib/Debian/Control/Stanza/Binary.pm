@@ -85,6 +85,7 @@ empty lines are replaced with dots.
 package Debian::Control::Stanza::Binary;
 
 use strict;
+use warnings;
 
 our $VERSION = '0.77';
 

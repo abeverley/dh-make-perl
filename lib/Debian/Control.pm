@@ -50,6 +50,7 @@ package Debian::Control;
 
 use base 'Class::Accessor';
 use strict;
+use warnings;
 
 our $VERSION = '0.77';
 
