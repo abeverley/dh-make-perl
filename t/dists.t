@@ -88,51 +88,90 @@ sub dist_ok($) {
     my $dist_dir = shift;
     my $dist = "$Bin/dists/$dist_dir";
 
-    system( "$Bin/../dh-make-perl", "--no-verbose",
-            "--home-dir", "$Bin/contents",
-            "--apt-contents-dir", "$Bin/contents",
-            "--data-dir", "$Bin/../share",
-            $ENV{NO_NETWORK} ? '--no-network' : (),
-            "--vcs", "none",
-            "--sources-list",
-            "$Bin/contents/sources.list", "--email", "joemaint\@test.local",
-            $dist );
+    my ( @cmd, $out, $err );
 
-    is( $?, 0, "$dist_dir: system returned 0" );
+    use IPC::Run qw( run );
+
+# plain make
+
+    $out = $err = '';
+    @cmd = (
+        "$Bin/../dh-make-perl", "--no-verbose",
+        "--home-dir",           "$Bin/contents",
+        "--apt-contents-dir",   "$Bin/contents",
+        "--data-dir",           "$Bin/../share",
+        $ENV{NO_NETWORK} ? '--no-network' : (), "--vcs",
+        "none",                       "--sources-list",
+        "$Bin/contents/sources.list", "--email",
+        "joemaint\@test.local",       $dist
+    );
+
+    my $ok = run \@cmd, \undef, \$out, \$err;
+
+    unless ($ok) {
+        diag "\$! = $!, \$? = $?";
+        diag $out if $out;
+        diag $err if $err;
+    }
+
+    ok( $ok, "$dist_dir run ok" );
 
     compare_tree( "$dist/debian", "$dist/wanted-debian", 'initial' );
 
-    system( "$Bin/../dh-make-perl", "--no-verbose",
-            "--home-dir", "$Bin/contents",
-            "--apt-contents-dir", "$Bin/contents",
-            "--data-dir", "$Bin/../share",
-            $ENV{NO_NETWORK} ? '--no-network' : (),
-            "--vcs", "none",
-            "--sources-list",
-            "$Bin/contents/sources.list", "--email", "joemaint\@test.local",
-            "refresh",
-            $dist );
+# --refresh
 
-    is( $?, 0, "$dist_dir refresh: system returned 0" );
+    $out = $err = '';
+    @cmd = (
+        "$Bin/../dh-make-perl", "--no-verbose",
+        "--home-dir",           "$Bin/contents",
+        "--apt-contents-dir",   "$Bin/contents",
+        "--data-dir",           "$Bin/../share",
+        $ENV{NO_NETWORK} ? '--no-network' : (), "--vcs",
+        "none",                       "--sources-list",
+        "$Bin/contents/sources.list", "--email",
+        "joemaint\@test.local",       "refresh",
+        $dist
+    );
+
+    $ok = run \@cmd, \undef, \$out, \$err;
+
+    unless ($ok) {
+        diag "\$! = $!, \$? = $?";
+        diag $out if $out;
+        diag $err if $err;
+    }
+
+    ok( $ok, "$dist_dir refresh: run ok" );
 
     compare_tree( "$dist/debian", "$dist/wanted-debian--refresh", 'refresh' );
 
     unlink File::Find::Rule->file->name('*.bak')->in("$dist/debian");
 
-    system( "$Bin/../dh-make-perl", "--no-verbose",
-            "--home-dir", "$Bin/contents",
-            "--apt-contents-dir", "$Bin/contents",
-            "--data-dir", "$Bin/../share",
-            $ENV{NO_NETWORK} ? '--no-network' : (),
-            "--vcs", "none",
-            "--sources-list",
-            "$Bin/contents/sources.list", "--email", "joemaint\@test.local",
-            "refresh", '--source-format', '3.0 (quilt)',
-            $dist );
+# --refresh --source-format '3.0 (quilt)'
 
-    is( $?, 0,
-        "$dist_dir refresh --source-format '3.0 (quilt)': system returned 0"
+    $out = $err = '';
+    @cmd = (
+        "$Bin/../dh-make-perl", "--no-verbose",
+        "--home-dir",           "$Bin/contents",
+        "--apt-contents-dir",   "$Bin/contents",
+        "--data-dir",           "$Bin/../share",
+        $ENV{NO_NETWORK} ? '--no-network' : (), "--vcs",
+        "none",                       "--sources-list",
+        "$Bin/contents/sources.list", "--email",
+        "joemaint\@test.local",       "refresh",
+        '--source-format',            '3.0 (quilt)',
+        $dist
     );
+
+    $ok = run \@cmd, \undef, \$out, \$err;
+
+    unless ($ok) {
+        diag "\$! = $!, \$? = $?";
+        diag $out if $out;
+        diag $err if $err;
+    }
+
+    ok( $ok, "$dist_dir refresh --source-format '3.0 (quilt)': run ok" );
 
     compare_tree(
         "$dist/debian",
@@ -140,24 +179,38 @@ sub dist_ok($) {
         'refresh --source-format 3.0 (quilt)'
     );
 
+# refresh with changed email
+
     modify_changelog($dist);
 
     local $ENV{DEBFULLNAME} = 'Florian Geekwurt';
     local $ENV{DEBEMAIL} = 'florian@geekwurt.org';
-    system( "$Bin/../dh-make-perl", "--no-verbose",
-            "--home-dir", "$Bin/contents",
-            "--apt-contents-dir", "$Bin/contents",
-            "--data-dir", "$Bin/../share",
-            $ENV{NO_NETWORK} ? '--no-network' : (),
-            "--vcs", "none",
-            "--sources-list",
-            "$Bin/contents/sources.list",
-            "refresh",
-            $dist );
 
-    is( $?, 0, "$dist_dir refresh: system returned 0" );
+    $out = $err = '';
+    @cmd = (
+        "$Bin/../dh-make-perl", "--no-verbose",
+        "--home-dir",           "$Bin/contents",
+        "--apt-contents-dir",   "$Bin/contents",
+        "--data-dir",           "$Bin/../share",
+        $ENV{NO_NETWORK} ? '--no-network' : (), "--vcs",
+        "none",                       "--sources-list",
+        "$Bin/contents/sources.list", "refresh",
+        $dist
+    );
+
+    $ok = run \@cmd, \undef, \$out, \$err;
+
+    unless ($ok) {
+        diag "\$! = $!, \$? = $?";
+        diag $out if $out;
+        diag $err if $err;
+    }
+
+    ok( $ok, "$dist_dir refresh with changed email: run ok" );
 
     compare_tree( "$dist/debian", "$dist/wanted-debian--refresh-email", 'email' );
+
+# clean up
 
     unlink File::Find::Rule->file->name('*.bak')->in("$dist/debian");
 

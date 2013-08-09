@@ -54,6 +54,7 @@ my $builder = My::Builder->new(
         'YAML'                      => 0,
     },
     build_requires      => {
+        'IPC::Run'          => 0,
         'File::DirCompare'  => 0,
         'File::Touch'       => 0,
         'Test::Compile'     => 0,
