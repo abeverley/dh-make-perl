@@ -1,3 +1,11 @@
+0.78 (2013-08-09)
+    add $VERSION to all modules
+
+    use strict; use warnings; everywhere
+    also ensure this doesn't change via t/critic.t
+
+    fix a bunch of typos thanks to Test::Spelling
+
 0.77 (2013-08-08)
 
   [ Salvatore Bonaccorso ]
