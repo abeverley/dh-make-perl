@@ -74,6 +74,8 @@ package Debian::Control::Stanza::Source;
 
 use strict;
 
+our $VERSION = '0.73';
+
 use base qw(Debian::Control::Stanza);
 
 use constant fields => qw (

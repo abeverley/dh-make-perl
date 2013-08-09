@@ -51,6 +51,8 @@ package Debian::Control;
 use base 'Class::Accessor';
 use strict;
 
+our $VERSION = '0.77';
+
 __PACKAGE__->mk_accessors(qw( source binary binary_tie _parser ));
 
 use Parse::DebControl;

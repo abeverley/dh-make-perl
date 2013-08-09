@@ -2,6 +2,9 @@ package DhMakePerl::Command::Packaging;
 
 use strict;
 use warnings;
+
+our $VERSION = '0.77';
+
 use feature 'switch';
 
 =head1 NAME

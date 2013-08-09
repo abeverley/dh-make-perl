@@ -12,6 +12,8 @@ This module implements the I<refresh> command of L<dh-make-perl(1)>.
 
 use strict; use warnings;
 
+our $VERSION = '0.77';
+
 use base 'DhMakePerl::Command::Packaging';
 use Debian::Control::FromCPAN;
 use Debian::WNPP::Query ();

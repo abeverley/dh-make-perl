@@ -3,6 +3,8 @@ package Debian::Dependencies;
 use strict;
 use warnings;
 
+our $VERSION = '0.67';
+
 use AptPkg::Config;
 use Debian::Dependency;
 

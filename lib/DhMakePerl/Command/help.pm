@@ -12,6 +12,8 @@ This module implements the I<help> command of L<dh-make-perl(1)>.
 
 use strict; use warnings;
 
+our $VERSION = '0.65';
+
 use base 'DhMakePerl';
 use Pod::Usage;
 

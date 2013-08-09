@@ -14,6 +14,8 @@ Debian::Control::FromCPAN - fill F<debian/control> from unpacked CPAN distributi
 package Debian::Control::FromCPAN;
 
 use strict;
+
+our $VERSION = '0.77';
 use Carp qw(croak);
 
 use base 'Debian::Control';

@@ -86,6 +86,8 @@ package Debian::Control::Stanza::Binary;
 
 use strict;
 
+our $VERSION = '0.77';
+
 use base 'Debian::Control::Stanza';
 
 use constant fields => qw(

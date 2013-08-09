@@ -12,6 +12,8 @@ This module implements the I<locate> command of L<dh-make-perl(1)>.
 
 use strict; use warnings;
 
+our $VERSION = '0.66';
+
 use base 'DhMakePerl';
 
 use DhMakePerl::Utils qw(is_core_module);

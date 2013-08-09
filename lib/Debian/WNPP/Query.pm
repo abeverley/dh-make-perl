@@ -2,6 +2,8 @@ package Debian::WNPP::Query;
 use strict;
 use warnings;
 
+our $VERSION = '0.74';
+
 =head1 NAME
 
 Debian::WNPP::Query - offline storage of Debian's work-needing package lists

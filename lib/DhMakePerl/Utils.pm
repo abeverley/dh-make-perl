@@ -1,5 +1,8 @@
 package DhMakePerl::Utils;
 
+
+our $VERSION = '0.71';
+
 =head1 NAME
 
 DhMakePerl::Utils - helper routined for dh-make-perl and alike

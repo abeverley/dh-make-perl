@@ -24,6 +24,8 @@ require v5.10.0;
 
 use strict;
 
+our $VERSION = '0.71';
+
 use base qw( Class::Accessor Tie::IxHash );
 
 use Carp qw(croak);

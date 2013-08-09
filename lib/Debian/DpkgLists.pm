@@ -2,6 +2,9 @@ package Debian::DpkgLists;
 
 use strict;
 use warnings;
+
+our $VERSION = '0.71';
+
 use Cwd;
 
 =head1 NAME

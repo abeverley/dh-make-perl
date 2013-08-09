@@ -3,6 +3,8 @@ package Debian::WNPP::Bug;
 use strict;
 use warnings;
 
+our $VERSION = '0.64';
+
 =head1 NAME
 
 Debian::WNPP::Bug - handy representation of Debian WNPP bug reports

@@ -1,5 +1,7 @@
 package Debian::Rules;
 
+our $VERSION = '0.66';
+
 =head1 NAME
 
 Debian::Rules - handy manipulation of debian/rules

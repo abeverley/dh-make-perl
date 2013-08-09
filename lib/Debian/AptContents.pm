@@ -3,6 +3,8 @@ package Debian::AptContents;
 use strict;
 use warnings;
 
+our $VERSION = '0.77';
+
 =head1 NAME
 
 Debian::AptContents - parse/search through apt-file's Contents files
