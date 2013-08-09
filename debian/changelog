@@ -121,7 +121,7 @@ dh-make-perl (0.77-1) unstable; urgency=low
   * rework dists.t using IPC::Run
   * supply data about libmodule-build-tiny-perl in test Contents
 
- -- Damyan Ivanov <dmn@debian.org>  Thu, 08 Aug 2013 23:52:14 +0200
+ -- Damyan Ivanov <dmn@debian.org>  Fri, 09 Aug 2013 12:19:07 +0200
 
 dh-make-perl (0.76-1) unstable; urgency=low
 
