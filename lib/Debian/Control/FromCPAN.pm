@@ -300,7 +300,7 @@ sub find_debs_for_modules {
 
         $dep->rel($ver_rel) if $dep and $ver_rel and $dep->ver;
 
-        my $mod_ver = join( " ", $module, $ver_rel, $version || () );
+        my $mod_ver = join( " ", $module, $ver_rel // (), $version || () );
         if ($dep) {
             if ($verbose) {
                 if ( $dep->pkg and $dep->pkg eq 'perl' ) {
