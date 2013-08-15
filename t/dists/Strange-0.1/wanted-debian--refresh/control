@@ -5,7 +5,7 @@ Maintainer: Joe Maintainer <joemaint@test.local>
 Build-Depends: debhelper (>= 9.20120312)
 Build-Depends-Indep: perl
 Standards-Version: 3.9.4
-Homepage: https://metacpan.org/release/Strange/
+Homepage: https://metacpan.org/release/Strange
 
 Package: libstrange-perl
 Architecture: all

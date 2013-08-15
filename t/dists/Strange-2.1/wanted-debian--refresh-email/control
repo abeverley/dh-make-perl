@@ -6,7 +6,7 @@ Build-Depends: debhelper (>= 9.20130630),
  libmodule-build-tiny-perl,
  perl
 Standards-Version: 3.9.4
-Homepage: https://metacpan.org/release/Strange/
+Homepage: https://metacpan.org/release/Strange
 
 Package: libstrange-perl
 Architecture: any

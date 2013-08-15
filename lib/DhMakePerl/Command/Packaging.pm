@@ -1177,7 +1177,7 @@ sub create_copyright {
 
 sub upsurl {
     my $self = shift;
-    return sprintf( "https://metacpan.org/release/%s/", $self->perlname );
+    return sprintf( "https://metacpan.org/release/%s", $self->perlname );
 }
 
 
