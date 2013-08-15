@@ -35,3 +35,4 @@
       in lib/DhMakePerl/Command/Packaging.pm (code + POD), like
       Module::AutoInstall, dh --with foo, etc.
       which can all be dropped with dh >= 8
+* upstream git: add remote and git fetch/merge
