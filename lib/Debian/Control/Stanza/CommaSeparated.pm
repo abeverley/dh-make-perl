@@ -114,5 +114,8 @@ sub sort {
     @$self = sort @$self;
 }
 
+=back
+
+=cut
 
 1;
