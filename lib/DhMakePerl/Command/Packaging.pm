@@ -941,7 +941,7 @@ sub create_copyright {
     my ( $fh, %fields, @res, @incomplete, $year );
     $fh = $self->_file_w($filename);
 
-    # In case author string pawns more than one line, indent them all.
+    # In case author string spawns more than one line, indent them all.
     my $cprt_author = $self->author || '(information incomplete)';
     $cprt_author =~ s/\n/\n    /gs;
     $cprt_author =~ s/^\s*$/    ./gm;
