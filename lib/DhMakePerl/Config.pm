@@ -74,7 +74,12 @@ use constant DEFAULTS => {
     exclude       => qr/$Dpkg::Source::Package::diff_ignore_default_regexp/,
     home_dir      => "$ENV{HOME}/.dh-make-perl",
     network       => 1,
-    only          => [ 'control', 'copyright', 'docs', 'examples', 'rules' ],
+    only          => {
+        map (
+            ( $_ => 1 ),
+            qw(control copyright docs examples rules)
+        ),
+    },
     source_format => '3.0 (quilt)',
     vcs           => 'git',
     verbose       => 1,
@@ -153,8 +158,9 @@ sub parse_command_line_options {
                                                                        # back to defaults
 
     # handle comma-separated multiple values in --only
-    $opts{only} = [ split( /,/, join( ',', @{ $opts{only} } ) ) ]
-        if exists $opts{only};
+    $opts{only}
+        = { map ( ( $_ => 1 ), split( /,/, join( ',', @{ $opts{only} } ) ) ) }
+        if $opts{only};
 
     while ( my ( $k, $v ) = each %opts ) {
         my $field = $k;

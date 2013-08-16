@@ -57,32 +57,32 @@ sub execute {
     $self->process_meta;
     $self->extract_basic();    # also detects arch-dep package
 
-    $self->extract_docs     if 'docs'     ~~ $self->cfg->only;
-    $self->extract_examples if 'examples' ~~ $self->cfg->only;
+    $self->extract_docs     if $self->cfg->only->{docs};
+    $self->extract_examples if $self->cfg->only->{examples};
     print "Found docs: @{ $self->docs }\n"
         if @{ $self->docs } and $self->cfg->verbose;
     print "Found examples: @{ $self->examples }\n"
         if @{ $self->examples } and $self->cfg->verbose;
 
-    if ( 'rules' ~~ $self->cfg->only ) {
+    if ( $self->cfg->only->{only} ) {
         $self->create_rules;
         $self->create_compat( $self->debian_file('compat') );
     }
 
-    if ( 'examples' ~~ $self->cfg->only ) {
+    if ( $self->cfg->only->{examples} ) {
         $self->update_file_list( examples => $self->examples );
     }
 
-    if ( 'docs' ~~ $self->cfg->only ) {
+    if ( $self->cfg->only->{docs} ) {
         $self->update_file_list( docs => $self->docs );
     }
 
-    if ( 'copyright' ~~ $self->cfg->only ) {
+    if ( $self->cfg->only->{copyright} ) {
         $self->backup_file( $self->debian_file('copyright') );
         $self->create_copyright( $self->debian_file('copyright') );
     }
 
-    if ( 'control' ~~ $self->cfg->only ) {
+    if ( $self->cfg->only->{control} ) {
         my $control = $self->control;
         if ( -e catfile( $self->debian_file('patches'), 'series' )
             and $self->cfg->source_format ne '3.0 (quilt)' )
