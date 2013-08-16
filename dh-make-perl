@@ -5,6 +5,8 @@ use warnings;
 
 use DhMakePerl;
 
+print "== dh-make-perl $DhMakePerl::VERSION ==\n";
+
 exit DhMakePerl->run;
 
 __END__
