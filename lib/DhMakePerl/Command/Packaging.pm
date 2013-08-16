@@ -954,7 +954,7 @@ sub create_copyright {
         'Upstream-Contact' => $cprt_author,
         'Source'           => $self->upsurl
     );
-    for my $key ( keys %fields ) {
+    for my $key ( sort keys %fields ) {
         my $full = "$key";
         if ( $fields{$key} ) {
             push @res, "$full: $fields{$key}";
@@ -1141,7 +1141,7 @@ sub create_copyright {
             }
         }
 
-        push @res, "License: " . join( ' or ', keys %licenses );
+        push @res, "License: " . join( ' or ', sort keys %licenses );
 
     }
     else {
@@ -1163,10 +1163,10 @@ sub create_copyright {
     else {
         push @res, "Copyright: $year, " . $self->get_developer;
     }
-    push @res, "License: " . join( ' or ', keys %licenses );
+    push @res, "License: " . join( ' or ', sort keys %licenses );
 
     map { $texts{$_} && push( @res, '', "License: $_", $texts{$_} ) }
-        keys %licenses;
+        sort keys %licenses;
 
     $fh->print( join( "\n", @res, '' ) );
     $fh->close;
