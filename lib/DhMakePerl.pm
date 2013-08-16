@@ -14,11 +14,11 @@ DhMakePerl - create Debian source package from CPAN dist
 
 =head1 VERSION
 
-Version 0.77
+Version 0.79
 
 =cut
 
-our $VERSION = '0.78';
+our $VERSION = '0.79';
 
 =head1 SYNOPSIS
 

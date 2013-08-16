@@ -1,11 +1,20 @@
-dh-make-perl (0.78-2) UNRELEASED; urgency=low
+dh-make-perl (0.79-1) unstable; urgency=low
 
   * silence a warning when reporting about a core-satisfied dependency without
     a version
-  * fix missing =back in Debian::Control::Stanza::CommaSeparated POD
+  * fix problems with perl 5.18:
     (Closes: #719829)
+    + fix missing =back in Debian::Control::Stanza::CommaSeparated POD
+    + sort a couple of hash key walks breaking tests with perl 5.18
+  * remove the trailing slash from ustream/watch URLs
+  * drop usage of experimental given/when in Packaging.pm
+  * rework --only internal representation to be a hash
+  * t/dists.t: rework running dh-make-perl and give all diagnostics when a
+    test fails
+  * fix special handling of changed copyright years
+  * make dh-make-perl report its version on every invocation
 
- -- Damyan Ivanov <dmn@debian.org>  Thu, 15 Aug 2013 22:16:07 +0200
+ -- Damyan Ivanov <dmn@debian.org>  Fri, 16 Aug 2013 14:00:30 +0200
 
 dh-make-perl (0.78-1) unstable; urgency=low
 

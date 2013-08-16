@@ -1,3 +1,18 @@
+0.79 (2013-08-16)
+  * silence a warning when reporting about a core-satisfied dependency without
+    a version
+  * fix problems with perl 5.18:
+    (Debian #719829)
+    + fix missing =back in Debian::Control::Stanza::CommaSeparated POD
+    + sort a couple of hash key walks breaking tests with perl 5.18
+  * remove the trailing slash from ustream/watch URLs
+  * drop usage of experimental given/when in Packaging.pm
+  * rework --only internal representation to be a hash
+  * t/dists.t: rework running dh-make-perl and give all diagnostics when a
+    test fails
+  * fix specoial handling of changed copyright years
+  * make dh-make-perl report its version on every invocation
+
 0.78 (2013-08-09)
     add $VERSION to all modules
 
