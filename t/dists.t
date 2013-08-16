@@ -47,7 +47,7 @@ sub compare_tree {
                         # different copyright years are normal
                         # (test written in 2002 and run in 2020
                         # after refreshing there can also be several years
-                        if ($hint eq 'email') {
+                        if ($hint =~ /email/) {
                             return 0
                              if $a
                                  =~ /^Copyright: (\d+, )+Florian Geekwurt <florian\@geekwurt\.org>$/
@@ -211,6 +211,8 @@ sub dist_ok($) {
             $dist
         ],
         dist_dir => $dist_dir,
+        # having 'email' in the comment enabled a specific
+        # comparison procedure in compare_tree()
         comment  => 'refresh email',
         compare  => {
             result => "$dist/debian",
