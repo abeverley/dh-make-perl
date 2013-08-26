@@ -1,4 +1,5 @@
 Source: dh-make-perl
+Homepage: https://metacpan.org/release/DhMakePerl
 Maintainer: Debian Perl Group <pkg-perl-maintainers@lists.alioth.debian.org>
 Uploaders: Wolfgang Schemmel <debian@37.org>,
            Christopher Sacca <csacca@thecsl.org>,
