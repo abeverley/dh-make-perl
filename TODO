@@ -36,3 +36,14 @@
       Module::AutoInstall, dh --with foo, etc.
       which can all be dropped with dh >= 8
 * upstream git: add remote and git fetch/merge
+* At the end, rename the extracted directory from Perl Distribution
+  style (Foo-Bar-$VERSION) to Debian Package style (libfoo-bar-perl),
+  otherwise debuild barfs:
+
+  debuild: found debian/changelog for package libfoo-bar-perl in the directory
+    /home/…/pkg-perl/Foo-Bar-$VERSION
+  but this directory name does not match the package name according to the
+  regex  PACKAGE(-.+)?.
+
+  To run debuild on this package, see the --check-dirname-level and
+  --check-dirname-regex options; run debuild --help for more info.
