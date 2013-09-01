@@ -51,7 +51,7 @@ use Email::Date::Format qw(email_date);
 use File::Basename qw( basename dirname );
 use File::Copy qw( copy move );
 use File::Path ();
-use File::Spec::Functions qw( catfile );
+use File::Spec::Functions qw( catdir catfile updir );
 use Module::Depends            ();
 use Module::Build::ModuleInfo;
 use Text::Wrap qw( wrap );
@@ -246,6 +246,10 @@ sub execute {
 
     $self->package_already_exists($apt_contents)
         or $self->modules_already_packaged($apt_contents);
+
+    # explicitly call Debian::Rules destroy
+    $self->rules( undef );
+    $self->rename_to_debian_package_dir;
 
     return(0);
 }
@@ -554,6 +558,23 @@ sub search_pkg_perl {
         if $resp->is_success;
 
     return undef;
+}
+
+sub rename_to_debian_package_dir {
+    my( $self ) = @_;
+    return unless $self->cfg->cpan;
+
+    my $maindir = $self->main_dir;
+    my $newmaindir = catdir( $maindir, updir(), $self->pkgname );
+
+    if( -d $newmaindir ) {
+      warn "$newmaindir already exists, skipping rename";
+      return;
+    }
+
+    system("mv $maindir $newmaindir") == 0 or die "rename failed: $self->main_dir to $newmaindir";
+    $self->main_dir( $newmaindir );
+    return;
 }
 
 sub package_already_exists {
