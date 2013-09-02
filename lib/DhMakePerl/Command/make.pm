@@ -248,6 +248,8 @@ sub execute {
         or $self->modules_already_packaged($apt_contents);
 
     # explicitly call Debian::Rules destroy
+    # this is needed because after the rename the object's
+    # destroy method would update a file on a stale path
     $self->rules( undef );
     $self->rename_to_debian_package_dir;
 
