@@ -336,7 +336,7 @@ sub setup_dir {
 
         # rename existing directory
         if ( -d $new_maindir
-            && system( "mv", "$new_maindir", "$new_maindir.$$" ) == 0 )
+            && rename $new_maindir, "$new_maindir.$$" )
         {
             print '=' x 70, "\n";
             print
@@ -574,7 +574,7 @@ sub rename_to_debian_package_dir {
       return;
     }
 
-    system("mv $maindir $newmaindir") == 0 or die "rename failed: $self->main_dir to $newmaindir";
+    rename $maindir, $newmaindir or die "rename failed: $self->main_dir to $newmaindir";
     $self->main_dir( $newmaindir );
     return;
 }
