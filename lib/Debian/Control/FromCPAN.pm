@@ -328,7 +328,11 @@ sub find_debs_for_modules {
                 my $alt_dep;
 
                 if ( my @pkgs = Debian::DpkgLists->scan_perl_mod($module) ) {
-                    @pkgs = grep { $_ ne 'perl-modules' } @pkgs;
+                    @pkgs = grep {
+                                ( $_ ne 'perl-modules' )
+                            and ( $_ ne 'perl-base' )
+                            and ( $_ ne 'perl' )
+                    } @pkgs;
 
                     $alt_dep = Debian::Dependency->new(
                           ( @pkgs > 1 )

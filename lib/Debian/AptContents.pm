@@ -406,6 +406,13 @@ sub find_file_packages {
                                                # otherwise it won't strip enough off Ubuntu's
                                                # usr/share/perl5/Config/Any.pm  universe/perl/libconfig-any-perl
 
+    # in-core dependencies are given by find_core_perl_dependency
+    @packages = grep {
+        ( $_         ne 'perl-base' )
+            and ( $_ ne 'perl' )
+            and ( $_ ne 'perl-modules' )
+    } @packages;
+
     return uniq @packages;
 }
 
