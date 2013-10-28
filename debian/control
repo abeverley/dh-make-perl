@@ -43,7 +43,7 @@ Build-Depends-Indep: libapt-pkg-perl,
                      libtie-ixhash-perl,
                      libwww-mechanize-perl,
                      libyaml-perl
-Standards-Version: 3.9.4
+Standards-Version: 3.9.5
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-perl/packages/dh-make-perl.git
 Vcs-Git: git://anonscm.debian.org/pkg-perl/packages/dh-make-perl.git
 
