@@ -1,3 +1,27 @@
+dh-make-perl (0.79-2) UNRELEASED; urgency=low
+
+  [ CSILLAG Tamas ]
+  * add Homepage to d/control (lintian check suggested)
+  * add rename_to_debian_package_dir.
+    This will rename the directory name to the canonical name of
+    the debian package.
+  * explain why explicit destroy is needed
+  * use system("mv ...") when cross device directory move is expected otherwise just use rename
+
+  [ Damyan Ivanov ]
+  * avoid depending on perl(-(base|modules))? for dual-lifed modules
+    these are handled by other means
+  * FromCPAN/find_debs_for_modules: do not crash when all offerred packages are perl(-(modules|base))?
+    (Closes: #725206)
+  * drop trailing slash from t/Control.t test file
+
+  [ Salvatore Bonaccorso ]
+  * Create packages with Standards-Version 3.9.5
+  * Adjust Standards-Version in control files of testsuite
+  * Bump Standards-Version to 3.9.5
+
+ -- CSILLAG Tamas <cstamas@cstamas.hu>  Mon, 28 Oct 2013 10:46:06 +0100
+
 dh-make-perl (0.79-1) unstable; urgency=low
 
   * silence a warning when reporting about a core-satisfied dependency without
