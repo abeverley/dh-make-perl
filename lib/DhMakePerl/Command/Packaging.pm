@@ -42,7 +42,7 @@ use Text::Balanced qw(extract_quotelike);
 use Text::Wrap qw(fill);
 use User::pwent;
 
-use constant debstdversion => '3.9.4';
+use constant debstdversion => '3.9.5';
 
 our %DEFAULTS = (
     start_dir => getcwd(),
