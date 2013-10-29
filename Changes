@@ -1,3 +1,20 @@
+0.80 (2013-10-29)
+  [ CSILLAG Tamas ]
+  * add rename_to_debian_package_dir.
+    This will rename the directory name to the canonical name of
+    the debian package.
+  * use system("mv ...") when cross device directory move is expected
+    otherwise just use rename
+
+  [ Damyan Ivanov ]
+  * FromCPAN/find_debs_for_modules: do not crash when all offerred packages
+    are perl(-(modules|base))? (Closes: #725206)
+  * drop trailing slash from t/Control.t test file
+
+  [ Salvatore Bonaccorso ]
+  * Create packages with Standards-Version 3.9.5
+  * Adjust Standards-Version in control files of testsuite
+
 0.79 (2013-08-16)
   * silence a warning when reporting about a core-satisfied dependency without
     a version
