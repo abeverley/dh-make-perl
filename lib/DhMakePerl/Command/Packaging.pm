@@ -354,20 +354,15 @@ sub extract_name_ver {
     $ver = $self->cfg->version
         if $self->cfg->version;
 
+    # final sanitazing of name and version
+    $name =~ s/::/-/g if defined $name;
+    $ver = $self->sanitize_version($ver) if defined $ver && !$self->cfg->version;
+
     defined($ver) and $ver ne ''
         or die "Unable to determine dist version\. Please use --version.\n";
 
-    # final sanitazing of name and version
-    $name =~ s/::/-/g;
-    $ver = $self->sanitize_version($ver) unless $self->cfg->version;
-
-    $name
-        or $ver
-        or die
-        "Unable to determine distribution name and version. Aborting.\n";
-
-    $name or die "Unable to determine distribution name. Aborting.\n";
-    $ver  or die "Unable to determine distribution version. Aborting.\n";
+    defined($name) and $name ne ''
+        or die "Unable to determine dist name\. Please use --packagename.\n";
 
     $self->perlname($name);
     $self->version($ver);
@@ -416,6 +411,7 @@ sub extract_name_ver_from_build {
         $vfrom =~s{::}{/}g;
         $vfrom = "lib/$vfrom.pm";
     }
+    return unless defined $name;
     $name =~ s/,.*$//;
 
     # band aid: need to find a solution also for build in directories
@@ -550,6 +546,7 @@ sub extract_name_ver_from_makefile {
         # Module::Install syntax
         $name = $self->unquote($1);
     }
+    return unless defined $name;
     $name =~ s/,.*$//;
 
     # band aid: need to find a solution also for build in directories
