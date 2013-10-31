@@ -10,7 +10,6 @@ use base 'DhMakePerl::Command::Packaging';
 __PACKAGE__->mk_accessors(
     qw(
         cfg apt_contents main_dir debian_dir meta
-        start_dir
         perlname version pkgversion
         copyright author
         extrasfields  extrapfields
@@ -367,8 +366,8 @@ sub setup_dir {
         my $maindir = shift(@ARGV) || '.';
         $maindir =~ s/\/$//;
         $self->main_dir($maindir);
-        my $guessed_tarball = catfile( $self->start_dir, "..",
-            basename( $self->start_dir ) . ".tar.gz" );
+        my $guessed_tarball = catfile( $self->main_dir, "..",
+            basename( $self->main_dir ) . ".tar.gz" );
 
         print "Trying $guessed_tarball...";
         if ( -f $guessed_tarball ) {
@@ -424,7 +423,7 @@ sub install_package {
     $debname = sprintf( "%s_%s-1_%s.deb", $self->pkgname, $self->version,
         $archspec );
 
-    my $deb = $self->start_dir . "/$debname";
+    my $deb = $self->main_dir . "/$debname";
     system("dpkg -i $deb") == 0
         || die "Cannot install package $deb\n";
 }

@@ -16,7 +16,7 @@ DhMakePerl::Command::Packaging - common routines for 'make' and 'refresh' dh-mak
 use base 'DhMakePerl';
 
 __PACKAGE__->mk_accessors(
-    qw( start_dir main_dir debian_dir
+    qw( main_dir debian_dir
         mod_cpan_version
         meta perlname author
         version rules docs examples copyright
@@ -45,7 +45,6 @@ use User::pwent;
 use constant debstdversion => '3.9.5';
 
 our %DEFAULTS = (
-    start_dir => getcwd(),
 );
 
 sub new {
