@@ -1,3 +1,22 @@
+dh-make-perl (0.81-1) UNRELEASED; urgency=medium
+
+  [ Dima Kogan ]
+  * If I can't parse pkgname or version, quit with a useful error message.
+    Before this patch, perl would throw up errors about trying to do stuff
+    with uninitialized variables. Now it says things like "Unable to
+    determine dist name. Please use --packagename"
+  * Replaced all 'start_dir' uses with 'main_dir' start_dir is the pwd
+    when we run dh_make_perl; main_dir is the (directory given on the
+    cmdline) || '.' We never actually want to use the start_dir. Prior to
+    this patch  dh-make-perl /some/path/ would look for a source tarball
+    in '.', which is clearly wrong for that command.
+
+  [ gregor herrmann ]
+  * DhMakePerl::Command::Packaging: install CONTRIBUTING files in
+    extract_docs().
+
+ -- Dima Kogan <dima@secretsauce.net>  Wed, 25 Dec 2013 17:08:35 +0100
+
 dh-make-perl (0.80-1) unstable; urgency=low
 
   [ CSILLAG Tamas ]
