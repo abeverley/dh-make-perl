@@ -232,7 +232,7 @@ sub drop_quilt {
 
 =item Copyright (C) 2008, 2009, 2010 Damyan Ivanov <dmn@debian.org>
 
-=item Copyright (C) 2010 gregor herrmann <gregoa@debian.org>
+=item Copyright (C) 2010, 2014 gregor herrmann <gregoa@debian.org>
 
 =back
 

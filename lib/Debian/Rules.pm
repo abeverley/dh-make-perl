@@ -385,6 +385,8 @@ sub DESTROY {
 
 =item Copyright (C) 2009, 2010 Damyan Ivanov <dmn@debian.org>
 
+=item Copyright (C) 2014 gregor herrmann <gregoa@debian.org>
+
 =back
 
 This program is free software; you can redistribute it and/or modify it under
