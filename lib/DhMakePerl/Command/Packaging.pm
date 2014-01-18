@@ -1475,53 +1475,53 @@ sub discover_utility_deps {
     }
     else {
         $deps->add('perl');
-        $debhelper_version = '9.20120312' if $debhelper_version eq '9';
+        $debhelper_version = '9.20120312~' if $debhelper_version eq '9';
     }
     $deps->add( Debian::Dependency->new( 'debhelper', $debhelper_version ) );
 
     $self->explained_dependency( 'Module::AutoInstall', $deps,
-        'debhelper (>= 7.2.13)' )
+        'debhelper (>= 7.2.13~)' )
         if -e catfile( $self->main_dir, qw( inc Module AutoInstall.pm ) );
     $self->explained_dependency( 'Module::Build::Tiny', $deps,
-        'debhelper (>= 9.20130630)' )
+        'debhelper (>= 9.20130630~)' )
         if $deps->has('libmodule-build-tiny-perl');
 
     for ( @{ $self->rules->lines } ) {
         $self->explained_dependency( 'dh --with', $deps,
-            'debhelper (>= 7.0.8)' )
+            'debhelper (>= 7.0.8~)' )
             if /dh\s+.*--with/;
 
         $self->explained_dependency(
             'dh --with=quilt',
-            $deps, 'quilt (>= 0.46-7)',
+            $deps, 'quilt (>= 0.46-7~)',
         ) if /dh\s+.*--with[= ]quilt/;
 
         $self->explained_dependency(
             'dh --with=bash-completion',
             $deps,
-            'bash-completion (>= 1:1.0-3)'
+            'bash-completion (>= 1:1.0-3~)'
         ) if (/dh\s+.*--with[= ]bash[-_]completion/);
 
         $self->explained_dependency(
             'dh --with=perl_dbi',
             $deps,
-            'libdbi-perl (>= 1.612)'
+            'libdbi-perl (>= 1.612~)'
         ) if (/dh\s+.*--with[= ]perl[-_]dbi/);
 
         $self->explained_dependency( 'override_dh_* target',
-            $deps, 'debhelper (>= 7.0.50)' )
+            $deps, 'debhelper (>= 7.0.50~)' )
             if /^override_dh_/;
 
         $self->explained_dependency( 'quilt.make', $deps, 'quilt' )
             if m{^include /usr/share/quilt/quilt.make};
 
         $self->explained_dependency( 'dh* --max-parallel',
-            $deps, 'debhelper (>= 7.4.4)' )
+            $deps, 'debhelper (>= 7.4.4~)' )
             if /dh.* --max-parallel/;
 
         # Modular --buildsystem support for debhelper needs 7.3.7.
         $self->explained_dependency( 'dh* --buildsystem',
-            $deps, 'debhelper (>= 7.3.7)' )
+            $deps, 'debhelper (>= 7.3.7~)' )
             if /dh.* --buildsystem/;
     }
 
@@ -1531,7 +1531,7 @@ sub discover_utility_deps {
         $self->explained_dependency(
             'Compatibility Makefile.PL',
             $deps,
-            'debhelper (>= 7.0.17)',
+            'debhelper (>= 7.0.17~)',
             'perl'
         ) if $self->makefile_pl_is_MBC;
     }
