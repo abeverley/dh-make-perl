@@ -1469,15 +1469,15 @@ sub discover_utility_deps {
 
     # start with the minimum
     my $debhelper_version = $self->cfg->dh;
-    $debhelper_version = '9.20120312' if $debhelper_version eq '9';
-    $deps->add( Debian::Dependency->new( 'debhelper', $debhelper_version ) );
 
     if ( $control->binary_tie->Values(0)->Architecture eq 'all' ) {
         $control->source->Build_Depends_Indep->add('perl');
     }
     else {
         $deps->add('perl');
+        $debhelper_version = '9.20120312' if $debhelper_version eq '9';
     }
+    $deps->add( Debian::Dependency->new( 'debhelper', $debhelper_version ) );
 
     $self->explained_dependency( 'Module::AutoInstall', $deps,
         'debhelper (>= 7.2.13)' )
