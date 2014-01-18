@@ -859,14 +859,14 @@ sub create_rules {
     $self->rules( Debian::Rules->new($file) );
 
     if ( $self->rules->is_dhtiny ) {
-        print "$file already uses DH7 tiny rules\n"
+        print "$file already uses dh tiny rules\n"
             if $self->cfg->verbose;
         return;
     }
 
     $self->backup_file($file);
 
-    my $rulesname = 'rules.dh7.tiny';
+    my $rulesname = 'rules.dh.tiny';
 
     for my $source (
         catfile( $self->cfg->home_dir, $rulesname ),
