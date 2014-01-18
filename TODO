@@ -30,11 +30,6 @@
 * Really minor issue. The AptContents.t test can be thrown off if the contents
   directory has stuff lying around from a failed run. ~periapt
 * Add a switch for "app" (foo-bar) vs. "lib" (libfoo-bar-perl) packages?
-* debhelper:
-  (5) there's still quite some special casing of debhelper versions 7.*
-      in lib/DhMakePerl/Command/Packaging.pm (code + POD), like
-      Module::AutoInstall, dh --with foo, etc.
-      which can all be dropped with dh >= 8
 * upstream git: add remote and git fetch/merge
 * At the end, rename the extracted directory from Perl Distribution
   style (Foo-Bar-$VERSION) to Debian Package style (libfoo-bar-perl),
@@ -47,3 +42,4 @@
 
   To run debuild on this package, see the --check-dirname-level and
   --check-dirname-regex options; run debuild --help for more info.
+* quilt support looks like a candidate for dropping
