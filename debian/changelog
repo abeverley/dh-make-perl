@@ -12,8 +12,18 @@ dh-make-perl (0.81-1) UNRELEASED; urgency=medium
     in '.', which is clearly wrong for that command.
 
   [ gregor herrmann ]
-  * DhMakePerl::Command::Packaging: install CONTRIBUTING files in
-    extract_docs().
+  * DhMakePerl::Command::Packaging:
+    - install CONTRIBUTING files in extract_docs().
+    - require debhelper 9.20120312 only for arch:any packages;
+      for arch:all debhelper 8 or 9 are enough
+    - add a trailing ~ to all versioned dependencies to make
+      backporting easier
+    - drop special casing for all kinds of dependencies which needed
+      debhelper 7.x.
+      Support for debhelper < 8 was dropped in dh-make-perl 0.77.
+  * Reword "debhelper(1) 7 tiny" to the more accurate "dh(1)".
+    Also rename is_dh7tiny() method to is_dhtiny().
+  * Update copyright years.
 
  -- Dima Kogan <dima@secretsauce.net>  Wed, 25 Dec 2013 17:08:35 +0100
 
