@@ -3,7 +3,7 @@ package DhMakePerl::Command::Packaging;
 use strict;
 use warnings;
 
-our $VERSION = '0.77';
+our $VERSION = '0.81';
 
 use feature 'switch';
 
