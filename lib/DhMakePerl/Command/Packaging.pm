@@ -1399,52 +1399,26 @@ sub discover_dependencies {
 
 =item discover_utility_deps
 
-Determines whether a certain version of L<debhelper(1)> or L<quilt(1)> is
+Determines whether certain versions of L<debhelper(1)> and other packages are
 needed by the build process.
 
 The following special cases are detected:
 
 =over
 
-=item Module::AutoInstall
-
-If L<Module::AutoInstall> is discovered in L<inc/>, debhelper dependency is
-raised to 7.2.13.
-
 =item Module::Build::Tiny
 
 if L<Module::Build::Tiny> is present in the build-dependencies, debhelper
-dependency is raised to 9.20130630.
+dependency is raised to 9.20130630~.
 
 =item dh --with=quilt
 
-C<dh --with=quilt> needs debhelper 7.0.8 and quilt 0.46-7.
-
-=item dh --with=bash-completion
-
-C<dh --with=bash-completion> needs debhelper 7.0.8 and bash-completion 1:1.0-3.
-
-=item dh --with=perl_dbi
-
-C<dh --with=perl_dbi> needs debhelper 7.0.8 and libdbi-perl 1.612.
-
-=item dh --buildsystem=buildsystem
-
-C<dh --buildsystem=buildsystem> needs debhelper 7.3.7.
+C<dh --with=quilt> needs quilt.
 
 =item quilt.make
 
 If F</usr/share/quilt/quilt.make> is included in F<debian/rules>, a
 build-dependency on C<quilt> is added.
-
-=item debhelper override targets
-
-Targets named C<override_dh_...> are supported by debhelper since 7.0.50
-
-=item Makefile.PL created by Module::Build::Compat
-
-Building such packages requires debhelper 7.0.17 (see
-L<http://bugs.debian.org/496157>) =back
 
 =item Module::Build
 
@@ -1479,61 +1453,31 @@ sub discover_utility_deps {
     }
     $deps->add( Debian::Dependency->new( 'debhelper', $debhelper_version ) );
 
-    $self->explained_dependency( 'Module::AutoInstall', $deps,
-        'debhelper (>= 7.2.13~)' )
-        if -e catfile( $self->main_dir, qw( inc Module AutoInstall.pm ) );
     $self->explained_dependency( 'Module::Build::Tiny', $deps,
         'debhelper (>= 9.20130630~)' )
         if $deps->has('libmodule-build-tiny-perl');
 
     for ( @{ $self->rules->lines } ) {
-        $self->explained_dependency( 'dh --with', $deps,
-            'debhelper (>= 7.0.8~)' )
-            if /dh\s+.*--with/;
-
         $self->explained_dependency(
             'dh --with=quilt',
-            $deps, 'quilt (>= 0.46-7~)',
+            $deps, 'quilt',
         ) if /dh\s+.*--with[= ]quilt/;
 
         $self->explained_dependency(
             'dh --with=bash-completion',
             $deps,
-            'bash-completion (>= 1:1.0-3~)'
+            'bash-completion'
         ) if (/dh\s+.*--with[= ]bash[-_]completion/);
 
         $self->explained_dependency(
             'dh --with=perl_dbi',
             $deps,
-            'libdbi-perl (>= 1.612~)'
+            'libdbi-perl'
         ) if (/dh\s+.*--with[= ]perl[-_]dbi/);
-
-        $self->explained_dependency( 'override_dh_* target',
-            $deps, 'debhelper (>= 7.0.50~)' )
-            if /^override_dh_/;
 
         $self->explained_dependency( 'quilt.make', $deps, 'quilt' )
             if m{^include /usr/share/quilt/quilt.make};
 
-        $self->explained_dependency( 'dh* --max-parallel',
-            $deps, 'debhelper (>= 7.4.4~)' )
-            if /dh.* --max-parallel/;
-
-        # Modular --buildsystem support for debhelper needs 7.3.7.
-        $self->explained_dependency( 'dh* --buildsystem',
-            $deps, 'debhelper (>= 7.3.7~)' )
-            if /dh.* --buildsystem/;
-    }
-
-    if (    -e $self->main_file('Makefile.PL')
-        and -e $self->main_file('Build.PL') )
-    {
-        $self->explained_dependency(
-            'Compatibility Makefile.PL',
-            $deps,
-            'debhelper (>= 7.0.17~)',
-            'perl'
-        ) if $self->makefile_pl_is_MBC;
     }
 
     # there are old packages that still build-depend on libmodule-build-perl
