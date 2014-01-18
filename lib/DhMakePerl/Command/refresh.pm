@@ -112,7 +112,7 @@ sub execute {
 =item add_quilt( $control )
 
 Plugs quilt into F<debian/rules> and F<debian/control>. Depends on
-F<debian/rules> being in DH7 three-liner format. Also adds debian/README.source
+F<debian/rules> being in L<dh(1)> three-liner format. Also adds debian/README.source
 documenting quilt usage.
 
 =cut
@@ -171,7 +171,7 @@ L<|add_quilt> was used to add quilt to F<debian/rules>.
 If F<debian/README.source> exists, references to quilt are removed from it (and
 the file removed if empty after that).
 
-Both dh7-style (C<dh --with=quilt>) and old-fashioned (C<$(QUILT_STAMPFN)>
+Both L<dh(1)> style (C<dh --with=quilt>) and old-fashioned (C<$(QUILT_STAMPFN)>
 target dependency) are supported.
 
 =cut

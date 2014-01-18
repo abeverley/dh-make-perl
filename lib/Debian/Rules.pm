@@ -15,7 +15,7 @@ Debian::Rules - handy manipulation of debian/rules
 
     my $r = Debian::Rules->new( { filename => 'debian/rules' } );
 
-    $r->is_dh7tiny && print "Using the latest and greatest\n";
+    $r->is_dhtiny && print "Using the latest and greatest\n";
     $r->is_quiltified && print "quilt rules the rules\n";
 
     # file contents changed externally
@@ -29,8 +29,8 @@ Debian::Rules - handy manipulation of debian/rules
 
 =head1 DESCRIPTION
 
-Some times, one needs to know whether F<debian/rules> uses the L<debhelper(1)>
-7 tiny variant, or whether it is integrated with L<quilt(1)>. Debian::Rules
+Some times, one needs to know whether F<debian/rules> uses the L<dh(1)>
+tiny variant, or whether it is integrated with L<quilt(1)>. Debian::Rules
 provides facilities to check this, as well as adding/removing quilt
 integration.
 
@@ -67,7 +67,7 @@ Reference to an array pointing to the rules file. Initialized by L</new>.
 use base 'Class::Accessor';
 
 __PACKAGE__->mk_accessors(
-    qw(filename lines _is_dh7tiny _is_quiltified _parsed));
+    qw(filename lines _is_dhtiny _is_quiltified _parsed));
 
 sub new {
     my $class = shift;
@@ -96,7 +96,7 @@ sub new {
 =item parse
 
 Parses the rules file and stores its findings for later use. Called
-automatically by L<is_dh7tiny> and L<is_quiltified>. The result of the parsing
+automatically by L<is_dhtiny> and L<is_quiltified>. The result of the parsing
 is cached and subsequent calls to C<is_XXX> use the cache. To force cache
 refresh (for example if the contents of the file have been changed), call
 C<parse> again.
@@ -106,7 +106,7 @@ C<parse> again.
 sub parse {
     my $self = shift;
 
-    $self->_is_dh7tiny(0);
+    $self->_is_dhtiny(0);
     $self->_is_quiltified(0);
 
     for ( my $i = 1; $i < @{ $self->lines }; $i++ ) {
@@ -114,7 +114,7 @@ sub parse {
             and $i + 1 < @{ $self->lines }
             and $self->lines->[ $i + 1 ] =~ /^\tdh .*\$\@/ )
         {
-            $self->_is_dh7tiny(1);
+            $self->_is_dhtiny(1);
 
             if ( $self->lines->[ $i + 1 ] =~ /--with[ =]quilt/ ) {
                 $self->_is_quiltified(1);
@@ -126,10 +126,10 @@ sub parse {
     $self->_parsed(1);
 }
 
-=item is_dh7tiny
+=item is_dhtiny
 
 Returns true if the contents of the rules file seem to use the so called
-I<tiny> variant offered by debhelper 7. Tiny rules are detected by the
+I<tiny> variant offered by L<dh(1)>. Tiny rules are detected by the
 presence of the following two lines:
 
     %:
@@ -139,12 +139,12 @@ presence of the following two lines:
 
 =cut
 
-sub is_dh7tiny {
+sub is_dhtiny {
     my $self = shift;
 
     $self->parse unless $self->_parsed;
 
-    return $self->_is_dh7tiny;
+    return $self->_is_dhtiny;
 }
 
 =item is_quiltified
@@ -172,8 +172,8 @@ sub is_quiltified {
 
 =item add_quilt
 
-Integrates L<quilt(1)> into the rules. For debhelper 7 I<tiny> rules (as
-determined by L</is_dh7tiny>) C<--with=quilt> is added to every C<dh>
+Integrates L<quilt(1)> into the rules. For L<dh(1)> I<tiny> rules (as
+determined by L</is_dhtiny>) C<--with=quilt> is added to every C<dh>
 invocation. For the more traditional variant, quilt is integrated via
 F<quilt.make> and its C<< $(QUILT_STAMPFN) >> and C<unpatch> targets.
 
@@ -186,7 +186,7 @@ sub add_quilt {
 
     my $lines = $self->lines;
 
-    if ( $self->is_dh7tiny) {
+    if ( $self->is_dhtiny) {
         for (@$lines) {
 
             # add --with=quilt to every dh call
@@ -196,7 +196,7 @@ sub add_quilt {
     }
     else {
 
-        # non-dh7tiny
+        # non-dhtiny
         splice @$lines, 1, 0,
             ( '', 'include /usr/share/quilt/quilt.make' )
             unless grep /quilt\.make/, @$lines;
@@ -215,7 +215,7 @@ sub add_quilt {
 
 =item drop_quilt
 
-Removes L<quilt(1)> integration. Both debhelper 7 I<tiny> style (C<dh
+Removes L<quilt(1)> integration. Both L<dh(1)> I<tiny> style (C<dh
 --with=quilt>) and traditional (C<< $(QUILT_STAMPFN) >> and C<unpatch>)
 approaches are detected and removed.
 

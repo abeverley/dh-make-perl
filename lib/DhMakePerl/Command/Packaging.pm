@@ -858,7 +858,7 @@ sub create_rules {
 
     $self->rules( Debian::Rules->new($file) );
 
-    if ( $self->rules->is_dh7tiny ) {
+    if ( $self->rules->is_dhtiny ) {
         print "$file already uses DH7 tiny rules\n"
             if $self->cfg->verbose;
         return;

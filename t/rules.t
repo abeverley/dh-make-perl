@@ -13,7 +13,7 @@ my $r = Debian::Rules->new(
     { lines => [ "#!/usr/bin/make -f\n", "%:\n", "\tdh \$\@\n" ] } );
 
 is( @{ $r->lines  }, 3,  'lines initialized properly' );
-ok( $r->is_dh7tiny, "Detects simple dh7tiny-style rules" );
+ok( $r->is_dhtiny, "Detects simple dhtiny-style rules" );
 
 $r = Debian::Rules->new(
     {   lines => [
@@ -25,7 +25,7 @@ $r = Debian::Rules->new(
         ]
     }
 );
-ok( $r->is_dh7tiny, "Detects dh7 in dh7tiny+quilt" );
+ok( $r->is_dhtiny, "Detects dh in dhtiny+quilt" );
 ok( $r->is_quiltified, "Detects --with=quilt" );
 $r->drop_quilt;
 is( $r->lines->[2], "\tdh \$\@\n", 'Dequiltification works' );
