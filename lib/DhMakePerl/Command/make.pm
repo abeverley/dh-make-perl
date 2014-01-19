@@ -81,7 +81,7 @@ sub execute {
 
     $self->extract_basic();
 
-    $tarball //= $self->guess_tarball if $self->cfg->{vcs} eq 'git';
+    $tarball //= $self->guess_debian_tarball if $self->cfg->{vcs} eq 'git';
 
     unless ( defined $self->cfg->version ) {
         $self->pkgversion( $self->version . '-1' );
@@ -255,13 +255,23 @@ sub execute {
     return(0);
 }
 
-sub guess_tarball {
+sub guess_debian_tarball {
     my $self = shift;
 
-    my $try = catfile( $self->main_dir, '..',
-              $self->control->source->Source . '_'
-            . $self->version
-            . '.orig.tar.gz' );
+    my $prefix = catfile( $self->main_dir, '..',
+                          $self->control->source->Source . '_'
+                          . $self->version
+                          . '.orig' );
+    $self->guess_tarball($prefix);
+}
+
+sub guess_tarball {
+    my $self = shift;
+    my $prefix = shift;
+    die "guess_tarball(): Needs everything except the file type suffix as parameter"
+        unless defined $prefix;
+
+    my $try = "$prefix.tar.gz";
 
     print "Trying $try...";
     if ( -f $try ) {
@@ -366,17 +376,10 @@ sub setup_dir {
         my $maindir = shift(@ARGV) || '.';
         $maindir =~ s/\/$//;
         $self->main_dir($maindir);
-        my $guessed_tarball = catfile( $self->main_dir, "..",
-            basename( $self->main_dir ) . ".tar.gz" );
+        my $guessed_tarball_prefix = catfile( $self->main_dir, "..",
+            basename( $self->main_dir ) );
 
-        print "Trying $guessed_tarball...";
-        if ( -f $guessed_tarball ) {
-            $tarball = $guessed_tarball;
-            print " found.\n";
-        }
-        else {
-            print " not found.\n";
-        }
+        $tarball = $self->guess_tarball($guessed_tarball_prefix);
     }
     return $tarball;
 }
