@@ -271,17 +271,19 @@ sub guess_tarball {
     die "guess_tarball(): Needs everything except the file type suffix as parameter"
         unless defined $prefix;
 
-    my $try = "$prefix.tar.gz";
+    foreach my $compression_suffix (qw(gz bz2 xz lzma)) {
+        my $try = "$prefix.tar.$compression_suffix";
 
-    print "Trying $try...";
-    if ( -f $try ) {
-        print " found!\n";
-        return $try;
+        print "Trying $try...";
+        if ( -f $try ) {
+            print " found!\n";
+            return $try;
+        }
+        else {
+            print " not found.\n";
+        }
     }
-    else {
-        print " not found.\n";
-        return undef;
-    }
+    return undef;
 }
 
 sub setup_dir {
