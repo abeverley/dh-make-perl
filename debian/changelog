@@ -36,6 +36,7 @@ dh-make-perl (0.81-1) UNRELEASED; urgency=medium
     guess_tarball($prefix) and guess_debian_tarball() and then using
     guess_tarball() also in setup_dir().
   * Iterate over all supported tar ball suffixes in guess_tarball().
+  * Use Cwd's realpath for upstream tarball search if main_dir is just "."
 
  -- Dima Kogan <dima@secretsauce.net>  Wed, 25 Dec 2013 17:08:35 +0100
 

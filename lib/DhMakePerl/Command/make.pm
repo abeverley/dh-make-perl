@@ -40,6 +40,7 @@ TO BE FILLED
 
 use AptPkg::Cache ();
 use CPAN ();
+use Cwd qw( realpath );
 use Debian::Dependencies      ();
 use Debian::Dependency        ();
 use Debian::WNPP::Query;
@@ -375,7 +376,7 @@ sub setup_dir {
 # 		);
     }
     else {
-        my $maindir = shift(@ARGV) || '.';
+        my $maindir = realpath( shift(@ARGV) || '.' );
         $maindir =~ s/\/$//;
         $self->main_dir($maindir);
         my $guessed_tarball_prefix = catfile( $self->main_dir, "..",
