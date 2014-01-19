@@ -25,6 +25,9 @@ dh-make-perl (0.81-1) UNRELEASED; urgency=medium
     Also rename is_dh7tiny() method to is_dhtiny().
   * Update copyright years.
 
+  [ Axel Beckert ]
+  * Apply wrap-and-sort.
+
  -- Dima Kogan <dima@secretsauce.net>  Wed, 25 Dec 2013 17:08:35 +0100
 
 dh-make-perl (0.80-1) unstable; urgency=low

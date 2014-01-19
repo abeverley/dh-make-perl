@@ -14,19 +14,19 @@ Uploaders: Wolfgang Schemmel <debian@37.org>,
            Axel Beckert <abe@debian.org>
 Section: perl
 Priority: optional
-Build-Depends: debhelper (>= 8), perl
+Build-Depends: debhelper (>= 8),
+               perl
 Build-Depends-Indep: libapt-pkg-perl,
                      libarray-unique-perl,
                      libclass-accessor-perl,
-                     perl (>= 5.13.10) | libcpan-meta-perl,
                      libdpkg-perl,
                      libemail-address-perl,
                      libemail-date-format-perl,
-                     libipc-run-perl,
                      libfile-dircompare-perl,
                      libfile-find-rule-perl,
                      libfile-touch-perl,
                      libfile-which-perl,
+                     libipc-run-perl,
                      liblist-moreutils-perl,
                      libmodule-depends-perl (>= 0.15),
                      libparse-debcontrol-perl,
@@ -42,7 +42,8 @@ Build-Depends-Indep: libapt-pkg-perl,
                      libtext-diff-perl,
                      libtie-ixhash-perl,
                      libwww-mechanize-perl,
-                     libyaml-perl
+                     libyaml-perl,
+                     perl (>= 5.13.10) | libcpan-meta-perl
 Standards-Version: 3.9.5
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-perl/packages/dh-make-perl.git
 Vcs-Git: git://anonscm.debian.org/pkg-perl/packages/dh-make-perl.git
@@ -50,15 +51,11 @@ Vcs-Git: git://anonscm.debian.org/pkg-perl/packages/dh-make-perl.git
 Package: dh-make-perl
 Architecture: all
 Depends: debhelper (>= 8),
-         ${perl:Depends},
-         ${misc:Depends},
-         make,
          dpkg-dev,
          fakeroot,
          libapt-pkg-perl,
          libarray-unique-perl,
          libclass-accessor-perl,
-         perl (>= 5.13.10) | libcpan-meta-perl,
          libdpkg-perl,
          libemail-address-perl,
          libemail-date-format-perl,
@@ -71,7 +68,11 @@ Depends: debhelper (>= 8),
          libtie-ixhash-perl,
          libwww-mechanize-perl,
          libyaml-perl,
-         perl
+         make,
+         perl,
+         perl (>= 5.13.10) | libcpan-meta-perl,
+         ${misc:Depends},
+         ${perl:Depends}
 Recommends: apt-file (>= 2.5.0),
             git,
             pristine-tar
