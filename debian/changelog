@@ -1,8 +1,5 @@
 dh-make-perl (0.81-1) UNRELEASED; urgency=medium
 
-  TODO: Verify fix for #735968 after submitter has reported an example
-    module to reproduce
-
   [ Dima Kogan ]
   * If I can't parse pkgname or version, quit with a useful error message.
     Before this patch, perl would throw up errors about trying to do stuff
