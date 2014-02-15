@@ -10,7 +10,6 @@ Uploaders: Wolfgang Schemmel <debian@37.org>,
            Nathan Handler <nhandler@debian.org>,
            Salvatore Bonaccorso <carnil@debian.org>,
            Maximilian Gass <mxey@cloudconnected.org>,
-           Nicholas Bamber <nicholas@periapt.co.uk>,
            Axel Beckert <abe@debian.org>
 Section: perl
 Priority: optional
