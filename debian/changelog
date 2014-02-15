@@ -35,6 +35,10 @@ dh-make-perl (0.81-1) UNRELEASED; urgency=medium
   * Iterate over all supported tar ball suffixes in guess_tarball().
   * Use Cwd's realpath for upstream tarball search if main_dir is just "."
 
+  [ gregor herrmann ]
+  * debian/control: remove Nicholas Bamber from Uploaders on request of
+    the MIA team.
+
  -- Dima Kogan <dima@secretsauce.net>  Wed, 25 Dec 2013 17:08:35 +0100
 
 dh-make-perl (0.80-1) unstable; urgency=low
