@@ -38,6 +38,7 @@ dh-make-perl (0.81-1) UNRELEASED; urgency=medium
   [ gregor herrmann ]
   * debian/control: remove Nicholas Bamber from Uploaders on request of
     the MIA team.
+  * Bump required debhelper version for Module::Build::Tiny to 9.20140227.
 
  -- Dima Kogan <dima@secretsauce.net>  Wed, 25 Dec 2013 17:08:35 +0100
 
