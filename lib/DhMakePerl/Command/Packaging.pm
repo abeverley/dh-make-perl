@@ -1409,7 +1409,7 @@ The following special cases are detected:
 =item Module::Build::Tiny
 
 if L<Module::Build::Tiny> is present in the build-dependencies, debhelper
-dependency is raised to 9.20130630~.
+dependency is raised to 9.20140227~.
 
 =item dh --with=quilt
 
@@ -1454,7 +1454,7 @@ sub discover_utility_deps {
     $deps->add( Debian::Dependency->new( 'debhelper', $debhelper_version ) );
 
     $self->explained_dependency( 'Module::Build::Tiny', $deps,
-        'debhelper (>= 9.20130630~)' )
+        'debhelper (>= 9.20140227~)' )
         if $deps->has('libmodule-build-tiny-perl');
 
     for ( @{ $self->rules->lines } ) {
