@@ -9,7 +9,6 @@ Uploaders: Wolfgang Schemmel <debian@37.org>,
            Ryan Niebur <ryan@debian.org>,
            Nathan Handler <nhandler@debian.org>,
            Salvatore Bonaccorso <carnil@debian.org>,
-           Maximilian Gass <mxey@cloudconnected.org>,
            Axel Beckert <abe@debian.org>
 Section: perl
 Priority: optional

@@ -34,6 +34,7 @@ dh-make-perl (0.81-1) UNRELEASED; urgency=medium
     guess_tarball() also in setup_dir().
   * Iterate over all supported tar ball suffixes in guess_tarball().
   * Use Cwd's realpath for upstream tarball search if main_dir is just "."
+  * Remove Maximilian Gaß from Uploaders (no more active according to himself)
 
   [ gregor herrmann ]
   * debian/control: remove Nicholas Bamber from Uploaders on request of
