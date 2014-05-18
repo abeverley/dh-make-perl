@@ -24,6 +24,6 @@
     debcommit -a -r
 
 * push
-    git push origin master debian/$VERSION-1
+    dpt push
 
 * serve yourself a piece of cake :)
