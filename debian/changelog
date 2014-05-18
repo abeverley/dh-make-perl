@@ -1,15 +1,8 @@
-dh-make-perl (0.81-1) UNRELEASED; urgency=medium
+dh-make-perl (0.81-1) unstable; urgency=medium
 
   [ Dima Kogan ]
-  * If I can't parse pkgname or version, quit with a useful error message.
-    Before this patch, perl would throw up errors about trying to do stuff
-    with uninitialized variables. Now it says things like "Unable to
-    determine dist name. Please use --packagename"
-  * Replaced all 'start_dir' uses with 'main_dir' start_dir is the pwd
-    when we run dh_make_perl; main_dir is the (directory given on the
-    cmdline) || '.' We never actually want to use the start_dir. Prior to
-    this patch  dh-make-perl /some/path/ would look for a source tarball
-    in '.', which is clearly wrong for that command.
+  * If unable to parse pkgname or version, quit with a useful error message.
+  * Replaced all 'start_dir' uses with 'main_dir'
 
   [ gregor herrmann ]
   * DhMakePerl::Command::Packaging:
@@ -41,7 +34,7 @@ dh-make-perl (0.81-1) UNRELEASED; urgency=medium
     the MIA team.
   * Bump required debhelper version for Module::Build::Tiny to 9.20140227.
 
- -- Dima Kogan <dima@secretsauce.net>  Wed, 25 Dec 2013 17:08:35 +0100
+ -- Damyan Ivanov <dmn@debian.org>  Sun, 18 May 2014 15:29:19 +0300
 
 dh-make-perl (0.80-1) unstable; urgency=low
 
