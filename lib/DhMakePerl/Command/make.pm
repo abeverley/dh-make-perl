@@ -748,7 +748,8 @@ sub git_add_debian {
 
     my $git = Git->repository( $self->main_dir );
     $git->command( 'add', 'debian' );
-    $git->command( 'commit', '-m', 'Initial packaging by dh-make-perl' );
+    $git->command( 'commit', '-m',
+        "Initial packaging by dh-make-perl $VERSION" );
     $git->command(
         qw( remote add origin ),
         sprintf( "ssh://git.debian.org/git/pkg-perl/packages/%s.git",
