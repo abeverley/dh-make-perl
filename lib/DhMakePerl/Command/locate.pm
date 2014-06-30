@@ -12,7 +12,7 @@ This module implements the I<locate> command of L<dh-make-perl(1)>.
 
 use strict; use warnings;
 
-our $VERSION = '0.66';
+our $VERSION = '0.81';
 
 use base 'DhMakePerl';
 
@@ -31,8 +31,8 @@ Provides I<locate> command implementation.
 sub execute {
     my $self = shift;
 
-    @ARGV == 1
-        or die "locate command requires exactly one non-option argument\n";
+    @ARGV >= 1
+        or die "locate command requires at least one non-option argument\n";
 
     my $apt_contents = $self->get_apt_contents;
 
@@ -45,21 +45,23 @@ Install the 'apt-file' package, run 'apt-file update' as root
 and retry.
 EOF
     }
-    my $mod = $ARGV[0];
 
-    if ( defined( my $core_since = is_core_module($mod) ) ) {
-        print "$mod is in Perl core (package perl)";
-        print $core_since ? " since $core_since\n" : "\n";
-        return 0;
+    my $result = 0;
+    for my $mod (@ARGV) {
+        if ( defined( my $core_since = is_core_module($mod) ) ) {
+            print "$mod is in Perl core (package perl)";
+            print $core_since ? " since $core_since\n" : "\n";
+        }
+        elsif ( my $pkg = $apt_contents->find_perl_module_package($mod) ) {
+            print "$mod is in $pkg package\n";
+        }
+        else {
+            print "$mod is not found in any Debian package\n";
+            $result = 1;
+        }
     }
 
-    if ( my $pkg = $apt_contents->find_perl_module_package($mod) ) {
-        print "$mod is in $pkg package\n";
-        return 0;
-    }
-
-    print "$mod is not found in any Debian package\n";
-    return 1;
+    return $result;
 }
 
 =back

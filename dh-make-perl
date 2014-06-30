@@ -23,7 +23,7 @@ dh-make-perl - Create debian source packages from Perl modules
 
 =item dh-make-perl refresh {I<--only ...>} [directory]
 
-=item dh-make-perl locate Foo::Bar
+=item dh-make-perl locate Foo::Bar ...
 
 =item dh-make-perl refresh-cache
 
@@ -115,13 +115,13 @@ directory when B<dh-make-perl> is run in L</refresh> mode. Filenames are
 separated by a comma. The option can be given multiple times, accumulating
 arguments.
 
-=item locate I<MODULE>
+=item locate I<MODULE> ...
 
-Tries to locate the package that conains the given Perl I<MODULE>.
+Tries to locate the package that conains the given Perl I<MODULE>s.
 
 Example:
 
-    dh-make-perl locate IPC::Run3
+    dh-make-perl locate IPC::Run3 XML::Tidy
 
 =item refresh-cache
 
