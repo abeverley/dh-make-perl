@@ -14,7 +14,7 @@ DhMakePerl::Config - dh-make-perl configuration class
 use base 'Class::Accessor';
 use Dpkg::Source::Package;
 
-use constant options => (
+my @OPTIONS = (
     'apt-contents-dir=s',
     'arch=s',          'backups!',
     'basepkgs=s',
@@ -40,12 +40,12 @@ use constant options => (
     'verbose!',        'version=s',
 );
 
-use constant commands =>
+my @COMMANDS =
     ( 'make', 'refresh|R', 'refresh-cache', 'dump-config', 'locate', 'help' );
 
 __PACKAGE__->mk_accessors(
     do {
-        my @opts = ( __PACKAGE__->options, __PACKAGE__->commands );
+        my @opts = ( @OPTIONS, @COMMANDS );
         for (@opts) {
             s/[=:!|].*//;
             s/-/_/g;
@@ -142,7 +142,7 @@ sub parse_command_line_options {
     # run below.
     Getopt::Long::Configure( qw( pass_through no_auto_abbrev no_ignore_case ) );
     my %opts;
-    GetOptions( \%opts, $self->options, )
+    GetOptions( \%opts, @OPTIONS )
         or die "Error parsing command-line options\n";
 
     # Make CPAN happy, make the user happy: Be more tolerant!
@@ -172,7 +172,7 @@ sub parse_command_line_options {
     # see what are we told to do
     %opts = ();
     Getopt::Long::Configure('no_pass_through');
-    GetOptions( \%opts, $self->commands )
+    GetOptions( \%opts, @COMMANDS )
         or die "Error parsing command-line options\n";
 
     if (%opts) {
@@ -182,7 +182,7 @@ sub parse_command_line_options {
     }
     else {
         my %cmds;
-        for( $self->commands ) {
+        for (@COMMANDS) {
             my $c = $_;
             $c =~ s/\|.+//;     # strip short alternatives
             $cmds{$c} = 1;
@@ -200,7 +200,7 @@ sub parse_command_line_options {
 
     if ( scalar( keys %opts ) > 1 ) {
         die "Only one of " .
-            map( $_, $self->commands ) . " can be specified\n";
+            map( $_, @COMMANDS ) . " can be specified\n";
     }
 
     $self->command( ( keys %opts )[0] );
@@ -253,7 +253,7 @@ sub parse_config_file {
             "Error parsing $fn: config-file is not allowed in the configuration file"
             if $yaml->{'config-file'};
 
-        for ( $self->options ) {
+        for (@OPTIONS) {
              ( my $key = $_ ) =~ s/[!=|].*//;
 
             next unless exists $yaml->{$key};
@@ -288,7 +288,7 @@ sub dump_config {
     my %hash;
     tie %hash, 'Tie::IxHash';
 
-    for my $opt ( $self->options ) {
+    for my $opt (@OPTIONS) {
         $opt =~ s/[=!|].*//;
         ( my $field = $opt ) =~ s/-/_/g;
         $hash{$opt} = $self->$field;
