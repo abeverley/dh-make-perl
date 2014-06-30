@@ -2,7 +2,7 @@ use strict;
 use warnings;
 use Test::More;
 
-plan skip_al => "This is a release-time test" unless $ENV{RELEASE_TESTING};
+plan skip_all => "This is a release-time test" unless $ENV{RELEASE_TESTING};
 
 # Ensure a recent version of Test::Pod::Coverage
 my $min_tpc = 1.08;
