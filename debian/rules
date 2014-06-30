@@ -8,7 +8,7 @@ BUILDHOME = $(CURDIR)/debian/build
 override_dh_auto_test:
 # leave this here for Test::DistManifest..I want it to happen on package build but not on CPAN install.
 	mkdir -p $(BUILDHOME)
-	HOME=$(BUILDHOME) NO_NETWORK=1 RELEASE_TESTING=1 dh_auto_test
+	HOME=$(BUILDHOME) NO_NETWORK=1 dh_auto_test
 
 override_dh_clean:
 	dh_clean
