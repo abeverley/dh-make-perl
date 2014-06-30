@@ -200,7 +200,7 @@ sub parse_command_line_options {
 
     if ( scalar( keys %opts ) > 1 ) {
         die "Only one of " .
-            map( $_, @COMMANDS ) . " can be specified\n";
+            join(', ', @COMMANDS ) . " can be specified\n";
     }
 
     $self->command( ( keys %opts )[0] );
