@@ -1,5 +1,12 @@
-0.82 (201Y-MM-DD)
-  ××× placeholder ×××
+0.82 (2014-06-30)
+  * HOWTO.Release: use dpt push in the pushing part
+  * make: include dh-make-perl version in the commit message of the initial
+    packaging
+  * Skip POD tests unless RELEASE_TESTING is present in the environment
+    (Closes: #752917, FTBFS with perl 5.20)
+  * fix the error message when more than one command is given on the command
+    line
+  * the locate command now accepts multiple arguments
 
 0.81 (2014-05-18)
 

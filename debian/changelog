@@ -1,8 +1,17 @@
-dh-make-perl (0.81-2) UNRELEASED; urgency=medium
+dh-make-perl (0.82-1) unstable; urgency=medium
 
-  * 
+  * HOWTO.Release: use dpt push in the pushing part
+  * make: include dh-make-perl version in the commit message of the initial
+    packaging
+  * Skip POD tests unless RELEASE_TESTING is present in the environment
+    remove RELEASE_TESTING from dh_auto_test invocation
+    (Closes: #752917, FTBFS with perl 5.20)
+  * fix the error message when more than one command is given on the command
+    line
+  * the locate command now accepts multiple arguments
+  * build-depend on the separately packaged Module::Build
 
- -- Damyan Ivanov <dmn@debian.org>  Sun, 18 May 2014 15:49:07 +0300
+ -- Damyan Ivanov <dmn@debian.org>  Wed, 02 Jul 2014 20:25:38 +0300
 
 dh-make-perl (0.81-1) unstable; urgency=medium
 
