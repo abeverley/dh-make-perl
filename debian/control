@@ -44,7 +44,7 @@ Build-Depends-Indep: libapt-pkg-perl,
                      libyaml-perl,
                      perl (>= 5.13.10) | libcpan-meta-perl
 Standards-Version: 3.9.5
-Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-perl/packages/dh-make-perl.git
+Vcs-Browser: https://anonscm.debian.org/cgit/pkg-perl/packages/dh-make-perl.git
 Vcs-Git: git://anonscm.debian.org/pkg-perl/packages/dh-make-perl.git
 
 Package: dh-make-perl
