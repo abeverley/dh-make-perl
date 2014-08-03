@@ -72,7 +72,7 @@ my $builder = My::Builder->new(
     share_files         => { map( ( $_ => $_ ), glob 'share/*' ) },
     meta_merge => {
         resources => {
-            repository => 'http://anonscm.debian.org/gitweb/?p=pkg-perl/packages/dh-make-perl.git',
+            repository => 'https://anonscm.debian.org/cgit/pkg-perl/packages/dh-make-perl.git',
         },
         keywords => [ qw(debian package helper) ],
     },
