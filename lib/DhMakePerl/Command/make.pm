@@ -192,7 +192,7 @@ sub execute {
                     $self->pkgname )
             );
             $self->control->source->Vcs_Browser(
-                sprintf( "http://anonscm.debian.org/gitweb/?p=pkg-perl/packages/%s.git",
+                sprintf( "https://anonscm.debian.org/cgit/pkg-perl/packages/%s.git",
                     $self->pkgname )
             );
         }
