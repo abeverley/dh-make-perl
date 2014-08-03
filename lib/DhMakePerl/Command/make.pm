@@ -555,12 +555,12 @@ sub search_pkg_perl {
     $ua->conn_cache( LWP::ConnCache->new );
 
     $resp = $ua->get(
-        "http://anonscm.debian.org/gitweb/?p=pkg-perl/packages/$pkg.git");
+        "https://anonscm.debian.org/cgit/pkg-perl/packages/$pkg.git");
     return { url => $resp->request->uri }
         if $resp->is_success;
 
     $resp = $ua->get(
-        "http://anonscm.debian.org/gitweb/?p=pkg-perl/attic/$pkg.git");
+        "https://anonscm.debian.org/cgit/pkg-perl/attic/$pkg.git");
     return { url => $resp->request->uri }
         if $resp->is_success;
 
