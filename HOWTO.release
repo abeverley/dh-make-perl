@@ -23,6 +23,11 @@
 * tag
     debcommit -a -r
 
+* increase version number
+    git grep $ver
+    sed -i -e 's/$ver/$ver+1/' file...
+    git ci -a -m'increment version to $ver+1'
+
 * push
     dpt push
 
