@@ -1,3 +1,15 @@
+0.83 (2014-08-04)
+
+  [ Salvatore Bonaccorso ]
+  * Update Vcs-Browser URL to cgit web frontend
+  * Update repository URL in Build.PL to the cgit web frontend
+  * When creating debian/control file use cgit web frontend URL for the
+    Vcs-Browser field
+  * Upse cgit web frontend whean searching for pkg-perl package repositories
+
+  [ Damyan Ivanov ]
+  * HOWTO.release: increase version after tagging
+
 0.82 (2014-06-30)
   * HOWTO.Release: use dpt push in the pushing part
   * make: include dh-make-perl version in the commit message of the initial
