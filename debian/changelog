@@ -5,7 +5,7 @@ dh-make-perl (0.83-1) unstable; urgency=medium
   * Update repository URL in Build.PL to the cgit web frontend
   * When creating debian/control file use cgit web frontend URL for the
     Vcs-Browser field
-  * Upse cgit web frontend whean searching for pkg-perl package repositories
+  * Use cgit web frontend when searching for pkg-perl package repositories
 
   [ Damyan Ivanov ]
   * HOWTO.release: increase version after tagging
