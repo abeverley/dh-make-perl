@@ -43,3 +43,4 @@
   To run debuild on this package, see the --check-dirname-level and
   --check-dirname-regex options; run debuild --help for more info.
 * quilt support looks like a candidate for dropping
+* call 'dpt upstream-repo' to set up debian/upstream/metadata
