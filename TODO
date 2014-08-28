@@ -44,3 +44,4 @@
   --check-dirname-regex options; run debuild --help for more info.
 * quilt support looks like a candidate for dropping
 * call 'dpt upstream-repo' to set up debian/upstream/metadata
+* make/refresh: add "Multi-Arch: same" header to arch-dep packages
