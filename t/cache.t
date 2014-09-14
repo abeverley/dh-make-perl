@@ -24,7 +24,8 @@ sub dist_ok($) {
         or die "unlink($Bin/contents/wnpp.cache): $!" );
     system('touch', "$Bin/contents/wnpp.cache");
 
-    system( "$Bin/../dh-make-perl", "--no-verbose",
+    system( $ENV{ADTTMP} ? 'dh-make-perl' : "$Bin/../dh-make-perl",
+            "--no-verbose",
             "--home-dir", "$Bin/contents",
             "--apt-contents-dir", "$Bin/contents",
             "--data-dir", "$Bin/../share",
