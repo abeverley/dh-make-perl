@@ -63,6 +63,8 @@ replaced with underscores.
 
 =item XS_Autobuild
 
+=item Testsuite
+
 =back
 
 All Build_... fields are converted into objects of L<Debian::Dependencies>
@@ -83,7 +85,7 @@ use constant fields => qw (
     Source Section Priority Maintainer Uploaders DM_Upload_Allowed 
     Build_Conflicts Build_Conflicts_Indep Build_Depends Build_Depends_Indep
     Standards_Version Vcs_Browser Vcs_Bzr Vcs_CVS Vcs_Git Vcs_Svn Homepage
-    XS_Autobuild
+    XS_Autobuild Testsuite
 );
 
 =head1 CONSTRUCTOR
