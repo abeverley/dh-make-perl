@@ -46,6 +46,7 @@ Build-Depends-Indep: libapt-pkg-perl,
 Standards-Version: 3.9.6
 Vcs-Browser: https://anonscm.debian.org/cgit/pkg-perl/packages/dh-make-perl.git
 Vcs-Git: git://anonscm.debian.org/pkg-perl/packages/dh-make-perl.git
+Testsuite: autopkgtest-pkg-perl
 
 Package: dh-make-perl
 Architecture: all
