@@ -209,7 +209,7 @@ sub execute {
     $self->create_copyright( $self->debian_file('copyright') );
     $self->update_file_list( docs => $self->docs, examples => $self->examples );
 
-
+    $self->create_upstream_metadata;
 
     if ( $self->cfg->recursive ) {
         $already_done //= {};

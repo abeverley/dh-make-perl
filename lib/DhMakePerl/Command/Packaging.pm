@@ -1565,6 +1565,41 @@ sub unquote {
     return $unquoted;
 }
 
+=item create_upstream_metadata
+
+Populates F<debian/upstream/metadata> with information from F<META>.
+
+=cut
+
+sub create_upstream_metadata {
+    my $self = shift;
+    my $meta = $self->meta;
+
+    return unless %$meta;
+
+    require YAML::XS;
+
+    my %upstream;
+
+    $upstream{"Archive"}           = 'CPAN';
+    $upstream{"Name"}              = $meta->{name};
+    $upstream{"Contact"}           = join( ', ', @{ $meta->{author} } );
+    # $upstream{"Homepage"}        = $meta->{resources}->{homepage};
+    $upstream{"Bug-Database"}      = $meta->{resources}->{bugtracker}->{web};
+    $upstream{"Bug-Submit"}        = $meta->{resources}->{bugtracker}->{mailto};
+    $upstream{"Repository"}        = $meta->{resources}->{repository}->{url};
+    $upstream{"Repository-Browse"} = $meta->{resources}->{repository}->{web};
+
+    foreach ( keys %upstream ) {
+        delete $upstream{$_} unless defined $upstream{$_};
+    }
+
+    my $dir = File::Spec->catdir( $self->main_dir, 'debian', 'upstream' );
+
+    mkdir($dir);
+    YAML::XS::DumpFile( File::Spec->catfile( $dir, 'metadata' ), \%upstream );
+}
+
 =back
 
 =cut
