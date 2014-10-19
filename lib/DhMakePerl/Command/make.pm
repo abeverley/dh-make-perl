@@ -129,6 +129,8 @@ sub execute {
     my $apt_contents = $self->get_apt_contents;
     my $src = $self->control->source;
 
+    $src->Testsuite('autopkgtest-pkg-perl') if $self->cfg->{pkg_perl};
+
     my @missing = $self->discover_dependencies;
 
     $bin->Depends->add( $self->cfg->depends )
