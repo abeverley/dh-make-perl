@@ -150,7 +150,8 @@ sub dist_ok($) {
 
     run_and_compare {
         run => [
-            "$Bin/../dh-make-perl", "--no-verbose",
+            $ENV{ADTTMP} ? 'dh-make-perl' : "$Bin/../dh-make-perl",
+            "--no-verbose",
             "--home-dir",           "$Bin/contents",
             "--apt-contents-dir",   "$Bin/contents",
             "--data-dir",           "$Bin/../share",
@@ -174,7 +175,8 @@ sub dist_ok($) {
 
     run_and_compare {
         run => [
-            "$Bin/../dh-make-perl", "--no-verbose",
+            $ENV{ADTTMP} ? 'dh-make-perl' : "$Bin/../dh-make-perl",
+            "--no-verbose",
             "--home-dir",           "$Bin/contents",
             "--apt-contents-dir",   "$Bin/contents",
             "--data-dir",           "$Bin/../share",
@@ -202,7 +204,8 @@ sub dist_ok($) {
 
     run_and_compare {
         run => [
-            "$Bin/../dh-make-perl", "--no-verbose",
+            $ENV{ADTTMP} ? 'dh-make-perl' : "$Bin/../dh-make-perl",
+            "--no-verbose",
             "--home-dir",           "$Bin/contents",
             "--apt-contents-dir",   "$Bin/contents",
             "--data-dir",           "$Bin/../share",
