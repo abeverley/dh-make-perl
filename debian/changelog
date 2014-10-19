@@ -12,7 +12,8 @@ dh-make-perl (0.84-1) UNRELEASED; urgency=medium
   * TODO: make/refresh: add "Multi-Arch: same" header to arch-dep packages
 
   [ Axel Beckert ]
-  * t/*.t: use dh-make-perl without path instead of $Bin/../dh-make-perl if $ADTTMP is set
+  * t/*.t: use dh-make-perl without path instead of $Bin/../dh-make-perl if
+    $ADTTMP is set
   * Add project-.proverc to enforce running with -j1 to avoid race conditions
 
   [ Salvatore Bonaccorso ]
