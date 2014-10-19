@@ -1,3 +1,34 @@
+dh-make-perl (0.84-1) UNRELEASED; urgency=medium
+
+  [ Damyan Ivanov ]
+  * bump version
+  * update Changes (sorry, CPAN)
+
+  [ Salvatore Bonaccorso ]
+  * Fixing typos from commit message in debian/changelog
+
+  [ Damyan Ivanov ]
+  * TODO += call 'dpt upstream-repo' to set up debian/upstream/metadata
+  * TODO: make/refresh: add "Multi-Arch: same" header to arch-dep packages
+
+  [ Axel Beckert ]
+  * t/*.t: use dh-make-perl without path instead of $Bin/../dh-make-perl if $ADTTMP is set
+  * Add project-.proverc to enforce running with -j1 to avoid race conditions
+
+  [ Salvatore Bonaccorso ]
+  * Create packages using Standards-Version 3.9.6
+  * Use Standards-Version 3.9.6 in testsuite control files
+  * Declare compliance with Debian Policy 3.9.6
+
+  [ gregor herrmann ]
+  * Add 'Testsuite' as a valid field to Debian::Control::Stanza::Source.
+
+  [ Damyan Ivanov ]
+  * create debian/upstream/metadata in 'make' mode
+  * make: add Testsuite: autopkgtest-pkg-perl source header in pkg-perl mode
+
+ -- Damyan Ivanov <dmn@debian.org>  Sun, 19 Oct 2014 14:27:47 +0000
+
 dh-make-perl (0.83-1) unstable; urgency=medium
 
   [ Salvatore Bonaccorso ]
