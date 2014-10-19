@@ -28,6 +28,10 @@ dh-make-perl (0.84-1) UNRELEASED; urgency=medium
   * create debian/upstream/metadata in 'make' mode
   * make: add Testsuite: autopkgtest-pkg-perl source header in pkg-perl mode
 
+  [ gregor herrmann ]
+  * t/dists.t: check for $ENV{ADTTMP} in all dh-make-perl invocations.
+  * Mark package as autopkgtest-able.
+
  -- Damyan Ivanov <dmn@debian.org>  Sun, 19 Oct 2014 14:27:47 +0000
 
 dh-make-perl (0.83-1) unstable; urgency=medium
