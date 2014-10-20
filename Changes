@@ -1,3 +1,25 @@
+0.84 (2014-10-20)
+
+  [ Axel Beckert ]
+  * t/*.t: use dh-make-perl without path instead of $Bin/../dh-make-perl if
+    $ADTTMP is set
+  * Add project-.proverc to enforce running with -j1 to avoid race conditions
+
+  [ Salvatore Bonaccorso ]
+  * Create packages using Standards-Version 3.9.6
+  * Use Standards-Version 3.9.6 in testsuite control files
+
+  [ gregor herrmann ]
+  * Add 'Testsuite' as a valid field to Debian::Control::Stanza::Source.
+
+  [ Damyan Ivanov ]
+  * create debian/upstream/metadata in 'make' mode
+  * make: add Testsuite: autopkgtest-pkg-perl source header in pkg-perl mode
+
+  [ gregor herrmann ]
+  * t/dists.t: check for $ENV{ADTTMP} in all dh-make-perl invocations.
+  * Mark package as autopkgtest-able.
+
 0.83 (2014-08-04)
 
   [ Salvatore Bonaccorso ]
