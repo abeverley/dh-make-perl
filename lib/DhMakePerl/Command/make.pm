@@ -349,12 +349,19 @@ sub setup_dir {
         $new_maindir = $orig_pwd . "/" . $dist->base_id;
 
         # rename existing directory
+        my $new_inc;
+        my $rename_to = "$new_maindir.$$";
+        while (-d $rename_to)
+        {
+            $new_inc++;
+            $rename_to = "$new_maindir.$$-$new_inc";
+        }
         if ( -d $new_maindir
-            && rename $new_maindir, "$new_maindir.$$" )
+            && rename $new_maindir, $rename_to)
         {
             print '=' x 70, "\n";
             print
-                "Unpacked tarball already existed, directory renamed to $new_maindir.$$\n";
+                "Unpacked tarball already existed, directory renamed to $rename_to\n";
             print '=' x 70, "\n";
         }
         system( "mv", $self->main_dir, "$new_maindir" ) == 0
