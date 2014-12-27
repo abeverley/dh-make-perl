@@ -438,7 +438,7 @@ sub install_package {
     $debname = sprintf( "%s_%s-1_%s.deb", $self->pkgname, $self->version,
         $archspec );
 
-    my $deb = $self->main_dir . "/$debname";
+    my $deb = $self->main_dir . "/../$debname";
     system("dpkg -i $deb") == 0
         || die "Cannot install package $deb\n";
 }
