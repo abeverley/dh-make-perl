@@ -23,7 +23,7 @@ use Carp qw(croak);
 use base 'Debian::Control';
 
 use CPAN ();
-use DhMakePerl::Utils qw( is_core_module find_cpan_module nice_perl_ver split_version_relation );
+use DhMakePerl::Utils qw( is_core_module find_cpan_module nice_perl_ver split_version_relation apt_cache );
 use File::Spec qw( catfile );
 use Module::Depends ();
 
@@ -46,6 +46,13 @@ Options:
 
 An instance of L<Debian::AptContents> to be used when locating to which package
 a required module belongs.
+
+=item dpkg_available
+An instance of L<DPKG::Parse::Available> to be used when checking whether
+the locally available package is the required version. For example:
+
+    my $available = DPKG::Parse::Available->new;
+    $available->parse;
 
 =item dir
 
@@ -85,6 +92,7 @@ sub discover_dependencies {
     ref($opts) and ref($opts) eq 'HASH'
         or die 'Usage: $obj->{ [ { opts hash } ] )';
     my $apt_contents = delete $opts->{apt_contents};
+    my $dpkg_available = delete $opts->{dpkg_available};
     my $dir = delete $opts->{dir};
     my $intrusive = delete $opts->{intrusive};
     my $require_deps = delete $opts->{require_deps};
@@ -163,7 +171,8 @@ sub discover_dependencies {
 
     # run-time
     my ( $debs, $missing )
-        = $self->find_debs_for_modules( $deps->{requires}, $apt_contents, $verbose );
+        = $self->find_debs_for_modules( $deps->{requires}, $apt_contents,
+            $verbose, $dpkg_available );
 
     if (@$debs) {
         if ($verbose) {
@@ -187,7 +196,8 @@ sub discover_dependencies {
             %{ $deps->{configure_requires} || {} }
         },
         $apt_contents,
-        $verbose
+        $verbose,
+        $dpkg_available,
     );
 
     if (@$b_debs) {
@@ -254,7 +264,7 @@ EOF
     return @$missing;
 }
 
-=item find_debs_for_modules I<dep hash>[, APT contents[, verbose ]]
+=item find_debs_for_modules I<dep hash>[, APT contents[, verbose[, DPKG available]]]
 
 Scans the given hash of dependencies ( module => version ) and returns
 matching Debian package dependency specification (as an instance of
@@ -262,13 +272,16 @@ L<Debian::Dependencies> class) and a list of missing modules.
 
 Perl core is searched first, then installed packages, then the APT contents.
 
+If a DPKG::Parse::Available object is passed, also check the available package version
+
 =cut
 
 sub find_debs_for_modules {
 
-    my ( $self, $dep_hash, $apt_contents, $verbose ) = @_;
+    my ( $self, $dep_hash, $apt_contents, $verbose, $dpkg_available ) = @_;
 
     my $debs = Debian::Dependencies->new();
+    my $aptpkg_cache = apt_cache();
 
     my @missing;
 
@@ -292,9 +305,45 @@ sub find_debs_for_modules {
                 ? [ map { { pkg => $_, ver => $version } } @pkgs ]
                 : ( $pkgs[0], $version )
             );
+
+            # Check the actual version available, if we've been passed
+            # a DPKG::Parse::Available object
+            if ( $dpkg_available ) {
+                my @available;
+                my @satisfied = grep {
+                    if ( my $pkg = $dpkg_available->get_package('name' => $_) ) {
+                        my $have_pkg = Debian::Dependency->new( $_, '=', $pkg->version );
+                        push @available, $have_pkg;
+                        $have_pkg->satisfies($dep);
+                    }
+                } @pkgs;
+                unless ( @satisfied ) {
+                    print "$module is available locally as @available, but does not satisify $version"
+                        if $verbose;
+                    push @missing, $module;
+                }
+            }
         }
-        elsif ($apt_contents) {
+
+        if (!$dep && $apt_contents) {
             $dep = $apt_contents->find_perl_module_package( $module, $version );
+
+            # Check the actual version in APT, if we've got
+            # a AptPkg::Cache object to search
+            if ( $dep && $aptpkg_cache ) {
+                my $pkg = $aptpkg_cache->{$dep->pkg};
+                if ( my $available = $pkg->{VersionList} ) {
+                    for my $v ( @$available ) {
+                        my $d = Debian::Dependency->new( $dep->pkg, '=', $v->{VerStr} );
+                        unless ( $d->satisfies($dep) )
+                        {
+                            push @missing, $module;
+                            print "$module package in APT ($d) does not satisfy $dep"
+                                if $verbose;
+                        }
+                    }
+                }
+            }
         }
 
 

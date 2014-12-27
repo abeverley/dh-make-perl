@@ -33,6 +33,7 @@ use Debian::Control::FromCPAN;
 use Debian::Dependencies;
 use Debian::Rules;
 use DhMakePerl::PodParser ();
+use DPKG::Parse::Available;
 use File::Basename qw(basename dirname);
 use File::Find qw(find);
 use File::Path ();
@@ -1377,13 +1378,19 @@ sub discover_dependencies {
         # control->discover_dependencies needs configured CPAN
         $self->configure_cpan;
 
+        # Don't cache this in case we've built and installed a
+        # module in this instance
+        my $dpkg_available = DPKG::Parse::Available->new;
+        $dpkg_available->parse;
+
         return $self->control->discover_dependencies(
-            {   dir          => $self->main_dir,
-                verbose      => $self->cfg->verbose,
-                apt_contents => $self->apt_contents,
-                require_deps => $self->cfg->requiredeps,
-                wnpp_query   => $wnpp_query,
-                intrusive    => $self->cfg->intrusive,
+            {   dir            => $self->main_dir,
+                verbose        => $self->cfg->verbose,
+                apt_contents   => $self->apt_contents,
+                dpkg_available => $dpkg_available,
+                require_deps   => $self->cfg->requiredeps,
+                wnpp_query     => $wnpp_query,
+                intrusive      => $self->cfg->intrusive,
             }
         );
     }

@@ -20,6 +20,7 @@ DhMakePerl::Utils - helper routines for dh-make-perl and alike
 
 our @EXPORT_OK = qw(
     find_core_perl_dependency
+    apt_cache
     find_cpan_module find_cpan_distribution
     is_core_module
     nice_perl_ver
@@ -30,6 +31,7 @@ use base 'Exporter';
 
 use 5.10.0;
 
+use AptPkg::Cache;
 use Module::CoreList ();
 use Debian::Dependency;
 
@@ -38,6 +40,23 @@ use Debian::Dependency;
 None of he following functions is exported by default.
 
 =over
+
+=item apt_cache
+
+Evaluate the creation of an AptPkg::Cache, and return it on success
+
+=cut
+
+sub apt_cache {
+    my $apt_cache;
+
+    eval {
+        $apt_cache = AptPkg::Cache->new;
+    };
+
+    warn "Error initializing AptPkg::Cache: $@" if $@;
+    $apt_cache;
+}
 
 =item find_cpan_module
 

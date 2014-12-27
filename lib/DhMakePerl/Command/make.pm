@@ -6,6 +6,7 @@ our $VERSION = '0.84';
 use 5.010;    # we use smart matching
 
 use base 'DhMakePerl::Command::Packaging';
+use DhMakePerl::Utils qw(apt_cache);
 
 __PACKAGE__->mk_accessors(
     qw(
@@ -38,7 +39,6 @@ TO BE FILLED
 
 =cut
 
-use AptPkg::Cache ();
 use CPAN ();
 use Cwd qw( realpath );
 use Debian::Dependencies      ();
@@ -597,14 +597,10 @@ sub package_already_exists {
     my( $self, $apt_contents ) = @_;
 
     my $found;
-
-    eval {
-        my $apt_cache = AptPkg::Cache->new;
-        $found = $apt_cache->packages->lookup( $self->pkgname )
-            if $apt_cache;
-    };
-
-    warn "Error initializing AptPkg::Cache: $@" if $@;
+    if (my $apt_cache = apt_cache())
+    {
+        $found = $apt_cache->packages->lookup( $self->pkgname );
+    }
 
     if ($found) {
         warn "**********\n";
