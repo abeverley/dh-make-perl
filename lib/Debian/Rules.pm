@@ -369,6 +369,19 @@ sub write {
     }
 }
 
+=item transform $sub
+
+Transforms each line of the file using the subroutine $sub
+
+=cut
+
+sub transform {
+    my $self = shift;
+    my $sub = shift or die "Please pass a regular expression with which to transform";
+
+    $self->lines( [ map { $sub->($_) } @{ $self->lines } ] );
+}
+
 sub DESTROY {
     my $self = shift;
 

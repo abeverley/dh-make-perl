@@ -20,7 +20,7 @@ __PACKAGE__->mk_accessors(
         mod_cpan_version
         meta perlname author
         version rules docs examples copyright
-        control
+        control core_module
     )
 );
 
@@ -867,7 +867,7 @@ sub create_rules {
 
     $self->backup_file($file);
 
-    my $rulesname = 'rules.dh.tiny';
+    my $rulesname = $self->core_module ? 'rules.dh.core' : 'rules.dh.tiny';
 
     for my $source (
         catfile( $self->cfg->home_dir, $rulesname ),
@@ -876,6 +876,9 @@ sub create_rules {
         if ( -e $source ) {
             print "Using rules: $source\n" if $self->cfg->verbose;
             $self->rules->read($source);
+            my $pkgname = $self->pkgname;
+            # Substitute any variables in the rules file
+            $self->rules->transform( sub{ s/PACKAGENAME/$pkgname/g; $_ } );
             last;
         };
     }

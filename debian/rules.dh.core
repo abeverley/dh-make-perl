@@ -1,0 +1,30 @@
+#!/usr/bin/make -f
+
+# Rules file for core modules. This adds dpkg-divert commands to the
+# package to save existing copies of files that will be overwritten
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+	dh_auto_configure -- NO_PERLLOCAL=1
+
+override_dh_md5sums:
+	# md5sums will contain all the files to be installed. Once it's been
+	# created, see whether any of the files to be installed already exist
+	# as part of another package
+	dh_md5sums
+	# The initial part of the shell script
+	echo '#!/bin/sh\n\nset -e\n\nif [ "$$1" = install ] || [ "$$1" = upgrade ]\nthen' > debian/PACKAGENAME/DEBIAN/preinst
+	# For each file in md5sums, see if it exists in another package on the
+	# system, and if it does, add the dpkg-divert commands
+	cut -d ' ' -f 3 debian/PACKAGENAME/DEBIAN/md5sums|xargs dpkg -S / 2> /dev/null|awk '/^perl/ {print "dpkg-divert --add --package PACKAGENAME --rename --divert " $$2 ".bundled " $$2 }' >> debian/PACKAGENAME/DEBIAN/preinst
+	# The end of the script
+	echo 'fi\nexit 0' >> debian/PACKAGENAME/DEBIAN/preinst
+	# Make the preinst file executable
+	chmod +x debian/PACKAGENAME/DEBIAN/preinst
+	# Same again for the package removal (postrm)
+	echo '#!/bin/sh\n\nset -e\n\nif [ "$$1" = remove ]\nthen' > debian/PACKAGENAME/DEBIAN/postrm
+	cut -d ' ' -f 3 debian/PACKAGENAME/DEBIAN/md5sums|xargs dpkg -S / 2> /dev/null|awk '/^perl/ {print "dpkg-divert --remove --package PACKAGENAME --rename --divert " $$2 ".bundled " $$2 }' >> debian/PACKAGENAME/DEBIAN/postrm
+	echo 'fi\nexit 0' >> debian/PACKAGENAME/DEBIAN/postrm
+	chmod +x debian/PACKAGENAME/DEBIAN/postrm

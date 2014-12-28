@@ -14,7 +14,7 @@ __PACKAGE__->mk_accessors(
         perlname version pkgversion
         copyright author
         extrasfields  extrapfields
-        docs examples
+        docs examples core_module
         )
 );
 
@@ -75,6 +75,8 @@ sub execute {
     die "CPANPLUS support disabled, sorry" if $self->cfg->cpanplus;
 
     $self->check_deprecated_overrides;
+
+    $self->core_module(1) if is_core_module($self->cfg->cpan);
 
     my $tarball = $self->setup_dir();
     $self->process_meta;
@@ -301,7 +303,7 @@ sub setup_dir {
         $orig_pwd = $ENV{'PWD'};
 
         # Is the module a core module?
-       if ( is_core_module( $self->cfg->cpan ) ) {
+       if ( $self->core_module ) {
             die $self->cfg->cpan
             . " is a standard module. Will not build without --core-ok.\n"
                 unless $self->cfg->core_ok;
